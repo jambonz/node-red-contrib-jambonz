@@ -1,7 +1,7 @@
 {
   "name": "node-red-contrib-jambonz",
   "version": "1.0.0",
-  "description": "",
+  "description": "Node-RED nodes for jambonz",
   "node-red": {
     "nodes": {
       "s3:upload": "src/nodes/s3-upload.js",
