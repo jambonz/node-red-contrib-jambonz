@@ -1,0 +1,271 @@
+<script type="text/html" data-template-name="gather">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+</div>
+<div class="form-row">
+  <label for="node-input-actionhook"><i class="icon-tag"></i> Action hook</label>
+  <input type="text" id="node-input-actionhook" placeholder="webhook with results of gather">
+</div>
+<fieldset>
+  <legend>Input Type</legend>
+  <div class="form-row">
+    <label for="node-input-speechinput"><i class="icon-tag"></i> Speech</label>
+    <input type="checkbox" id="node-input-speechinput">
+  </div>
+  <div class="form-row">
+    <label for="node-input-dtmfinput"><i class="icon-tag"></i> Digits</label>
+    <input type="checkbox" id="node-input-dtmfinput">
+  </div>
+
+  <!-- speech --> 
+  <div id="speech-input-container">
+    <div class="form-row">
+      <label for="node-input-recognizerlang"><i class="icon-tag"></i> Language</label>
+      <select id="node-input-recognizerlang">
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-recognizerhints"><i class="icon-tag"></i> Hints</label>
+      <input type="text" id="node-input-recognizerhints" placeholder="comma-separated list of phrases">
+    </div>
+  </div>
+
+  <!-- dtmf -->
+  <div id="dtmf-input-container">
+    <div class="form-row">
+      <label for="node-input-finishonkey"><i class="icon-tag"></i> Finish key</label>
+      <input type="text" id="node-input-finishonkey" placeholder="dtmf key to signal end of input">
+    </div>
+    <div class="form-row">
+      <label for="node-input-numdigits"><i class="icon-tag"></i> Num. digits</label>
+      <input type="text" id="node-input-numdigits" placeholder="number of digits to collect">
+    </div>
+    <div class="form-row">
+      <label for="node-input-numtimeout"><i class="icon-tag"></i> Timeout</label>
+      <input type="text" id="node-input-timeout" placeholder="dtmf timeout in secs">
+    </div>
+  </div>
+
+</fieldset>
+
+
+<fieldset>
+  <legend>Prompt</legend>
+  <div class="form-row">
+    <label for="node-input-prompttype"><i class="icon-tag"></i> Verb</label>
+    <select id="node-input-prompttype">
+      <option>play</option>
+      <option selected>say</option>
+    </select>
+  </div>
+
+  <!-- say -->
+  <div id="say-container">
+    <div class="form-row">
+      <label for="node-input-text"><i class="icon-tag"></i> Text</label>
+      <textarea id="node-input-text" rows="4" placeholder="Text or SSML to speak" style="width:70%"></textarea>
+    </div>
+    <div class="form-row">
+      <label for="node-input-vendor"><i class="icon-tag"></i> Vendor</label>
+      <select id="node-input-vendor">
+        <option value="default" selected>--application default--</option>
+        <option value="google">google</option>
+        <option value="aws">aws/polly</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-lang"><i class="icon-tag"></i> Language</label>
+      <select id="node-input-lang">
+        <option value="default" selected>--application default--</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-voice"><i class="icon-tag"></i> Voice</label>
+      <select id="node-input-voice">
+        <option value="default" selected>--application default--</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- play -->
+  <div id="play-container">
+    <div class="form-row">
+      <label for="node-input-playurl"><i class="icon-tag"></i> Timeout</label>
+      <input type="text" id="node-input-playurl" placeholder="url of file to play">
+    </div>
+  </div>
+
+
+</fieldset>
+
+
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('gather',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        actionhook: {value: ''},
+        finishonkey: {value: ''},
+        dtmfinput: {value: 0},
+        speechinput: {value: 1},
+        numdigits: {value: ''},
+        timeout: {value: ''},
+
+        prompttype: {value: 'say'},
+
+        // play
+        playurl: {value: ''},
+
+        // say
+        text: {value: ''},
+        vendor: {value: 'default'},
+        lang: {value: 'default'},
+        voice: {value: 'default'},
+
+        // recognizer
+        recognizerlang: {value: 'default'},
+        recognizerhints: {value: ''}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'gather';},
+      oneditprepare: function() {
+        buildGatherPanel(this);
+      }
+  });
+</script>
+
+
+
+<script type="text/html" data-help-name="gather">
+  <p>Collect speech or dtmf input from the caller</p>
+</script>
+
+<script type="text/javascript">
+  "use strict";
+
+
+  function buildGatherPanel(node) {
+    var vendorElem = $('#node-input-vendor');
+    var langElem = $('#node-input-lang');
+    var voiceElem = $('#node-input-voice');
+    var recLangElem = $('#node-input-recognizerlang');
+  
+    var onVendorChanged = function() {
+      var vendor = vendorElem.find(':selected').val();
+
+      console.log(`vendor changed to ${vendor}`);
+      setLanguage(vendor);
+    }
+
+    var onLangChanged = function () {
+      var vendor = vendorElem.find(':selected').val();
+      var lang = langElem.find(':selected').val();
+      console.log(`language changed to ${lang}`);
+      setVoice(vendor, lang)
+    }
+  
+    var setLanguage = function(v) {
+      langElem.find('option').remove();
+      voiceElem.find('option').remove();
+
+      switch (v) {
+        case 'default': 
+          langElem.append('<option value="default" selected>--application default--</option>');
+          voiceElem.append('<option value="default" selected>--application default--</option>');
+          node.lang = 'default';
+          node.voice = 'default';
+          break;
+
+        case 'google':
+          langElem.append(googleLanguageOptions);
+          break;
+
+        case 'aws':
+          langElem.append(awsLanguageOptions);
+          break;
+      }
+      langElem.val(node.lang);
+    }
+
+    var setVoice = function(vendor, lang) {
+      console.log(`gather: set voice for language ${lang} vendor ${vendor}`);
+      voiceElem.find('option').remove();
+
+      switch (vendor) {
+        case 'default':
+          voiceElem.append('<option value="default" selected>--application default--</option>');
+          break;
+
+        case 'google':
+        case 'aws':
+          var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
+          if (obj) {
+            var options = '';
+            for (var i = 0; i < obj.voices.length; i++) {
+              if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+              else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+            }
+            voiceElem.append(options);
+          }
+          break;
+      }
+      voiceElem.val(node.voice);
+    }
+
+    var setTranscriptionLanguage = function() {
+      console.log(`settring transcription languages: ${speechRecOptions}`);
+      recLangElem.find('option').remove();
+      recLangElem.append('<option value="default">--application default--</option>');
+      recLangElem.append(speechRecOptions);
+    }
+
+    var enableSpeech = function(enabled) {
+      console.log(`enable speech: ${enabled}`);
+      if (enabled) $('#speech-input-container').show();
+      else $('#speech-input-container').hide();
+    }
+    var enableDtmf = function(enabled) {
+      console.log(`enable dtmf: ${enabled}`);
+      if (enabled) $('#dtmf-input-container').show();
+      else $('#dtmf-input-container').hide();          
+    }
+
+    $('#node-input-speechinput').change(function() {
+      var doSpeech = $('#node-input-speechinput:checked').val();
+      enableSpeech(doSpeech);
+    });
+    $('#node-input-dtmfinput').change(function() {
+      var doDtmf = $('#node-input-dtmfinput:checked').val();
+      enableDtmf(doDtmf);
+    });
+
+    var onSayPlayChanged = function () {
+      var type = $('#node-input-prompttype').find(':selected').val();
+      console.log(`prompt type changed to ${type}`);
+      if (type === 'say') {
+        $('#say-container').show();
+        $('#play-container').hide();
+      }
+      else {
+        $('#play-container').show();
+        $('#say-container').hide();
+      }
+    }
+
+    setTranscriptionLanguage();
+    recLangElem.val(node.recognizerlang);
+
+    vendorElem.change(onVendorChanged);
+    langElem.change(onLangChanged);
+
+    $('#node-input-prompttype').change(onSayPlayChanged);
+  }
+
+
+</script>

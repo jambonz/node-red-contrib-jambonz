@@ -1,0 +1,27 @@
+{
+  "name": "node-red-contrib-jambonz",
+  "version": "1.0.0",
+  "description": "",
+  "node-red": {
+    "nodes": {
+      "s3:upload": "src/nodes/s3-upload.js",
+      "dequeue": "src/nodes/dequeue.js",
+      "dial": "src/nodes/dial.js",
+      "enqueue": "src/nodes/enqueue.js",
+      "gather": "src/nodes/gather.js",
+      "hangup": "src/nodes/hangup.js",
+      "leave": "src/nodes/leave.js",
+      "pause": "src/nodes/pause.js",
+      "play": "src/nodes/play.js",
+      "say": "src/nodes/say.js",
+      "sip:decline": "src/nodes/sip-decline.js"
+    }
+  },
+  "author": "Dave Horton",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.666.0",
+    "s3-upload-stream": "^1.0.7",
+    "ws": "^7.2.5"
+  }
+}

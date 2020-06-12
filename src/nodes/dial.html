@@ -1,0 +1,345 @@
+<script type="text/html" data-template-name="dial">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+
+  <div class="form-row" style="margin-bottom:0;">
+    <label><i class="fa fa-list"></i> <span>Dial Targets</span></label>
+  </div>
+  <div class="form-row node-input-target-container-row">
+      <ol id="node-input-target-container"></ol>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-actionhook"><i class="icon-tag"></i> Action hook</label>
+    <input type="text" id="node-input-actionhook" placeholder="webhook to invoke when the call ends">
+  </div>
+  <div class="form-row">
+    <label for="node-input-answeronbridge"><i class="icon-tag"></i>Answer on bridge</label>
+    <input type="checkbox" id="node-input-answeronbridge">
+  </div>
+  <div class="form-row">
+    <label for="node-input-callerid"><i class="icon-tag"></i> Caller ID</label>
+    <input type="text" id="node-input-callerid" placeholder="Caller ID to place on outbound call">
+  </div>
+  <div class="form-row">
+    <label for="node-input-confirmhook"><i class="icon-tag"></i> Confirm hook</label>
+    <input type="text" id="node-input-confirmhook" placeholder="webhook to run on called party after answer">
+  </div>
+  <div class="form-row">
+    <label for="node-input-dialmusic"><i class="icon-tag"></i> Dial music</label>
+    <input type="text" id="node-input-dialmusic" placeholder="url to .wav or .mp3 file to play during dial">
+  </div>
+  <div class="form-row">
+    <label for="node-input-dtmfcapture"><i class="icon-tag"></i> Dtmf capture</label>
+    <input type="text" id="node-input-dtmfcapture" placeholder="comma-separated list of dtmf captures">
+  </div>
+  <div class="form-row">
+    <label for="node-input-dtmfhook"><i class="icon-tag"></i> Dtmf hook</label>
+    <input type="text" id="node-input-dtmfhook" placeholder="webhook to call when dtmf is captured">
+  </div>
+  <div class="form-row">
+    <label for="node-input-timelimit"><i class="icon-tag"></i> Time limit</label>
+    <input type="text" id="node-input-timelimit" placeholder="max duration of call in secs">
+  </div>
+  <div class="form-row">
+    <label for="node-input-timeout"><i class="icon-tag"></i> Timeout</label>
+    <input type="text" id="node-input-timeout" placeholder="ring no answer timeout in secs (default: 60)">
+  </div>
+  <fieldset>
+    <legend>Live audio</legend>
+    <div class="form-row">
+      <label for="node-input-listenurl"><i class="icon-tag"></i> Websocket server url</label>
+      <input type="text" id="node-input-listenurl" placeholder="ws://example.com">
+    </div>
+  </fieldset>
+  <fieldset>
+      <legend>Transcription</legend>
+      <div class="form-row">
+        <label for="node-input-transcribeurl"><i class="icon-tag"></i> Transcription hook</label>
+        <input type="text" id="node-input-transcribeurl" placeholder="webhook to call with transcriptions">
+      </div>
+      <div class="form-row">
+        <label for="node-input-transcribelang"><i class="icon-tag"></i> Language</label>
+        <input type="text" id="node-input-transcribelang" placeholder="en-US">
+      </div>
+      <div class="form-row">
+        <label for="node-input-interim"><i class="icon-tag"></i>Send interim transcriptions</label>
+        <input type="checkbox" id="node-input-interim">
+      </div>          
+    </fieldset>
+    <fieldset>
+      <legend>SIP Headers</legend>
+      <div class="form-row" style="margin-bottom:0;">
+        <label style="width:100%"><i class="fa fa-list"></i> <span>Add custom headers on outdial</span></label>
+      </div>
+      <div class="form-row node-input-headers-container-row">
+          <ol id="node-input-headers-container"></ol>
+      </div>
+    </fieldset>
+  
+  </div>
+</script>
+
+<script type="text/html" data-help-name="dial">
+  <p>Dial out to a phone number, registered user, or sip endpoint</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('dial',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        targets:{
+          value:[
+            {
+              type: 'phone',
+              number: '',
+              name: '',
+              sipUri: '',
+              user: '',
+              pass: ''
+            }
+          ]
+        },
+        headers: {
+          value: []
+        },
+        actionhook: {value: ''},
+        answeronbridge: {value: false},
+        callerid: {value: ''},
+        confirmhook: {value: ''},
+        dialmusic: {value: ''},
+        dtmfcapture: {value: ''},
+        dtmfhook: {value: ''},
+        timelimit: {validate:RED.validators.regex(/^\d*$/) },
+        timeout: {validate:RED.validators.regex(/^\d*$/) },
+        listenurl: {value: ''},
+        transcribeurl: {value: ''},
+        interim: {value: false},
+        transcribelang: {value: 'en-US', require: true}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'dial';},
+      oneditprepare: function() {
+
+        // populate targets editable list
+        $('#node-input-target-container').css('min-height','180px').css('min-width','450px').editableList({
+          addItem: function(container, i, opt) {
+            var target = opt;
+            console.log(`addItem: ${JSON.stringify(opt)}`);
+            if (!target.hasOwnProperty('type')) {
+                target = {type: 'phone', number: ''};
+            }
+            container.css({
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            });
+            let fragment = document.createDocumentFragment();
+            var row1 = $('<div/>',{style:"display:flex;"}).appendTo(fragment);
+            var row2 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
+            var row3 = $('<div/>',{style:"margin-top:8px;"}).appendTo(fragment);
+            var row4 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
+
+            var selectField = $('<select/>',{class:"node-input-target-type",style:"width:110px; margin-right:10px;"}).appendTo(row1);
+            var selectOptions = ['phone', 'user', 'sipUri', 'teams'];
+            for (var i = 0; i < 4; i++) {
+                selectField.append($("<option></option>").val(selectOptions[i]).text(selectOptions[i]));
+            }
+            selectField.val('phone');
+
+            $('<input/>', {
+              class:"node-input-target-property-name", 
+              type:"text", 
+              placeholder: 'number to dial'
+            })
+              .appendTo(row1);
+
+            $('<label style="padding-top:8px; padding-right:20px">Auth Username:</label>')
+              .appendTo(row2);
+
+            $('<input/>',{
+              class:"node-input-target-property-authuser", 
+              type:"text", 
+              placeholder: '(if required by remote endpoint)'
+            })
+              .appendTo(row2);
+
+            $('<label style="padding-top:8px; padding-right:20px">Auth Password:</label>')
+              .appendTo(row3);
+            $('<input/>',{
+              class:"node-input-target-property-authpassword", 
+              type:"text", 
+              placeholder: '(if required by remote endpoint)'
+            })
+              .appendTo(row3);
+            
+            selectField.on("change", function() {
+              var type = $(this).val();
+              var input = $(this).parent().find('input.node-input-target-property-name');
+              input.focus();
+              switch (type) {
+                case 'phone': 
+                  input.attr('placeholder', 'E.164 number to dial');
+                  break;
+                case 'teams':
+                  input.attr('placeholder', 'MS teams phone number or extension');
+                  break;
+                case 'user': 
+                  input.attr('placeholder', 'user@domain');
+                  break;
+                case 'sipUri': 
+                  input.attr('placeholder', 'sip:number@ip-address');
+                  break;
+              }
+              if (type !== 'sipUri') {
+                row2.hide();
+                row3.hide();
+              }
+              else {
+                row2.show();
+                row3.show();
+              }
+            });
+            selectField.val(target.type);
+            var datafield = row1.find(".node-input-target-property-name");
+            var userfield = row2.find(".node-input-target-property-authuser");
+            var passfield = row3.find(".node-input-target-property-authpassword");
+
+            switch (target.type) {
+              case 'phone': 
+              case 'teams':
+                datafield.val(target.number);
+                break;
+              case 'user': 
+                datafield.val(target.name);
+                break;
+              case 'sipUri': 
+                datafield.val(target.sipUri);
+                userfield.val(target.user);
+                passfield.val(target.pass);
+                break;
+            }
+            selectField.change();
+            container[0].appendChild(fragment);
+          },
+          removable: true,
+          addButton: 'add target'
+        });
+        console.log(`oneditprepare: coming in with targets: ${JSON.stringify(this.targets)}`);
+        if (!this.targets || this.targets.length === 0) {
+          var target = {
+            type: 'phone',
+            number: '',
+          };
+
+          this.targets = [target];
+        }
+
+        for (var i=0; i < this.targets.length; i++) {
+            var target = this.targets[i];
+            $("#node-input-target-container").editableList('addItem', target);
+        }
+
+        // populate headers editable list
+        $('#node-input-headers-container').css('min-height','120px').css('min-width','450px').editableList({
+          addItem: function(container, i, opt) {
+            var header = opt;
+            if (!header.hasOwnProperty('h')) {
+                header = {h: '', v: ''};
+            }
+            container.css({
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            });
+            let fragment = document.createDocumentFragment();
+            var row1 = $('<div/>',{style:"display:flex;"}).appendTo(fragment);
+            $('<input/>', {
+              class:"node-input-header-property-name", 
+              type:"text", 
+              placeholder: 'SIP Header'
+            })
+              .appendTo(row1);
+            $('<input/>', {
+              class:"node-input-value-property-name", 
+              type:"text", 
+              placeholder: 'value'
+            })
+              .appendTo(row1);
+
+            row1.find('.node-input-header-property-name').val(header.h);
+            row1.find('.node-input-value-property-name').val(header.v);
+
+            container[0].appendChild(fragment);
+          },
+          removable: true
+        });
+
+        console.log(`oneditprepare: coming in with headers: ${JSON.stringify(this.headers)}`);
+        if (!this.headers) {
+          var header = {
+            h: '',
+            v: '',
+          };
+
+          this.headers = [header];
+        }
+
+        for (var i=0; i < this.headers.length; i++) {
+            var header = this.headers[i];
+            $("#node-input-headers-container").editableList('addItem', header);
+        }
+      },
+      oneditsave: function() {
+        var targets = $("#node-input-target-container").editableList('items');
+        var node = this;
+        node.targets= [];
+        console.log(`entering oneditsave with ${targets.length} targets`);
+        console.log(`entering oneditsave with ${JSON.stringify(node)}`);
+        targets.each(function(i) {
+          var target = $(this);
+          var type = target.find(".node-input-target-type").val();
+          var data = target.find(".node-input-target-property-name").val();
+          var user = target.find(".node-input-target-property-authuser").val();
+          var pass = target.find(".node-input-target-property-authpassword").val();
+          if (!['phone', 'user', 'sipUri', 'teams'].includes(type) || 0 === data.length) return;
+
+          var t = {type};
+          switch (type) {
+            case 'phone':
+            case 'teams':
+              t.number = data;
+              break;
+            case 'user':
+              t.name = data;
+              break;
+            case 'sipUri': 
+            t.sipUri = data;
+            if (user.length > 0 && pass.length > 0) {
+              Object.assign(t, {user, pass});
+            }
+          }
+          node.targets.push(t);
+        });
+        console.log(`saved targets ${JSON.stringify(node.targets)}`);
+
+        node.headers = [];
+        var headers = $("#node-input-headers-container").editableList('items');
+        headers.each(function(i) {
+          var header = $(this);
+          console.log(`header: ${JSON.stringify(header)}`);
+          var h = header.find(".node-input-header-property-name").val();
+          var v = header.find(".node-input-value-property-name").val();
+          console.log(`added ${h}: ${v}`);
+          var obj = {};
+          obj[h] = v;
+          node.headers.push({h, v});
+        });
+        console.log(`saved headers ${JSON.stringify(node.headers)}`);
+      },
+    });
+</script>

@@ -1,0 +1,39 @@
+<script type="text/javascript">
+  RED.nodes.registerType('enqueue',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        queuename: {value: '', required: true},
+        actionhook: {value: ''},
+        waithook: {value: ''}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'enqueue';},
+  });
+</script>
+
+<script type="text/html" data-template-name="enqueue">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-queuename"><i class="icon-tag"></i> Queue</label>
+    <input type="text" id="node-input-queuename" placeholder="Queue name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-actionhook"><i class="icon-tag"></i> Action hook</label>
+    <input type="text" id="node-input-actionhook" placeholder="webhook to call with results">
+  </div>
+  <div class="form-row">
+    <label for="node-input-waithook"><i class="icon-tag"></i> Wait hook</label>
+    <input type="text" id="node-input-waithook" placeholder="webhook for url to play while waiting">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="enqueue">
+  <p>Put a caller in queue</p>
+</script>
