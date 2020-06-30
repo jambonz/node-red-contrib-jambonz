@@ -11,7 +11,7 @@
 
   var googleUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/googleTts';
   $.getJSON(googleUrl, function (data) {
-    console.log('retrieved data ' + JSON.stringify(data));
+    //console.log('retrieved data ' + JSON.stringify(data));
     data.forEach(function(l) {
       mapGoogle[l.code] = {
         name: l.name,
@@ -22,7 +22,7 @@
   });
   var awsUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/awsTts';
   $.getJSON(awsUrl, function (data) {
-    console.log('retrieved data ' + JSON.stringify(data));
+    //console.log('retrieved data ' + JSON.stringify(data));
     data.forEach(function(l) {
       mapAws[l.code] = {
         name: l.name,
@@ -33,226 +33,13 @@
   });
   var speechRecUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/googleSpeech';
     $.getJSON(speechRecUrl, function (data) {
-      console.log('retrieved data for recognizer voices: ' + JSON.stringify(data));
+      //console.log('retrieved data for recognizer voices: ' + JSON.stringify(data));
       data.forEach(function(l) {
         mapSpeechRec[l.code] = l.name;
         speechRecOptions += `<option value="${l.code}">${l.name}</option>`;        
       });
     });
 
-  function buildEditPanel(node) {
-    var vendorElem = $('#node-input-vendor');
-    var langElem = $('#node-input-lang');
-    var voiceElem = $('#node-input-voice');
-  
-    var onVendorChanged = function() {
-      var vendor = vendorElem.find(':selected').val();
-
-      console.log(`vendor changed to ${vendor}`);
-      setLanguage(vendor);
-    }
-
-    var onLangChanged = function () {
-      var vendor = vendorElem.find(':selected').val();
-      var lang = langElem.find(':selected').val();
-      console.log(`language changed to ${lang}`);
-      setVoice(vendor, lang)
-    }
-  
-    var setLanguage = function(v) {
-      langElem.find('option').remove();
-      voiceElem.find('option').remove();
-
-      switch (v) {
-        case 'default': 
-          langElem.append('<option value="default" selected>--application default--</option>');
-          voiceElem.append('<option value="default" selected>--application default--</option>');
-          node.lang = 'default';
-          node.voice = 'default';
-          break;
-
-        case 'google':
-          langElem.append(googleLanguageOptions);
-          break;
-
-        case 'aws':
-          langElem.append(awsLanguageOptions);
-          break;
-      }
-      langElem.val(node.lang);
-    }
-
-    var setVoice = function(vendor, lang) {
-      console.log(`set voice for language ${lang} vendor ${vendor}`);
-      voiceElem.find('option').remove();
-
-      switch (vendor) {
-        case 'default':
-          voiceElem.append('<option value="default" selected>--application default--</option>');
-          break;
-
-        case 'google':
-        case 'aws':
-          var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
-          if (obj) {
-            var options = '';
-            for (var i = 0; i < obj.voices.length; i++) {
-              if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-              else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-            }
-            voiceElem.append(options);
-          }
-          break;
-      }
-      voiceElem.val(node.voice);
-    }
-
-    vendorElem.change(onVendorChanged);
-    langElem.change(onLangChanged);
-  }
-
-  function buildTranscribePanel(node) {
-    $('#node-input-transcriptionhook').typedInput({
-      types: ['str', 'msg', 'flow', 'global'],
-      typeField: $('#node-input-transcriptionhookType')
-    });
-    var recLangElem = $('#node-input-recognizerlang');
-
-    var setTranscriptionLanguage = function() {
-      console.log(`setting transcription languages: ${speechRecOptions}`);
-      recLangElem.find('option').remove();
-      recLangElem.append('<option value="default">--application default--</option>');
-      recLangElem.append(speechRecOptions);
-    }
-    setTranscriptionLanguage();
-    recLangElem.val(node.recognizerlang);
-  }
-
-  function buildGatherPanel(node) {
-    $('#node-input-playurl').typedInput({
-      types: ['str', 'msg', 'flow', 'global'],
-      typeField: $('#node-input-playurlType')
-    });
-    $('#node-input-recognizerhints').typedInput({
-      types: ['str', 'msg', 'flow', 'global'],
-      typeField: $('#node-input-recognizerhintsType')
-    });
-
-    var vendorElem = $('#node-input-vendor');
-    var langElem = $('#node-input-lang');
-    var voiceElem = $('#node-input-voice');
-    var recLangElem = $('#node-input-recognizerlang');
-  
-    var onVendorChanged = function() {
-      var vendor = vendorElem.find(':selected').val();
-
-      console.log(`vendor changed to ${vendor}`);
-      setLanguage(vendor);
-    }
-
-    var onLangChanged = function () {
-      var vendor = vendorElem.find(':selected').val();
-      var lang = langElem.find(':selected').val();
-      console.log(`language changed to ${lang}`);
-      setVoice(vendor, lang)
-    }
-  
-    var setLanguage = function(v) {
-      langElem.find('option').remove();
-      voiceElem.find('option').remove();
-
-      switch (v) {
-        case 'default': 
-          langElem.append('<option value="default" selected>--application default--</option>');
-          voiceElem.append('<option value="default" selected>--application default--</option>');
-          node.lang = 'default';
-          node.voice = 'default';
-          break;
-
-        case 'google':
-          langElem.append(googleLanguageOptions);
-          break;
-
-        case 'aws':
-          langElem.append(awsLanguageOptions);
-          break;
-      }
-      langElem.val(node.lang);
-    }
-
-    var setVoice = function(vendor, lang) {
-      console.log(`gather: set voice for language ${lang} vendor ${vendor}`);
-      voiceElem.find('option').remove();
-
-      switch (vendor) {
-        case 'default':
-          voiceElem.append('<option value="default" selected>--application default--</option>');
-          break;
-
-        case 'google':
-        case 'aws':
-          var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
-          if (obj) {
-            var options = '';
-            for (var i = 0; i < obj.voices.length; i++) {
-              if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-              else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-            }
-            voiceElem.append(options);
-          }
-          break;
-      }
-      voiceElem.val(node.voice);
-    }
-
-    var setTranscriptionLanguage = function() {
-      console.log(`settring transcription languages: ${speechRecOptions}`);
-      recLangElem.find('option').remove();
-      recLangElem.append('<option value="default">--application default--</option>');
-      recLangElem.append(speechRecOptions);
-    }
-
-    var enableSpeech = function(enabled) {
-      console.log(`enable speech: ${enabled}`);
-      if (enabled) $('#speech-input-container').show();
-      else $('#speech-input-container').hide();
-    }
-    var enableDtmf = function(enabled) {
-      console.log(`enable dtmf: ${enabled}`);
-      if (enabled) $('#dtmf-input-container').show();
-      else $('#dtmf-input-container').hide();          
-    }
-
-    $('#node-input-speechinput').change(function() {
-      var doSpeech = $('#node-input-speechinput:checked').val();
-      enableSpeech(doSpeech);
-    });
-    $('#node-input-dtmfinput').change(function() {
-      var doDtmf = $('#node-input-dtmfinput:checked').val();
-      enableDtmf(doDtmf);
-    });
-
-    var onSayPlayChanged = function () {
-      var type = $('#node-input-prompttype').find(':selected').val();
-      console.log(`prompt type changed to ${type}`);
-      if (type === 'say') {
-        $('#say-container').show();
-        $('#play-container').hide();
-      }
-      else {
-        $('#play-container').show();
-        $('#say-container').hide();
-      }
-    }
-
-    setTranscriptionLanguage();
-    recLangElem.val(node.recognizerlang);
-
-    vendorElem.change(onVendorChanged);
-    langElem.change(onLangChanged);
-
-    $('#node-input-prompttype').change(onSayPlayChanged);
-  }
 </script>
 
 <!-- user auth -->
@@ -1041,7 +828,129 @@ The enqueue command is used to place a caller in a queue.
       icon: "file.png",
       label: function() { return this.name || 'gather';},
       oneditprepare: function() {
-        buildGatherPanel(this);
+        $('#node-input-playurl').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-playurlType')
+        });
+        $('#node-input-recognizerhints').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-recognizerhintsType')
+        });
+
+        var vendorElem = $('#node-input-vendor');
+        var langElem = $('#node-input-lang');
+        var voiceElem = $('#node-input-voice');
+        var recLangElem = $('#node-input-recognizerlang');
+      
+        var onVendorChanged = function() {
+          var vendor = vendorElem.find(':selected').val();
+
+          console.log(`vendor changed to ${vendor}`);
+          setLanguage(vendor);
+        }
+
+        var onLangChanged = function () {
+          var vendor = vendorElem.find(':selected').val();
+          var lang = langElem.find(':selected').val();
+          console.log(`language changed to ${lang}`);
+          setVoice(vendor, lang)
+        }
+      
+        var setLanguage = function(v) {
+          langElem.find('option').remove();
+          voiceElem.find('option').remove();
+
+          switch (v) {
+            case 'default': 
+              langElem.append('<option value="default" selected>--application default--</option>');
+              voiceElem.append('<option value="default" selected>--application default--</option>');
+              this.lang = 'default';
+              this.voice = 'default';
+              break;
+
+            case 'google':
+              langElem.append(googleLanguageOptions);
+              break;
+
+            case 'aws':
+              langElem.append(awsLanguageOptions);
+              break;
+          }
+          langElem.val(this.lang);
+        }
+
+        var setVoice = function(vendor, lang) {
+          console.log(`gather: set voice for language ${lang} vendor ${vendor}`);
+          voiceElem.find('option').remove();
+
+          switch (vendor) {
+            case 'default':
+              voiceElem.append('<option value="default" selected>--application default--</option>');
+              break;
+
+            case 'google':
+            case 'aws':
+              var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
+              if (obj) {
+                var options = '';
+                for (var i = 0; i < obj.voices.length; i++) {
+                  if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+                  else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+                }
+                voiceElem.append(options);
+              }
+              break;
+          }
+          voiceElem.val(this.voice);
+        }
+
+        var setTranscriptionLanguage = function() {
+          console.log(`settring transcription languages: ${speechRecOptions}`);
+          recLangElem.find('option').remove();
+          recLangElem.append('<option value="default">--application default--</option>');
+          recLangElem.append(speechRecOptions);
+        }
+
+        var enableSpeech = function(enabled) {
+          console.log(`enable speech: ${enabled}`);
+          if (enabled) $('#speech-input-container').show();
+          else $('#speech-input-container').hide();
+        }
+        var enableDtmf = function(enabled) {
+          console.log(`enable dtmf: ${enabled}`);
+          if (enabled) $('#dtmf-input-container').show();
+          else $('#dtmf-input-container').hide();          
+        }
+
+        $('#node-input-speechinput').change(function() {
+          var doSpeech = $('#node-input-speechinput:checked').val();
+          enableSpeech(doSpeech);
+        });
+        $('#node-input-dtmfinput').change(function() {
+          var doDtmf = $('#node-input-dtmfinput:checked').val();
+          enableDtmf(doDtmf);
+        });
+
+        var onSayPlayChanged = function () {
+          var type = $('#node-input-prompttype').find(':selected').val();
+          console.log(`prompt type changed to ${type}`);
+          if (type === 'say') {
+            $('#say-container').show();
+            $('#play-container').hide();
+          }
+          else {
+            $('#play-container').show();
+            $('#say-container').hide();
+          }
+        }
+
+        setTranscriptionLanguage();
+        recLangElem.val(this.recognizerlang);
+
+        vendorElem.change(onVendorChanged);
+        langElem.change(onLangChanged);
+
+        $('#node-input-prompttype').change(onSayPlayChanged);
       }
   });
 </script>
@@ -1311,7 +1220,20 @@ The leave verb transfers a call out of a queue. The call then returns to the flo
           typeField: $('#node-input-transcriptionhookType')
         });
  
-        buildTranscribePanel(this);
+        $('#node-input-transcriptionhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-transcriptionhookType')
+        });
+        var recLangElem = $('#node-input-recognizerlang');
+
+        var setTranscriptionLanguage = function() {
+          //console.log(`setting transcription languages: ${speechRecOptions}`);
+          recLangElem.find('option').remove();
+          recLangElem.append('<option value="default">--application default--</option>');
+          recLangElem.append(speechRecOptions);
+        }
+        setTranscriptionLanguage();
+        recLangElem.val(this.recognizerlang);
       }
   });
 </script>
@@ -1356,7 +1278,7 @@ The leave verb transfers a call out of a queue. The call then returns to the flo
   </div>
   <div class="form-row">
     <label for="node-input-beep">Beep</label>
-    <input type="checkbox" id="node-input-finishonkey">
+    <input type="checkbox" id="node-input-beep">
   </div>
   <div class="form-row">
     <label for="node-input-mixtype">Mix Type</label>
@@ -1686,7 +1608,76 @@ The redirect verb retrieves a new URL to execute for the current call.
       outputs:1,
       icon: "file.png",
       label: function() { return this.name || 'say';},
-      oneditprepare: function() {buildEditPanel(this);}
+      oneditprepare: function() {
+        var vendorElem = $('#node-input-vendor');
+        var langElem = $('#node-input-lang');
+        var voiceElem = $('#node-input-voice');
+      
+        var onVendorChanged = function() {
+          var vendor = vendorElem.find(':selected').val();
+
+          console.log(`vendor changed to ${vendor}`);
+          setLanguage(vendor);
+        }
+
+        var onLangChanged = function () {
+          var vendor = vendorElem.find(':selected').val();
+          var lang = langElem.find(':selected').val();
+          console.log(`language changed to ${lang}`);
+          setVoice(vendor, lang)
+        }
+      
+        var setLanguage = function(v) {
+          langElem.find('option').remove();
+          voiceElem.find('option').remove();
+
+          switch (v) {
+            case 'default': 
+              langElem.append('<option value="default" selected>--application default--</option>');
+              voiceElem.append('<option value="default" selected>--application default--</option>');
+              this.lang = 'default';
+              this.voice = 'default';
+              break;
+
+            case 'google':
+              langElem.append(googleLanguageOptions);
+              break;
+
+            case 'aws':
+              langElem.append(awsLanguageOptions);
+              break;
+          }
+          langElem.val(this.lang);
+        }
+
+        var setVoice = function(vendor, lang) {
+          console.log(`set voice for language ${lang} vendor ${vendor}`);
+          voiceElem.find('option').remove();
+
+          switch (vendor) {
+            case 'default':
+              voiceElem.append('<option value="default" selected>--application default--</option>');
+              break;
+
+            case 'google':
+            case 'aws':
+              var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
+              if (obj) {
+                var options = '';
+                for (var i = 0; i < obj.voices.length; i++) {
+                  if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+                  else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+                }
+                voiceElem.append(options);
+              }
+              break;
+          }
+          voiceElem.val(this.voice);
+        }
+
+        vendorElem.change(onVendorChanged);
+        langElem.change(onLangChanged);
+      }
   });
 </script>
 
