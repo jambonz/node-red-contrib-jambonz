@@ -37,26 +37,26 @@ module.exports = function(RED) {
           ha1_string,
           auth.nonce
         ];
-  
+
         if (auth.cnonce) {
           responseParams.push(auth.nc);
           responseParams.push(auth.cnonce);
         }
-  
+
         if (auth.qop) {
           responseParams.push(auth.qop);
         }
-  
+
         responseParams.push(ha2.digest('hex'));
         response.update(responseParams.join(':'));
-  
+
         var calculated = response.digest('hex');
         if (calculated === auth.response) {
           Object.assign(authResponse, {status: 'ok'});
         }
         else {
           Object.assign(authResponse, {status: 'fail', msg: 'incorrect password'});
-        }  
+        }
       }
       else {
         Object.assign(authResponse, {status: 'fail', msg: 'invalid domain or username'});
