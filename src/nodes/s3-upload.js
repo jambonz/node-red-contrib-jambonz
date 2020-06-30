@@ -1,9 +1,8 @@
 module.exports = function(RED) {
-  "use strict";
   var WebSocket = require('ws');
   var url = require('url');
-  let AWS      = require('aws-sdk') ;
-  let S3Stream = require('s3-upload-stream');
+  var AWS      = require('aws-sdk') ;
+  var S3Stream = require('s3-upload-stream');
 
 
   var serverUpgradeAdded = false;
@@ -35,22 +34,22 @@ module.exports = function(RED) {
       'accesskey',
       'secret'
     ].forEach(function(attr) { node[attr] = n[attr];});
-    
+
     node._clients = {};
     node.closing = false;
 
     function handleConnection(/*socket*/socket) {
-      var id = (1+Math.random()*4294967295).toString(16);
+      var id = (1 + Math.random() * 4294967295).toString(16);
       node._clients[id] = socket;
-      node.emit('opened',{count: Object.keys(node._clients).length, id:id});
-      socket.on('open',function() {
-        node.emit('opened',{count:'',id:id});
+      node.emit('opened', {count: Object.keys(node._clients).length, id:id});
+      socket.on('open', function() {
+        node.emit('opened', {count:'', id:id});
       });
-      socket.on('close',function() {
+      socket.on('close', function() {
         delete node._clients[id];
-        node.emit('closed',{count:Object.keys(node._clients).length,id:id});
+        node.emit('closed', {count:Object.keys(node._clients).length,id:id});
       });
-      socket.on('message',function(data) {
+      socket.on('message', function(data) {
         // first message is a JSON object containing metadata
         try {
           socket.removeAllListeners('message');
@@ -76,10 +75,10 @@ module.exports = function(RED) {
           upload.on('error', function(err) {
             node.log(`Error uploading: ${JSON.stringify(err)}`);
           });
-          upload.on('part', function (details) {
+          upload.on('part', function(details) {
             node.log(`part: ${JSON.stringify(details)}`);
           });
-          upload.on('uploaded', function (details) {
+          upload.on('uploaded', function(details) {
             node.log(`uploaded: ${JSON.stringify(details)}`);
           });
           const duplex = WebSocket.createWebSocketStream(socket);
@@ -89,21 +88,23 @@ module.exports = function(RED) {
         }
       });
       socket.on('error', function(err) {
-        node.emit('error',{err:err,id:id});
+        node.emit('error', {err:err, id:id});
       });
     }
 
     if (!serverUpgradeAdded) {
       RED.server.on('upgrade', handleServerUpgrade);
-      serverUpgradeAdded = true
+      serverUpgradeAdded = true;
     }
 
-    var path = RED.settings.httpNodeRoot || "/";
-    path = path + (path.slice(-1) == "/" ? "":"/") + (node.path.charAt(0) == "/" ? node.path.substring(1) : node.path);
+    var path = RED.settings.httpNodeRoot || '/';
+    path = path + (path.slice(-1) == '/' ? '' : '/') + (node.path.charAt(0) == '/' ?
+      node.path.substring(1) :
+      node.path);
     node.fullPath = path;
 
     if (listenerNodes.hasOwnProperty(path)) {
-      node.error(RED._("websocket.errors.duplicate-path",{path: node.path}));
+      node.error(RED._('websocket.errors.duplicate-path', {path: node.path}));
       return;
     }
     listenerNodes[node.fullPath] = node;
@@ -118,10 +119,10 @@ module.exports = function(RED) {
     node.server.setMaxListeners(0);
     node.server.on('connection', handleConnection);
 
-    node.on("close", function() {
+    node.on('close', function() {
       delete listenerNodes[node.fullPath];
       node.server.close();
     });
   }
-  RED.nodes.registerType("audio in", WebSocketListenerNode);
+  RED.nodes.registerType('audio in', WebSocketListenerNode);
 }

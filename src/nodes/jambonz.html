@@ -1,0 +1,1951 @@
+<!-- user auth -->
+<script type="text/javascript">
+  RED.nodes.registerType('user auth',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        password: {},
+        passwordType: {},
+        ha1: {},
+        ha1Type: {}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'user auth';},
+      oneditprepare: function() {
+        $('#node-input-password').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-passwordType')
+        });
+        $('#node-input-ha1').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-ha1Type')
+        });
+      }
+  });
+</script>
+
+<script type="text/html" data-template-name="user auth">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <fieldset>
+    <legend>Enter either a plain-text or hashed password</legend>
+    <div class="form-row">
+      <label for="node-input-password">Plain text password</label>
+      <input type="text" id="node-input-password">
+      <input type="hidden" id="node-input-passwordType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-ha1">Hashed</label>
+      <input type="text" id="node-input-ha1">
+      <input type="hidden" id="node-input-ha1Type">
+    </div>
+  </fieldset>
+</script>
+
+<script type="text/html" data-help-name="user auth">
+  <p>Authenticate a user</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>authRequest<span class="property-type">object</span></dt>
+      <dd>The digest parameters provided by the user</dd>
+  </dl>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>authResponse<span class="property-type">object</span></dt>
+   <dd>An object containing a status property indicating whether the password provided has successfully authenticated the user</dd>
+</dl>
+
+<h3>Details</h3>
+The user auth command is used to authenticate a user based on the sip digest they presented and a password retrieved by some means by the application.
+You may provide either a plaintext password, or a precomputed hash based on <a href="https://tools.ietf.org/html/rfc2617">RFC 2617</a>, i.e. MD5( username ":" realm ":" password ).<br/><br/>
+It is valid to provide neither the plaintext nor hashed password, and in this case the user authentication will fail.  
+It is useful to do this, for instance, when either the presented domain or username are unrecognized.<br/><br/>
+The output of this node is to set <code>msg.authResponse</code> accordingly, and the <code>webhook out</code> node should then be used to send the result back to the jambonz server.
+<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/register-hook">Jambonz user authentication reference</a></li>
+  </ul>
+</script>
+
+<!-- conference -->
+<script type="text/javascript">
+  RED.nodes.registerType('conference',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        conference: {required: true, value: ''},
+        conferenceType: {value: 'str'},
+        beep: {value: false},
+        endConferenceOnExit: {value: false},
+        startConferenceOnEnter: {value: false},
+        maxParticipants: {},
+        maxParticipantsType: {value: 'num'},
+        enterHook: {},
+        enterHookType: {value: 'str'},
+        waitHook: {},
+        waitHookType: {value: 'str'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { 
+        return this.name || 'conference';
+      },
+      oneditprepare: function() {
+        $('#node-input-conference').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-conferenceType')
+        });
+        $('#node-input-enterHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-enterHookType')
+        });
+        $('#node-input-waitHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-waitHookType')
+        });
+        $('#node-input-maxParticipants').typedInput({
+          types: ['num', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-maxParticipantsType')
+        });
+      }
+  });
+</script>
+
+<script type="text/html" data-template-name="conference">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-conference">Conference Name</label>
+    <input type="text" id="node-input-conference" placeholder="conference to join">
+    <input type="hidden" id="node-input-conferenceType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-enterHook">Enter Hook</label>
+    <input type="text" id="node-input-enterHook" placeholder="webhook url">
+    <input type="hidden" id="node-input-enterHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-waitHook">Wait Hook</label>
+    <input type="text" id="node-input-waitHook" placeholder="webhook url">
+    <input type="hidden" id="node-input-waitHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-beep">Beep on entry</label>
+    <input type="checkbox" id="node-input-beep">
+  </div>
+  <div class="form-row">
+    <label for="node-input-startConferenceOnEntry">Start on entry</label>
+    <input type="checkbox" id="node-input-startConferenceOnEntry">
+  </div>
+  <div class="form-row">
+    <label for="node-input-endConferenceOnExit">End on exit</label>
+    <input type="checkbox" id="node-input-endConferenceOnExit">
+  </div>
+  <div class="form-row">
+    <label for="node-input-maxParticipants">Max Participants</label>
+    <input type="text" id="node-input-maxParticipants">
+    <input type="hidden" id="node-input-maxParticipantsType">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="conference">
+  <p>places a caller in a queue.</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>conference</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The conference verb places a call into a conference.
+<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/jambonz/#conference">Jambonz conference reference</a></li>
+  </ul>
+</script>
+
+<!-- dequeue -->
+<script type="text/javascript">
+  RED.nodes.registerType('dequeue',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        queue: {required: true, value: ''},
+        queueType: {value: 'str'},
+        actionHook: {},
+        actionHookType: {value: 'str'},
+        confirmHook: {},
+        confirmHookType: {value: 'str'},
+        beep: {value: false},
+        timeout: {},
+        timeoutType: {value: 'num'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { 
+        return this.name || 'dequeue';
+      },
+      oneditprepare: function() {
+        $('#node-input-queue').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-queueType')
+        });
+        $('#node-input-actionHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-actionHookType')
+        });
+        $('#node-input-confirmHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-confirmHookType')
+        });
+        $('#node-input-timeout').typedInput({
+          types: ['num', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-timeoutType')
+        });
+      }
+  });
+</script>
+
+<script type="text/html" data-template-name="dequeue">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-queue">Queue Name</label>
+    <input type="text" id="node-input-queue" placeholder="name of queue to remove caller from">
+    <input type="hidden" id="node-input-queueType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-beep">Play beep on connecting</label>
+    <input type="checkbox" id="node-input-beep">
+  </div>
+  <div class="form-row">
+    <label for="node-input-actionHook">Action Hook</label>
+    <input type="text" id="node-input-actionHook" placeholder="webhook url">
+    <input type="hidden" id="node-input-actionHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-confirmHook">Confirm Hook</label>
+    <input type="text" id="node-input-confirmHook" placeholder="webhook url">
+    <input type="hidden" id="node-input-confirmHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-timeout">Timeout</label>
+    <input type="text" id="node-input-timeout" placeholder="seconds to wait if queue is empty">
+    <input type="hidden" id="node-input-timeoutType">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="dequeue">
+  <p>removes the a call from the front of a queue and bridges that call to the current caller.</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>dequeue</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The dequeue verb removes the a call from the front of a specified queue and bridges that call to the current caller.
+<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/jambonz/#dequeue">Jambonz dequeue reference</a></li>
+  </ul>
+</script>
+
+<!-- dial -->
+<script type="text/html" data-template-name="dial">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row" style="margin-bottom:0;">
+    <label><i class="fa fa-list"></i> <span>Dial Targets</span></label>
+  </div>
+  <div class="form-row node-input-target-container-row">
+      <ol id="node-input-target-container"></ol>
+  </div>
+  <div class="form-row">
+    <label for="node-input-actionhook"><i class="icon-tag"></i> Action hook</label>
+    <input type="text" id="node-input-actionhook" placeholder="webhook to invoke when the call ends">
+    <input type="hidden" id="node-input-actionhookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-answeronbridge"><i class="icon-tag"></i>Answer on bridge</label>
+    <input type="checkbox" id="node-input-answeronbridge">
+  </div>
+  <div class="form-row">
+    <label for="node-input-callerid"><i class="icon-tag"></i> Caller ID</label>
+    <input type="text" id="node-input-callerid" placeholder="Caller ID to place on outbound call">
+    <input type="hidden" id="node-input-calleridType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-confirmhook"><i class="icon-tag"></i> Confirm hook</label>
+    <input type="text" id="node-input-confirmhook" placeholder="webhook to run on called party after answer">
+    <input type="hidden" id="node-input-confirmhookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-dialmusic"><i class="icon-tag"></i> Dial music</label>
+    <input type="text" id="node-input-dialmusic" placeholder="url to .wav or .mp3 file to play during dial">
+    <input type="hidden" id="node-input-dialMusicType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-dtmfcapture"><i class="icon-tag"></i> Dtmf capture</label>
+    <input type="text" id="node-input-dtmfcapture" placeholder="comma-separated list of dtmf captures">
+    <input type="hidden" id="node-input-dtmfcaptureType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-dtmfhook"><i class="icon-tag"></i> Dtmf hook</label>
+    <input type="text" id="node-input-dtmfhook" placeholder="webhook to call when dtmf is captured">
+    <input type="hidden" id="node-input-dtmfhookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-timelimit"><i class="icon-tag"></i> Time limit</label>
+    <input type="text" id="node-input-timelimit" placeholder="max duration of call in secs">
+  </div>
+  <div class="form-row">
+    <label for="node-input-timeout"><i class="icon-tag"></i> Timeout</label>
+    <input type="text" id="node-input-timeout" placeholder="ring no answer timeout in secs (default: 60)">
+  </div>
+  <fieldset>
+    <legend>Live audio</legend>
+    <div class="form-row">
+      <label for="node-input-listenurl"><i class="icon-tag"></i> Websocket server url</label>
+      <input type="text" id="node-input-listenurl" placeholder="ws://example.com">
+      <input type="hidden" id="node-input-listenurlType">
+    </div>
+  </fieldset>
+  <fieldset>
+      <legend>Transcription</legend>
+      <div class="form-row">
+        <label for="node-input-transcribeurl"><i class="icon-tag"></i> Transcription hook</label>
+        <input type="text" id="node-input-transcribeurl" placeholder="transcription webhook">
+        <input type="hidden" id="node-input-transcribeurlType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-transcribelang"><i class="icon-tag"></i> Language</label>
+        <input type="text" id="node-input-transcribelang" placeholder="en-US">
+      </div>
+      <div class="form-row">
+        <label for="node-input-interim"><i class="icon-tag"></i>Send interim transcriptions</label>
+        <input type="checkbox" id="node-input-interim">
+      </div>          
+    </fieldset>
+    <fieldset>
+      <legend>SIP Headers</legend>
+      <div class="form-row" style="margin-bottom:0;">
+        <label style="width:100%"><i class="fa fa-list"></i> <span>Add custom headers on outdial</span></label>
+      </div>
+      <div class="form-row node-input-headers-container-row">
+          <ol id="node-input-headers-container"></ol>
+      </div>
+    </fieldset>
+  </div>
+</script>
+
+<script type="text/html" data-help-name="dial">
+  <p>Dial out to a phone number, registered user, sip endpoint, or Microsoft teams user</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>dial</code> action appended  </dd>
+  </dl>
+
+  <h3>Details</h3>
+  The dial verb is used to create a new call by dialing out to a number, a registered sip user, or sip endpoint
+    <ul>
+        <li><a href="https://docs.jambonz.org/jambonz/#transcribe">Jambonz transcribe reference</a></li>
+    </ul>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('dial',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        targets:{
+          value:[
+            {
+              type: 'phone',
+              dest: '',
+              user: '',
+              pass: '',
+              varType: 'str'
+            }
+          ]
+        },
+        headers: {
+          value: []
+        },
+        actionhook: {value: ''},
+        actionhookType: {value: 'str'},
+        answeronbridge: {value: false},
+        callerid: {value: ''},
+        calleridType: {value: ''},
+        confirmhook: {value: ''},
+        confirmhookType: {value: 'str'},
+        dialmusic: {value: ''},
+        dialmusicType: {value: 'str'},
+        dtmfcapture: {value: ''},
+        dtmfcaptureType: {value: 'str'},
+        dtmfhook: {value: ''},
+        dtmfhookType: {value: 'str'},
+        timelimit: {validate:RED.validators.regex(/^\d*$/) },
+        timeout: {validate:RED.validators.regex(/^\d*$/) },
+        listenurl: {value: ''},
+        listenurlType: {value: 'str'},
+        transcribeurl: {value: ''},
+        transcribeurlType: {value: 'str'},
+        interim: {value: false},
+        transcribelang: {value: 'en-US', require: true}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'dial';},
+      oneditprepare: function() {
+        $('#node-input-callerid').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-calleridType')
+        });
+        $('#node-input-actionhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-actionhookType')
+        });
+        $('#node-input-confirmhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-confirmhookType')
+        });
+        $('#node-input-dialmusic').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-dialmusicType')
+        });
+        $('#node-input-dtmfcapture').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-dtmfcaptureType')
+        });
+        $('#node-input-dtmfhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-dtmfhookType')
+        });
+        $('#node-input-transcribeurl').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-transcribeurlType')
+        });
+        $('#node-input-listenurl').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-listenurlType')
+        });
+
+        // populate targets editable list
+        $('#node-input-target-container').css('min-height','180px').css('min-width','450px').editableList({
+          addItem: function(container, i, opt) {
+            var target = opt;
+            console.log(`addItem: ${JSON.stringify(opt)}`);
+            container.css({
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            });
+            let fragment = document.createDocumentFragment();
+            var row1 = $('<div/>',{style:"display:flex;"}).appendTo(fragment);
+            var row2 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
+            var row3 = $('<div/>',{style:"margin-top:8px;"}).appendTo(fragment);
+            var row4 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
+
+            var selectField = $('<select/>',{class:"node-input-target-type",style:"width:110px; margin-right:10px;"}).appendTo(row1);
+            var selectOptions = ['phone', 'user', 'sipUri', 'teams'];
+            for (var i = 0; i < 4; i++) {
+                selectField.append($("<option></option>").val(selectOptions[i]).text(selectOptions[i]));
+            }
+            selectField.val('phone');
+
+            $('<input/>', {
+              class:"node-input-target-property-name", 
+              type:"text", 
+              placeholder: 'number to dial'
+            })
+              .appendTo(row1);
+            
+            /* make it a TypedInput */
+            row1.find('.node-input-target-property-name').typedInput({types: ['str', 'msg', 'flow', 'global']});
+            row1.find('.red-ui-typedInput-container').css('width', '70%');
+
+
+            $('<label style="padding-top:8px; padding-right:20px">Auth Username:</label>')
+              .appendTo(row2);
+
+            $('<input/>',{
+              class:"node-input-target-property-authuser", 
+              type:"text", 
+              placeholder: '(if required by remote endpoint)'
+            })
+              .appendTo(row2);
+
+            $('<label style="padding-top:8px; padding-right:20px">Auth Password:</label>')
+              .appendTo(row3);
+            $('<input/>',{
+              class:"node-input-target-property-authpassword", 
+              type:"text", 
+              placeholder: '(if required by remote endpoint)'
+            })
+              .appendTo(row3);
+            
+            selectField.on('change', function() {
+              var type = $(this).val();
+              var input = $(this).parent().find('input.node-input-target-property-name');
+              input.focus();
+              switch (type) {
+                case 'phone': 
+                  input.attr('placeholder', 'E.164 number to dial');
+                  break;
+                case 'teams':
+                  input.attr('placeholder', 'Microsoft Teams phone number or extension');
+                  break;
+                case 'user': 
+                  input.attr('placeholder', 'user@domain');
+                  break;
+                case 'sipUri': 
+                  input.attr('placeholder', 'sip:number@ip-address');
+                  break;
+              }
+              if (type !== 'sipUri') {
+                row2.hide();
+                row3.hide();
+              }
+              else {
+                row2.show();
+                row3.show();
+              }
+            });
+            selectField.val(target.type);
+            var datafield = row1.find('.node-input-target-property-name');
+            var userfield = row2.find('.node-input-target-property-authuser');
+            var passfield = row3.find('.node-input-target-property-authpassword');
+
+            datafield.typedInput('type', target.varType);
+
+            switch (target.type) {
+              case 'sipUri': 
+                userfield.val(target.user);
+                passfield.val(target.pass);
+              default:
+                datafield.typedInput('value', target.dest);
+                break;
+            }
+            selectField.change();
+            container[0].appendChild(fragment);
+          },
+          removable: true,
+          addButton: 'add target'
+        });
+        console.log(`oneditprepare: coming in with targets: ${JSON.stringify(this.targets)}`);
+        /*
+        if (!this.targets || this.targets.length === 0) {
+          var target = {
+            type: 'phone',
+            number: '',
+            varType: 'str'
+          };
+          this.targets = [target];
+        }
+        */
+
+        for (var i=0; i < this.targets.length; i++) {
+            var target = this.targets[i];
+            $("#node-input-target-container").editableList('addItem', target);
+        }
+        // populate headers editable list
+        $('#node-input-headers-container').css('min-height','120px').css('min-width','450px').editableList({
+          addItem: function(container, i, opt) {
+            var header = opt;
+            if (!header.hasOwnProperty('h')) {
+                header = {h: '', v: ''};
+            }
+            container.css({
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            });
+            let fragment = document.createDocumentFragment();
+            var row1 = $('<div/>',{style:"display:flex;"}).appendTo(fragment);
+            $('<input/>', {
+              class:"node-input-header-property-name", 
+              type:"text", 
+              placeholder: 'SIP Header'
+            })
+              .appendTo(row1);
+            $('<input/>', {
+              class:"node-input-value-property-name", 
+              type:"text", 
+              placeholder: 'value'
+            })
+              .appendTo(row1);
+
+            row1.find('.node-input-header-property-name').val(header.h);
+            row1.find('.node-input-value-property-name').val(header.v);
+
+            container[0].appendChild(fragment);
+          },
+          removable: true
+        });
+        console.log(`oneditprepare: coming in with headers: ${JSON.stringify(this.headers)}`);
+        if (!this.headers) {
+          var header = {
+            h: '',
+            v: '',
+          };
+          this.headers = [header];
+        }
+
+        for (var i=0; i < this.headers.length; i++) {
+            var header = this.headers[i];
+            $("#node-input-headers-container").editableList('addItem', header);
+        }
+      },
+      oneditsave: function() {
+        var targets = $("#node-input-target-container").editableList('items');
+        var node = this;
+        node.targets= [];
+        console.log(`entering oneditsave with ${targets.length} targets`);
+
+        targets.each(function(i) {
+          var target = $(this);
+          var type = target.find('.node-input-target-type').val();
+          var varType = target.find('.node-input-target-property-name').typedInput('type');
+          var dest = target.find('.node-input-target-property-name').typedInput('value');
+          var user = target.find('.node-input-target-property-authuser').val();
+          var pass = target.find('.node-input-target-property-authpassword').val();
+          if (!['phone', 'user', 'sipUri', 'teams'].includes(type) || 0 === dest.length) return;
+
+          var t = {type};
+          t.varType = varType;
+          t.dest = dest;
+          if ('sipUri' === type && user.length > 0 && pass.length > 0) {
+            Object.assign(t, {user, pass});
+          }
+          node.targets.push(t);
+        });
+        console.log(`saved targets ${JSON.stringify(node.targets)}`);
+
+        node.headers = [];
+        var headers = $("#node-input-headers-container").editableList('items');
+        headers.each(function(i) {
+          var header = $(this);
+          console.log(`header: ${JSON.stringify(header)}`);
+          var h = header.find(".node-input-header-property-name").val();
+          var v = header.find(".node-input-value-property-name").val();
+          console.log(`added ${h}: ${v}`);
+          var obj = {};
+          obj[h] = v;
+          node.headers.push({h, v});
+        });
+        console.log(`saved headers ${JSON.stringify(node.headers)}`);
+      },
+    });
+</script>
+
+<!-- enqueue -->
+<script type="text/javascript">
+  RED.nodes.registerType('enqueue',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        queue: {required: true, value: ''},
+        queueType: {value: 'str'},
+        actionHook: {},
+        actionHookType: {value: 'str'},
+        waitHook: {},
+        waitHookType: {value: 'str'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { 
+        return this.name || 'enqueue';
+      },
+      oneditprepare: function() {
+        $('#node-input-queue').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-queueType')
+        });
+        $('#node-input-actionHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-actionHookType')
+        });
+        $('#node-input-waitHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-waitHookType')
+        });
+      }
+  });
+</script>
+
+<script type="text/html" data-template-name="enqueue">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-queue">Queue Name</label>
+    <input type="text" id="node-input-queue" placeholder="name of queue">
+    <input type="hidden" id="node-input-queueType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-actionHook">Action Hook</label>
+    <input type="text" id="node-input-actionHook" placeholder="webhook url">
+    <input type="hidden" id="node-input-actionHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-waitHook">Wait Hook</label>
+    <input type="text" id="node-input-waitHook" placeholder="webhook url">
+    <input type="hidden" id="node-input-waitHookType">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="enqueue">
+  <p>places a caller in a queue.</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>enqueue</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The enqueue command is used to place a caller in a queue.
+<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/jambonz/#enqueue">Jambonz enqueue reference</a></li>
+  </ul>
+</script>
+
+<!-- gather -->
+<script type="text/javascript">
+  RED.nodes.registerType('gather',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        actionhook: {value: ''},
+        finishonkey: {value: ''},
+        dtmfinput: {value: 0},
+        speechinput: {value: 1},
+        numdigits: {value: ''},
+        timeout: {value: ''},
+        prompttype: {value: 'say'},
+        playurl: {value: ''},
+        playurlType: {value: 'str'},
+        text: {value: ''},
+        vendor: {value: 'default'},
+        lang: {value: 'default'},
+        voice: {value: 'default'},
+        recognizerlang: {value: 'default'},
+        recognizerhints: {value: ''},
+        recognizerhintsType: {value: 'str'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'gather';},
+      oneditprepare: function() {
+        buildGatherPanel(this);
+      }
+  });
+</script>
+
+<script type="text/html" data-template-name="gather">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+</div>
+<div class="form-row">
+  <label for="node-input-actionhook"><i class="icon-tag"></i> Action hook</label>
+  <input type="text" id="node-input-actionhook" placeholder="webhook with results of gather">
+</div>
+<fieldset>
+  <legend>Input Type</legend>
+  <div class="form-row">
+    <label for="node-input-speechinput"><i class="icon-tag"></i> Speech</label>
+    <input type="checkbox" id="node-input-speechinput">
+  </div>
+  <div class="form-row">
+    <label for="node-input-dtmfinput"><i class="icon-tag"></i> Digits</label>
+    <input type="checkbox" id="node-input-dtmfinput">
+  </div>
+
+  <div id="speech-input-container">
+    <div class="form-row">
+      <label for="node-input-recognizerlang"><i class="icon-tag"></i> Language</label>
+      <select id="node-input-recognizerlang">
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-recognizerhints"><i class="icon-tag"></i> Hints</label>
+      <input type="text" id="node-input-recognizerhints" placeholder="comma-separated list of phrases">
+      <input type="hidden" id="node-input-recognizerhintsType">
+    </div>
+  </div>
+
+  <div id="dtmf-input-container">
+    <div class="form-row">
+      <label for="node-input-finishonkey"><i class="icon-tag"></i> Finish key</label>
+      <input type="text" id="node-input-finishonkey" placeholder="dtmf key to signal end of input">
+    </div>
+    <div class="form-row">
+      <label for="node-input-numdigits"><i class="icon-tag"></i> Num. digits</label>
+      <input type="text" id="node-input-numdigits" placeholder="number of digits to collect">
+    </div>
+    <div class="form-row">
+      <label for="node-input-numtimeout"><i class="icon-tag"></i> Timeout</label>
+      <input type="text" id="node-input-timeout" placeholder="dtmf timeout in secs">
+    </div>
+  </div>
+
+</fieldset>
+
+<fieldset>
+  <legend>Prompt</legend>
+  <div class="form-row">
+    <label for="node-input-prompttype"><i class="icon-tag"></i> Verb</label>
+    <select id="node-input-prompttype">
+      <option>play</option>
+      <option selected>say</option>
+    </select>
+  </div>
+
+  <div id="say-container">
+    <div class="form-row">
+      <label for="node-input-text"><i class="icon-tag"></i> Text</label>
+      <textarea id="node-input-text" rows="4" placeholder="Text or SSML to speak" style="width:70%"></textarea>
+    </div>
+    <div class="form-row">
+      <label for="node-input-vendor"><i class="icon-tag"></i> Vendor</label>
+      <select id="node-input-vendor">
+        <option value="default" selected>--application default--</option>
+        <option value="google">google</option>
+        <option value="aws">aws/polly</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-lang"><i class="icon-tag"></i> Language</label>
+      <select id="node-input-lang">
+        <option value="default" selected>--application default--</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-voice"><i class="icon-tag"></i> Voice</label>
+      <select id="node-input-voice">
+        <option value="default" selected>--application default--</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="play-container">
+    <div class="form-row">
+      <label for="node-input-playurl"> Url</label>
+      <input type="text" id="node-input-playurl" placeholder="url of file to play">
+      <input type="hidden" id="node-input-playurlType">
+    </div>
+  </div>
+</fieldset>
+</script>
+
+<script type="text/html" data-help-name="gather">
+  <p>Collect speech or dtmf input from the caller</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>gather</code> action appended  </dd>
+  </dl>
+
+  <h3>Details</h3>
+  The gather command is used to collect dtmf or speech input.
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/jambonz/#gather">Jambonz gather reference</a></li>
+    </ul>
+</script>
+
+<!-- hangup -->
+<script type="text/javascript">
+  RED.nodes.registerType('hangup',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'hangup';},
+  });
+</script>
+
+<script type="text/html" data-template-name="hangup">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+</div>
+</script>
+
+<script type="text/html" data-help-name="hangup">
+  <p>Hangup the call</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>hangup</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The hangup verb hangs up the current call.
+<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/jambonz/#hangup">Jambonz hangup reference</a></li>
+  </ul>
+</script>
+
+<!-- leave -->
+<script type="text/javascript">
+  RED.nodes.registerType('leave',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'leave';}
+  });
+</script>
+
+<script type="text/html" data-template-name="leave">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="leave">
+  <p>transfer call out of queue</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>leave</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The leave verb transfers a call out of a queue. The call then returns to the flow of execution following the enqueue verb that parked the call, or the document returned by that verbs actionHook property, if provided.<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/jambonz/#leave">Jambonz leave reference</a></li>
+  </ul>
+</script>
+
+<!-- listen -->
+<script type="text/javascript">
+  RED.nodes.registerType('listen',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        actionhook: {},
+        actionhookType: {value: 'str'},
+        url: {required: true},
+        urlType: {value: 'str'},
+        authuser: {},
+        authuserType: {val: 'str'},
+        authpass: {},
+        authpassType: {val: 'str'},
+        finishonkey: {},
+        maxlength: {},
+        metadata: {},
+        metadataType: {value: 'json'},
+        mixtype: {value: 'mono'},
+        beep: {value: false},
+        samplerate: {value: 8000},
+        timeout: {},
+        transcriptionhook: {},
+        transcriptionhookType: {value: 'str'},
+        recognizerlang: {value: 'default'},
+        interim: {value: false},
+        profanityfilter: {value: false}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'listen';},
+      oneditprepare: function() {
+        $('#node-input-actionhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-actionhookType')
+        });
+        $('#node-input-url').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-urlType')
+        });
+        $('#node-input-authuser').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-authuserType')
+        });
+        $('#node-input-authpassword').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-authpasswordType')
+        });
+        $('#node-input-metadata').typedInput({
+          types: ['json', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-metadataType')
+        });
+        $('#node-input-transcriptionhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-transcriptionhookType')
+        });
+ 
+        buildTranscribePanel(this);
+      }
+  });
+</script>
+
+<script type="text/html" data-template-name="listen">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-url">Url</label>
+    <input type="text" id="node-input-url" placeholder="ws url">
+    <input type="hidden" id="node-input-urlType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-authuser">User</label>
+    <input type="text" id="node-input-authuser" placeholder="basic auth username">
+    <input type="hidden" id="node-input-authuserType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-authpassword">Password</label>
+    <input type="text" id="node-input-authpassword" placeholder="basic auth password">
+    <input type="hidden" id="node-input-authpasswordType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-actionhook">Action Hook</label>
+    <input type="text" id="node-input-actionhook" placeholder="webhook url tro invoke when operation ends">
+    <input type="hidden" id="node-input-actionhookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-metadata">Metadata</label>
+    <input type="text" id="node-input-metadata">
+    <input type="hidden" id="node-input-metadataType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-maxlength">Max Duration</label>
+    <input type="text" id="node-input-maxlength">
+  </div>
+  <div class="form-row">
+    <label for="node-input-finishonkey">End key</label>
+    <input type="text" id="node-input-finishonkey">
+  </div>
+  <div class="form-row">
+    <label for="node-input-beep">Beep</label>
+    <input type="checkbox" id="node-input-finishonkey">
+  </div>
+  <div class="form-row">
+    <label for="node-input-mixtype">Mix Type</label>
+    <select id="node-input-mixtype">
+      <option selected>mono</option>
+      <option>stereo</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-samplerate">Sample Rate</label>
+    <select id="node-input-samplerate">
+      <option selected>8000</option>
+      <option>16000</option>
+      <option>24000</option>
+      <option>48000</option>
+      <option>64000</option>
+    </select>
+  </div>
+  <fieldset>
+    <legend>Transcription (optional)</legend>
+    <div class="form-row">
+      <label for="node-input-transcriptionhook"><i class="icon-tag"></i> Transcription hook</label>
+      <input type="text" id="node-input-transcriptionhook" placeholder="transcription webhook">
+      <input type="hidden" id="node-input-transcriptionhookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-recognizerlang">Language</label>
+      <select id="node-input-recognizerlang">
+      </select>
+    </div>
+        <div class="form-row">
+      <label for="node-input-interim">Send interim transcriptions</label>
+      <input type="checkbox" id="node-input-interim">
+    </div>          
+    <div class="form-row">
+      <label for="node-input-interim">Profanity filter</label>
+      <input type="checkbox" id="node-input-profanityfilter">
+    </div>          
+  </fieldset>
+
+</script>
+
+<script type="text/html" data-help-name="listen">
+  <p>send live audio for the call to an over a websocket connection</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>listen</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The listen verb establishes a connection to a websocket server and sends live audio for the current call.<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/jambonz/#listen">Jambonz listen reference</a></li>
+  </ul>
+</script>
+
+<!-- pause -->
+<script type="text/javascript">
+  RED.nodes.registerType('pause',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        len: {required: true},
+        lenType: {value: 'str'},
+
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-pause",
+      label: function() { return this.name || 'pause';},
+      oneditprepare: function() {
+        $('#node-input-len').typedInput({
+          default: $('#node-input-lenType').val(),
+          types: ['num','msg', 'flow', 'global'],
+          typeField: $('#node-input-lenType')
+        });
+      }
+  });
+</script>
+
+<script type="text/html" data-template-name="pause">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-length">Duration</label>
+    <input type="text" id="node-input-len" placeholder="number of seconds to pause">
+    <input type="hidden" id="node-input-lenType">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="pause">
+  <p>Pause a specified number of seconds</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>pause</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The pause verb waits a specified number of seconds before continuing to execute the application.
+<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/jambonz/#pause">Jambonz pause reference</a></li>
+  </ul>
+</script>
+
+
+<!-- pause -->
+<script type="text/javascript">
+  RED.nodes.registerType('pause',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        len: {required: true},
+        lenType: {value: 'str'},
+
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'pause';},
+      oneditprepare: function() {
+        $('#node-input-len').typedInput({
+          default: $('#node-input-lenType').val(),
+          types: ['num','msg', 'flow', 'global'],
+          typeField: $('#node-input-lenType')
+        });
+      }
+  });
+</script>
+
+<script type="text/html" data-template-name="pause">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-length">Duration</label>
+    <input type="text" id="node-input-len" placeholder="number of seconds to pause">
+    <input type="hidden" id="node-input-lenType">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="pause">
+  <p>Pause a specified number of seconds</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>pause</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The pause verb waits a specified number of seconds before continuing to execute the application.
+<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/jambonz/#pause">Jambonz pause reference</a></li>
+  </ul>
+</script>
+
+<!-- play -->
+<script type="text/javascript">
+  RED.nodes.registerType('play',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        url: {required: true},
+        urlType: {value: 'str'},
+        early: {value: false},
+        loop: {value: 1, required: true,  validate: RED.validators.number()},
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'play';},
+      oneditprepare: function() {
+        $('#node-input-url').typedInput({
+          default: $('#node-input-urlType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-urlType')
+        });
+      }
+  });
+</script>
+
+<script type="text/html" data-template-name="play">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-url">Url</label>
+    <input type="text" id="node-input-url" placeholder="url returning .mp3 or .wav file">
+    <input type="hidden" id="node-input-urlType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-early"><i class="icon-tag"></i>Early media</label>
+    <input type="checkbox" id="node-input-early">
+  </div>
+  <div class="form-row">
+    <label for="node-input-loop"><i class="icon-tag"></i>Loop</label>
+    <input type="input" id="node-input-loop" placeholder="number of times to repeat"> 
+  </div>  
+</script>
+
+<script type="text/html" data-help-name="play">
+  <p>Play a wav or mp3 file</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>play</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The play action plays an mp3 or wave file into a call.  If early media is checked, the audio will be played over an early media connection, 
+if the call has not already been answered.
+
+<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/jambonz/#play">Jambonz play reference</a></li>
+  </ul>
+</script>
+
+<!-- redirect -->
+<script type="text/javascript">
+  RED.nodes.registerType('redirect',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        hook: {required: true},
+        hookType: {value: 'str'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { 
+        return this.name || 'redirect';
+      },
+      oneditprepare: function() {
+        $('#node-input-hook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-hookType')
+        });
+      }
+  });
+</script>
+
+<script type="text/html" data-template-name="redirect">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-hook">Action Hook</label>
+    <input type="text" id="node-input-hook" placeholder="url">
+    <input type="hidden" id="node-input-hookType">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="redirect">
+  <p>Redirect a call to a new application URL</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>redirect</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The redirect verb retrieves a new URL to execute for the current call.
+<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/jambonz/#redirect">Jambonz redirect reference</a></li>
+  </ul>
+</script>
+
+<!-- say -->
+<script type="text/javascript">
+  RED.nodes.registerType('say',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        text: {required: true},
+        early: {value: false},
+        loop: {value: 1},
+        vendor: {value: 'default'},
+        lang: {value: 'default'},
+        voice: {value: 'default'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'say';},
+      oneditprepare: function() {buildEditPanel(this);}
+  });
+</script>
+
+<script type="text/html" data-template-name="say">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+</div>
+<div class="form-row">
+  <label for="node-input-text"><i class="icon-tag"></i> Text</label>
+  <textarea id="node-input-text" rows="4" placeholder="Text or SSML to speak" style="width:70%"></textarea>
+</div>
+<div class="form-row">
+  <label for="node-input-early"><i class="icon-tag"></i>Early media</label>
+  <input type="checkbox" id="node-input-early">
+</div>
+<div class="form-row">
+  <label for="node-input-loop"><i class="icon-tag"></i>Loop</label>
+  <input type="input" id="node-input-loop" placeholder="number of times to repeat"> 
+</div>
+<fieldset>
+  <legend>Speech synthesis options</legend>
+  <div class="form-row">
+    <label for="node-input-vendor"><i class="icon-tag"></i> Vendor</label>
+    <select id="node-input-vendor">
+      <option value="default" selected>--application default--</option>
+      <option value="google">google</option>
+      <option value="aws">aws/polly</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-lang"><i class="icon-tag"></i> Language</label>
+    <select id="node-input-lang">
+      <option value="default" selected>--application default--</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-voice"><i class="icon-tag"></i> Voice</label>
+    <select id="node-input-voice">
+      <option value="default" selected>--application default--</option>
+    </select>
+  </div>
+</fieldset>
+</script>
+
+<script type="text/html" data-help-name="say">
+  <p>Synthesize speech from text or SSML</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>conference</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The say command is used to send synthesized speech to the remote party. 
+The text provided may be either plain text or may use SSML tags.
+<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/jambonz/#say">Jambonz say reference</a></li>
+</script>
+
+<!-- sip:decline -->
+<script type="text/javascript">
+  RED.nodes.registerType('sip:decline',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        status: {},
+        statusType: {value: 'num'},
+        reason: {value: ''},
+        reasonType: {value: 'str'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'sip:decline';},
+      oneditprepare: function() {
+        $('#node-input-status').typedInput({
+          default: $('#node-input-statusType').val(),
+          types: ['num','msg', 'flow', 'global'],
+          typeField: $('#node-input-statusType')
+        });
+        $('#node-input-reason').typedInput({
+          default: $('#node-input-reasonType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-reasonType')
+        });
+      }
+  });
+</script>
+
+<script type="text/html" data-template-name="sip:decline">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-status">Status</label>
+    <input type="text" id="node-input-status" placeholder="sip status code">
+    <input type="hidden" id="node-input-statusType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-reason">Reason</label>
+    <input type="text" id="node-input-reason" placeholder="sip reason">
+    <input type="hidden" id="node-input-reasonType">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="sip:decline">
+  <p>Reject an incoming call with a status code and, optionally, reason</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>sip:decline</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The sip:decline verb rejects an incoming call.
+<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/jambonz/#sipdecline">Jambonz sip:decline reference</a></li>
+  </ul>
+</script>
+
+<!-- tag -->
+<script type="text/javascript">
+  RED.nodes.registerType('tag',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        data: {required: true},
+        dataType: {value: 'json'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-tags",
+      label: function() { return this.name || 'tag';},
+      oneditprepare: function() {
+        $('#node-input-data').typedInput({
+          default: $('#node-input-dataType').val(),
+          types: ['json', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-dataType')
+        });
+      }
+  });
+</script>
+
+<script type="text/html" data-template-name="tag">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-length">Data</label>
+    <input type="text" id="node-input-data" placeholder="data object">
+    <input type="hidden" id="node-input-dataType">
+  </div>
+</script>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>tag</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The tag verb is used to add properties to the standard call attributes that jambonz includes on every action or call status HTTP POST request.<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/jambonz/#tag">Jambonz tag reference</a></li>
+  </ul>
+</script>
+
+<!-- transcribe -->
+<!--
+<script type="text/javascript">
+  RED.nodes.registerType('transcribe',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        transcriptionhook: {required: true},
+        transcriptionhookType: {value: 'str'},
+        recognizerlang: {required: true},
+        interim: {value: false},
+        dualchannel: {value: false},
+        profanityfilter: {value: false}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'transcribe';},
+      oneditprepare: function() {
+        buildTranscribePanel(this);
+      }
+  });
+</script>
+
+<script type="text/html" data-template-name="transcribe">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+</div>
+<div class="form-row">
+  <label for="node-input-recognizerlang">Language</label>
+  <select id="node-input-recognizerlang">
+  </select>
+</div>
+<div class="form-row">
+  <label for="node-input-transcriptionhook">Transcription hook</label>
+  <input type="text" id="node-input-transcriptionhook" placeholder="webhook with results of transcription">
+  <input type="hidden" id="node-input-transcriptionhookType">
+</div>
+<div class="form-row">
+  <label for="node-input-interim"><i class="icon-tag"></i>Send interim results</label>
+  <input type="checkbox" id="node-input-interim">
+</div>
+<div class="form-row">
+  <label for="node-input-dualchannel"><i class="icon-tag"></i>Transcribe both channels</label>
+  <input type="checkbox" id="node-input-dualchannel">
+</div>
+<div class="form-row">
+  <label for="node-input-profanityfilter"><i class="icon-tag"></i>Filter profanity</label>
+  <input type="checkbox" id="node-input-profanityfilter">
+</div>
+</script>
+
+<script type="text/html" data-help-name="transcribe">
+  <p>The transcribe verb is used to send real time transcriptions of speech to a web callback.</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>gather</code> action appended  </dd>
+  </dl>
+
+  <h3>Details</h3>
+  The transcribe command is only allowed as a nested verb within a dial or listen verb. Using transcribe in a dial command allows a long-running transcription of a phone call to be made, while nesting within a listen verb allows transcriptions of recorded messages (e.g. voicemail).  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/jambonz/#transcribe">Jambonz transcribe reference</a></li>
+    </ul>
+</script>
+-->
+
+
+<!-- speech helpers -->
+<script type="text/javascript">
+  "use strict";
+
+  let mapGoogle = {};
+  let googleLanguageOptions = '';
+  let mapAws = {};
+  let awsLanguageOptions = '';
+  let mapSpeechRec = {};
+  let speechRecOptions = '';
+
+  var googleUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/googleTts';
+  $.getJSON(googleUrl, function (data) {
+    console.log('retrieved data ' + JSON.stringify(data));
+    data.forEach(function(l) {
+      mapGoogle[l.code] = {
+        name: l.name,
+        voices: l.voices
+      };
+      googleLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
+    });
+  });
+  var awsUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/awsTts';
+  $.getJSON(awsUrl, function (data) {
+    console.log('retrieved data ' + JSON.stringify(data));
+    data.forEach(function(l) {
+      mapAws[l.code] = {
+        name: l.name,
+        voices: l.voices
+      };
+      awsLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
+    });
+  });
+  var speechRecUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/googleSpeech';
+    $.getJSON(speechRecUrl, function (data) {
+      console.log('retrieved data for recognizer voices: ' + JSON.stringify(data));
+      data.forEach(function(l) {
+        mapSpeechRec[l.code] = l.name;
+        speechRecOptions += `<option value="${l.code}">${l.name}</option>`;        
+      });
+    });
+
+  function buildEditPanel(node) {
+    var vendorElem = $('#node-input-vendor');
+    var langElem = $('#node-input-lang');
+    var voiceElem = $('#node-input-voice');
+  
+    var onVendorChanged = function() {
+      var vendor = vendorElem.find(':selected').val();
+
+      console.log(`vendor changed to ${vendor}`);
+      setLanguage(vendor);
+    }
+
+    var onLangChanged = function () {
+      var vendor = vendorElem.find(':selected').val();
+      var lang = langElem.find(':selected').val();
+      console.log(`language changed to ${lang}`);
+      setVoice(vendor, lang)
+    }
+  
+    var setLanguage = function(v) {
+      langElem.find('option').remove();
+      voiceElem.find('option').remove();
+
+      switch (v) {
+        case 'default': 
+          langElem.append('<option value="default" selected>--application default--</option>');
+          voiceElem.append('<option value="default" selected>--application default--</option>');
+          node.lang = 'default';
+          node.voice = 'default';
+          break;
+
+        case 'google':
+          langElem.append(googleLanguageOptions);
+          break;
+
+        case 'aws':
+          langElem.append(awsLanguageOptions);
+          break;
+      }
+      langElem.val(node.lang);
+    }
+
+    var setVoice = function(vendor, lang) {
+      console.log(`set voice for language ${lang} vendor ${vendor}`);
+      voiceElem.find('option').remove();
+
+      switch (vendor) {
+        case 'default':
+          voiceElem.append('<option value="default" selected>--application default--</option>');
+          break;
+
+        case 'google':
+        case 'aws':
+          var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
+          if (obj) {
+            var options = '';
+            for (var i = 0; i < obj.voices.length; i++) {
+              if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+              else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+            }
+            voiceElem.append(options);
+          }
+          break;
+      }
+      voiceElem.val(node.voice);
+    }
+
+    vendorElem.change(onVendorChanged);
+    langElem.change(onLangChanged);
+  }
+
+  function buildTranscribePanel(node) {
+    $('#node-input-transcriptionhook').typedInput({
+      types: ['str', 'msg', 'flow', 'global'],
+      typeField: $('#node-input-transcriptionhookType')
+    });
+    var recLangElem = $('#node-input-recognizerlang');
+
+    var setTranscriptionLanguage = function() {
+      console.log(`setting transcription languages: ${speechRecOptions}`);
+      recLangElem.find('option').remove();
+      recLangElem.append('<option value="default">--application default--</option>');
+      recLangElem.append(speechRecOptions);
+    }
+    setTranscriptionLanguage();
+    recLangElem.val(node.recognizerlang);
+  }
+
+  function buildGatherPanel(node) {
+    $('#node-input-playurl').typedInput({
+      types: ['str', 'msg', 'flow', 'global'],
+      typeField: $('#node-input-playurlType')
+    });
+    $('#node-input-recognizerhints').typedInput({
+      types: ['str', 'msg', 'flow', 'global'],
+      typeField: $('#node-input-recognizerhintsType')
+    });
+
+    var vendorElem = $('#node-input-vendor');
+    var langElem = $('#node-input-lang');
+    var voiceElem = $('#node-input-voice');
+    var recLangElem = $('#node-input-recognizerlang');
+  
+    var onVendorChanged = function() {
+      var vendor = vendorElem.find(':selected').val();
+
+      console.log(`vendor changed to ${vendor}`);
+      setLanguage(vendor);
+    }
+
+    var onLangChanged = function () {
+      var vendor = vendorElem.find(':selected').val();
+      var lang = langElem.find(':selected').val();
+      console.log(`language changed to ${lang}`);
+      setVoice(vendor, lang)
+    }
+  
+    var setLanguage = function(v) {
+      langElem.find('option').remove();
+      voiceElem.find('option').remove();
+
+      switch (v) {
+        case 'default': 
+          langElem.append('<option value="default" selected>--application default--</option>');
+          voiceElem.append('<option value="default" selected>--application default--</option>');
+          node.lang = 'default';
+          node.voice = 'default';
+          break;
+
+        case 'google':
+          langElem.append(googleLanguageOptions);
+          break;
+
+        case 'aws':
+          langElem.append(awsLanguageOptions);
+          break;
+      }
+      langElem.val(node.lang);
+    }
+
+    var setVoice = function(vendor, lang) {
+      console.log(`gather: set voice for language ${lang} vendor ${vendor}`);
+      voiceElem.find('option').remove();
+
+      switch (vendor) {
+        case 'default':
+          voiceElem.append('<option value="default" selected>--application default--</option>');
+          break;
+
+        case 'google':
+        case 'aws':
+          var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
+          if (obj) {
+            var options = '';
+            for (var i = 0; i < obj.voices.length; i++) {
+              if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+              else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+            }
+            voiceElem.append(options);
+          }
+          break;
+      }
+      voiceElem.val(node.voice);
+    }
+
+    var setTranscriptionLanguage = function() {
+      console.log(`settring transcription languages: ${speechRecOptions}`);
+      recLangElem.find('option').remove();
+      recLangElem.append('<option value="default">--application default--</option>');
+      recLangElem.append(speechRecOptions);
+    }
+
+    var enableSpeech = function(enabled) {
+      console.log(`enable speech: ${enabled}`);
+      if (enabled) $('#speech-input-container').show();
+      else $('#speech-input-container').hide();
+    }
+    var enableDtmf = function(enabled) {
+      console.log(`enable dtmf: ${enabled}`);
+      if (enabled) $('#dtmf-input-container').show();
+      else $('#dtmf-input-container').hide();          
+    }
+
+    $('#node-input-speechinput').change(function() {
+      var doSpeech = $('#node-input-speechinput:checked').val();
+      enableSpeech(doSpeech);
+    });
+    $('#node-input-dtmfinput').change(function() {
+      var doDtmf = $('#node-input-dtmfinput:checked').val();
+      enableDtmf(doDtmf);
+    });
+
+    var onSayPlayChanged = function () {
+      var type = $('#node-input-prompttype').find(':selected').val();
+      console.log(`prompt type changed to ${type}`);
+      if (type === 'say') {
+        $('#say-container').show();
+        $('#play-container').hide();
+      }
+      else {
+        $('#play-container').show();
+        $('#say-container').hide();
+      }
+    }
+
+    setTranscriptionLanguage();
+    recLangElem.val(node.recognizerlang);
+
+    vendorElem.change(onVendorChanged);
+    langElem.change(onLangChanged);
+
+    $('#node-input-prompttype').change(onSayPlayChanged);
+  }
+</script>
