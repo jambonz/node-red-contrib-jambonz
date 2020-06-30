@@ -40,37 +40,907 @@
       });
     });
 
-</script>
+    RED.nodes.registerType('user auth',{
+        category: 'jambonz',
+        color: '#a6bbcf',
+        defaults: {
+          name: {value: ''},
+          password: {},
+          passwordType: {},
+          ha1: {},
+          ha1Type: {}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "file.png",
+        label: function() { return this.name || 'user auth';},
+        oneditprepare: function() {
+          $('#node-input-password').typedInput({
+            types: ['str', 'msg', 'flow', 'global'],
+            typeField: $('#node-input-passwordType')
+          });
+          $('#node-input-ha1').typedInput({
+            types: ['str', 'msg', 'flow', 'global'],
+            typeField: $('#node-input-ha1Type')
+          });
+        }
+    });
 
-<!-- user auth -->
-<script type="text/javascript">
-  RED.nodes.registerType('user auth',{
+    RED.nodes.registerType('conference',{
       category: 'jambonz',
       color: '#a6bbcf',
       defaults: {
         name: {value: ''},
-        password: {},
-        passwordType: {},
-        ha1: {},
-        ha1Type: {}
+        conference: {required: true, value: ''},
+        conferenceType: {value: 'str'},
+        beep: {value: false},
+        endConferenceOnExit: {value: false},
+        startConferenceOnEnter: {value: false},
+        maxParticipants: {},
+        maxParticipantsType: {value: 'num'},
+        enterHook: {},
+        enterHookType: {value: 'str'},
+        waitHook: {},
+        waitHookType: {value: 'str'}
       },
       inputs:1,
       outputs:1,
       icon: "file.png",
-      label: function() { return this.name || 'user auth';},
+      label: function() { 
+        return this.name || 'conference';
+      },
       oneditprepare: function() {
-        $('#node-input-password').typedInput({
+        $('#node-input-conference').typedInput({
           types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-passwordType')
+          typeField: $('#node-input-conferenceType')
         });
-        $('#node-input-ha1').typedInput({
+        $('#node-input-enterHook').typedInput({
           types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-ha1Type')
+          typeField: $('#node-input-enterHookType')
+        });
+        $('#node-input-waitHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-waitHookType')
+        });
+        $('#node-input-maxParticipants').typedInput({
+          types: ['num', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-maxParticipantsType')
         });
       }
   });
+
+  RED.nodes.registerType('dequeue',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        queue: {required: true, value: ''},
+        queueType: {value: 'str'},
+        actionHook: {},
+        actionHookType: {value: 'str'},
+        confirmHook: {},
+        confirmHookType: {value: 'str'},
+        beep: {value: false},
+        timeout: {},
+        timeoutType: {value: 'num'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { 
+        return this.name || 'dequeue';
+      },
+      oneditprepare: function() {
+        $('#node-input-queue').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-queueType')
+        });
+        $('#node-input-actionHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-actionHookType')
+        });
+        $('#node-input-confirmHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-confirmHookType')
+        });
+        $('#node-input-timeout').typedInput({
+          types: ['num', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-timeoutType')
+        });
+      }
+  });
+
+  RED.nodes.registerType('dial',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        targets:{
+          value:[
+            {
+              type: 'phone',
+              dest: '',
+              user: '',
+              pass: '',
+              varType: 'str'
+            }
+          ]
+        },
+        headers: {
+          value: []
+        },
+        actionhook: {value: ''},
+        actionhookType: {value: 'str'},
+        answeronbridge: {value: false},
+        callerid: {value: ''},
+        calleridType: {value: ''},
+        confirmhook: {value: ''},
+        confirmhookType: {value: 'str'},
+        dialmusic: {value: ''},
+        dialmusicType: {value: 'str'},
+        dtmfcapture: {value: ''},
+        dtmfcaptureType: {value: 'str'},
+        dtmfhook: {value: ''},
+        dtmfhookType: {value: 'str'},
+        timelimit: {validate:RED.validators.regex(/^\d*$/) },
+        timeout: {validate:RED.validators.regex(/^\d*$/) },
+        listenurl: {value: ''},
+        listenurlType: {value: 'str'},
+        transcribeurl: {value: ''},
+        transcribeurlType: {value: 'str'},
+        interim: {value: false},
+        transcribelang: {value: 'en-US', require: true}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'dial';},
+      oneditprepare: () => {
+        var node = this;
+        $('#node-input-callerid').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-calleridType')
+        });
+        $('#node-input-actionhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-actionhookType')
+        });
+        $('#node-input-confirmhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-confirmhookType')
+        });
+        $('#node-input-dialmusic').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-dialmusicType')
+        });
+        $('#node-input-dtmfcapture').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-dtmfcaptureType')
+        });
+        $('#node-input-dtmfhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-dtmfhookType')
+        });
+        $('#node-input-transcribeurl').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-transcribeurlType')
+        });
+        $('#node-input-listenurl').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-listenurlType')
+        });
+
+        // populate targets editable list
+        $('#node-input-target-container').css('min-height','180px').css('min-width','450px').editableList({
+          addItem: function(container, i, opt) {
+            var target = opt;
+            console.log(`addItem: ${JSON.stringify(opt)}, keys ${Object.keys(opt).length}`);
+            if (0 === Object.keys(opt).length) {
+              target = {
+                type: 'phone',
+                dest: '',
+                user: '',
+                pass: '',
+                varType: 'str'
+              };
+            }
+
+            container.css({
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            });
+            let fragment = document.createDocumentFragment();
+            var row1 = $('<div/>',{style:"display:flex;"}).appendTo(fragment);
+            var row2 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
+            var row3 = $('<div/>',{style:"margin-top:8px;"}).appendTo(fragment);
+            var row4 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
+
+            var selectField = $('<select/>',{class:"node-input-target-type",style:"width:110px; margin-right:10px;"}).appendTo(row1);
+            var selectOptions = ['phone', 'user', 'sipUri', 'teams'];
+            for (var i = 0; i < 4; i++) {
+                selectField.append($("<option></option>").val(selectOptions[i]).text(selectOptions[i]));
+            }
+            selectField.val('phone');
+
+            $('<input/>', {
+              class:"node-input-target-property-name", 
+              type:"text", 
+              placeholder: 'number to dial'
+            })
+              .appendTo(row1);
+            
+            /* make it a TypedInput */
+            row1.find('.node-input-target-property-name').typedInput({types: ['str', 'msg', 'flow', 'global']});
+            row1.find('.red-ui-typedInput-container').css('width', '70%');
+
+
+            $('<label style="padding-top:8px; padding-right:20px">Auth Username:</label>')
+              .appendTo(row2);
+
+            $('<input/>',{
+              class:"node-input-target-property-authuser", 
+              type:"text", 
+              placeholder: '(if required by remote endpoint)'
+            })
+              .appendTo(row2);
+
+            $('<label style="padding-top:8px; padding-right:20px">Auth Password:</label>')
+              .appendTo(row3);
+            $('<input/>',{
+              class:"node-input-target-property-authpassword", 
+              type:"text", 
+              placeholder: '(if required by remote endpoint)'
+            })
+              .appendTo(row3);
+            
+            selectField.on('change', function() {
+              var type = $(this).val();
+              console.log(`type changed to ${type}`);
+              var input = $(this).parent().find('input.red-ui-typedInput-input');
+              input.focus();
+              switch (type) {
+                case 'phone': 
+                  input.attr('placeholder', 'E.164 number to dial');
+                  break;
+                case 'teams':
+                  input.attr('placeholder', 'Microsoft Teams phone number or extension');
+                  break;
+                case 'user': 
+                  input.attr('placeholder', 'user@domain');
+                  break;
+                case 'sipUri': 
+                  input.attr('placeholder', 'sip:number@ip-address');
+                  break;
+              }
+              if (type !== 'sipUri') {
+                row2.hide();
+                row3.hide();
+              }
+              else {
+                row2.show();
+                row3.show();
+              }
+            });
+            selectField.val(target.type);
+            var datafield = row1.find('.node-input-target-property-name');
+            var userfield = row2.find('.node-input-target-property-authuser');
+            var passfield = row3.find('.node-input-target-property-authpassword');
+
+            datafield.typedInput('type', target.varType);
+
+            switch (target.type) {
+              case 'sipUri': 
+                userfield.val(target.user);
+                passfield.val(target.pass);
+              default:
+                datafield.typedInput('value', target.dest);
+                break;
+            }
+            selectField.change();
+            container[0].appendChild(fragment);
+          },
+          removable: true,
+          addButton: 'add target'
+        });
+        console.log(`oneditprepare: coming in with targets: ${JSON.stringify(node.targets)}`);
+        if (!node.targets || 0 === node.targets.length) {
+          node.targets = [{
+            type: 'phone',
+            dest: '',
+            user: '',
+            pass: '',
+            varType: 'str'
+          }];
+        }
+
+        for (var i=0; i < node.targets.length; i++) {
+            var target = node.targets[i];
+            $("#node-input-target-container").editableList('addItem', target);
+        }
+        // populate headers editable list
+        $('#node-input-headers-container').css('min-height','120px').css('min-width','450px').editableList({
+          addItem: function(container, i, opt) {
+            var header = opt;
+            if (!header.hasOwnProperty('h')) {
+                header = {h: '', v: ''};
+            }
+            container.css({
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            });
+            let fragment = document.createDocumentFragment();
+            var row1 = $('<div/>',{style:"display:flex;"}).appendTo(fragment);
+            $('<input/>', {
+              class:"node-input-header-property-name", 
+              type:"text", 
+              placeholder: 'SIP Header'
+            })
+              .appendTo(row1);
+            $('<input/>', {
+              class:"node-input-value-property-name", 
+              type:"text", 
+              placeholder: 'value'
+            })
+              .appendTo(row1);
+
+            row1.find('.node-input-header-property-name').val(header.h);
+            row1.find('.node-input-value-property-name').val(header.v);
+
+            container[0].appendChild(fragment);
+          },
+          removable: true
+        });
+        console.log(`oneditprepare: coming in with headers: ${JSON.stringify(node.headers)}`);
+        if (!node.headers) {
+          var header = {
+            h: '',
+            v: '',
+          };
+          node.headers = [header];
+        }
+
+        for (var i=0; i < node.headers.length; i++) {
+            var header = node.headers[i];
+            $("#node-input-headers-container").editableList('addItem', header);
+        }
+      },
+      oneditsave: () => {
+        var targets = $("#node-input-target-container").editableList('items');
+        var node = this;
+        node.targets= [];
+        console.log(`entering oneditsave with ${targets.length} targets`);
+
+        targets.each(function(i) {
+          var target = $(this);
+          var type = target.find('.node-input-target-type').val();
+          var varType = target.find('.node-input-target-property-name').typedInput('type');
+          var dest = target.find('.node-input-target-property-name').typedInput('value');
+          var user = target.find('.node-input-target-property-authuser').val();
+          var pass = target.find('.node-input-target-property-authpassword').val();
+          if (!['phone', 'user', 'sipUri', 'teams'].includes(type) || 0 === dest.length) return;
+
+          var t = {type};
+          t.varType = varType;
+          t.dest = dest;
+          if ('sipUri' === type && user.length > 0 && pass.length > 0) {
+            Object.assign(t, {user, pass});
+          }
+          node.targets.push(t);
+        });
+        console.log(`saved targets ${JSON.stringify(node.targets)}`);
+
+        node.headers = [];
+        var headers = $("#node-input-headers-container").editableList('items');
+        headers.each(function(i) {
+          var header = $(this);
+          console.log(`header: ${JSON.stringify(header)}`);
+          var h = header.find(".node-input-header-property-name").val();
+          var v = header.find(".node-input-value-property-name").val();
+          console.log(`added ${h}: ${v}`);
+          var obj = {};
+          obj[h] = v;
+          node.headers.push({h, v});
+        });
+        console.log(`saved headers ${JSON.stringify(node.headers)}`);
+      },
+    });
+
+    RED.nodes.registerType('enqueue',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        queue: {required: true, value: ''},
+        queueType: {value: 'str'},
+        actionHook: {},
+        actionHookType: {value: 'str'},
+        waitHook: {},
+        waitHookType: {value: 'str'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { 
+        return this.name || 'enqueue';
+      },
+      oneditprepare: function() {
+        $('#node-input-queue').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-queueType')
+        });
+        $('#node-input-actionHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-actionHookType')
+        });
+        $('#node-input-waitHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-waitHookType')
+        });
+      }
+  });
+
+  RED.nodes.registerType('gather',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        actionhook: {value: ''},
+        finishonkey: {value: ''},
+        dtmfinput: {value: 0},
+        speechinput: {value: 1},
+        numdigits: {value: ''},
+        timeout: {value: ''},
+        prompttype: {value: 'say'},
+        playurl: {value: ''},
+        playurlType: {value: 'str'},
+        text: {value: ''},
+        vendor: {value: 'default'},
+        lang: {value: 'default'},
+        voice: {value: 'default'},
+        recognizerlang: {value: 'default'},
+        recognizerhints: {value: ''},
+        recognizerhintsType: {value: 'str'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'gather';},
+      oneditprepare: () => {
+        var node = this;
+        $('#node-input-playurl').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-playurlType')
+        });
+        $('#node-input-recognizerhints').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-recognizerhintsType')
+        });
+
+        var vendorElem = $('#node-input-vendor');
+        var langElem = $('#node-input-lang');
+        var voiceElem = $('#node-input-voice');
+        var recLangElem = $('#node-input-recognizerlang');
+      
+        var onVendorChanged = function() {
+          var vendor = vendorElem.find(':selected').val();
+
+          console.log(`vendor changed to ${vendor}`);
+          setLanguage(vendor);
+        }
+
+        var onLangChanged = function () {
+          var vendor = vendorElem.find(':selected').val();
+          var lang = langElem.find(':selected').val();
+          console.log(`language changed to ${lang}`);
+          setVoice(vendor, lang)
+        }
+      
+        var setLanguage = function(v) {
+          langElem.find('option').remove();
+          voiceElem.find('option').remove();
+
+          switch (v) {
+            case 'default': 
+              langElem.append('<option value="default" selected>--application default--</option>');
+              voiceElem.append('<option value="default" selected>--application default--</option>');
+              node.lang = 'default';
+              node.voice = 'default';
+              break;
+
+            case 'google':
+              langElem.append(googleLanguageOptions);
+              break;
+
+            case 'aws':
+              langElem.append(awsLanguageOptions);
+              break;
+          }
+          langElem.val(node.lang);
+        }
+
+        var setVoice = function(vendor, lang) {
+          console.log(`gather: set voice for language ${lang} vendor ${vendor}`);
+          voiceElem.find('option').remove();
+
+          switch (vendor) {
+            case 'default':
+              voiceElem.append('<option value="default" selected>--application default--</option>');
+              break;
+
+            case 'google':
+            case 'aws':
+              var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
+              if (obj) {
+                var options = '';
+                for (var i = 0; i < obj.voices.length; i++) {
+                  if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+                  else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+                }
+                voiceElem.append(options);
+              }
+              break;
+          }
+          voiceElem.val(node.voice);
+        }
+
+        var setTranscriptionLanguage = function() {
+          console.log(`settring transcription languages: ${speechRecOptions}`);
+          recLangElem.find('option').remove();
+          recLangElem.append('<option value="default">--application default--</option>');
+          recLangElem.append(speechRecOptions);
+        }
+
+        var enableSpeech = function(enabled) {
+          console.log(`enable speech: ${enabled}`);
+          if (enabled) $('#speech-input-container').show();
+          else $('#speech-input-container').hide();
+        }
+        var enableDtmf = function(enabled) {
+          console.log(`enable dtmf: ${enabled}`);
+          if (enabled) $('#dtmf-input-container').show();
+          else $('#dtmf-input-container').hide();          
+        }
+
+        $('#node-input-speechinput').change(function() {
+          var doSpeech = $('#node-input-speechinput:checked').val();
+          enableSpeech(doSpeech);
+        });
+        $('#node-input-dtmfinput').change(function() {
+          var doDtmf = $('#node-input-dtmfinput:checked').val();
+          enableDtmf(doDtmf);
+        });
+
+        var onSayPlayChanged = function () {
+          var type = $('#node-input-prompttype').find(':selected').val();
+          console.log(`prompt type changed to ${type}`);
+          if (type === 'say') {
+            $('#say-container').show();
+            $('#play-container').hide();
+          }
+          else {
+            $('#play-container').show();
+            $('#say-container').hide();
+          }
+        }
+
+        setTranscriptionLanguage();
+        recLangElem.val(node.recognizerlang);
+
+        vendorElem.change(onVendorChanged);
+        langElem.change(onLangChanged);
+
+        $('#node-input-prompttype').change(onSayPlayChanged);
+      }
+  });
+
+  RED.nodes.registerType('hangup',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'hangup';},
+  });
+
+  RED.nodes.registerType('leave',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'leave';}
+  });
+
+  RED.nodes.registerType('listen',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        actionhook: {},
+        actionhookType: {value: 'str'},
+        url: {required: true},
+        urlType: {value: 'str'},
+        authuser: {},
+        authuserType: {val: 'str'},
+        authpass: {},
+        authpassType: {val: 'str'},
+        finishonkey: {},
+        maxlength: {},
+        metadata: {},
+        metadataType: {value: 'json'},
+        mixtype: {value: 'mono'},
+        beep: {value: false},
+        samplerate: {value: 8000},
+        timeout: {},
+        transcriptionhook: {},
+        transcriptionhookType: {value: 'str'},
+        recognizerlang: {value: 'default'},
+        interim: {value: false},
+        profanityfilter: {value: false}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'listen';},
+      oneditprepare: () => {
+        var node = this;
+        $('#node-input-actionhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-actionhookType')
+        });
+        $('#node-input-url').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-urlType')
+        });
+        $('#node-input-authuser').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-authuserType')
+        });
+        $('#node-input-authpassword').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-authpasswordType')
+        });
+        $('#node-input-metadata').typedInput({
+          types: ['json', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-metadataType')
+        });
+        $('#node-input-transcriptionhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-transcriptionhookType')
+        });
+ 
+        $('#node-input-transcriptionhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-transcriptionhookType')
+        });
+        var recLangElem = $('#node-input-recognizerlang');
+
+        var setTranscriptionLanguage = function() {
+          //console.log(`setting transcription languages: ${speechRecOptions}`);
+          recLangElem.find('option').remove();
+          recLangElem.append('<option value="default">--application default--</option>');
+          recLangElem.append(speechRecOptions);
+        }
+        setTranscriptionLanguage();
+        recLangElem.val(node.recognizerlang);
+      }
+  });
+
+  RED.nodes.registerType('pause',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        len: {required: true},
+        lenType: {value: 'str'},
+
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-pause",
+      label: function() { return this.name || 'pause';},
+      oneditprepare: function() {
+        $('#node-input-len').typedInput({
+          default: $('#node-input-lenType').val(),
+          types: ['num','msg', 'flow', 'global'],
+          typeField: $('#node-input-lenType')
+        });
+      }
+  });
+
+  RED.nodes.registerType('play',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        url: {required: true},
+        urlType: {value: 'str'},
+        early: {value: false},
+        loop: {value: 1, required: true,  validate: RED.validators.number()},
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'play';},
+      oneditprepare: function() {
+        $('#node-input-url').typedInput({
+          default: $('#node-input-urlType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-urlType')
+        });
+      }
+  });
+
+  RED.nodes.registerType('redirect', {
+    category: 'jambonz',
+    color: '#a6bbcf',
+    defaults: {
+      name: {value: ''},
+      hook: {required: true},
+      hookType: {value: 'str'}
+    },
+    inputs:1,
+    outputs:1,
+    icon: "file.png",
+    label: function() { 
+      return this.name || 'redirect';
+    },
+    oneditprepare: function() {
+      $('#node-input-hook').typedInput({
+        types: ['str', 'msg', 'flow', 'global'],
+        typeField: $('#node-input-hookType')
+      });
+      }
+  });
+
+  RED.nodes.registerType('say',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        text: {required: true},
+        early: {value: false},
+        loop: {value: 1},
+        vendor: {value: 'default'},
+        lang: {value: 'default'},
+        voice: {value: 'default'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'say';},
+      oneditprepare: () => {
+        var node = this;
+        var vendorElem = $('#node-input-vendor');
+        var langElem = $('#node-input-lang');
+        var voiceElem = $('#node-input-voice');
+      
+        var onVendorChanged = function() {
+          var vendor = vendorElem.find(':selected').val();
+
+          console.log(`vendor changed to ${vendor}`);
+          setLanguage(vendor);
+        }
+
+        var onLangChanged = function() {
+          var vendor = vendorElem.find(':selected').val();
+          var lang = langElem.find(':selected').val();
+          console.log(`language changed to ${lang}`);
+          setVoice(vendor, lang)
+        }
+      
+        var setLanguage = function(v) {
+          langElem.find('option').remove();
+          voiceElem.find('option').remove();
+
+          switch (v) {
+            case 'default': 
+              langElem.append('<option value="default" selected>--application default--</option>');
+              voiceElem.append('<option value="default" selected>--application default--</option>');
+              node.lang = 'default';
+              node.voice = 'default';
+              break;
+
+            case 'google':
+              langElem.append(googleLanguageOptions);
+              break;
+
+            case 'aws':
+              langElem.append(awsLanguageOptions);
+              break;
+          }
+          langElem.val(node.lang);
+        }
+
+        var setVoice = function(vendor, lang) {
+          console.log(`set voice for language ${lang} vendor ${vendor}`);
+          voiceElem.find('option').remove();
+
+          switch (vendor) {
+            case 'default':
+              voiceElem.append('<option value="default" selected>--application default--</option>');
+              break;
+
+            case 'google':
+            case 'aws':
+              var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
+              if (obj) {
+                var options = '';
+                for (var i = 0; i < obj.voices.length; i++) {
+                  if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+                  else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+                }
+                voiceElem.append(options);
+              }
+              break;
+          }
+          voiceElem.val(node.voice);
+        }
+
+        vendorElem.change(onVendorChanged);
+        langElem.change(onLangChanged);
+      }
+  });
+
+  RED.nodes.registerType('sip:decline',{
+      category: 'jambonz',
+      color: '#a6bbcf',
+      defaults: {
+        name: {value: ''},
+        status: {},
+        statusType: {value: 'num'},
+        reason: {value: ''},
+        reasonType: {value: 'str'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() { return this.name || 'sip:decline';},
+      oneditprepare: function() {
+        $('#node-input-status').typedInput({
+          default: $('#node-input-statusType').val(),
+          types: ['num','msg', 'flow', 'global'],
+          typeField: $('#node-input-statusType')
+        });
+        $('#node-input-reason').typedInput({
+          default: $('#node-input-reasonType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-reasonType')
+        });
+      }
+  });
+
+  RED.nodes.registerType('tag',{
+    category: 'jambonz',
+    color: '#a6bbcf',
+    defaults: {
+      name: {value: ''},
+      data: {required: true},
+      dataType: {value: 'json'}
+    },
+    inputs:1,
+    outputs:1,
+    icon: "font-awesome/fa-tags",
+    label: function() { return this.name || 'tag';},
+    oneditprepare: function() {
+      $('#node-input-data').typedInput({
+        default: $('#node-input-dataType').val(),
+        types: ['json', 'msg', 'flow', 'global'],
+        typeField: $('#node-input-dataType')
+      });
+    }
+  });
+
 </script>
 
+
+<!-- user auth -->
 <script type="text/html" data-template-name="user auth">
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -118,51 +988,6 @@ The output of this node is to set <code>msg.authResponse</code> accordingly, and
 </script>
 
 <!-- conference -->
-<script type="text/javascript">
-  RED.nodes.registerType('conference',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-        conference: {required: true, value: ''},
-        conferenceType: {value: 'str'},
-        beep: {value: false},
-        endConferenceOnExit: {value: false},
-        startConferenceOnEnter: {value: false},
-        maxParticipants: {},
-        maxParticipantsType: {value: 'num'},
-        enterHook: {},
-        enterHookType: {value: 'str'},
-        waitHook: {},
-        waitHookType: {value: 'str'}
-      },
-      inputs:1,
-      outputs:1,
-      icon: "file.png",
-      label: function() { 
-        return this.name || 'conference';
-      },
-      oneditprepare: function() {
-        $('#node-input-conference').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-conferenceType')
-        });
-        $('#node-input-enterHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-enterHookType')
-        });
-        $('#node-input-waitHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-waitHookType')
-        });
-        $('#node-input-maxParticipants').typedInput({
-          types: ['num', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-maxParticipantsType')
-        });
-      }
-  });
-</script>
-
 <script type="text/html" data-template-name="conference">
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -225,49 +1050,6 @@ The conference verb places a call into a conference.
 </script>
 
 <!-- dequeue -->
-<script type="text/javascript">
-  RED.nodes.registerType('dequeue',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-        queue: {required: true, value: ''},
-        queueType: {value: 'str'},
-        actionHook: {},
-        actionHookType: {value: 'str'},
-        confirmHook: {},
-        confirmHookType: {value: 'str'},
-        beep: {value: false},
-        timeout: {},
-        timeoutType: {value: 'num'}
-      },
-      inputs:1,
-      outputs:1,
-      icon: "file.png",
-      label: function() { 
-        return this.name || 'dequeue';
-      },
-      oneditprepare: function() {
-        $('#node-input-queue').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-queueType')
-        });
-        $('#node-input-actionHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-actionHookType')
-        });
-        $('#node-input-confirmHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-confirmHookType')
-        });
-        $('#node-input-timeout').typedInput({
-          types: ['num', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-timeoutType')
-        });
-      }
-  });
-</script>
-
 <script type="text/html" data-template-name="dequeue">
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -432,329 +1214,7 @@ The dequeue verb removes the a call from the front of a specified queue and brid
     </ul>
 </script>
 
-<script type="text/javascript">
-  RED.nodes.registerType('dial',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-        targets:{
-          value:[
-            {
-              type: 'phone',
-              dest: '',
-              user: '',
-              pass: '',
-              varType: 'str'
-            }
-          ]
-        },
-        headers: {
-          value: []
-        },
-        actionhook: {value: ''},
-        actionhookType: {value: 'str'},
-        answeronbridge: {value: false},
-        callerid: {value: ''},
-        calleridType: {value: ''},
-        confirmhook: {value: ''},
-        confirmhookType: {value: 'str'},
-        dialmusic: {value: ''},
-        dialmusicType: {value: 'str'},
-        dtmfcapture: {value: ''},
-        dtmfcaptureType: {value: 'str'},
-        dtmfhook: {value: ''},
-        dtmfhookType: {value: 'str'},
-        timelimit: {validate:RED.validators.regex(/^\d*$/) },
-        timeout: {validate:RED.validators.regex(/^\d*$/) },
-        listenurl: {value: ''},
-        listenurlType: {value: 'str'},
-        transcribeurl: {value: ''},
-        transcribeurlType: {value: 'str'},
-        interim: {value: false},
-        transcribelang: {value: 'en-US', require: true}
-      },
-      inputs:1,
-      outputs:1,
-      icon: "file.png",
-      label: function() { return this.name || 'dial';},
-      oneditprepare: function() {
-        $('#node-input-callerid').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-calleridType')
-        });
-        $('#node-input-actionhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-actionhookType')
-        });
-        $('#node-input-confirmhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-confirmhookType')
-        });
-        $('#node-input-dialmusic').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-dialmusicType')
-        });
-        $('#node-input-dtmfcapture').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-dtmfcaptureType')
-        });
-        $('#node-input-dtmfhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-dtmfhookType')
-        });
-        $('#node-input-transcribeurl').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-transcribeurlType')
-        });
-        $('#node-input-listenurl').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-listenurlType')
-        });
-
-        // populate targets editable list
-        $('#node-input-target-container').css('min-height','180px').css('min-width','450px').editableList({
-          addItem: function(container, i, opt) {
-            var target = opt;
-            console.log(`addItem: ${JSON.stringify(opt)}`);
-            container.css({
-              overflow: 'hidden',
-              whiteSpace: 'nowrap'
-            });
-            let fragment = document.createDocumentFragment();
-            var row1 = $('<div/>',{style:"display:flex;"}).appendTo(fragment);
-            var row2 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
-            var row3 = $('<div/>',{style:"margin-top:8px;"}).appendTo(fragment);
-            var row4 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
-
-            var selectField = $('<select/>',{class:"node-input-target-type",style:"width:110px; margin-right:10px;"}).appendTo(row1);
-            var selectOptions = ['phone', 'user', 'sipUri', 'teams'];
-            for (var i = 0; i < 4; i++) {
-                selectField.append($("<option></option>").val(selectOptions[i]).text(selectOptions[i]));
-            }
-            selectField.val('phone');
-
-            $('<input/>', {
-              class:"node-input-target-property-name", 
-              type:"text", 
-              placeholder: 'number to dial'
-            })
-              .appendTo(row1);
-            
-            /* make it a TypedInput */
-            row1.find('.node-input-target-property-name').typedInput({types: ['str', 'msg', 'flow', 'global']});
-            row1.find('.red-ui-typedInput-container').css('width', '70%');
-
-
-            $('<label style="padding-top:8px; padding-right:20px">Auth Username:</label>')
-              .appendTo(row2);
-
-            $('<input/>',{
-              class:"node-input-target-property-authuser", 
-              type:"text", 
-              placeholder: '(if required by remote endpoint)'
-            })
-              .appendTo(row2);
-
-            $('<label style="padding-top:8px; padding-right:20px">Auth Password:</label>')
-              .appendTo(row3);
-            $('<input/>',{
-              class:"node-input-target-property-authpassword", 
-              type:"text", 
-              placeholder: '(if required by remote endpoint)'
-            })
-              .appendTo(row3);
-            
-            selectField.on('change', function() {
-              var type = $(this).val();
-              var input = $(this).parent().find('input.node-input-target-property-name');
-              input.focus();
-              switch (type) {
-                case 'phone': 
-                  input.attr('placeholder', 'E.164 number to dial');
-                  break;
-                case 'teams':
-                  input.attr('placeholder', 'Microsoft Teams phone number or extension');
-                  break;
-                case 'user': 
-                  input.attr('placeholder', 'user@domain');
-                  break;
-                case 'sipUri': 
-                  input.attr('placeholder', 'sip:number@ip-address');
-                  break;
-              }
-              if (type !== 'sipUri') {
-                row2.hide();
-                row3.hide();
-              }
-              else {
-                row2.show();
-                row3.show();
-              }
-            });
-            selectField.val(target.type);
-            var datafield = row1.find('.node-input-target-property-name');
-            var userfield = row2.find('.node-input-target-property-authuser');
-            var passfield = row3.find('.node-input-target-property-authpassword');
-
-            datafield.typedInput('type', target.varType);
-
-            switch (target.type) {
-              case 'sipUri': 
-                userfield.val(target.user);
-                passfield.val(target.pass);
-              default:
-                datafield.typedInput('value', target.dest);
-                break;
-            }
-            selectField.change();
-            container[0].appendChild(fragment);
-          },
-          removable: true,
-          addButton: 'add target'
-        });
-        console.log(`oneditprepare: coming in with targets: ${JSON.stringify(this.targets)}`);
-        /*
-        if (!this.targets || this.targets.length === 0) {
-          var target = {
-            type: 'phone',
-            number: '',
-            varType: 'str'
-          };
-          this.targets = [target];
-        }
-        */
-
-        for (var i=0; i < this.targets.length; i++) {
-            var target = this.targets[i];
-            $("#node-input-target-container").editableList('addItem', target);
-        }
-        // populate headers editable list
-        $('#node-input-headers-container').css('min-height','120px').css('min-width','450px').editableList({
-          addItem: function(container, i, opt) {
-            var header = opt;
-            if (!header.hasOwnProperty('h')) {
-                header = {h: '', v: ''};
-            }
-            container.css({
-              overflow: 'hidden',
-              whiteSpace: 'nowrap'
-            });
-            let fragment = document.createDocumentFragment();
-            var row1 = $('<div/>',{style:"display:flex;"}).appendTo(fragment);
-            $('<input/>', {
-              class:"node-input-header-property-name", 
-              type:"text", 
-              placeholder: 'SIP Header'
-            })
-              .appendTo(row1);
-            $('<input/>', {
-              class:"node-input-value-property-name", 
-              type:"text", 
-              placeholder: 'value'
-            })
-              .appendTo(row1);
-
-            row1.find('.node-input-header-property-name').val(header.h);
-            row1.find('.node-input-value-property-name').val(header.v);
-
-            container[0].appendChild(fragment);
-          },
-          removable: true
-        });
-        console.log(`oneditprepare: coming in with headers: ${JSON.stringify(this.headers)}`);
-        if (!this.headers) {
-          var header = {
-            h: '',
-            v: '',
-          };
-          this.headers = [header];
-        }
-
-        for (var i=0; i < this.headers.length; i++) {
-            var header = this.headers[i];
-            $("#node-input-headers-container").editableList('addItem', header);
-        }
-      },
-      oneditsave: function() {
-        var targets = $("#node-input-target-container").editableList('items');
-        var node = this;
-        node.targets= [];
-        console.log(`entering oneditsave with ${targets.length} targets`);
-
-        targets.each(function(i) {
-          var target = $(this);
-          var type = target.find('.node-input-target-type').val();
-          var varType = target.find('.node-input-target-property-name').typedInput('type');
-          var dest = target.find('.node-input-target-property-name').typedInput('value');
-          var user = target.find('.node-input-target-property-authuser').val();
-          var pass = target.find('.node-input-target-property-authpassword').val();
-          if (!['phone', 'user', 'sipUri', 'teams'].includes(type) || 0 === dest.length) return;
-
-          var t = {type};
-          t.varType = varType;
-          t.dest = dest;
-          if ('sipUri' === type && user.length > 0 && pass.length > 0) {
-            Object.assign(t, {user, pass});
-          }
-          node.targets.push(t);
-        });
-        console.log(`saved targets ${JSON.stringify(node.targets)}`);
-
-        node.headers = [];
-        var headers = $("#node-input-headers-container").editableList('items');
-        headers.each(function(i) {
-          var header = $(this);
-          console.log(`header: ${JSON.stringify(header)}`);
-          var h = header.find(".node-input-header-property-name").val();
-          var v = header.find(".node-input-value-property-name").val();
-          console.log(`added ${h}: ${v}`);
-          var obj = {};
-          obj[h] = v;
-          node.headers.push({h, v});
-        });
-        console.log(`saved headers ${JSON.stringify(node.headers)}`);
-      },
-    });
-</script>
-
 <!-- enqueue -->
-<script type="text/javascript">
-  RED.nodes.registerType('enqueue',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-        queue: {required: true, value: ''},
-        queueType: {value: 'str'},
-        actionHook: {},
-        actionHookType: {value: 'str'},
-        waitHook: {},
-        waitHookType: {value: 'str'}
-      },
-      inputs:1,
-      outputs:1,
-      icon: "file.png",
-      label: function() { 
-        return this.name || 'enqueue';
-      },
-      oneditprepare: function() {
-        $('#node-input-queue').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-queueType')
-        });
-        $('#node-input-actionHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-actionHookType')
-        });
-        $('#node-input-waitHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-waitHookType')
-        });
-      }
-  });
-</script>
-
 <script type="text/html" data-template-name="enqueue">
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -800,161 +1260,6 @@ The enqueue command is used to place a caller in a queue.
 </script>
 
 <!-- gather -->
-<script type="text/javascript">
-  RED.nodes.registerType('gather',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-        actionhook: {value: ''},
-        finishonkey: {value: ''},
-        dtmfinput: {value: 0},
-        speechinput: {value: 1},
-        numdigits: {value: ''},
-        timeout: {value: ''},
-        prompttype: {value: 'say'},
-        playurl: {value: ''},
-        playurlType: {value: 'str'},
-        text: {value: ''},
-        vendor: {value: 'default'},
-        lang: {value: 'default'},
-        voice: {value: 'default'},
-        recognizerlang: {value: 'default'},
-        recognizerhints: {value: ''},
-        recognizerhintsType: {value: 'str'}
-      },
-      inputs:1,
-      outputs:1,
-      icon: "file.png",
-      label: function() { return this.name || 'gather';},
-      oneditprepare: function() {
-        $('#node-input-playurl').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-playurlType')
-        });
-        $('#node-input-recognizerhints').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-recognizerhintsType')
-        });
-
-        var vendorElem = $('#node-input-vendor');
-        var langElem = $('#node-input-lang');
-        var voiceElem = $('#node-input-voice');
-        var recLangElem = $('#node-input-recognizerlang');
-      
-        var onVendorChanged = function() {
-          var vendor = vendorElem.find(':selected').val();
-
-          console.log(`vendor changed to ${vendor}`);
-          setLanguage(vendor);
-        }
-
-        var onLangChanged = function () {
-          var vendor = vendorElem.find(':selected').val();
-          var lang = langElem.find(':selected').val();
-          console.log(`language changed to ${lang}`);
-          setVoice(vendor, lang)
-        }
-      
-        var setLanguage = function(v) {
-          langElem.find('option').remove();
-          voiceElem.find('option').remove();
-
-          switch (v) {
-            case 'default': 
-              langElem.append('<option value="default" selected>--application default--</option>');
-              voiceElem.append('<option value="default" selected>--application default--</option>');
-              this.lang = 'default';
-              this.voice = 'default';
-              break;
-
-            case 'google':
-              langElem.append(googleLanguageOptions);
-              break;
-
-            case 'aws':
-              langElem.append(awsLanguageOptions);
-              break;
-          }
-          langElem.val(this.lang);
-        }
-
-        var setVoice = function(vendor, lang) {
-          console.log(`gather: set voice for language ${lang} vendor ${vendor}`);
-          voiceElem.find('option').remove();
-
-          switch (vendor) {
-            case 'default':
-              voiceElem.append('<option value="default" selected>--application default--</option>');
-              break;
-
-            case 'google':
-            case 'aws':
-              var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
-              if (obj) {
-                var options = '';
-                for (var i = 0; i < obj.voices.length; i++) {
-                  if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-                  else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-                }
-                voiceElem.append(options);
-              }
-              break;
-          }
-          voiceElem.val(this.voice);
-        }
-
-        var setTranscriptionLanguage = function() {
-          console.log(`settring transcription languages: ${speechRecOptions}`);
-          recLangElem.find('option').remove();
-          recLangElem.append('<option value="default">--application default--</option>');
-          recLangElem.append(speechRecOptions);
-        }
-
-        var enableSpeech = function(enabled) {
-          console.log(`enable speech: ${enabled}`);
-          if (enabled) $('#speech-input-container').show();
-          else $('#speech-input-container').hide();
-        }
-        var enableDtmf = function(enabled) {
-          console.log(`enable dtmf: ${enabled}`);
-          if (enabled) $('#dtmf-input-container').show();
-          else $('#dtmf-input-container').hide();          
-        }
-
-        $('#node-input-speechinput').change(function() {
-          var doSpeech = $('#node-input-speechinput:checked').val();
-          enableSpeech(doSpeech);
-        });
-        $('#node-input-dtmfinput').change(function() {
-          var doDtmf = $('#node-input-dtmfinput:checked').val();
-          enableDtmf(doDtmf);
-        });
-
-        var onSayPlayChanged = function () {
-          var type = $('#node-input-prompttype').find(':selected').val();
-          console.log(`prompt type changed to ${type}`);
-          if (type === 'say') {
-            $('#say-container').show();
-            $('#play-container').hide();
-          }
-          else {
-            $('#play-container').show();
-            $('#say-container').hide();
-          }
-        }
-
-        setTranscriptionLanguage();
-        recLangElem.val(this.recognizerlang);
-
-        vendorElem.change(onVendorChanged);
-        langElem.change(onLangChanged);
-
-        $('#node-input-prompttype').change(onSayPlayChanged);
-      }
-  });
-</script>
-
 <script type="text/html" data-template-name="gather">
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -1075,20 +1380,6 @@ The enqueue command is used to place a caller in a queue.
 </script>
 
 <!-- hangup -->
-<script type="text/javascript">
-  RED.nodes.registerType('hangup',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-      },
-      inputs:1,
-      outputs:1,
-      icon: "file.png",
-      label: function() { return this.name || 'hangup';},
-  });
-</script>
-
 <script type="text/html" data-template-name="hangup">
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -1119,20 +1410,6 @@ The hangup verb hangs up the current call.
 </script>
 
 <!-- leave -->
-<script type="text/javascript">
-  RED.nodes.registerType('leave',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-      },
-      inputs:1,
-      outputs:1,
-      icon: "file.png",
-      label: function() { return this.name || 'leave';}
-  });
-</script>
-
 <script type="text/html" data-template-name="leave">
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -1162,82 +1439,6 @@ The leave verb transfers a call out of a queue. The call then returns to the flo
 </script>
 
 <!-- listen -->
-<script type="text/javascript">
-  RED.nodes.registerType('listen',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-        actionhook: {},
-        actionhookType: {value: 'str'},
-        url: {required: true},
-        urlType: {value: 'str'},
-        authuser: {},
-        authuserType: {val: 'str'},
-        authpass: {},
-        authpassType: {val: 'str'},
-        finishonkey: {},
-        maxlength: {},
-        metadata: {},
-        metadataType: {value: 'json'},
-        mixtype: {value: 'mono'},
-        beep: {value: false},
-        samplerate: {value: 8000},
-        timeout: {},
-        transcriptionhook: {},
-        transcriptionhookType: {value: 'str'},
-        recognizerlang: {value: 'default'},
-        interim: {value: false},
-        profanityfilter: {value: false}
-      },
-      inputs:1,
-      outputs:1,
-      icon: "file.png",
-      label: function() { return this.name || 'listen';},
-      oneditprepare: function() {
-        $('#node-input-actionhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-actionhookType')
-        });
-        $('#node-input-url').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-urlType')
-        });
-        $('#node-input-authuser').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-authuserType')
-        });
-        $('#node-input-authpassword').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-authpasswordType')
-        });
-        $('#node-input-metadata').typedInput({
-          types: ['json', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-metadataType')
-        });
-        $('#node-input-transcriptionhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-transcriptionhookType')
-        });
- 
-        $('#node-input-transcriptionhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-transcriptionhookType')
-        });
-        var recLangElem = $('#node-input-recognizerlang');
-
-        var setTranscriptionLanguage = function() {
-          //console.log(`setting transcription languages: ${speechRecOptions}`);
-          recLangElem.find('option').remove();
-          recLangElem.append('<option value="default">--application default--</option>');
-          recLangElem.append(speechRecOptions);
-        }
-        setTranscriptionLanguage();
-        recLangElem.val(this.recognizerlang);
-      }
-  });
-</script>
-
 <script type="text/html" data-template-name="listen">
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -1343,90 +1544,6 @@ The listen verb establishes a connection to a websocket server and sends live au
 </script>
 
 <!-- pause -->
-<script type="text/javascript">
-  RED.nodes.registerType('pause',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-        len: {required: true},
-        lenType: {value: 'str'},
-
-      },
-      inputs:1,
-      outputs:1,
-      icon: "font-awesome/fa-pause",
-      label: function() { return this.name || 'pause';},
-      oneditprepare: function() {
-        $('#node-input-len').typedInput({
-          default: $('#node-input-lenType').val(),
-          types: ['num','msg', 'flow', 'global'],
-          typeField: $('#node-input-lenType')
-        });
-      }
-  });
-</script>
-
-<script type="text/html" data-template-name="pause">
-  <div class="form-row">
-    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-    <input type="text" id="node-input-name" placeholder="Name">
-  </div>
-  <div class="form-row">
-    <label for="node-input-length">Duration</label>
-    <input type="text" id="node-input-len" placeholder="number of seconds to pause">
-    <input type="hidden" id="node-input-lenType">
-  </div>
-</script>
-
-<script type="text/html" data-help-name="pause">
-  <p>Pause a specified number of seconds</p>
-  <h3>Inputs</h3>
-  <dl class="message-properties">
-      <dt>jambonz<span class="property-type">object</span></dt>
-      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
-  </dl>
-
-<h3>Outputs</h3>
-<dl class="message-properties">
-   <dt>jambonz<span class="property-type">object</span></dt>
-   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>pause</code> action appended  </dd>
-</dl>
-
-<h3>Details</h3>
-The pause verb waits a specified number of seconds before continuing to execute the application.
-<h3>References</h3>
-  <ul>
-      <li><a href="https://docs.jambonz.org/jambonz/#pause">Jambonz pause reference</a></li>
-  </ul>
-</script>
-
-
-<!-- pause -->
-<script type="text/javascript">
-  RED.nodes.registerType('pause',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-        len: {required: true},
-        lenType: {value: 'str'},
-
-      },
-      inputs:1,
-      outputs:1,
-      icon: "file.png",
-      label: function() { return this.name || 'pause';},
-      oneditprepare: function() {
-        $('#node-input-len').typedInput({
-          default: $('#node-input-lenType').val(),
-          types: ['num','msg', 'flow', 'global'],
-          typeField: $('#node-input-lenType')
-        });
-      }
-  });
-</script>
-
 <script type="text/html" data-template-name="pause">
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -1462,31 +1579,6 @@ The pause verb waits a specified number of seconds before continuing to execute 
 </script>
 
 <!-- play -->
-<script type="text/javascript">
-  RED.nodes.registerType('play',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-        url: {required: true},
-        urlType: {value: 'str'},
-        early: {value: false},
-        loop: {value: 1, required: true,  validate: RED.validators.number()},
-      },
-      inputs:1,
-      outputs:1,
-      icon: "file.png",
-      label: function() { return this.name || 'play';},
-      oneditprepare: function() {
-        $('#node-input-url').typedInput({
-          default: $('#node-input-urlType').val(),
-          types: ['str','msg', 'flow', 'global'],
-          typeField: $('#node-input-urlType')
-        });
-      }
-  });
-</script>
-
 <script type="text/html" data-template-name="play">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
@@ -1532,30 +1624,6 @@ if the call has not already been answered.
 </script>
 
 <!-- redirect -->
-<script type="text/javascript">
-  RED.nodes.registerType('redirect',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-        hook: {required: true},
-        hookType: {value: 'str'}
-      },
-      inputs:1,
-      outputs:1,
-      icon: "file.png",
-      label: function() { 
-        return this.name || 'redirect';
-      },
-      oneditprepare: function() {
-        $('#node-input-hook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-hookType')
-        });
-      }
-  });
-</script>
-
 <script type="text/html" data-template-name="redirect">
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -1591,96 +1659,6 @@ The redirect verb retrieves a new URL to execute for the current call.
 </script>
 
 <!-- say -->
-<script type="text/javascript">
-  RED.nodes.registerType('say',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-        text: {required: true},
-        early: {value: false},
-        loop: {value: 1},
-        vendor: {value: 'default'},
-        lang: {value: 'default'},
-        voice: {value: 'default'}
-      },
-      inputs:1,
-      outputs:1,
-      icon: "file.png",
-      label: function() { return this.name || 'say';},
-      oneditprepare: function() {
-        var vendorElem = $('#node-input-vendor');
-        var langElem = $('#node-input-lang');
-        var voiceElem = $('#node-input-voice');
-      
-        var onVendorChanged = function() {
-          var vendor = vendorElem.find(':selected').val();
-
-          console.log(`vendor changed to ${vendor}`);
-          setLanguage(vendor);
-        }
-
-        var onLangChanged = function () {
-          var vendor = vendorElem.find(':selected').val();
-          var lang = langElem.find(':selected').val();
-          console.log(`language changed to ${lang}`);
-          setVoice(vendor, lang)
-        }
-      
-        var setLanguage = function(v) {
-          langElem.find('option').remove();
-          voiceElem.find('option').remove();
-
-          switch (v) {
-            case 'default': 
-              langElem.append('<option value="default" selected>--application default--</option>');
-              voiceElem.append('<option value="default" selected>--application default--</option>');
-              this.lang = 'default';
-              this.voice = 'default';
-              break;
-
-            case 'google':
-              langElem.append(googleLanguageOptions);
-              break;
-
-            case 'aws':
-              langElem.append(awsLanguageOptions);
-              break;
-          }
-          langElem.val(this.lang);
-        }
-
-        var setVoice = function(vendor, lang) {
-          console.log(`set voice for language ${lang} vendor ${vendor}`);
-          voiceElem.find('option').remove();
-
-          switch (vendor) {
-            case 'default':
-              voiceElem.append('<option value="default" selected>--application default--</option>');
-              break;
-
-            case 'google':
-            case 'aws':
-              var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
-              if (obj) {
-                var options = '';
-                for (var i = 0; i < obj.voices.length; i++) {
-                  if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-                  else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-                }
-                voiceElem.append(options);
-              }
-              break;
-          }
-          voiceElem.val(this.voice);
-        }
-
-        vendorElem.change(onVendorChanged);
-        langElem.change(onLangChanged);
-      }
-  });
-</script>
-
 <script type="text/html" data-template-name="say">
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -1734,7 +1712,7 @@ The redirect verb retrieves a new URL to execute for the current call.
 <h3>Outputs</h3>
 <dl class="message-properties">
    <dt>jambonz<span class="property-type">object</span></dt>
-   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>conference</code> action appended  </dd>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>say</code> action appended  </dd>
 </dl>
 
 <h3>Details</h3>
@@ -1746,36 +1724,6 @@ The text provided may be either plain text or may use SSML tags.
 </script>
 
 <!-- sip:decline -->
-<script type="text/javascript">
-  RED.nodes.registerType('sip:decline',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-        status: {},
-        statusType: {value: 'num'},
-        reason: {value: ''},
-        reasonType: {value: 'str'}
-      },
-      inputs:1,
-      outputs:1,
-      icon: "file.png",
-      label: function() { return this.name || 'sip:decline';},
-      oneditprepare: function() {
-        $('#node-input-status').typedInput({
-          default: $('#node-input-statusType').val(),
-          types: ['num','msg', 'flow', 'global'],
-          typeField: $('#node-input-statusType')
-        });
-        $('#node-input-reason').typedInput({
-          default: $('#node-input-reasonType').val(),
-          types: ['str','msg', 'flow', 'global'],
-          typeField: $('#node-input-reasonType')
-        });
-      }
-  });
-</script>
-
 <script type="text/html" data-template-name="sip:decline">
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -1816,29 +1764,6 @@ The sip:decline verb rejects an incoming call.
 </script>
 
 <!-- tag -->
-<script type="text/javascript">
-  RED.nodes.registerType('tag',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-        data: {required: true},
-        dataType: {value: 'json'}
-      },
-      inputs:1,
-      outputs:1,
-      icon: "font-awesome/fa-tags",
-      label: function() { return this.name || 'tag';},
-      oneditprepare: function() {
-        $('#node-input-data').typedInput({
-          default: $('#node-input-dataType').val(),
-          types: ['json', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-dataType')
-        });
-      }
-  });
-</script>
-
 <script type="text/html" data-template-name="tag">
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -1863,79 +1788,3 @@ The tag verb is used to add properties to the standard call attributes that jamb
       <li><a href="https://docs.jambonz.org/jambonz/#tag">Jambonz tag reference</a></li>
   </ul>
 </script>
-
-<!-- transcribe -->
-<!--
-<script type="text/javascript">
-  RED.nodes.registerType('transcribe',{
-      category: 'jambonz',
-      color: '#a6bbcf',
-      defaults: {
-        name: {value: ''},
-        transcriptionhook: {required: true},
-        transcriptionhookType: {value: 'str'},
-        recognizerlang: {required: true},
-        interim: {value: false},
-        dualchannel: {value: false},
-        profanityfilter: {value: false}
-      },
-      inputs:1,
-      outputs:1,
-      icon: "file.png",
-      label: function() { return this.name || 'transcribe';},
-      oneditprepare: function() {
-        buildTranscribePanel(this);
-      }
-  });
-</script>
-
-<script type="text/html" data-template-name="transcribe">
-  <div class="form-row">
-    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-    <input type="text" id="node-input-name" placeholder="Name">
-</div>
-<div class="form-row">
-  <label for="node-input-recognizerlang">Language</label>
-  <select id="node-input-recognizerlang">
-  </select>
-</div>
-<div class="form-row">
-  <label for="node-input-transcriptionhook">Transcription hook</label>
-  <input type="text" id="node-input-transcriptionhook" placeholder="webhook with results of transcription">
-  <input type="hidden" id="node-input-transcriptionhookType">
-</div>
-<div class="form-row">
-  <label for="node-input-interim"><i class="icon-tag"></i>Send interim results</label>
-  <input type="checkbox" id="node-input-interim">
-</div>
-<div class="form-row">
-  <label for="node-input-dualchannel"><i class="icon-tag"></i>Transcribe both channels</label>
-  <input type="checkbox" id="node-input-dualchannel">
-</div>
-<div class="form-row">
-  <label for="node-input-profanityfilter"><i class="icon-tag"></i>Filter profanity</label>
-  <input type="checkbox" id="node-input-profanityfilter">
-</div>
-</script>
-
-<script type="text/html" data-help-name="transcribe">
-  <p>The transcribe verb is used to send real time transcriptions of speech to a web callback.</p>
-  <h3>Inputs</h3>
-  <dl class="message-properties">
-      <dt>jambonz<span class="property-type">object</span></dt>
-      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
-  </dl>
-
-  <h3>Outputs</h3>
-  <dl class="message-properties">
-    <dt>jambonz<span class="property-type">object</span></dt>
-    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>gather</code> action appended  </dd>
-  </dl>
-
-  <h3>Details</h3>
-  The transcribe command is only allowed as a nested verb within a dial or listen verb. Using transcribe in a dial command allows a long-running transcription of a phone call to be made, while nesting within a listen verb allows transcriptions of recorded messages (e.g. voicemail).  <h3>References</h3>
-    <ul>
-        <li><a href="https://docs.jambonz.org/jambonz/#transcribe">Jambonz transcribe reference</a></li>
-    </ul>
-</script>
--->
