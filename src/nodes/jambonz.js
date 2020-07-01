@@ -389,6 +389,7 @@ module.exports = function(RED) {
       node.log(`config: ${JSON.stringify(config)}`);
       var target = config.targets.map((t) => {
         var dest = v_resolve(t.dest, t.varType, this.context(), msg);
+        node.log(`dial: dest ${t.varType}:${t.dest} resolved to ${dest}`);
         switch (t.type) {
           case 'phone':
             t.number = dest;
