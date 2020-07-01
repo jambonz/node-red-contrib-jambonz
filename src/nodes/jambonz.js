@@ -15,7 +15,7 @@ module.exports = function(RED) {
       if (config.ha1 && config.ha1.length) {
         ha1_string =  v_resolve(config.ha1, config.ha1Type, this.context(), msg);
         attemptedAuthentication = true;
-        node.log(`user auth: validating user ${auth.username} domain ${auth.domain} based on hashed password`);
+        node.log(`user auth: validating user ${auth.username} domain ${auth.realm} based on hashed password`);
       }
       else if (config.password && config.password.length) {
         var password = v_resolve(config.password, config.passwordType, this.context(), msg);
@@ -23,7 +23,7 @@ module.exports = function(RED) {
         ha1.update([auth.username, auth.realm, password].join(':'));
         ha1_string = ha1.digest('hex');
         attemptedAuthentication = true;
-        node.log(`user auth: validating user ${auth.username} domain ${auth.domain} based on plaintext password`);
+        node.log(`user auth: validating user ${auth.username} domain ${auth.realm} based on plaintext password`);
       }
       else {
         node.log('user auth: failing due to no password provided');
@@ -281,6 +281,8 @@ module.exports = function(RED) {
     var node = this;
     node.on('input', function(msg) {
 
+      node.log(`say config: ${JSON.stringify(config)}, msg.call: ${JSON.stringify(msg.call)}`);
+
       // jambonz say verb
       var obj = {
         verb: 'say',
@@ -359,54 +361,34 @@ module.exports = function(RED) {
   }
   RED.nodes.registerType('gather', gather);
 
-  /** transcribe */
-  /*
-  function transcribe(config) {
-    RED.nodes.createNode(this, config);
-    var node = this;
-    node.on('input', function(msg, send, done) {
-      appendVerb(msg, {
-        verb: 'transcribe',
-        vendor: 'google',
-        language: config.recognizerlang,
-        transcriptionHook: v_resolve(config.transcriptionhook, config.transcriptionhookType, this.context(), msg),
-        dualChannel: config.dualchannel,
-        profanityFilter: config.profanityfilter,
-        interim: config.interim
-      });
-      node.send(msg);
-    });
-  }
-  RED.nodes.registerType('transcribe', transcribe);
-  */
-
   function dial(config) {
     RED.nodes.createNode(this, config);
     var node = this;
 
     node.on('input', function(msg) {
 
-      node.log(`config: ${JSON.stringify(config)}`);
+      node.log(`dial config: ${JSON.stringify(config)}, msg.call: ${JSON.stringify(msg.call)}`);
       var target = config.targets.map((t) => {
-        var dest = v_resolve(t.dest, t.varType, this.context(), msg);
+        const obj = Object.assign({}, t);
+        var dest = v_resolve(obj.dest, obj.varType, this.context(), msg);
         node.log(`dial: dest ${t.varType}:${t.dest} resolved to ${dest}`);
         switch (t.type) {
           case 'phone':
-            t.number = dest;
+            obj.number = dest;
             break;
           case 'user':
-            t.name = dest;
+            obj.name = dest;
             break;
           case 'sip':
-            t.sipUri = dest;
+            obj.sipUri = dest;
             break;
           case 'teams':
-            t.user = dest;
+            obj.user = dest;
             break;
         }
-        delete t.varType;
-        delete t.dest;
-        return t;
+        delete obj.varType;
+        delete obj.dest;
+        return obj;
       });
       var data = {
         verb: 'dial',

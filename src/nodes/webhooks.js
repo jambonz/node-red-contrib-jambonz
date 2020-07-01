@@ -135,11 +135,19 @@ module.exports = function(RED) {
         res._msgid = msgid;
         if (node.method == 'post') {
           extend(req.body, req.query);
-          if (req.body.method) node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res), authRequest: req.body});
-          else node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res), call: req.body});
+          if (req.body.method) {
+            node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res), authRequest: req.body});
+          }
+          else {
+            node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res), call: req.body});
+          }
         } else if (node.method == 'get') {
-          if (req.body.method) node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res), authRequest: req.query});
-          else node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res), call:req.query});
+          if (req.body.method) {
+            node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res), authRequest: req.query});
+          }
+          else {
+            node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res), call:req.query});
+          }
         } else {
           node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res)});
         }
