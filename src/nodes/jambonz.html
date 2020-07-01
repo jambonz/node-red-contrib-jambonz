@@ -155,20 +155,8 @@
       color: '#a6bbcf',
       defaults: {
         name: {value: ''},
-        targets:{
-          value:[
-            {
-              type: 'phone',
-              dest: '',
-              user: '',
-              pass: '',
-              varType: 'str'
-            }
-          ]
-        },
-        headers: {
-          value: []
-        },
+        targets:{value:[{type: 'phone', dest: '', user: '', pass: '', varType: 'str'}]},
+        headers: {value: []},
         actionhook: {value: ''},
         actionhookType: {value: 'str'},
         answeronbridge: {value: false},
@@ -195,8 +183,7 @@
       outputs:1,
       icon: "file.png",
       label: function() { return this.name || 'dial';},
-      oneditprepare: () => {
-        var node = this;
+      oneditprepare: function() {
         $('#node-input-callerid').typedInput({
           types: ['str', 'msg', 'flow', 'global'],
           typeField: $('#node-input-calleridType')
@@ -230,12 +217,11 @@
           typeField: $('#node-input-listenurlType')
         });
 
-        // populate targets editable list
         $('#node-input-target-container').css('min-height','180px').css('min-width','450px').editableList({
           addItem: function(container, i, opt) {
             var target = opt;
             console.log(`addItem: ${JSON.stringify(opt)}, keys ${Object.keys(opt).length}`);
-            if (0 === Object.keys(opt).length) {
+            if (!target.hasOwnProperty('type')) {
               target = {
                 type: 'phone',
                 dest: '',
@@ -255,23 +241,20 @@
             var row3 = $('<div/>',{style:"margin-top:8px;"}).appendTo(fragment);
             var row4 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
 
-            var selectField = $('<select/>',{class:"node-input-target-type",style:"width:110px; margin-right:10px;"}).appendTo(row1);
+            var selectField = $('<select/>',{class:"node-input-target-type",style:"width:110px; margin-right:10px;"})
+              .appendTo(row1);
             var selectOptions = ['phone', 'user', 'sipUri', 'teams'];
             for (var i = 0; i < 4; i++) {
                 selectField.append($("<option></option>").val(selectOptions[i]).text(selectOptions[i]));
             }
-            selectField.val('phone');
+            var propertyName = $('<input/>', {class:"node-input-target-property-name", type:"text"})
+              .appendTo(row1)
+              .typedInput({types: ['str', 'msg', 'flow', 'global']});
 
-            $('<input/>', {
-              class:"node-input-target-property-name", 
-              type:"text", 
-              placeholder: 'number to dial'
-            })
-              .appendTo(row1);
             
             /* make it a TypedInput */
             console.log('creating typedInput');
-            row1.find('.node-input-target-property-name').css('width', '70%').typedInput({types: ['str', 'msg', 'flow', 'global']});
+            //row1.find('.node-input-target-property-name').css('width', '70%').typedInput({types: ['str', 'msg', 'flow', 'global']});
             //row1.find('.red-ui-typedInput-container').css('width', '70%');
 
             $('<label style="padding-top:8px; padding-right:20px">Auth Username:</label>')
@@ -322,6 +305,9 @@
               }
             });
             selectField.val(target.type);
+            propertyName.typedInput('value', target.dest);
+            propertyName.typedInput('type', target.varType);
+
             var datafield = row1.find('.node-input-target-property-name');
             var userfield = row2.find('.node-input-target-property-authuser');
             var passfield = row3.find('.node-input-target-property-authpassword');
@@ -342,19 +328,20 @@
           removable: true,
           addButton: 'add target'
         });
-        console.log(`oneditprepare: coming in with targets: ${JSON.stringify(node.targets)}`);
-        if (!node.targets || 0 === node.targets.length) {
-          node.targets = [{
+        console.log(`oneditprepare: coming in with targets: ${JSON.stringify(this.targets)}`);
+        if (!this.targets) {
+          var target = {
             type: 'phone',
             dest: '',
             user: '',
             pass: '',
             varType: 'str'
-          }];
+          }
+          this.targets = [target];
         }
 
-        for (var i=0; i < node.targets.length; i++) {
-            var target = node.targets[i];
+        for (var i=0; i < this.targets.length; i++) {
+            var target = this.targets[i];
             $("#node-input-target-container").editableList('addItem', target);
         }
         // populate headers editable list
@@ -390,38 +377,40 @@
           },
           removable: true
         });
-        console.log(`oneditprepare: coming in with headers: ${JSON.stringify(node.headers)}`);
-        if (!node.headers) {
+        console.log(`oneditprepare: coming in with headers: ${JSON.stringify(this.headers)}`);
+        if (!this.headers) {
           var header = {
             h: '',
             v: '',
           };
-          node.headers = [header];
+          this.headers = [header];
         }
 
-        for (var i=0; i < node.headers.length; i++) {
-            var header = node.headers[i];
+        for (var i=0; i < this.headers.length; i++) {
+            var header = this.headers[i];
             $("#node-input-headers-container").editableList('addItem', header);
         }
       },
-      oneditsave: () => {
+      oneditsave: function () {
         var targets = $("#node-input-target-container").editableList('items');
         var node = this;
-        node.targets= [];
+        node.targets = [];
         console.log(`entering oneditsave with ${targets.length} targets`);
 
         targets.each(function(i) {
           var target = $(this);
           var type = target.find('.node-input-target-type').val();
           var varType = target.find('.node-input-target-property-name').typedInput('type');
-          var dest = target.find('.node-input-target-property-name').typedInput('value');
+          var dest    = target.find('.node-input-target-property-name').typedInput('value');
           var user = target.find('.node-input-target-property-authuser').val();
           var pass = target.find('.node-input-target-property-authpassword').val();
           if (!['phone', 'user', 'sipUri', 'teams'].includes(type) || 0 === dest.length) return;
 
-          var t = {type};
-          t.varType = varType;
-          t.dest = dest;
+          var t = {
+            type,
+            varType,
+            dest
+          };
           if ('sipUri' === type && user.length > 0 && pass.length > 0) {
             Object.assign(t, {user, pass});
           }
@@ -429,9 +418,8 @@
         });
         console.log(`saved targets ${JSON.stringify(node.targets)}`);
 
-        node.headers = [];
-        var headers = $("#node-input-headers-container").editableList('items');
-        headers.each(function(i) {
+        var headers = [];
+        $("#node-input-headers-container").editableList('items').each(function(i) {
           var header = $(this);
           console.log(`header: ${JSON.stringify(header)}`);
           var h = header.find(".node-input-header-property-name").val();
@@ -439,8 +427,9 @@
           console.log(`added ${h}: ${v}`);
           var obj = {};
           obj[h] = v;
-          node.headers.push({h, v});
+          headers.push({h, v});
         });
+        node.headers = headers;
         console.log(`saved headers ${JSON.stringify(node.headers)}`);
       },
     });
@@ -1126,6 +1115,11 @@ The dequeue verb removes the a call from the front of a specified queue and brid
 
 <!-- dial -->
 <script type="text/html" data-template-name="dial">
+  <style>
+    ol#node-input-target-container .red-ui-typedInput-container {
+      flex:1;
+    }
+  </style>
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
