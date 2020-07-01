@@ -270,9 +270,9 @@
               .appendTo(row1);
             
             /* make it a TypedInput */
-            row1.find('.node-input-target-property-name').typedInput({types: ['str', 'msg', 'flow', 'global']});
-            row1.find('.red-ui-typedInput-container').css('width', '70%');
-
+            console.log('creating typedInput');
+            row1.find('.node-input-target-property-name').css('width', '70%').typedInput({types: ['str', 'msg', 'flow', 'global']});
+            //row1.find('.red-ui-typedInput-container').css('width', '70%');
 
             $('<label style="padding-top:8px; padding-right:20px">Auth Username:</label>')
               .appendTo(row2);
@@ -522,17 +522,20 @@
         var recLangElem = $('#node-input-recognizerlang');
       
         var onVendorChanged = function() {
-          var vendor = vendorElem.find(':selected').val();
-
-          console.log(`vendor changed to ${vendor}`);
-          setLanguage(vendor);
+          node.vendor = vendorElem.find(':selected').val();
+          console.log(`gather vendor changed to ${node.vendor}`);
+          setLanguage(node.vendor);
         }
 
-        var onLangChanged = function () {
-          var vendor = vendorElem.find(':selected').val();
-          var lang = langElem.find(':selected').val();
-          console.log(`language changed to ${lang}`);
-          setVoice(vendor, lang)
+        var onLangChanged = function() {
+          node.lang = langElem.find(':selected').val();
+          console.log(`language changed to ${node.lang}`);
+          setVoice(node.vendor, node.lang)
+        }
+      
+        var onVoiceChanged = function() {
+          node.voice = voiceElem.find(':selected').val();
+          console.log(`voice changed to ${node.voice}`);
         }
       
         var setLanguage = function(v) {
@@ -559,7 +562,7 @@
         }
 
         var setVoice = function(vendor, lang) {
-          console.log(`gather: set voice for language ${lang} vendor ${vendor}`);
+          console.log(`say set voice for language ${lang} vendor ${vendor}`);
           voiceElem.find('option').remove();
 
           switch (vendor) {
@@ -581,6 +584,14 @@
               break;
           }
           voiceElem.val(node.voice);
+        }
+        vendorElem.change(onVendorChanged);
+        langElem.change(onLangChanged);
+        voiceElem.change(onVoiceChanged);
+
+        var onRecLangChanged = function() {
+          node.recognizerlang = recLangElem.find(':selected').val();
+          console.log(`language changed to ${node.recognizerlang}`);
         }
 
         var setTranscriptionLanguage = function() {
@@ -625,9 +636,7 @@
 
         setTranscriptionLanguage();
         recLangElem.val(node.recognizerlang);
-
-        vendorElem.change(onVendorChanged);
-        langElem.change(onLangChanged);
+        recLangElem.change(onRecLangChanged);
 
         $('#node-input-prompttype').change(onSayPlayChanged);
       }
@@ -720,15 +729,22 @@
           typeField: $('#node-input-transcriptionhookType')
         });
         var recLangElem = $('#node-input-recognizerlang');
+      
+        var onLangChanged = function() {
+          node.recognizerlang = recLangElem.find(':selected').val();
+          console.log(`language changed to ${node.recognizerlang}`);
+        }
 
         var setTranscriptionLanguage = function() {
-          //console.log(`setting transcription languages: ${speechRecOptions}`);
+          console.log(`setting transcription languages: ${speechRecOptions}`);
           recLangElem.find('option').remove();
           recLangElem.append('<option value="default">--application default--</option>');
           recLangElem.append(speechRecOptions);
         }
         setTranscriptionLanguage();
         recLangElem.val(node.recognizerlang);
+
+        recLangElem.change(onLangChanged);
       }
   });
 
@@ -821,20 +837,24 @@
         var langElem = $('#node-input-lang');
         var voiceElem = $('#node-input-voice');
       
+        console.log(`oneditprepare say vendor: ${node.vendor}, lang: ${node.lang}, voice: ${node.voice}`);
         var onVendorChanged = function() {
-          var vendor = vendorElem.find(':selected').val();
-
-          console.log(`vendor changed to ${vendor}`);
-          setLanguage(vendor);
+          node.vendor = vendorElem.find(':selected').val();
+          console.log(`say vendor changed to ${node.vendor}`);
+          setLanguage(node.vendor);
         }
 
         var onLangChanged = function() {
-          var vendor = vendorElem.find(':selected').val();
-          var lang = langElem.find(':selected').val();
-          console.log(`language changed to ${lang}`);
-          setVoice(vendor, lang)
+          node.lang = langElem.find(':selected').val();
+          console.log(`language changed to ${node.lang}`);
+          setVoice(node.vendor, node.lang)
         }
       
+        var onVoiceChanged = function() {
+          node.voice = voiceElem.find(':selected').val();
+          console.log(`voice changed to ${node.voice}`);
+        }
+
         var setLanguage = function(v) {
           langElem.find('option').remove();
           voiceElem.find('option').remove();
@@ -859,7 +879,7 @@
         }
 
         var setVoice = function(vendor, lang) {
-          console.log(`set voice for language ${lang} vendor ${vendor}`);
+          console.log(`say set voice for language ${lang} vendor ${vendor}`);
           voiceElem.find('option').remove();
 
           switch (vendor) {
@@ -885,6 +905,7 @@
 
         vendorElem.change(onVendorChanged);
         langElem.change(onLangChanged);
+        voiceElem.change(onVoiceChanged);
       }
   });
 
