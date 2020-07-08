@@ -456,9 +456,10 @@ module.exports = function(RED) {
 
       const obj = {
         verb: 'dialogflow',
-        credentials:  v_resolve(config.serviceAccountCredentials, config.serviceAccountCredentialsType, this.context(), msg),
+        credentials:  v_resolve(config.serviceAccountCredentials,
+          config.serviceAccountCredentialsType, this.context(), msg),
         project:  v_resolve(config.project, config.projectType, this.context(), msg),
-        lang:  v_resolve(config.lang, config.langType, this.context(), msg),
+        lang:  config.lang,
       };
       if (eventHook && eventHook.length > 0) obj.eventHook = eventHook;
       if (actionHook && actionHook.length > 0) obj.actionHook = actionHook;
