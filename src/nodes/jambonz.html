@@ -251,12 +251,6 @@
               .appendTo(row1)
               .typedInput({types: ['str', 'msg', 'flow', 'global']});
 
-            
-            /* make it a TypedInput */
-            console.log('creating typedInput');
-            //row1.find('.node-input-target-property-name').css('width', '70%').typedInput({types: ['str', 'msg', 'flow', 'global']});
-            //row1.find('.red-ui-typedInput-container').css('width', '70%');
-
             $('<label style="padding-top:8px; padding-right:20px">Auth Username:</label>')
               .appendTo(row2);
 
@@ -432,6 +426,73 @@
         node.headers = headers;
         console.log(`saved headers ${JSON.stringify(node.headers)}`);
       },
+    });
+
+    RED.nodes.registerType('dialogflow',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+        serviceAccountCredentials: {required: true, value: ''},
+        serviceAccountCredentialsType: {value: 'msg'},
+        project: {required: true, value: ''},
+        projectType: {value: 'str'},
+        lang: {required: true, value: 'en-US'},
+        welcomeEvent: {},
+        welcomeEventType: {value: 'str'},
+        welcomeEventParams: {},
+        welcomeEventParamsType: {value: 'json'},
+        passDtmf: {value: false},
+        timeout: {},
+        timeoutType: {value: 'num'},
+        eventHook: {},
+        eventHookType: {value: 'str'},
+        actionHook: {},
+        actionHookType: {value: 'str'},
+        evtAll: {value: true},
+        evtIntent: {value: false},
+        evtTranscript: {value: false},
+        evtInterimTranscript: {value: false},
+        evtDtmf: {value: false},
+        evtEndUtterance: {value: false},
+        evtStartPlay: {value: false},
+        evtEndPlay: {value: false},
+        evtNoInput: {value: false},
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { return this.name || 'dialogflow';},
+      oneditprepare: function() {
+        $('#node-input-serviceAccountCredentials').typedInput({
+          typeField: $('#node-input-serviceAccountCredentialsType'),
+          types: ['msg', 'flow', 'global']
+        });
+        $('#node-input-project').typedInput({
+          typeField: $('#node-input-projectType'),
+          types: ['str','msg', 'flow', 'global']
+        });
+        $('#node-input-welcomeEvent').typedInput({
+          typeField: $('#node-input-welcomeEventType'),
+          types: ['str','msg', 'flow', 'global']
+        });
+        $('#node-input-welcomeEventParams').typedInput({
+          typeField: $('#node-input-welcomeEventParamsType'),
+          types: ['json', 'msg', 'flow', 'global']
+        });
+        $('#node-input-eventHook').typedInput({
+          typeField: $('#node-input-eventHookType'),
+          types: ['str','msg', 'flow', 'global']
+        });
+        $('#node-input-actionHook').typedInput({
+          typeField: $('#node-input-actionHookType'),
+          types: ['str','msg', 'flow', 'global']
+        });
+        $('#node-input-inputTimeout').typedInput({
+          typeField: $('#node-input-inputTimeout'),
+          types: ['num','msg', 'flow', 'global']
+        });
+      }
     });
 
     RED.nodes.registerType('enqueue',{
@@ -1476,7 +1537,7 @@ The leave verb transfers a call out of a queue. The call then returns to the flo
   </div>
   <div class="form-row">
     <label for="node-input-actionhook">Action Hook</label>
-    <input type="text" id="node-input-actionhook" placeholder="webhook url tro invoke when operation ends">
+    <input type="text" id="node-input-actionhook" placeholder="webhook url to invoke when operation ends">
     <input type="hidden" id="node-input-actionhookType">
   </div>
   <div class="form-row">
@@ -1791,15 +1852,115 @@ The sip:decline verb rejects an incoming call.
   </div>
 </script>
 
-<h3>Outputs</h3>
-<dl class="message-properties">
-   <dt>jambonz<span class="property-type">object</span></dt>
-   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>tag</code> action appended  </dd>
-</dl>
+<script type="text/html" data-help-name="tag">
+  <p>Add additional metadata to a call</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> The output of a previous action, if no <code>msg.jambonz</code> exists it will be created</dd>
+  </dl>
 
-<h3>Details</h3>
-The tag verb is used to add properties to the standard call attributes that jambonz includes on every action or call status HTTP POST request.<h3>References</h3>
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>tag</code> action appended  </dd>
+  </dl>
+
+  <h3>Details</h3>
+  The tag verb is used to add properties to the standard call attributes that jambonz includes on every action or call status HTTP POST request.<h3>References</h3>
   <ul>
       <li><a href="https://docs.jambonz.org/jambonz/#tag">Jambonz tag reference</a></li>
   </ul>
+</script>
+
+<!-- dialogflow -->
+<script type="text/html" data-template-name="dialogflow">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-project">Dialogflow Project ID</label>
+    <input type="text" id="node-input-project">
+    <input type="hidden" id="node-input-projectType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-serviceAccountCredentials">Service Account Key</label>
+    <input type="text" id="node-input-serviceAccountCredentials">
+    <input type="hidden" id="node-input-serviceAccountCredentialsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-lang">Language</label>
+    <input type="text" id="node-input-lang">
+  </div>
+  <div class="form-row">
+    <label for="node-input-welcomeEvent">Welcome Intent</label>
+    <input type="text" id="node-input-welcomeEvent">
+    <input type="hidden" id="node-input-welcomeEventType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-welcomeEventParams">Welcome Intent Parameters</label>
+    <input type="text" id="node-input-welcomeEventParams">
+    <input type="hidden" id="node-input-welcomeEventParamsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-inputTimeout">Input Timeout</label>
+    <input type="text" id="node-input-inputTimeout" placeholder="seconds to wait for a response">
+    <input type="hidden" id="node-input-inputTimeoutType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-eventHook">Event Hook</label>
+    <input type="text" id="node-input-eventHook">
+    <input type="hidden" id="node-input-eventHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-eventHook">Action Hook</label>
+    <input type="text" id="node-input-actionHook">
+    <input type="hidden" id="node-input-actionHookType">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="dialogflow">
+  <p>Run a Google dialogflow bot on the call</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>Dialogflow Project ID<span class="property-type">string</span></dt>
+    <dd> The name of the dialogflow project to execute. Required.</dd>
+    <br/>
+    <dt>Service Account Key<span class="property-type">string</span></dt>
+    <dd> A Google service account key in JSON format is used to authenticate to dialogflow. Required.</dd>
+    <br/>
+    <dt>Language<span class="property-type">string</span></dt>
+    <dd> The ISO language code to use for speech recognition. Required.</dd>
+    <br/>
+    <dt>Welcome Intent<span class="property-type">string</span></dt>
+    <dd> The name of a dialogflow intent to send when the call is first connected. Optional.</dd>
+    <br/>
+    <dt>Welcome Intent Parameters<span class="property-type">object</span></dt>
+    <dd> A JSON object containing parameters to send along with the welcome intent. Optional.</dd>
+    <br/>
+    <dt>Input Timeout<span class="property-type">number</span></dt>
+    <dd> Number of seconds to wait for no response.  Optional.</dd>
+    <br/>
+    <dt>Event Hook<span class="property-type">number</span></dt>
+    <dd> Webhook to call when an intent, transcription or other dialogflow event is received. Optional.</dd>
+    <br/>
+    <dt>Action Hook<span class="property-type">number</span></dt>
+    <dd> Webhook to call when the dialogflow bot interaction concludes. Optional.</dd>
+</dl>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>dialogflow</code> action appended  </dd>
+  </dl>
+
+  <h3>Details</h3>
+  The dialogflow action connects the call to a Google dialogflow voicebot.  
+  The action completes either when a new application is returned in a response to an eventHook, or the call is terminated from the dialogflow side.
+
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/jambonz/#dialogflow">Jambonz dialogflow reference</a></li>
+    </ul>
 </script>

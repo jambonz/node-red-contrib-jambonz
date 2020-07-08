@@ -441,6 +441,35 @@ module.exports = function(RED) {
   }
   RED.nodes.registerType('dial', dial);
 
+  /** dialogflow */
+  function dialogflow(config) {
+    RED.nodes.createNode(this, config);
+    var node = this;
+    node.on('input', function(msg) {
+      var val = v_resolve(config.timeout, config.timeoutType, this.context(), msg);
+      var timeout = /^\d+$/.test(val) ? parseInt(val) : 0;
+      var eventHook = v_resolve(config.eventHook, config.eventHookType, this.context(), msg);
+      var actionHook = v_resolve(config.actionHook, config.actionHookType, this.context(), msg);
+
+      var cdata = v_resolve(config.serviceAccountCredentials, config.serviceAccountCredentialsType, this.context(), msg);
+      node.log(`credentials: ${config.credentials}: ${JSON.stringify(cdata)}`);
+
+      const obj = {
+        verb: 'dialogflow',
+        credentials:  v_resolve(config.serviceAccountCredentials, config.serviceAccountCredentialsType, this.context(), msg),
+        project:  v_resolve(config.project, config.projectType, this.context(), msg),
+        lang:  v_resolve(config.lang, config.langType, this.context(), msg),
+      };
+      if (eventHook && eventHook.length > 0) obj.eventHook = eventHook;
+      if (actionHook && actionHook.length > 0) obj.actionHook = actionHook;
+      if (timeout) obj.noInputTimeout = timeout;
+
+      appendVerb(msg, obj);
+      node.send(msg);
+    });
+  }
+  RED.nodes.registerType('dialogflow', dialogflow);
+
 };
 
 
