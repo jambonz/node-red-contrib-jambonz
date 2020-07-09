@@ -1,0 +1,10 @@
+[{
+	"id": "c3a18ace.0d2e88",
+	"type": "comment",
+	"z": "eb5fc5f9.306228",
+	"name": "sip trunking outbound",
+	"info": "# SIP trunking\n\nThis flow shows a simple example of placing an outbound\ncall from a registered SIP device to the PSTN number received \nin the SIP INVITE.\n\nAdditionally, a message is played using TTS before\noutdialing.\n\nThis example shows how to play a message over an early media\nconnection so as not to answer the incoming call until \nthe called party has connected.  To do, this the `early media` checkbox \nis checked on the `say` node and the `answer on bridge` checkbox \nis checked on the `dial` node.",
+	"x": 160,
+	"y": 40,
+	"wires": []
+}]
