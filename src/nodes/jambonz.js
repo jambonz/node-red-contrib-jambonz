@@ -450,7 +450,11 @@ module.exports = function(RED) {
       var timeout = /^\d+$/.test(val) ? parseInt(val) : 0;
       var eventHook = v_resolve(config.eventHook, config.eventHookType, this.context(), msg);
       var actionHook = v_resolve(config.actionHook, config.actionHookType, this.context(), msg);
-
+      var welcomeEvent = v_resolve(config.welcomeEvent, config.welcomeEventType, this.context(), msg);
+      var welcomeEventParams;
+      if (welcomeEvent && welcomeEvent.length > 0) {
+        welcomeEventParams = v_resolve(config.welcomeEventParams, config.welcomeEventParamsType, this.context(), msg);
+      }
       var cdata = v_resolve(config.serviceAccountCredentials, config.serviceAccountCredentialsType, this.context(), msg);
       node.log(`credentials: ${config.credentials}: ${JSON.stringify(cdata)}`);
 
@@ -461,6 +465,10 @@ module.exports = function(RED) {
         project:  v_resolve(config.project, config.projectType, this.context(), msg),
         lang:  config.lang,
       };
+      if (welcomeEvent) {
+        obj.welcomeEvent = welcomeEvent;
+        if (welcomeEventParams) obj.welcomeEventParams = welcomeEventParams;
+      }
       if (eventHook && eventHook.length > 0) obj.eventHook = eventHook;
       if (actionHook && actionHook.length > 0) obj.actionHook = actionHook;
       if (timeout) obj.noInputTimeout = timeout;

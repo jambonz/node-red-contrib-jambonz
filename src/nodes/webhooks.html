@@ -33,8 +33,11 @@
         },
     });
 </script>
-<script type="text/x-red" data-template-name="webhook in">
-   
+<script type="text/html" data-template-name="webhook in">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="name">
+    </div>
     <div class="form-row">
         <label for="node-input-method"><i class="fa fa-tasks"></i> Method</label>
         <select type="text" id="node-input-method" style="width:70%;">
@@ -42,20 +45,22 @@
           <option value="post">POST</option>
         </select>
     </div>
-  
     <div class="form-row">
-        <label for="node-input-url"><i class="fa fa-globe"></i> URL</label>
+        <label for="node-input-url"><i class="fa fa-globe"></i> Path</label>
         <input id="node-input-url" type="text" placeholder="/answer">
-    </div>
-    <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="name">
     </div>
 </script>
   
-  <script type="text/x-red" data-help-name="webhook in">
+<script type="text/html" data-help-name="webhook in">
   <p>Receive jambonz webhook</p>
-  
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>Method<span class="property-type">string</span></dt>
+    <dd>GET or POST</dd>
+    <dt>Path<span class="property-type">string</span></dt>
+    <dd>URL path</dd>
+   </dl>
+
    <h3>Outputs</h3>
    <dl class="message-properties">
        <dt>jambonz<span class="property-type">object</span></dt>
@@ -89,7 +94,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="webhook out">
+<script type="text/html" data-template-name="webhook out">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="name">

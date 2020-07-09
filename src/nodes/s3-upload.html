@@ -23,41 +23,23 @@
     <input type="text" id="node-input-name" placeholder="Name">
   </div>
   <div class="form-row">
-    <label for="node-input-path"><i class="icon-tag"></i> Path</label>
+    <label for="node-input-path">Path</label>
     <input type="text" id="node-input-path" placeholder="url path of websocket server">
   </div>
   <div class="form-row">
-    <label for="node-input-path"><i class="icon-tag"></i> S3 Bucket</label>
+    <label for="node-input-path">S3 Bucket</label>
     <input type="text" id="node-input-bucket" placeholder="Bucket in which to store audio recording">
   </div>
-  <!-- 
-  <div class="form-row">
-    <label for="node-input-"><i class="icon-tag"></i>AWS Region</label>
-    <select id="node-input-region">
-      <option value="us-east-1" selected>US East (N. Virginia) - us-east-1</option>
-      <option value="us-east-2">US East (Ohio) - us-east-2</option>
-      <option value="us-west-1">US West (N. California) - us-west-1</option>
-      <option value="us-west-2">US West (Oregon) - us-west-2</option>
-      <option value="af-south-1">Africa (Capetown) - af-south-1</option>
-      <option value="ap-east-1">Asia Pacific (Hong Kong) - ap-east-1</option>
-      <option value="ap-south-1">Asia Pacific (Mumbai) - ap-south-1</option>
-      <option value="ap-northeast-1">Asia Pacific (Tokyo) - ap-northeast-1</option>
-      <option value="ap-northeast-2">Asia Pacific (Seoul) - ap-northeast-2</option>
-      <option value="ap-southeast-1">Asia Pacific (Singapore) - ap-southeast-1</option>
-      <option value="ap-southeast-2">Asia Pacific (Sydney) - ap-southeast-2</option>
-      <option value="ca-central-1">Canada (central) - ca-central-1</option>
-      <option value="eu-north-1">Europe (Stockholm) - eu-north-1</option>
-      <option value="eu-west-1">Europe (Ireland) - eu-west-1</option>
-      <option value="eu-west-2">Europe (London) - eu-west-2</option>
-      <option value="eu-west-3">Europe (Paris) - eu-west-3</option>
-      <option value="eu-south-1">Europe (Milan) - eu-south-1</option>
-      <option value="me-south-1">Middle East (Bahrain) - me-south-1</option>
-      <option value="sa-east-1">South America (Sao Paolo) - sa-east-1</option>
-    </select>
-  </div>
-  -->
 </script>
 
 <script type="text/html" data-help-name="audio in">
-<p>Receives audio from jambonz and uploads to S3</p>
+  <p>Receives audio from jambonz and uploads to S3</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>Path<span class="property-type">string</span></dt>
+    <dd>URL path to listen for incoming audio stream on; i.e. a webhook defined in a dial or listen verb</dd>
+    <dt>S3 Bucket<span class="property-type">string</span></dt>
+    <dd>An S3 bucket to upload recording to.  This bucket must allow public access.</dd>
+</dl>
+
 </script>
