@@ -455,15 +455,13 @@ module.exports = function(RED) {
       if (welcomeEvent && welcomeEvent.length > 0) {
         welcomeEventParams = v_resolve(config.welcomeEventParams, config.welcomeEventParamsType, this.context(), msg);
       }
-      var cdata = v_resolve(config.serviceAccountCredentials, config.serviceAccountCredentialsType, this.context(), msg);
-      node.log(`credentials: ${config.credentials}: ${JSON.stringify(cdata)}`);
-
+      var noInputEvent = v_resolve(config.noInputEvent, config.noInputEventType, this.context(), msg);
       const obj = {
         verb: 'dialogflow',
         credentials:  v_resolve(config.serviceAccountCredentials,
           config.serviceAccountCredentialsType, this.context(), msg),
         project:  v_resolve(config.project, config.projectType, this.context(), msg),
-        lang:  config.lang,
+        lang:  config.recognizerlang,
       };
       if (welcomeEvent) {
         obj.welcomeEvent = welcomeEvent;
@@ -472,6 +470,7 @@ module.exports = function(RED) {
       if (eventHook && eventHook.length > 0) obj.eventHook = eventHook;
       if (actionHook && actionHook.length > 0) obj.actionHook = actionHook;
       if (timeout) obj.noInputTimeout = timeout;
+      if (timeout && noInputEvent) obj.noInputEvent = noInputEvent;
 
       appendVerb(msg, obj);
       node.send(msg);

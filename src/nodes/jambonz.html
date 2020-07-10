@@ -8,6 +8,8 @@
   let awsLanguageOptions = '';
   let mapSpeechRec = {};
   let speechRecOptions = '';
+  let mapDialogflow = {};
+  let dialogFlowOptions = '';
 
   var googleUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/googleTts';
   $.getJSON(googleUrl, function (data) {
@@ -39,6 +41,15 @@
         speechRecOptions += `<option value="${l.code}">${l.name}</option>`;        
       });
     });
+
+  var dialogflowUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/dialogflow';
+  $.getJSON(dialogflowUrl, function (data) {
+    console.log('retrieved data for dialogflow languages: ' + JSON.stringify(data));
+    data.forEach(function(l) {
+      mapDialogflow[l.code] = l.name;
+      dialogFlowOptions += `<option value="${l.code}">${l.name}</option>`;        
+    });
+  });
 
     RED.nodes.registerType('user auth',{
         category: 'jambonz',
@@ -433,11 +444,11 @@
       color: '#bbabaa',
       defaults: {
         name: {value: ''},
+        recognizerlang: {value: 'en-US'},
         serviceAccountCredentials: {required: true, value: ''},
         serviceAccountCredentialsType: {value: 'msg'},
         project: {required: true, value: ''},
         projectType: {value: 'str'},
-        lang: {required: true, value: 'en-US'},
         welcomeEvent: {},
         welcomeEventType: {value: 'str'},
         welcomeEventParams: {},
@@ -445,6 +456,8 @@
         passDtmf: {value: false},
         inputTimeout: {},
         inputTimeoutType: {value: 'num'},
+        noInputEvent: {},
+        noInputEventType: {value: 'str'},
         eventHook: {},
         eventHookType: {value: 'str'},
         actionHook: {},
@@ -464,6 +477,7 @@
       icon: "font-awesome/fa-cubes",
       label: function() { return this.name || 'dialogflow';},
       oneditprepare: function() {
+        var node = this;
         $('#node-input-serviceAccountCredentials').typedInput({
           typeField: $('#node-input-serviceAccountCredentialsType'),
           types: ['msg', 'flow', 'global']
@@ -492,6 +506,24 @@
           typeField: $('#node-input-inputTimeout'),
           types: ['num','msg', 'flow', 'global']
         });
+        $('#node-input-noinputEvent').typedInput({
+          typeField: $('#node-input-noinputEventType'),
+          types: ['str','msg', 'flow', 'global']
+        });
+
+        console.log(`node: ${JSON.stringify(node)}`);
+
+        var recLangElem = $('#node-input-recognizerlang');
+
+        var setTranscriptionLanguage = function() {
+          console.log(`setting transcription languages: ${dialogFlowOptions}`);
+          recLangElem.find('option').remove();
+          recLangElem.append(dialogFlowOptions);
+        }
+
+        setTranscriptionLanguage();
+        console.log(`setting lang to ${node.recognizerlang}`);
+        recLangElem.val(node.recognizerlang);
       }
     });
 
@@ -645,7 +677,7 @@
         }
 
         var setTranscriptionLanguage = function() {
-          console.log(`settring transcription languages: ${speechRecOptions}`);
+          console.log(`setting transcription languages: ${speechRecOptions}`);
           recLangElem.find('option').remove();
           recLangElem.append('<option value="default">--application default--</option>');
           recLangElem.append(speechRecOptions);
@@ -1658,11 +1690,11 @@ The leave verb transfers a call out of a queue. The call then returns to the flo
       <input type="hidden" id="node-input-transcriptionhookType">
     </div>
     <div class="form-row">
-      <label for="node-input-recognizerlang">Language</label>
+      <label for="node-input-recognizerlang"><i class="icon-tag"></i> Language</label>
       <select id="node-input-recognizerlang">
       </select>
     </div>
-        <div class="form-row">
+    <div class="form-row">
       <label for="node-input-interim">Send interim transcriptions</label>
       <input type="checkbox" id="node-input-interim">
     </div>          
@@ -1999,33 +2031,40 @@ The sip:decline verb rejects an incoming call.
     <input type="text" id="node-input-name" placeholder="Name">
   </div>
   <div class="form-row">
-    <label for="node-input-project">Dialogflow Project ID</label>
+    <label for="node-input-project">Dialogflow project ID</label>
     <input type="text" id="node-input-project">
     <input type="hidden" id="node-input-projectType">
   </div>
   <div class="form-row">
-    <label for="node-input-serviceAccountCredentials">Service Account Key</label>
+    <label for="node-input-recognizerlang">Speaker language</label>
+    <select id="node-input-recognizerlang">
+      <option value="placeholder"></option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-serviceAccountCredentials">Service account key</label>
     <input type="text" id="node-input-serviceAccountCredentials">
     <input type="hidden" id="node-input-serviceAccountCredentialsType">
   </div>
   <div class="form-row">
-    <label for="node-input-lang">Language</label>
-    <input type="text" id="node-input-lang">
-  </div>
-  <div class="form-row">
-    <label for="node-input-welcomeEvent">Welcome Intent</label>
-    <input type="text" id="node-input-welcomeEvent">
+    <label for="node-input-welcomeEvent">Welcome intent</label>
+    <input type="text" id="node-input-welcomeEvent" placeholder="event to send on connect">
     <input type="hidden" id="node-input-welcomeEventType">
   </div>
   <div class="form-row">
-    <label for="node-input-welcomeEventParams">Welcome Intent Parameters</label>
+    <label for="node-input-welcomeEventParams">Welcome intent parameters</label>
     <input type="text" id="node-input-welcomeEventParams">
     <input type="hidden" id="node-input-welcomeEventParamsType">
   </div>
   <div class="form-row">
-    <label for="node-input-inputTimeout">Input Timeout</label>
+    <label for="node-input-inputTimeout">Input timeout</label>
     <input type="text" id="node-input-inputTimeout" placeholder="seconds to wait for a response">
     <input type="hidden" id="node-input-inputTimeoutType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-noInputEvent">Input timeout intent</label>
+    <input type="text" id="node-input-noInputEvent" placeholder="event to send on input timeout">
+    <input type="hidden" id="node-input-noInputEventType">
   </div>
   <div class="form-row">
     <label for="node-input-eventHook">Event Hook</label>

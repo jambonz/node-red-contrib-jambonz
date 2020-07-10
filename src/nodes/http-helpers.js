@@ -1,5 +1,6 @@
 const {google, aws} = require('../data/tts');
-const speechrec = require('../data/tts').google;
+const speechrec = require('../data/recognizer').google;
+const dialogflow = require('../data/dialogflow');
 
 module.exports = function(RED) {
   RED.httpAdmin.get('/googleTts', (req, res) => {
@@ -13,5 +14,9 @@ module.exports = function(RED) {
 
   RED.httpAdmin.get('/googleSpeech', (req, res) => {
     res.send(speechrec);
+  });
+
+  RED.httpAdmin.get('/dialogflow', (req, res) => {
+    res.send(dialogflow);
   });
 };

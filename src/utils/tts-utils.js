@@ -1,5 +1,6 @@
 var awsData = require('../data/aws-tts');
 var googleData = require('../data/google-tts');
+var dialogflowData = require('../data/google-tts');
 
 var mapGoogle = {};
 var googleLanguageOptions = '';
@@ -9,6 +10,15 @@ googleData.forEach(function(l) {
     voices: l.voices
   };
   googleLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
+});
+var mapDialogFlow = {};
+var dialogFlowLanguageOptions = '';
+dialogflowData.forEach(function(l) {
+  mapGoogle[l.code] = {
+    name: l.name,
+    voices: l.voices
+  };
+  dialogFlowLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
 });
 
 var mapAws = {};
@@ -23,7 +33,9 @@ awsData.forEach(function(l) {
 
 module.exports = {
   googleLanguageOptions,
+  dialogFlowLanguageOptions,
   awsLanguageOptions,
   mapGoogle,
-  mapAws
+  mapAws,
+  mapDialogFlow
 };
