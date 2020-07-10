@@ -27,7 +27,7 @@ The [dequeue](https://docs.jambonz.org/jambonz/#dequeue) verb removes the a call
 The [dial](https://docs.jambonz.org/jambonz/#dial) verb is used to create a new call by dialing out to a number, a registered sip user, a sip endpoint, or a Microsoft Teams user.
 
 ### dialogflow
-The [dial](https://docs.jambonz.org/jambonz/#dialogflow) verb is used to connect a call to a Google dialogflow bot.
+The [dialogflow](https://docs.jambonz.org/jambonz/#dialogflow) verb is used to connect a call to a Google dialogflow bot.
 
 ### enqueue
 The [enqueue](https://docs.jambonz.org/jambonz/#enqueue) command is used to place a caller in a queue.
