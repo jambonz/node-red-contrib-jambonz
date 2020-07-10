@@ -446,7 +446,7 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     var node = this;
     node.on('input', function(msg) {
-      var val = v_resolve(config.timeout, config.timeoutType, this.context(), msg);
+      var val = v_resolve(config.inputTimeout, config.inputTimeoutType, this.context(), msg);
       var timeout = /^\d+$/.test(val) ? parseInt(val) : 0;
       var eventHook = v_resolve(config.eventHook, config.eventHookType, this.context(), msg);
       var actionHook = v_resolve(config.actionHook, config.actionHookType, this.context(), msg);
