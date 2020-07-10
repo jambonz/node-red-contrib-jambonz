@@ -447,6 +447,7 @@ module.exports = function(RED) {
     var node = this;
     node.on('input', function(msg) {
       var val = v_resolve(config.inputTimeout, config.inputTimeoutType, this.context(), msg);
+      node.log(`input timeout: ${val}`);
       var timeout = /^\d+$/.test(val) ? parseInt(val) : 0;
       var eventHook = v_resolve(config.eventHook, config.eventHookType, this.context(), msg);
       var actionHook = v_resolve(config.actionHook, config.actionHookType, this.context(), msg);
@@ -472,6 +473,7 @@ module.exports = function(RED) {
       if (timeout) obj.noInputTimeout = timeout;
       if (timeout && noInputEvent) obj.noInputEvent = noInputEvent;
 
+      node.log(`dialogflow: ${JSON.stringify(obj)}`);
       appendVerb(msg, obj);
       node.send(msg);
     });
