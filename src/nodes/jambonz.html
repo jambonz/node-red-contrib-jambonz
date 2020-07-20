@@ -511,8 +511,6 @@
           types: ['str','msg', 'flow', 'global']
         });
 
-        console.log(`node: ${JSON.stringify(node)}`);
-
         var recLangElem = $('#node-input-recognizerlang');
 
         var setTranscriptionLanguage = function() {
@@ -1038,6 +1036,122 @@
         typeField: $('#node-input-dataType')
       });
     }
+  });
+
+  RED.nodes.registerType('jambonz-api-token',{
+    category: 'config',
+    defaults: {
+      token: {value: '', required: true},
+    },
+    label: function() { return 'api token';}
+  });
+
+  RED.nodes.registerType('lcc',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        token: {value: '', required: true, type: 'jambonz-api-token'},
+        accountSid: {required: true},
+        accountSidType: {value: 'str'},
+        callSid: {required: true},
+        callSidType: {value: 'msg'},
+        action: {value: 'hangup', required: true},
+        text: {value: ''},
+        vendor: {value: 'default'},
+        lang: {value: 'default'},
+        voice: {value: 'default'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { return this.name || 'LCC';},
+      oneditprepare: function() {
+        var node = this;
+        var vendorElem = $('#node-input-vendor');
+        var langElem = $('#node-input-lang');
+        var voiceElem = $('#node-input-voice');
+
+        $('#node-input-accountSid').typedInput({
+          default: $('#node-input-accountSidType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-accountSidType')
+        });
+        $('#node-input-callSid').typedInput({
+          default: $('#node-input-callSidType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-callSidType')
+        });
+      
+        console.log(`oneditprepare say vendor: ${node.vendor}, lang: ${node.lang}, voice: ${node.voice}`);
+        var onVendorChanged = function() {
+          node.vendor = vendorElem.find(':selected').val();
+          console.log(`say vendor changed to ${node.vendor}`);
+          setLanguage(node.vendor);
+        }
+
+        var onLangChanged = function() {
+          node.lang = langElem.find(':selected').val();
+          console.log(`language changed to ${node.lang}`);
+          setVoice(node.vendor, node.lang)
+        }
+      
+        var onVoiceChanged = function() {
+          node.voice = voiceElem.find(':selected').val();
+          console.log(`voice changed to ${node.voice}`);
+        }
+
+        var setLanguage = function(v) {
+          langElem.find('option').remove();
+          voiceElem.find('option').remove();
+
+          switch (v) {
+            case 'default': 
+              langElem.append('<option value="default" selected>--application default--</option>');
+              voiceElem.append('<option value="default" selected>--application default--</option>');
+              node.lang = 'default';
+              node.voice = 'default';
+              break;
+
+            case 'google':
+              langElem.append(googleLanguageOptions);
+              break;
+
+            case 'aws':
+              langElem.append(awsLanguageOptions);
+              break;
+          }
+          langElem.val(node.lang);
+        }
+
+        var setVoice = function(vendor, lang) {
+          console.log(`say set voice for language ${lang} vendor ${vendor}`);
+          voiceElem.find('option').remove();
+
+          switch (vendor) {
+            case 'default':
+              voiceElem.append('<option value="default" selected>--application default--</option>');
+              break;
+
+            case 'google':
+            case 'aws':
+              var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
+              if (obj) {
+                var options = '';
+                for (var i = 0; i < obj.voices.length; i++) {
+                  if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+                  else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+                }
+                voiceElem.append(options);
+              }
+              break;
+          }
+          voiceElem.val(node.voice);
+        }
+
+        vendorElem.change(onVendorChanged);
+        langElem.change(onLangChanged);
+        voiceElem.change(onVoiceChanged);
+      }
   });
 
 </script>
@@ -2115,3 +2229,93 @@ The sip:decline verb rejects an incoming call.
         <li><a href="https://docs.jambonz.org/jambonz/#dialogflow">Jambonz dialogflow reference</a></li>
     </ul>
 </script>
+
+<!-- api-token config node 
+<script type="text/html" data-template-name="jambonz-api-token">
+  <div class="form-row">
+      <label for="node-config-input-token"><i class="icon-bookmark"></i> API token</label>
+      <input type="text" id="node-config-input-token">
+  </div>
+</script>
+
+<script type="text/html" data-template-name="lcc">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+</div>
+<div class="form-row">
+  <label for="node-input-token">API token</label>
+  <input type="text" id="node-input-token">
+</div>
+<div class="form-row">
+  <label for="node-input-accountSid">AccountSid</label>
+  <input type="text" id="node-input-accountSid">
+</div>
+<div class="form-row">
+  <label for="node-input-callSid">CallSid</label>
+  <input type="text" id="node-input-callSid">
+</div>
+<div class="form-row">
+  <label for="node-input-action">Action</label>
+  <select id="node-input-action">
+    <option>hangup call</option>
+    <option>mute caller</option>
+    <option>unmute caller</option>
+    <option>pause audio feed</option>
+    <option>resume audio feed</option>
+  </select>
+<div class="form-row">
+  <label for="node-input-text"><i class="icon-tag"></i> Text</label>
+  <textarea id="node-input-text" rows="4" placeholder="Text or SSML to speak" style="width:70%"></textarea>
+</div>
+<fieldset>
+  <legend>Speech synthesis options</legend>
+  <div class="form-row">
+    <label for="node-input-vendor"><i class="icon-tag"></i> Vendor</label>
+    <select id="node-input-vendor">
+      <option value="default" selected>--application default--</option>
+      <option value="google">google</option>
+      <option value="aws">aws/polly</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-lang"><i class="icon-tag"></i> Language</label>
+    <select id="node-input-lang">
+      <option value="default" selected>--application default--</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-voice"><i class="icon-tag"></i> Voice</label>
+    <select id="node-input-voice">
+      <option value="default" selected>--application default--</option>
+    </select>
+  </div>
+</fieldset>
+</script>
+
+<script type="text/html" data-help-name="lcc">
+  <p>Perform Live Call Control</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>Text<span class="property-type">string</span></dt>
+    <dd>text to speak; may contain SSML tags</dd>
+    <dt>Vendor<span class="property-type">string</span></dt>
+    <dd>TTS vendor</dd>
+    <dt>Language<span class="property-type">string</span></dt>
+    <dd>TTS language</dd>
+    <dt>Voice<span class="property-type">string</span></dt>
+    <dd>TTS voice</dd>
+  </dl>
+
+<h3>Details</h3>
+The lcc command is used to perform live call control on a call in progress.
+The call can be terminated, the caller can be muted or unmuted, or the live 
+audio feed that is being sent via a <a href="https://docs.jambonz.org/jambonz/#listen">listen</a> verb can be paused or resumed.
+<br/><br/>
+A common use case is to use dtmf captures in a <a href="https://docs.jambonz.org/jambonz/#dial">dial</a> verb to call a webhook 
+that then uses lcc to modify the state of the call.
+<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/rest/#updating-a-call">Jambonz reference</a></li>
+</script>
+-->

@@ -478,6 +478,18 @@ module.exports = function(RED) {
   }
   RED.nodes.registerType('dialogflow', dialogflow);
 
+  /** LCC */
+  /*
+  function lcc(config) {
+    RED.nodes.createNode(this, config);
+    var node = this;
+    node.on('input', function(msg) {
+
+      node.send(msg);
+    });
+  }
+  RED.nodes.registerType('lcc', lcc);
+  */
 };
 
 
