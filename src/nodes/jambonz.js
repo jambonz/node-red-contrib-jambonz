@@ -1,4 +1,5 @@
 var {createHash} = require('crypto');
+const bent = require('bent');
 var mustache = require('mustache');
 mustache.escape = function(text) {return text;};
 
@@ -478,20 +479,192 @@ module.exports = function(RED) {
   }
   RED.nodes.registerType('dialogflow', dialogflow);
 
+  function jambonz_auth(config) {
+    RED.nodes.createNode(this, config);
+    this.url = config.url;
+    this.accountSid = config.accountSid;
+    this.apiKey = config.apiKey;
+  }
+
+  RED.nodes.registerType('jambonz_auth', jambonz_auth, {
+    credentials: {
+      url: {type: 'text'},
+      accountSid: {type: 'text'},
+      apiToken: {type: 'text'}
+    }
+  });
+
+  function doLCC(baseUrl, accountSid, apiToken, callSid, opts) {
+    const post = bent(`${baseUrl}/v1/`, 'POST', 'json', 202, {
+      'Authorization': `Bearer ${apiToken}`
+    });
+    return post(`Accounts/${accountSid}/Calls/${callSid}`, opts);
+  }
+
+  function doCreateCall(baseUrl, accountSid, apiToken, opts) {
+    const post = bent(`${baseUrl}/v1/`, 'POST', 'json', 201, {
+      'Authorization': `Bearer ${apiToken}`
+    });
+    return post(`Accounts/${accountSid}/Calls`, opts);
+  }
+
+
   /** LCC */
-  /*
   function lcc(config) {
     RED.nodes.createNode(this, config);
     var node = this;
-    node.on('input', function(msg) {
+    const server = RED.nodes.getNode(config.server);
 
-      node.send(msg);
+    node.on('input', async(msg, send, done) => {
+      send = send || function() { node.send.apply(node, arguments);};
+
+      const {url, accountSid, apiToken} = server.credentials;
+      if (!url || !accountSid || !apiToken || !config.callSid) {
+        node.log(`invalid / missing credentials or callSid, skipping LCC node: ${JSON.stringify(server.credentials)}`);
+        send(msg);
+        if (done) done();
+        return;
+      }
+
+      const opts = {};
+      switch (config.action) {
+        case 'hangup':
+          opts.call_status = 'completed';
+          break;
+        case 'mute':
+          opts.mute_status = 'mute';
+          break;
+        case 'unmute':
+          opts.mute_status = 'unmute';
+          break;
+        case 'pause':
+          opts.listen_status = 'pause';
+          break;
+        case 'resume':
+          opts.listen_status = 'resume';
+          break;
+        case 'redirect':
+          opts.call_hook = v_resolve(config.callHook, config.callHookType, this.context(), msg);
+          break;
+        case 'whisper':
+          Object.assign(opts, {
+            whisper: {
+              verb: 'say',
+              text: node.text
+            }
+          });
+          if (['aws', 'google'].includes(node.vendor)) {
+            Object.assign(opts.whisper, {
+              synthesizer: {
+                vendor: node.vendor,
+                language: node.lang,
+                voice: node.voice
+              }
+            });
+          }
+          break;
+        default:
+          node.log(`invalid action: ${config.action}`);
+          send(msg);
+          if (done) done();
+          return;
+      }
+
+      try {
+        await doLCC(url, accountSid, apiToken, config.callSid, opts);
+        msg.statusCode = 202;
+      } catch (err) {
+        if (err.statusCode) msg.statusCode = err.statusCode;
+        else {
+          node.log(`Error sending LCC ${JSON.stringify(err)}`);
+          if (done) done(err);
+          else node.error(err, msg);
+          send(msg);
+          return;
+        }
+      }
+      send(msg);
+      if (done) done();
     });
   }
   RED.nodes.registerType('lcc', lcc);
-  */
-};
 
+  /** Create call */
+  function create_call(config) {
+    RED.nodes.createNode(this, config);
+    var node = this;
+    const server = RED.nodes.getNode(config.server);
+
+    node.on('input', async(msg, send, done) => {
+      send = send || function() { node.send.apply(node, arguments);};
+
+      const {url, accountSid, apiToken} = server.credentials;
+      if (!url || !accountSid || !apiToken) {
+        node.log(`invalid / missing credentials, skipping create-call node: ${JSON.stringify(server.credentials)}`);
+        send(msg);
+        if (done) done();
+        return;
+      }
+
+      var from = v_resolve(config.from, config.fromType, this.context(), msg);
+      var to = v_resolve(config.to, config.toType, this.context(), msg);
+
+      const opts = {
+        application_sid: config.application,
+        from,
+        to: {
+          type: config.dest
+        },
+      };
+      if (config.timeout) {
+        const timeout = parseInt(config.timeout);
+        if (timeout > 0) opts.timeout = timeout;
+      }
+      switch (config.dest) {
+        case 'phone':
+          opts.to.number = to;
+          break;
+        case 'user':
+          opts.to.name = to;
+          break;
+        case 'sip':
+          opts.to.sipUri = to;
+          break;
+        case 'ms-teams':
+          opts.to.user = to;
+          break;
+        default:
+          if (done) done(`unknown dest type ${config.dest}`);
+          else node.error(`unknown dest type ${config.dest}`, msg);
+          send(msg);
+          return;
+      }
+
+      try {
+        node.log(`sending create call ${JSON.stringify(opts)}`);
+        const res = await doCreateCall(url, accountSid, apiToken, opts);
+        msg.statusCode = 202;
+        msg.callSid = res.sid;
+        node.log(`successfully launched call with callSid ${msg.callSid}`);
+      } catch (err) {
+        if (err.statusCode) {
+          node.log(`create-call failed with ${err.statusCode}`);
+          msg.statusCode = err.statusCode;
+        }
+        else {
+          node.log(`Error sending create all ${JSON.stringify(err)}`);
+          if (done) done(err);
+          else node.error(err, msg);
+          send(msg);
+          return;
+        }
+      }
+      send(msg);
+      if (done) done();
+    });
+  }
+  RED.nodes.registerType('create-call', create_call);
+};
 
 // helper functions
 
