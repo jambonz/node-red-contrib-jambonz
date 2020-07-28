@@ -254,7 +254,7 @@
 
             var selectField = $('<select/>',{class:"node-input-target-type",style:"width:110px; margin-right:10px;"})
               .appendTo(row1);
-            var selectOptions = ['phone', 'user', 'sipUri', 'teams'];
+            var selectOptions = ['phone', 'user', 'sip', 'teams'];
             for (var i = 0; i < 4; i++) {
                 selectField.append($("<option></option>").val(selectOptions[i]).text(selectOptions[i]));
             }
@@ -296,11 +296,11 @@
                 case 'user': 
                   input.attr('placeholder', 'user@domain');
                   break;
-                case 'sipUri': 
+                case 'sip': 
                   input.attr('placeholder', 'sip:number@ip-address');
                   break;
               }
-              if (type !== 'sipUri') {
+              if (type !== 'sip') {
                 row2.hide();
                 row3.hide();
               }
@@ -320,7 +320,7 @@
             datafield.typedInput('type', target.varType);
 
             switch (target.type) {
-              case 'sipUri': 
+              case 'sip': 
                 userfield.val(target.user);
                 passfield.val(target.pass);
               default:
@@ -409,14 +409,14 @@
           var dest    = target.find('.node-input-target-property-name').typedInput('value');
           var user = target.find('.node-input-target-property-authuser').val();
           var pass = target.find('.node-input-target-property-authpassword').val();
-          if (!['phone', 'user', 'sipUri', 'teams'].includes(type) || 0 === dest.length) return;
+          if (!['phone', 'user', 'sip', 'teams'].includes(type) || 0 === dest.length) return;
 
           var t = {
             type,
             varType,
             dest
           };
-          if ('sipUri' === type && user.length > 0 && pass.length > 0) {
+          if ('sip' === type && user.length > 0 && pass.length > 0) {
             Object.assign(t, {user, pass});
           }
           node.targets.push(t);
@@ -1248,6 +1248,7 @@
         var populateApplications = function() {
           var serverId = $('#node-input-server option:selected').val();
           var conn = RED.nodes.node(serverId);
+          console.log(`server id ${serverId} has conn ${JSON.stringify(conn)}`);
           if (conn && conn.credentials) {
             const {url, accountSid, apiToken} = conn.credentials;
 
@@ -1581,7 +1582,7 @@ The dequeue verb removes the a call from the front of a specified queue and brid
     <dd>A telephone number to dial in E.164 format</dd>
     <dt>Dial target - user<span class="property-type">string</span></dt>
     <dd>A registered sip user in user@domain format</dd>
-    <dt>Dial target - sipUri<span class="property-type">string</span></dt>
+    <dt>Dial target - sip<span class="property-type">string</span></dt>
     <dd>A sip endpoint in sip uri format, optionally with sip username and password</dd>
     <dt>Dial target - teams<span class="property-type">string</span></dt>
     <dd>A phone number that is associated with a user in the Microsoft Teams tenant associated with this account</dd>
