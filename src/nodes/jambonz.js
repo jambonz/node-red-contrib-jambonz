@@ -382,6 +382,14 @@ module.exports = function(RED) {
             break;
           case 'sip':
             obj.sipUri = dest;
+            if (t.user) {
+              obj.auth = {
+                user: t.user,
+                password: t.pass
+              };
+            }
+            delete t.user;
+            delete t.pass;
             break;
           case 'teams':
             obj.user = dest;
