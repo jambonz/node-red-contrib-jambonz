@@ -384,7 +384,7 @@ module.exports = function(RED) {
             obj.sipUri = dest;
             if (t.user) {
               obj.auth = {
-                user: t.user,
+                username: t.user,
                 password: t.pass
               };
             }
