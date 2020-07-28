@@ -388,8 +388,8 @@ module.exports = function(RED) {
                 password: t.pass
               };
             }
-            delete t.user;
-            delete t.pass;
+            delete obj.user;
+            delete obj.pass;
             break;
           case 'teams':
             obj.user = dest;
