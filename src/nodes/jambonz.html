@@ -51,73 +51,100 @@
     });
   });
 
-    RED.nodes.registerType('user auth',{
-        category: 'jambonz',
-        color:"#c1f986",
-        defaults: {
-          name: {value: ''},
-          password: {},
-          passwordType: {},
-          ha1: {},
-          ha1Type: {}
-        },
-        inputs:1,
-        outputs:1,
-        icon: "font-awesome/fa-id-badge",
-        label: function() { return this.name || 'user auth';},
-        oneditprepare: function() {
-          $('#node-input-password').typedInput({
-            types: ['str', 'msg', 'flow', 'global'],
-            typeField: $('#node-input-passwordType')
-          });
-          $('#node-input-ha1').typedInput({
-            types: ['str', 'msg', 'flow', 'global'],
-            typeField: $('#node-input-ha1Type')
-          });
-        }
-    });
+  var testCredentials = function() {
+    const baseUrl =  $("#node-config-input-url").val();
+    const accountSid =  $("#node-config-input-accountSid").val();
+    const token =  $("#node-config-input-apiToken").val();
+    const status = $("#node-config-test-status");
 
-    RED.nodes.registerType('conference',{
+    status.text('');
+
+    $.ajax({
+      url: `${baseUrl}/v1/Accounts/${accountSid}/ApiKeys`,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      dataType: 'json',
+      timeout: 500,
+      error: (err) => {
+        status.text('Failed');
+        console.log(err);
+      },
+      success: (res) => {
+        if (Array.isArray(res)) status.text('Success!');
+        else status.text('Failed');
+        console.log(`response from fetch of api keys: ${JSON.stringify(res)}`);
+      }
+    });
+  }
+
+  RED.nodes.registerType('user auth',{
       category: 'jambonz',
-      color: '#bbabaa',
+      color:"#c1f986",
       defaults: {
         name: {value: ''},
-        conference: {required: true, value: ''},
-        conferenceType: {value: 'str'},
-        beep: {value: false},
-        endConferenceOnExit: {value: false},
-        startConferenceOnEnter: {value: false},
-        maxParticipants: {},
-        maxParticipantsType: {value: 'num'},
-        enterHook: {},
-        enterHookType: {value: 'str'},
-        waitHook: {},
-        waitHookType: {value: 'str'}
+        password: {},
+        passwordType: {},
+        ha1: {},
+        ha1Type: {}
       },
       inputs:1,
       outputs:1,
-      icon: "font-awesome/fa-cubes",
-      label: function() { 
-        return this.name || 'conference';
-      },
+      icon: "font-awesome/fa-id-badge",
+      label: function() { return this.name || 'user auth';},
       oneditprepare: function() {
-        $('#node-input-conference').typedInput({
+        $('#node-input-password').typedInput({
           types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-conferenceType')
+          typeField: $('#node-input-passwordType')
         });
-        $('#node-input-enterHook').typedInput({
+        $('#node-input-ha1').typedInput({
           types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-enterHookType')
-        });
-        $('#node-input-waitHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-waitHookType')
-        });
-        $('#node-input-maxParticipants').typedInput({
-          types: ['num', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-maxParticipantsType')
+          typeField: $('#node-input-ha1Type')
         });
       }
+  });
+
+  RED.nodes.registerType('conference',{
+    category: 'jambonz',
+    color: '#bbabaa',
+    defaults: {
+      name: {value: ''},
+      conference: {required: true, value: ''},
+      conferenceType: {value: 'str'},
+      beep: {value: false},
+      endConferenceOnExit: {value: false},
+      startConferenceOnEnter: {value: false},
+      maxParticipants: {},
+      maxParticipantsType: {value: 'num'},
+      enterHook: {},
+      enterHookType: {value: 'str'},
+      waitHook: {},
+      waitHookType: {value: 'str'}
+    },
+    inputs:1,
+    outputs:1,
+    icon: "font-awesome/fa-cubes",
+    label: function() { 
+      return this.name || 'conference';
+    },
+    oneditprepare: function() {
+      $('#node-input-conference').typedInput({
+        types: ['str', 'msg', 'flow', 'global'],
+        typeField: $('#node-input-conferenceType')
+      });
+      $('#node-input-enterHook').typedInput({
+        types: ['str', 'msg', 'flow', 'global'],
+        typeField: $('#node-input-enterHookType')
+      });
+      $('#node-input-waitHook').typedInput({
+        types: ['str', 'msg', 'flow', 'global'],
+        typeField: $('#node-input-waitHookType')
+      });
+      $('#node-input-maxParticipants').typedInput({
+        types: ['num', 'msg', 'flow', 'global'],
+        typeField: $('#node-input-maxParticipantsType')
+      });
+    }
   });
 
   RED.nodes.registerType('dequeue',{
@@ -1049,34 +1076,6 @@
       return this.credentials ? this.credentials.url : null;
     }
   });
-
-  function testCredentials() {
-    const baseUrl =  $("#node-config-input-url").val();
-    const accountSid =  $("#node-config-input-accountSid").val();
-    const token =  $("#node-config-input-apiToken").val();
-    const status = $("#node-config-test-status");
-
-    status.text('');
-
-    $.ajax({
-      url: `${baseUrl}/v1/Accounts/${accountSid}/ApiKeys`,
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-      dataType: 'json',
-      timeout: 500,
-      error: (err) => {
-        status.text('Failed');
-        console.log(err);
-      },
-      success: (res) => {
-        if (Array.isArray(res)) status.text('Success!');
-        else status.text('Failed');
-        console.log(`response from fetch of api keys: ${JSON.stringify(res)}`);
-      }
-    });
-  }
-
 
   RED.nodes.registerType('lcc',{
       category: 'jambonz',
