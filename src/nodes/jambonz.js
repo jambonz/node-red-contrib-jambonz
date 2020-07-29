@@ -511,11 +511,13 @@ module.exports = function(RED) {
     }
   });
 
-  function doLCC(baseUrl, accountSid, apiToken, callSid, opts) {
+  function doLCC(node, baseUrl, accountSid, apiToken, callSid, opts) {
     const post = bent(`${baseUrl}/v1/`, 'POST', 'json', 202, {
       'Authorization': `Bearer ${apiToken}`
     });
-    return post(`Accounts/${accountSid}/Calls/${callSid}`, opts);
+    const url = `Accounts/${accountSid}/Calls/${callSid}`;
+    node.log(`invoking LCC at ${baseUrl}/v1/${url}`);
+    return post(url, opts);
   }
 
   function doCreateCall(baseUrl, accountSid, apiToken, opts) {
@@ -588,8 +590,9 @@ module.exports = function(RED) {
       }
 
       try {
-        await doLCC(url, accountSid, apiToken, config.callSid, opts);
+        await doLCC(node, url, accountSid, apiToken, config.callSid, opts);
         msg.statusCode = 202;
+        node.log(`successfully sent LCC with opts ${JSON.stringify(opts)}`);
       } catch (err) {
         if (err.statusCode) msg.statusCode = err.statusCode;
         else {
