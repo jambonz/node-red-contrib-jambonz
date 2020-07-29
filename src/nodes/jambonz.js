@@ -707,7 +707,7 @@ function appendVerb(msg, obj) {
  * resolve a value that may be either a string or a property of the msg, flow, or global context
  */
 function v_resolve(val, valType, context, msg, asJson) {
-  if (!val) return val;
+  if (!val || !valType) return val;
   switch (valType) {
     case 'str':
     case 'num':
