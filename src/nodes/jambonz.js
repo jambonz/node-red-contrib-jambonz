@@ -564,6 +564,7 @@ module.exports = function(RED) {
           opts.listen_status = 'resume';
           break;
         case 'redirect':
+          node.log(`LCC redirect callHook ${config.callHook} callHookType: ${config.callHookType}`);
           opts.call_hook = v_resolve(config.callHook, config.callHookType, this.context(), msg);
           break;
         case 'whisper':
