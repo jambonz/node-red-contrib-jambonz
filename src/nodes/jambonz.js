@@ -516,7 +516,7 @@ module.exports = function(RED) {
       'Authorization': `Bearer ${apiToken}`
     });
     const url = `Accounts/${accountSid}/Calls/${callSid}`;
-    node.log(`invoking LCC at ${baseUrl}/v1/${url}`);
+    node.log(`invoking LCC with callSid ${callSid} at ${baseUrl}/v1/${url}`);
     return post(url, opts);
   }
 
@@ -538,7 +538,8 @@ module.exports = function(RED) {
       send = send || function() { node.send.apply(node, arguments);};
 
       const {url, accountSid, apiToken} = server.credentials;
-      if (!url || !accountSid || !apiToken || !config.callSid) {
+      const callSid = v_resolve(config.callSid, config.callSidType, this.context(), msg);
+      if (!url || !accountSid || !apiToken || !callSid) {
         node.log(`invalid / missing credentials or callSid, skipping LCC node: ${JSON.stringify(server.credentials)}`);
         send(msg);
         if (done) done();
@@ -590,7 +591,7 @@ module.exports = function(RED) {
       }
 
       try {
-        await doLCC(node, url, accountSid, apiToken, config.callSid, opts);
+        await doLCC(node, url, accountSid, apiToken, callSid, opts);
         msg.statusCode = 202;
         node.log(`successfully sent LCC with opts ${JSON.stringify(opts)}`);
       } catch (err) {
