@@ -409,7 +409,6 @@ module.exports = function(RED) {
         actionHook: v_resolve(config.actionhook, config.actionhookType, this.context(), msg),
         confirmHook: v_resolve(config.confirmhook, config.confirmhookType, this.context(), msg),
         dialMusic: v_resolve(config.dialmusic, config.dialmusicType, this.context(), msg),
-        dtmfCapture: v_resolve(config.dtmfcapture, config.dtmfcaptureType, this.context(), msg),
         dtmfHook: v_resolve(config.dtmfhook, config.dtmfhookType, this.context(), msg)
       };
 
@@ -440,6 +439,16 @@ module.exports = function(RED) {
           }
         };
       }
+
+      // dtmf capture
+      const dtmfCapture = v_resolve(config.dtmfcapture, config.dtmfcaptureType, this.context(), msg);
+      if (dtmfCapture && dtmfCapture.length) {
+        data.dtmfCapture = dtmfCapture.split(',').map((i) => i.trim());
+      }
+      else {
+        delete data.dtmfHook;
+      }
+
 
       node.log(`dial verb: ${JSON.stringify(data)}`);
 
