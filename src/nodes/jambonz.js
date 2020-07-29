@@ -571,15 +571,15 @@ module.exports = function(RED) {
           Object.assign(opts, {
             whisper: {
               verb: 'say',
-              text: node.text
+              text: node.config.text
             }
           });
-          if (['aws', 'google'].includes(node.vendor)) {
+          if (['aws', 'google'].includes(node.config.vendor)) {
             Object.assign(opts.whisper, {
               synthesizer: {
-                vendor: node.vendor,
-                language: node.lang,
-                voice: node.voice
+                vendor: node.config.vendor,
+                language: node.config.lang,
+                voice: node.config.voice
               }
             });
           }
