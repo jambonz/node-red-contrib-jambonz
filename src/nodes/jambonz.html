@@ -1099,7 +1099,7 @@
           const action = $('#node-input-action').val();
           return action !== 'redirect' || v.length > 0;
         }},
-        callHookType: {value: ''},
+        callHookType: {value: 'str'},
       },
       inputs:1,
       outputs:1,
@@ -2411,7 +2411,7 @@ The sip:decline verb rejects an incoming call.
 <div class="form-row">
   <label for="node-input-callSid">CallSid</label>
   <input type="text" id="node-input-callSid">
-  <input type="hidden" id="node-input-inputCalSidType">
+  <input type="hidden" id="node-input-inputCallSidType">
 </div>
 <div class="form-row">
   <label for="node-input-action">Action</label>
