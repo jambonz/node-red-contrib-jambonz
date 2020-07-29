@@ -51,7 +51,7 @@
     });
   });
 
-  var testCredentials = function() {
+  function testCredentials() {
     const baseUrl =  $("#node-config-input-url").val();
     const accountSid =  $("#node-config-input-accountSid").val();
     const token =  $("#node-config-input-apiToken").val();
@@ -1074,6 +1074,9 @@
     },
     label: function() { 
       return this.credentials ? this.credentials.url : null;
+    },
+    oneditprepare: function() {
+      $('#btn-test-credentials').on('click', testCredentials);
     }
   });
 
@@ -2383,7 +2386,7 @@ The sip:decline verb rejects an incoming call.
   <input type="text" id="node-config-input-apiToken">
 </div>
 <div class="form-row">
-  <button id="button" onclick="testCredentials()"><i class="fa fa-lock"></i> Test Credentials</button>
+  <button id="btn-test-credentials"><i class="fa fa-lock"></i> Test Credentials</button>
   <span id="node-config-test-status" style="margin-left: 20px;"></span>
 </div>
 </script>
