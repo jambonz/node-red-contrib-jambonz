@@ -2375,7 +2375,7 @@ The sip:decline verb rejects an incoming call.
 <script type="text/html" data-template-name="jambonz_auth">
   <div class="form-row">
     <label for="node-config-input-url">Base URL</label>
-    <input type="text" id="node-config-input-url" placeholder="http://localhost:3001">
+    <input type="text" id="node-config-input-url" placeholder="http://localhost:3000">
 </div>
 <div class="form-row">
   <label for="node-config-input-accountSid">AccountSid</label>
@@ -2458,6 +2458,7 @@ The sip:decline verb rejects an incoming call.
   <div class="form-row">
     <label for="node-input-callHook">Call webhook</label>
     <input type="text" id="node-input-callHook" placeholder="/path">
+    <input type="hidden" id="node-input-callHookType">
   </div>  
 </div>
 </script>
