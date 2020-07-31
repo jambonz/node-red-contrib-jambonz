@@ -280,14 +280,16 @@ module.exports = function(RED) {
     this.early = config.early;
     this.loop = config.loop;
     var node = this;
+
     node.on('input', function(msg) {
 
       node.log(`say config: ${JSON.stringify(config)}, msg.call: ${JSON.stringify(msg.call)}`);
+      const text = v_text_resolve(this.text, this.context(), msg);
 
       // jambonz say verb
       var obj = {
         verb: 'say',
-        text: node.text,
+        text,
         loop: parseInt(node.loop),
         earlyMedia: node.early
       };
@@ -329,7 +331,7 @@ module.exports = function(RED) {
           var hints = v_resolve(config.recognizerhints, config.recognizerhintsType, this.context(), msg);
           obj.recognizer.hints = hints
             .split(',')
-            .map(function(str) { return str.trim()});
+            .map((str) => str.trim());
         }
       }
       if (config.dtmfinput) {
@@ -341,14 +343,14 @@ module.exports = function(RED) {
 
       // prompt
       if (config.prompttype === 'say') {
-        obj.say = {text: config.text};
+        obj.say = {text: v_text_resolve(config.text, this.context(), msg)};
         if (['aws', 'google'].includes(config.vendor)) {
           Object.assign(obj.say, {
             synthesizer: {
               vendor: config.vendor,
               language: config.lang,
               voice: config.voice
-            }  
+            }
           });
         }
       }
@@ -728,4 +730,35 @@ function v_resolve(val, valType, context, msg, asJson) {
     data[keys[k]] = dataobject.get(keys[k]);
   }
   return mustache.render('{{' + val + '}}', data);
+}
+
+function v_text_resolve(val, context, msg) {
+  const flow = {};
+  const glob = {};
+  let keys = context.flow.keys();
+  for (const k in keys) {
+    flow[keys[k]] = context.flow.get(keys[k]);
+  }
+  keys = context.global.keys();
+  for (const k in keys) {
+    glob[keys[k]] = context.global.get(keys[k]);
+  }
+
+
+  const newString = val.trim().replace(/\${([^{}]*)}/g, (a, b) => {
+    if (b.startsWith('msg.')) {
+      const prop = b.slice(4);
+      return mustache.render('{{' + prop + '}}', msg);
+    }
+    else if (b.startsWith('flow.')) {
+      const prop = b.slice(5);
+      return mustache.render('{{' + prop + '}}', flow);
+    }
+    else if (b.startsWith('global.')) {
+      const prop = b.slice(7);
+      return mustache.render('{{' + prop + '}}', glob);
+    }
+    return '${' + b + '}';
+  });
+  return newString;
 }
