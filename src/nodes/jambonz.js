@@ -744,11 +744,13 @@ function v_text_resolve(node, val, context, msg) {
     glob[keys[k]] = context.global.get(keys[k]);
   }
 
+  node.log(`msg.name is ${msg.name}`);
 
   const newString = val.trim().replace(/\${([^{}]*)}/g, (a, b) => {
     node.log(`replacing ${b} in ${val}`);
     if (b.startsWith('msg.')) {
       const prop = b.slice(4);
+      node.log(`msg.${prop} renders to ${msg[prop]}`);
       return mustache.render('{{' + prop + '}}', msg);
     }
     else if (b.startsWith('flow.')) {
