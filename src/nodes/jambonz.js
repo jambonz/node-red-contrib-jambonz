@@ -284,7 +284,7 @@ module.exports = function(RED) {
     node.on('input', function(msg) {
 
       node.log(`say config: ${JSON.stringify(config)}, msg.call: ${JSON.stringify(msg.call)}`);
-      const text = v_text_resolve(this.text, this.context(), msg);
+      const text = v_text_resolve(node, this.text, this.context(), msg);
 
       // jambonz say verb
       var obj = {
@@ -343,7 +343,7 @@ module.exports = function(RED) {
 
       // prompt
       if (config.prompttype === 'say') {
-        obj.say = {text: v_text_resolve(config.text, this.context(), msg)};
+        obj.say = {text: v_text_resolve(node, config.text, this.context(), msg)};
         if (['aws', 'google'].includes(config.vendor)) {
           Object.assign(obj.say, {
             synthesizer: {
@@ -732,7 +732,7 @@ function v_resolve(val, valType, context, msg, asJson) {
   return mustache.render('{{' + val + '}}', data);
 }
 
-function v_text_resolve(val, context, msg) {
+function v_text_resolve(node, val, context, msg) {
   const flow = {};
   const glob = {};
   let keys = context.flow.keys();
@@ -746,6 +746,7 @@ function v_text_resolve(val, context, msg) {
 
 
   const newString = val.trim().replace(/\${([^{}]*)}/g, (a, b) => {
+    node.log(`replacing ${b} in ${val}`);
     if (b.startsWith('msg.')) {
       const prop = b.slice(4);
       return mustache.render('{{' + prop + '}}', msg);
@@ -760,5 +761,6 @@ function v_text_resolve(val, context, msg) {
     }
     return '${' + b + '}';
   });
+  node.log(`v_text_resolve: ${val} interpolated to ${newString}`);
   return newString;
 }
