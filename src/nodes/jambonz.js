@@ -751,15 +751,15 @@ function v_text_resolve(node, val, context, msg) {
     if (b.startsWith('msg.')) {
       const prop = b.slice(4);
       node.log(`msg.${prop} renders to ${msg[prop]}`);
-      return mustache.render('{{' + prop + '}}', msg);
+      return msg[prop];
     }
     else if (b.startsWith('flow.')) {
       const prop = b.slice(5);
-      return mustache.render('{{' + prop + '}}', flow);
+      return flow[prop];
     }
     else if (b.startsWith('global.')) {
       const prop = b.slice(7);
-      return mustache.render('{{' + prop + '}}', glob);
+      return glob[prop];
     }
     return '${' + b + '}';
   });
