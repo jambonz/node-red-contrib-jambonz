@@ -779,7 +779,8 @@
       defaults: {
         name: {value: ''},
         bot: {required: true},
-        alias: {required: true}
+        alias: {required: true},
+        alias: {value: 'us-east-1'}
       },
       inputs:1,
       outputs:1,
@@ -1888,6 +1889,48 @@ The hangup verb hangs up the current call.
 The leave verb transfers a call out of a queue. The call then returns to the flow of execution following the enqueue verb that parked the call, or the document returned by that verbs actionHook property, if provided.<h3>References</h3>
   <ul>
       <li><a href="https://docs.jambonz.org/jambonz/#leave">Jambonz leave reference</a></li>
+  </ul>
+</script>
+
+<!-- lex -->
+<script type="text/html" data-template-name="lex">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bot">Bot</label>
+    <input type="text" id="node-input-bot" placeholder="bot name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-alias">Alias</label>
+    <input type="text" id="node-input-alias" placeholder="bot alias">
+  </div>
+  <div class="form-row">
+    <label for="node-input-region">Region</label>
+    <input type="text" id="node-input-region" placeholder="aws region">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="pause">
+  <p>Pause a specified number of seconds</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>Duration<span class="property-type">object</span></dt>
+    <dd>Number of seconds pause</dd>
+   </dl>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+  <dt>jambonz<span class="property-type">object</span></dt>
+  <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>pause</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The pause verb waits a specified number of seconds before continuing to execute the application.
+<h3>References</h3>
+  <ul>
+      <li><a href="https://docs.jambonz.org/jambonz/#pause">Jambonz pause reference</a></li>
   </ul>
 </script>
 
