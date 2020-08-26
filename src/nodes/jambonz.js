@@ -129,6 +129,26 @@ module.exports = function(RED) {
   }
   RED.nodes.registerType('leave', leave);
 
+  /** lex */
+  function lex(config) {
+    RED.nodes.createNode(this, config);
+    var node = this;
+    node.on('input', function(msg) {
+      //var val = v_resolve(config.len, config.lenType, this.context(), msg);
+      //var length = /^\d+$/.test(val) ? parseInt(val) : parseFloat(val);
+      var bot = config.bot;
+      var alias = config.alias;
+      appendVerb(msg, {
+        verb: 'lex',
+        bot,
+        alias,
+        region: 'us-east-1'
+      });
+      node.send(msg);
+    });
+  }
+  RED.nodes.registerType('lex', lex);
+
   /** listen */
   function listen(config) {
     RED.nodes.createNode(this, config);

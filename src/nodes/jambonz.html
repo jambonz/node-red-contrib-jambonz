@@ -773,6 +773,20 @@
       label: function() { return this.name || 'leave';}
   });
 
+  RED.nodes.registerType('lex',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+        bot: {required: true},
+        alias: {required: true}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { return this.name || 'lex';}
+  });
+
   RED.nodes.registerType('listen',{
       category: 'jambonz',
       color: '#bbabaa',
