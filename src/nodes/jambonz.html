@@ -779,13 +779,89 @@
       defaults: {
         name: {value: ''},
         bot: {required: true},
+        botType: {value: 'str'},
         alias: {required: true},
-        alias: {value: 'us-east-1'}
+        aliasType: {value: 'str'},
+        region: {required: true, value: 'us-east-1'},
+        eventHook: {},
+        eventHookType: {value: 'str'},
+        actionHook: {},
+        actionHookType: {value: 'str'},
+        bargein: {value: true},
+        inputTimeout: {},
+        inputTimeoutType: {value: 'num'},
+        passDtmf: {value: true},
+        prompt: {value: 'lex', required: true},
+        lang: {value: 'en-US'},
+        vendor: {value: 'aws'},
+        voice: {}
       },
       inputs:1,
       outputs:1,
       icon: "font-awesome/fa-cubes",
-      label: function() { return this.name || 'lex';}
+      label: function() { return this.name || 'lex';},
+      oneditprepare: () => {
+        var node = this;
+        var promptElem = $('#node-input-prompt');
+        var ttsDiv = $('#tts-options');
+        var vendorElem = $('#node-input-vendor');
+        var voiceElem = $('#node-input-voice');
+
+        console.log(`oeditprepare: vendor is ${node.vendor} voice is ${node.voice}`);
+
+        $('#node-input-bot').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-botType')
+        });
+        $('#node-input-alias').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-aliasType')
+        });
+        $('#node-input-inputTimeout').typedInput({
+          types: ['num', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-inputTimeoutType')
+        });
+
+        var onPromptChanged = function () {
+          node.action = promptElem.find(':selected').val();
+          if ('tts' === node.action) ttsDiv.show();
+          else ttsDiv.hide();
+        }
+        var onVendorChanged = function() {
+          node.vendor = vendorElem.find(':selected').val();
+          console.log(`lex vendor changed to ${node.vendor}`);
+          setVoice(node.vendor, 'en-US');
+          //voiceElem.val(node.voice);
+        }
+        var onVoiceChanged = function() {
+          node.voice = voiceElem.find(':selected').val();
+          console.log(`voice changed to ${node.voice}`);
+        }
+        var setVoice = function(vendor, lang) {
+          console.log(`say set voice for language ${lang} vendor ${vendor}, voice now is ${node.voice}`);
+          voiceElem.find('option').remove();
+
+          switch (vendor) {
+            case 'google':
+            case 'aws':
+              var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
+              if (obj) {
+                var options = '';
+                for (var i = 0; i < obj.voices.length; i++) {
+                  //if (obj.voices[i].value === node.voice) options += `<option selected value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+                  options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+                }
+                voiceElem.append(options);
+              }
+              break;
+          }
+          voiceElem.val(node.voice);
+        }
+        promptElem.change(onPromptChanged);
+
+        vendorElem.change(onVendorChanged);
+        voiceElem.change(onVoiceChanged);
+      }
   });
 
   RED.nodes.registerType('listen',{
@@ -1901,15 +1977,71 @@ The leave verb transfers a call out of a queue. The call then returns to the flo
   <div class="form-row">
     <label for="node-input-bot">Bot</label>
     <input type="text" id="node-input-bot" placeholder="bot name">
+    <input type="hidden" id="node-input-botType">
   </div>
   <div class="form-row">
     <label for="node-input-alias">Alias</label>
     <input type="text" id="node-input-alias" placeholder="bot alias">
+    <input type="hidden" id="node-input-aliasType">
   </div>
   <div class="form-row">
     <label for="node-input-region">Region</label>
-    <input type="text" id="node-input-region" placeholder="aws region">
+    <select id="node-input-region">
+      <option value="ap-northeast-1">Tokyo (ap-northeast-1)</option>
+      <option value="ap-southeast-1">Singapore (ap-southeast-1)</option>
+      <option value="ap-southeast-2">Sydney (ap-southeast-2)</option>
+      <option value="eu-central-1">Frankfurt (eu-central-1)</option>
+      <option value="eu-west-1">Ireland (eu-west-1)</option>
+      <option value="eu-west-2">London (eu-west-2)</option>
+      <option value="us-east-1" selected>N. Virginia (us-east-1)</option>
+      <option value="us-west-2">Oregon (us-west-2)</option>
+    </select>
   </div>
+  <div class="form-row">
+    <label for="node-input-inputTimeout">Input timeout</label>
+    <input type="text" id="node-input-inputTimeout" placeholder="seconds to wait for a response">
+    <input type="hidden" id="node-input-inputTimeoutType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-beep">Enable barge-in</label>
+    <input type="checkbox" id="node-input-bargein">
+  </div>
+  <div class="form-row">
+    <label for="node-input-passDtmf">Enable dtmf</label>
+    <input type="checkbox" id="node-input-passDtmf">
+  </div>
+  <div class="form-row">
+    <label for="node-input-eventHook">Event Hook</label>
+    <input type="text" id="node-input-eventHook">
+    <input type="hidden" id="node-input-eventHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-actionHook">Action Hook</label>
+    <input type="text" id="node-input-actionHook">
+    <input type="hidden" id="node-input-actionHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-prompt">Prompt audio</label>
+    <select id="node-input-prompt">
+      <option value="lex">Use Lex-provided audio</option>
+      <option value="tts">Use text to speech</option>
+    </select>
+  </div>
+  <div id="tts-options">
+    <div class="form-row">
+      <label for="node-input-vendor">Vendor</label>
+      <select id="node-input-vendor">
+        <option value="google">google</option>
+        <option value="aws">aws/polly</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-voice">Voice</label>
+      <select id="node-input-voice">
+      </select>
+    </div>
+  </div>
+
 </script>
 
 <script type="text/html" data-help-name="pause">
@@ -2384,7 +2516,7 @@ The sip:decline verb rejects an incoming call.
     <input type="hidden" id="node-input-eventHookType">
   </div>
   <div class="form-row">
-    <label for="node-input-eventHook">Action Hook</label>
+    <label for="node-input-actionHook">Action Hook</label>
     <input type="text" id="node-input-actionHook">
     <input type="hidden" id="node-input-actionHookType">
   </div>
