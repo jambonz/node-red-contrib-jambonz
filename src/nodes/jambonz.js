@@ -152,7 +152,7 @@ module.exports = function(RED) {
       if (eventHook && eventHook.length > 0) obj.eventHook = eventHook;
       if (actionHook && actionHook.length > 0) obj.actionHook = actionHook;
       if (timeout) obj.noInputTimeout = timeout;
-      if (obj.prompt === 'tts') {
+      if (config.prompt === 'tts') {
         obj.tts = {
           vendor: config.vendor,
           language: config.lang,
@@ -525,7 +525,7 @@ module.exports = function(RED) {
       if (actionHook && actionHook.length > 0) obj.actionHook = actionHook;
       if (timeout) obj.noInputTimeout = timeout;
       if (timeout && noInputEvent) obj.noInputEvent = noInputEvent;
-      if (obj.prompt === 'tts') {
+      if (config.prompt === 'tts') {
         obj.tts = {
           vendor: config.vendor,
           language: config.lang,
