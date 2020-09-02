@@ -153,13 +153,10 @@ module.exports = function(RED) {
       if (actionHook && actionHook.length > 0) obj.actionHook = actionHook;
       if (timeout) obj.noInputTimeout = timeout;
       if (obj.prompt === 'tts') {
-        obj.say = {
-          text: 'placeholder',
-          synthesizer: {
-            vendor: config.vendor,
-            language: 'en-US',
-            voice: config.voice
-          }
+        obj.tts = {
+          vendor: config.vendor,
+          language: config.lang,
+          voice: config.voice
         };
       }
 
@@ -314,9 +311,6 @@ module.exports = function(RED) {
   function say(config) {
     RED.nodes.createNode(this, config);
     this.text = config.text;
-    this.vendor = config.vendor;
-    this.lang = config.lang;
-    this.voice = config.voice;
     this.early = config.early;
     this.loop = config.loop;
     var node = this;
@@ -336,9 +330,9 @@ module.exports = function(RED) {
       if (['aws', 'google'].includes(node.vendor)) {
         Object.assign(obj, {
           synthesizer: {
-            vendor: node.vendor,
-            language: node.lang,
-            voice: node.voice
+            vendor: config.vendor,
+            language: config.lang,
+            voice: config.voice
           }
         });
       }
@@ -531,6 +525,13 @@ module.exports = function(RED) {
       if (actionHook && actionHook.length > 0) obj.actionHook = actionHook;
       if (timeout) obj.noInputTimeout = timeout;
       if (timeout && noInputEvent) obj.noInputEvent = noInputEvent;
+      if (obj.prompt === 'tts') {
+        obj.tts = {
+          vendor: config.vendor,
+          language: config.lang,
+          voice: config.voice
+        };
+      }
 
       appendVerb(msg, obj);
       node.send(msg);

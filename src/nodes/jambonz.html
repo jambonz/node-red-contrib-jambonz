@@ -78,6 +78,96 @@
     });
   }
 
+  function prepareTtsControls(node) {
+    var vendorElem = $('#node-input-vendor');
+    var langElem = $('#node-input-lang');
+    var xlangElem = $('#node-input-xlang');
+    var voiceElem = $('#node-input-voice');
+    var xvoiceElem = $('#node-input-xvoice');
+  
+    console.log(`oneditprepare tts vendor: ${node.vendor}, lang: ${node.lang}, voice: ${node.voice}`);
+
+    var onVendorChanged = function() {
+      node.vendor = vendorElem.val();
+      console.log(`tts vendor changed to ${node.vendor}`);
+      setLanguage(node.vendor);
+    }
+    var setLanguage = function(v) {
+      xlangElem.find('option').remove();
+      xvoiceElem.find('option').remove();
+
+      switch (v) {
+        case 'default': 
+          xlangElem.append('<option value="default" selected>--application default--</option>');
+          xvoiceElem.append('<option value="default" selected>--application default--</option>');
+          langElem.val('default');
+          voiceElem.val('default');
+          break;
+
+        case 'google':
+          xlangElem.append(googleLanguageOptions);
+          break;
+
+        case 'aws':
+          xlangElem.append(awsLanguageOptions);
+          break;
+      }
+      console.log(`installed language choices for ${v}`);
+      xlangElem.val(langElem.val());
+    }
+    var onLangChanged = function() {
+      console.log(`lang edit changed to ${langElem.val()}`);
+    }
+    var onXLangChanged = function() {
+      var lang = xlangElem.find(':selected').val();
+      console.log(`lang dropdown changed to ${lang}`);
+      node.lang = lang;
+      langElem.val(node.lang);
+      setVoice(node.vendor, node.lang)
+    }
+    var setVoice = function(vendor, lang) {
+      xvoiceElem.find('option').remove();
+
+      console.log(`installing voices for ${vendor} ${lang}`);
+      switch (vendor) {
+        case 'default':
+          xvoiceElem.append('<option value="default" selected>--application default--</option>');
+          break;
+
+        case 'google':
+        case 'aws':
+          var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
+          if (obj) {
+            var options = '';
+            for (var i = 0; i < obj.voices.length; i++) {
+              if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+              else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+            }
+            xvoiceElem.append(options);
+          }
+          break;
+      }
+      console.log(`installed voice choices for ${vendor} ${lang}`);
+      if (voiceElem.val()) xvoiceElem.val(voiceElem.val());
+    }
+    var onVoiceChanged = function() {
+      console.log(`voice edit changed to ${voiceElem.val()}`);
+      xvoiceElem.val(voiceElem.val());
+    }
+    var onXVoiceChanged = function() {
+      var voice = xvoiceElem.find(':selected').val();
+      node.voice = voice;
+      console.log(`voice dropdown changed to ${voice}`);
+      voiceElem.val(voice);
+    }
+
+    vendorElem.change(onVendorChanged);
+    langElem.change(onLangChanged);
+    xlangElem.change(onXLangChanged);
+    voiceElem.change(onVoiceChanged);
+    xvoiceElem.change(onXVoiceChanged);
+  }
+
   RED.nodes.registerType('user auth',{
       category: 'jambonz',
       color:"#c1f986",
@@ -498,6 +588,12 @@
         evtStartPlay: {value: false},
         evtEndPlay: {value: false},
         evtNoInput: {value: false},
+        prompt: {value: 'dialogflow', required: true},
+        vendor: {value: 'default'},
+        lang: {value: 'default'},
+        voice: {value: 'default'},
+        xlang: {},
+        xvoice: {}
       },
       inputs:1,
       outputs:1,
@@ -537,8 +633,17 @@
           typeField: $('#node-input-noinputEventType'),
           types: ['str','msg', 'flow', 'global']
         });
-
+        var promptElem = $('#node-input-prompt');
+        var ttsDiv = $('#tts-options');
         var recLangElem = $('#node-input-recognizerlang');
+
+        prepareTtsControls(node);
+        var onPromptChanged = function () {
+          node.action = promptElem.find(':selected').val();
+          if ('tts' === node.action) ttsDiv.show();
+          else ttsDiv.hide();
+        }
+        promptElem.change(onPromptChanged);
 
         var setTranscriptionLanguage = function() {
           console.log(`setting transcription languages: ${dialogFlowOptions}`);
@@ -604,6 +709,8 @@
         vendor: {value: 'default'},
         lang: {value: 'default'},
         voice: {value: 'default'},
+        xvoice: {},
+        xlang: {},
         recognizerlang: {value: 'default'},
         recognizerhints: {value: ''},
         recognizerhintsType: {value: 'str'}
@@ -614,6 +721,8 @@
       label: function() { return this.name || 'gather';},
       oneditprepare: () => {
         var node = this;
+        prepareTtsControls(node);
+
         $('#node-input-playurl').typedInput({
           types: ['str', 'msg', 'flow', 'global'],
           typeField: $('#node-input-playurlType')
@@ -623,78 +732,7 @@
           typeField: $('#node-input-recognizerhintsType')
         });
 
-        var vendorElem = $('#node-input-vendor');
-        var langElem = $('#node-input-lang');
-        var voiceElem = $('#node-input-voice');
         var recLangElem = $('#node-input-recognizerlang');
-      
-        var onVendorChanged = function() {
-          node.vendor = vendorElem.find(':selected').val();
-          console.log(`gather vendor changed to ${node.vendor}`);
-          setLanguage(node.vendor);
-        }
-
-        var onLangChanged = function() {
-          node.lang = langElem.find(':selected').val();
-          console.log(`language changed to ${node.lang}`);
-          setVoice(node.vendor, node.lang)
-        }
-      
-        var onVoiceChanged = function() {
-          node.voice = voiceElem.find(':selected').val();
-          console.log(`voice changed to ${node.voice}`);
-        }
-      
-        var setLanguage = function(v) {
-          langElem.find('option').remove();
-          voiceElem.find('option').remove();
-
-          switch (v) {
-            case 'default': 
-              langElem.append('<option value="default" selected>--application default--</option>');
-              voiceElem.append('<option value="default" selected>--application default--</option>');
-              node.lang = 'default';
-              node.voice = 'default';
-              break;
-
-            case 'google':
-              langElem.append(googleLanguageOptions);
-              break;
-
-            case 'aws':
-              langElem.append(awsLanguageOptions);
-              break;
-          }
-          langElem.val(node.lang);
-        }
-
-        var setVoice = function(vendor, lang) {
-          console.log(`say set voice for language ${lang} vendor ${vendor}`);
-          voiceElem.find('option').remove();
-
-          switch (vendor) {
-            case 'default':
-              voiceElem.append('<option value="default" selected>--application default--</option>');
-              break;
-
-            case 'google':
-            case 'aws':
-              var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
-              if (obj) {
-                var options = '';
-                for (var i = 0; i < obj.voices.length; i++) {
-                  if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-                  else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-                }
-                voiceElem.append(options);
-              }
-              break;
-          }
-          voiceElem.val(node.voice);
-        }
-        vendorElem.change(onVendorChanged);
-        langElem.change(onLangChanged);
-        voiceElem.change(onVoiceChanged);
 
         var onRecLangChanged = function() {
           node.recognizerlang = recLangElem.find(':selected').val();
@@ -792,9 +830,11 @@
         inputTimeoutType: {value: 'num'},
         passDtmf: {value: true},
         prompt: {value: 'lex', required: true},
-        lang: {value: 'en-US'},
-        vendor: {value: 'aws'},
-        voice: {}
+        vendor: {value: 'default'},
+        lang: {value: 'default'},
+        voice: {value: 'default'},
+        xlang: {},
+        xvoice: {}
       },
       inputs:1,
       outputs:1,
@@ -804,10 +844,8 @@
         var node = this;
         var promptElem = $('#node-input-prompt');
         var ttsDiv = $('#tts-options');
-        var vendorElem = $('#node-input-vendor');
-        var voiceElem = $('#node-input-voice');
 
-        console.log(`oeditprepare: vendor is ${node.vendor} voice is ${node.voice}`);
+        prepareTtsControls(node);
 
         $('#node-input-bot').typedInput({
           types: ['str', 'msg', 'flow', 'global'],
@@ -827,40 +865,8 @@
           if ('tts' === node.action) ttsDiv.show();
           else ttsDiv.hide();
         }
-        var onVendorChanged = function() {
-          node.vendor = vendorElem.find(':selected').val();
-          console.log(`lex vendor changed to ${node.vendor}`);
-          setVoice(node.vendor, 'en-US');
-          //voiceElem.val(node.voice);
-        }
-        var onVoiceChanged = function() {
-          node.voice = voiceElem.find(':selected').val();
-          console.log(`voice changed to ${node.voice}`);
-        }
-        var setVoice = function(vendor, lang) {
-          console.log(`say set voice for language ${lang} vendor ${vendor}, voice now is ${node.voice}`);
-          voiceElem.find('option').remove();
 
-          switch (vendor) {
-            case 'google':
-            case 'aws':
-              var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
-              if (obj) {
-                var options = '';
-                for (var i = 0; i < obj.voices.length; i++) {
-                  //if (obj.voices[i].value === node.voice) options += `<option selected value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-                  options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-                }
-                voiceElem.append(options);
-              }
-              break;
-          }
-          voiceElem.val(node.voice);
-        }
         promptElem.change(onPromptChanged);
-
-        vendorElem.change(onVendorChanged);
-        voiceElem.change(onVoiceChanged);
       }
   });
 
@@ -1023,7 +1029,9 @@
         loop: {value: 1},
         vendor: {value: 'default'},
         lang: {value: 'default'},
-        voice: {value: 'default'}
+        xlang: {},
+        voice: {value: 'default'},
+        xvoice: {}
       },
       inputs:1,
       outputs:1,
@@ -1031,79 +1039,7 @@
       label: function() { return this.name || 'say';},
       oneditprepare: () => {
         var node = this;
-        var vendorElem = $('#node-input-vendor');
-        var langElem = $('#node-input-lang');
-        var voiceElem = $('#node-input-voice');
-      
-        console.log(`oneditprepare say vendor: ${node.vendor}, lang: ${node.lang}, voice: ${node.voice}`);
-        var onVendorChanged = function() {
-          node.vendor = vendorElem.find(':selected').val();
-          console.log(`say vendor changed to ${node.vendor}`);
-          setLanguage(node.vendor);
-        }
-
-        var onLangChanged = function() {
-          node.lang = langElem.find(':selected').val();
-          console.log(`language changed to ${node.lang}`);
-          setVoice(node.vendor, node.lang)
-        }
-      
-        var onVoiceChanged = function() {
-          node.voice = voiceElem.find(':selected').val();
-          console.log(`voice changed to ${node.voice}`);
-        }
-
-        var setLanguage = function(v) {
-          langElem.find('option').remove();
-          voiceElem.find('option').remove();
-
-          switch (v) {
-            case 'default': 
-              langElem.append('<option value="default" selected>--application default--</option>');
-              voiceElem.append('<option value="default" selected>--application default--</option>');
-              node.lang = 'default';
-              node.voice = 'default';
-              break;
-
-            case 'google':
-              langElem.append(googleLanguageOptions);
-              break;
-
-            case 'aws':
-              langElem.append(awsLanguageOptions);
-              break;
-          }
-          langElem.val(node.lang);
-        }
-
-        var setVoice = function(vendor, lang) {
-          console.log(`say set voice for language ${lang} vendor ${vendor}`);
-          voiceElem.find('option').remove();
-
-          switch (vendor) {
-            case 'default':
-              voiceElem.append('<option value="default" selected>--application default--</option>');
-              break;
-
-            case 'google':
-            case 'aws':
-              var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
-              if (obj) {
-                var options = '';
-                for (var i = 0; i < obj.voices.length; i++) {
-                  if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-                  else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-                }
-                voiceElem.append(options);
-              }
-              break;
-          }
-          voiceElem.val(node.voice);
-        }
-
-        vendorElem.change(onVendorChanged);
-        langElem.change(onLangChanged);
-        voiceElem.change(onVoiceChanged);
+        prepareTtsControls(node);
       }
   });
 
@@ -1847,15 +1783,23 @@ The enqueue command is used to place a caller in a queue.
         <option value="aws">aws/polly</option>
       </select>
     </div>
+    <div class="form-row" style="display: none;">
+      <label for="node-input-lang"> Lang</label>
+      <input type="text" id="node-input-lang">
+    </div>
     <div class="form-row">
-      <label for="node-input-lang"><i class="icon-tag"></i> Language</label>
-      <select id="node-input-lang">
+      <label for="node-input-xlang">Language</label>
+      <select id="node-input-xlang">
         <option value="default" selected>--application default--</option>
       </select>
     </div>
+    <div class="form-row" style="display: none;">
+      <label for="node-input-voice"> Voice</label>
+      <input type="text" id="node-input-voice">
+    </div>
     <div class="form-row">
-      <label for="node-input-voice"><i class="icon-tag"></i> Voice</label>
-      <select id="node-input-voice">
+      <label for="node-input-xvoice">Voice</label>
+      <select id="node-input-xvoice">
         <option value="default" selected>--application default--</option>
       </select>
     </div>
@@ -2029,19 +1973,34 @@ The leave verb transfers a call out of a queue. The call then returns to the flo
   </div>
   <div id="tts-options">
     <div class="form-row">
-      <label for="node-input-vendor">Vendor</label>
+      <label for="node-input-vendor"><i class="icon-tag"></i> Vendor</label>
       <select id="node-input-vendor">
+        <option value="default" selected>--application default--</option>
         <option value="google">google</option>
         <option value="aws">aws/polly</option>
       </select>
     </div>
+    <div class="form-row" style="display: none;">
+      <label for="node-input-lang"> Lang</label>
+      <input type="text" id="node-input-lang">
+    </div>
     <div class="form-row">
-      <label for="node-input-voice">Voice</label>
-      <select id="node-input-voice">
+      <label for="node-input-xlang">Language</label>
+      <select id="node-input-xlang">
+        <option value="default" selected>--application default--</option>
+      </select>
+    </div>
+    <div class="form-row" style="display: none;">
+      <label for="node-input-voice"> Voice</label>
+      <input type="text" id="node-input-voice">
+    </div>
+    <div class="form-row">
+      <label for="node-input-xvoice">Voice</label>
+      <select id="node-input-xvoice">
+        <option value="default" selected>--application default--</option>
       </select>
     </div>
   </div>
-
 </script>
 
 <script type="text/html" data-help-name="pause">
@@ -2338,22 +2297,30 @@ The redirect verb retrieves a new URL to execute for the current call.
 <fieldset>
   <legend>Speech synthesis options</legend>
   <div class="form-row">
-    <label for="node-input-vendor"><i class="icon-tag"></i> Vendor</label>
+    <label for="node-input-vendor">Vendor</label>
     <select id="node-input-vendor">
       <option value="default" selected>--application default--</option>
       <option value="google">google</option>
       <option value="aws">aws/polly</option>
     </select>
   </div>
+  <div class="form-row" style="display: none;">
+    <label for="node-input-lang"> Lang</label>
+    <input type="text" id="node-input-lang">
+  </div>
   <div class="form-row">
-    <label for="node-input-lang"><i class="icon-tag"></i> Language</label>
-    <select id="node-input-lang">
+    <label for="node-input-xlang">Language</label>
+    <select id="node-input-xlang">
       <option value="default" selected>--application default--</option>
     </select>
   </div>
+  <div class="form-row" style="display: none;">
+    <label for="node-input-voice"> Voice</label>
+    <input type="text" id="node-input-voice">
+  </div>
   <div class="form-row">
-    <label for="node-input-voice"><i class="icon-tag"></i> Voice</label>
-    <select id="node-input-voice">
+    <label for="node-input-xvoice">Voice</label>
+    <select id="node-input-xvoice">
       <option value="default" selected>--application default--</option>
     </select>
   </div>
@@ -2519,6 +2486,43 @@ The sip:decline verb rejects an incoming call.
     <label for="node-input-actionHook">Action Hook</label>
     <input type="text" id="node-input-actionHook">
     <input type="hidden" id="node-input-actionHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-prompt">Prompt audio</label>
+    <select id="node-input-prompt" style="width:250px;">
+      <option value="dialogflow">Use dialogflow-provided audio</option>
+      <option value="tts">Use text to speech</option>
+    </select>
+  </div>
+  <div id="tts-options">
+    <div class="form-row">
+      <label for="node-input-vendor"><i class="icon-tag"></i> Vendor</label>
+      <select id="node-input-vendor">
+        <option value="default" selected>--application default--</option>
+        <option value="google">google</option>
+        <option value="aws">aws/polly</option>
+      </select>
+    </div>
+    <div class="form-row" style="display: none;">
+      <label for="node-input-lang"> Lang</label>
+      <input type="text" id="node-input-lang">
+    </div>
+    <div class="form-row">
+      <label for="node-input-xlang">Language</label>
+      <select id="node-input-xlang">
+        <option value="default" selected>--application default--</option>
+      </select>
+    </div>
+    <div class="form-row" style="display: none;">
+      <label for="node-input-voice"> Voice</label>
+      <input type="text" id="node-input-voice">
+    </div>
+    <div class="form-row">
+      <label for="node-input-xvoice">Voice</label>
+      <select id="node-input-xvoice">
+        <option value="default" selected>--application default--</option>
+      </select>
+    </div>
   </div>
 </script>
 
