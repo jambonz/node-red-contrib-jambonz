@@ -1111,6 +1111,7 @@
       category: 'jambonz',
       color: '#aebfb9',
       defaults: {
+        name: {value: ''},
         server: {value: '', required: true, type: 'jambonz_auth'},
         callSid: {required: true},
         callSidType: {value: 'msg'},
@@ -1132,7 +1133,7 @@
       outputs:1,
       icon: "font-awesome/fa-cubes",
       label: function() { 
-        return this.name || this.action ? `LCC - ${this.action}` : 'LCC';
+        return this.name || (this.action ? `LCC - ${this.action}` : 'LCC');
       },
       oneditprepare: function() {
         var node = this;
@@ -1240,6 +1241,7 @@
       category: 'jambonz',
       color: '#aebfb9',
       defaults: {
+        name: {value: ''},
         server: {value: '', required: true, type: 'jambonz_auth'},
         from: {value: '', required: true},
         fromType: {value: ''},
@@ -1327,6 +1329,7 @@
       category: 'jambonz',
       color: '#aebfb9',
       defaults: {
+        name: {value: ''},
         server: {value: '', required: true, type: 'jambonz_auth'},
         from: {value: '', required: true},
         fromType: {value: ''},
@@ -2807,7 +2810,7 @@ When the call is answered the specified application's call hook will be invoked.
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
-</div>
+  </div>
 <div class="form-row">
   <label for="node-input-server">Server</label>
   <input type="text" id="node-input-server">
