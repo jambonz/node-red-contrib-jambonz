@@ -138,12 +138,18 @@ module.exports = function(RED) {
           if (req.body.method) {
             node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res), authRequest: req.body});
           }
+          else if (req.body.provider) {
+            node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res), sms: req.body});
+          }
           else {
             node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res), call: req.body});
           }
         } else if (node.method == 'get') {
           if (req.body.method) {
             node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res), authRequest: req.query});
+          }
+          else if (req.body.provider) {
+            node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res), sms:req.query});
           }
           else {
             node.send({_msgid:msgid, req:req, res:createResponseWrapper(node, res), call:req.query});
