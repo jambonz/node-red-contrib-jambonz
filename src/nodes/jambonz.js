@@ -133,24 +133,35 @@ module.exports = function(RED) {
   function lex(config) {
     RED.nodes.createNode(this, config);
     var node = this;
+    const awsCreds = RED.nodes.getNode(config.credentials);
     node.on('input', function(msg) {
-      var bot = v_resolve(config.bot, config.botType, this.context(), msg);
-      var alias = v_resolve(config.alias, config.aliasType, this.context(), msg);
+      const {accessKey, secretAccessKey} = awsCreds.credentials;
+      var botId = v_resolve(config.bot, config.botType, this.context(), msg);
+      var botAlias = v_resolve(config.alias, config.aliasType, this.context(), msg);
+      var locale = v_resolve(config.locale, config.localeType, this.context(), msg) || 'en_US';
+      var intent = v_resolve(config.intent, config.intentType, this.context(), msg);
       var val = v_resolve(config.inputTimeout, config.inputTimeoutType, this.context(), msg);
       var timeout = /^\d+$/.test(val) ? parseInt(val) : 0;
       var eventHook = v_resolve(config.eventHook, config.eventHookType, this.context(), msg);
       var actionHook = v_resolve(config.actionHook, config.actionHookType, this.context(), msg);
       const obj = {
         verb: 'lex',
-        bot,
-        alias,
+        credentials: {
+          accessKey,
+          secretAccessKey
+        },
+        botId,
+        botAlias,
         region: config.region,
+        locale,
         prompt: config.prompt,
         bargein: config.bargein,
         passDtmf: config.passDtmf
       };
       if (eventHook && eventHook.length > 0) obj.eventHook = eventHook;
       if (actionHook && actionHook.length > 0) obj.actionHook = actionHook;
+      if (intent && intent.length > 0) obj.intent = intent;
+      if (config.welcomeMessage && config.welcomeMessage.length) obj.welcomeMessage = config.welcomeMessage;
       if (timeout) obj.noInputTimeout = timeout;
       if (config.prompt === 'tts') {
         obj.tts = {
@@ -576,6 +587,19 @@ module.exports = function(RED) {
       url: {type: 'text'},
       accountSid: {type: 'text'},
       apiToken: {type: 'text'}
+    }
+  });
+
+  function aws_auth(config) {
+    RED.nodes.createNode(this, config);
+    this.accessKey = config.accessKey;
+    this.secretAccessKey = config.secretAccessKey;
+  }
+
+  RED.nodes.registerType('aws_auth', aws_auth, {
+    credentials: {
+      accessKey: {type: 'text'},
+      secretAccessKey: {type: 'text'}
     }
   });
 
