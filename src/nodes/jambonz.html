@@ -816,7 +816,7 @@
       color: '#bbabaa',
       defaults: {
         name: {value: ''},
-        credentials: {value: '', type: 'aws_auth'},
+        aws: {value: '', type: 'aws_auth'},
         bot: {required: true},
         botType: {value: 'str'},
         alias: {required: true},
@@ -2044,8 +2044,8 @@ The leave verb transfers a call out of a queue. The call then returns to the flo
     <input type="text" id="node-input-name" placeholder="Name">
   </div>
   <div class="form-row">
-    <label for="node-input-credentials">AWS credentials</label>
-    <input type="text" id="node-input-credentials">
+    <label for="node-input-aws">AWS credentials</label>
+    <input type="text" id="node-input-aws">
   </div>  
   <div class="form-row">
     <label for="node-input-bot">Bot ID</label>
@@ -2786,11 +2786,11 @@ The sip:decline verb rejects an incoming call.
   <div class="form-row">
     <label for="node-config-input-accessKey">AWS Access Key ID</label>
     <input type="text" id="node-config-input-accessKey">
-</div>
-<div class="form-row">
-  <label for="node-config-input-secretAccessKey">AWS Secret Access Key</label>
-  <input type="text" id="node-config-input-secretAccessKey">
-</div>
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-secretAccessKey">AWS Secret Access Key</label>
+    <input type="text" id="node-config-input-secretAccessKey">
+  </div>
 </script>
 
 <script type="text/x-red" data-help-name="jambonz_auth">

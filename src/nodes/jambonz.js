@@ -133,7 +133,7 @@ module.exports = function(RED) {
   function lex(config) {
     RED.nodes.createNode(this, config);
     var node = this;
-    const awsCreds = RED.nodes.getNode(config.credentials);
+    const awsCreds = RED.nodes.getNode(config.aws);
     node.log(`lex config: ${JSON.stringify(config)}`);
     node.log(`awsCreds: ${JSON.stringify(awsCreds)}`);
     node.on('input', function(msg) {
