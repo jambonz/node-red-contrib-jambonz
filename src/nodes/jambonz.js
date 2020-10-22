@@ -134,8 +134,14 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     var node = this;
     const awsCreds = RED.nodes.getNode(config.credentials);
+    node.log(`lex config: ${JSON.stringify(config)}`);
+    node.log(`awsCreds: ${JSON.stringify(awsCreds)}`);
     node.on('input', function(msg) {
-      const {accessKey, secretAccessKey} = awsCreds.credentials;
+      let accessKey, secretAccessKey;
+      if (awsCreds && awsCreds.credentials) {
+        accessKey = awsCreds.credentials.accessKey;
+        secretAccessKey = awsCreds.credentials.secretAccessKey;
+      }
       var botId = v_resolve(config.bot, config.botType, this.context(), msg);
       var botAlias = v_resolve(config.alias, config.aliasType, this.context(), msg);
       var locale = v_resolve(config.locale, config.localeType, this.context(), msg) || 'en_US';
@@ -146,10 +152,6 @@ module.exports = function(RED) {
       var actionHook = v_resolve(config.actionHook, config.actionHookType, this.context(), msg);
       const obj = {
         verb: 'lex',
-        credentials: {
-          accessKey,
-          secretAccessKey
-        },
         botId,
         botAlias,
         region: config.region,
@@ -158,6 +160,7 @@ module.exports = function(RED) {
         bargein: config.bargein,
         passDtmf: config.passDtmf
       };
+      if (accessKey) Object.assign(obj, {credentials: {accessKey, secretAccessKey}});
       if (eventHook && eventHook.length > 0) obj.eventHook = eventHook;
       if (actionHook && actionHook.length > 0) obj.actionHook = actionHook;
       if (intent && intent.length > 0) obj.intent = intent;
