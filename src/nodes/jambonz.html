@@ -824,8 +824,13 @@
         region: {required: true, value: 'us-east-1'},
         locale: {value: 'en_US'},
         localeType: {value: 'str'},
+        specifyIntent: {value: true},
         intent: {value: ''},
         intentType: {value: 'str'},
+        slots: {value: ''},
+        slotsType: {value: 'json'},
+        metadata: {value: ''},
+        metadataType: {value: 'json'},
         welcomeMessage: {value: 'str'},
         eventHook: {},
         eventHookType: {value: 'str'},
@@ -873,6 +878,14 @@
           types: ['num', 'msg', 'flow', 'global'],
           typeField: $('#node-input-inputTimeoutType')
         });
+        $('#node-input-slots').typedInput({
+          typeField: $('#node-input-slotsType'),
+          types: ['json', 'msg', 'flow', 'global']
+        });
+        $('#node-input-metadata').typedInput({
+          typeField: $('#node-input-metadataType'),
+          types: ['json', 'msg', 'flow', 'global']
+        });
 
         var onPromptChanged = function () {
           node.action = promptElem.find(':selected').val();
@@ -881,6 +894,18 @@
         }
 
         promptElem.change(onPromptChanged);
+        $('#node-input-specifyIntent').change(function() {
+          const doIntent = $('#node-input-specifyIntent:checked').val();
+          console.log('intent? ' + doIntent);
+          if (doIntent) {
+            $('#intent-options').show();
+            $('#welcome-msg-options').hide();
+          }
+          else {
+            $('#intent-options').hide();
+            $('#welcome-msg-options').show();
+          }
+        });
       }
   });
 
@@ -2076,13 +2101,31 @@ The leave verb transfers a call out of a queue. The call then returns to the flo
     </select>
   </div>
   <div class="form-row">
-    <label for="node-input-intent">Intent</label>
-    <input type="text" id="node-input-intent" placeholder="name of welcome intent (if any)">
-    <input type="hidden" id="node-input-intentType">
+    <label for="node-input-specifyIntent">Initial intent?</label>
+    <input type="checkbox" id="node-input-specifyIntent">
+  </div>
+  <div id="intent-options">
+    <div class="form-row">
+      <label for="node-input-intent">Intent name</label>
+      <input type="text" id="node-input-intent" placeholder="name of initial intent (if any)">
+      <input type="hidden" id="node-input-intentType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-slots">Slots</label>
+      <input type="text" id="node-input-slots" placeholder="initial slot values (if any)">
+      <input type="hidden" id="node-input-slotsType">
+    </div>
+  </div>
+  <div id="welcome-msg-options">
+    <div class="form-row">
+      <label for="node-input-welcomeMessage">Welcome message</label>
+      <textarea id="node-input-welcomeMessage" rows="2" placeholder="Initial message to speak, if any" style="width:65%"></textarea>
+    </div>
   </div>
   <div class="form-row">
-    <label for="node-input-welcomeMessage">Welcome message</label>
-    <textarea id="node-input-welcomeMessage" rows="2" placeholder="Initial message to speak, if any" style="width:65%"></textarea>
+    <label for="node-input-metadata">Metadata</label>
+    <input type="text" id="node-input-metadata" placeholder="key-value pairs to send to lex (if any)">
+    <input type="hidden" id="node-input-metadataType">
   </div>
   <div class="form-row">
     <label for="node-input-inputTimeout">Input timeout</label>
