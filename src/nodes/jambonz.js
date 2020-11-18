@@ -172,7 +172,6 @@ module.exports = function(RED) {
       if (accessKey) Object.assign(obj, {credentials: {accessKey, secretAccessKey}});
       if (eventHook && eventHook.length > 0) obj.eventHook = eventHook;
       if (actionHook && actionHook.length > 0) obj.actionHook = actionHook;
-      if (intent && intent.length > 0) obj.intent = intent;
       if (!config.specifyIntent && config.welcomeMessage && config.welcomeMessage.length) obj.welcomeMessage = config.welcomeMessage;
       if (timeout) obj.noInputTimeout = timeout;
       if (config.prompt === 'tts') {
