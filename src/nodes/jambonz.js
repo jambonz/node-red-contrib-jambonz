@@ -149,7 +149,7 @@ module.exports = function(RED) {
       var timeout = /^\d+$/.test(val) ? parseInt(val) : 0;
       var eventHook = v_resolve(config.eventHook, config.eventHookType, this.context(), msg);
       var actionHook = v_resolve(config.actionHook, config.actionHookType, this.context(), msg);
-      var metadata =  v_resolve(config.slots, config.slotsType, this.context(), msg);
+      var metadata =  v_resolve(config.metadata, config.metadataType, this.context(), msg);
       var slots, intentName;
 
       if (config.specifyIntent) {
