@@ -1,7 +1,10 @@
 name: CI
 
-# run manually
+# run when a tag is pushed or kick off manually
 on:
+  push:
+      tags:
+        - '*'
   workflow_dispatch:
 
 jobs:
