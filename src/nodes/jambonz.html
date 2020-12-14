@@ -1379,7 +1379,7 @@
         var populateApplications = function() {
           var serverId = $('#node-input-server option:selected').val();
           var conn = RED.nodes.node(serverId);
-          console.log(`server id ${serverId} has conn ${JSON.stringify(conn)}`);
+          console.log(`server id ${serverId} has conn`, conn);
           if (conn && conn.credentials) {
             const {url, accountSid, apiToken} = conn.credentials;
 
