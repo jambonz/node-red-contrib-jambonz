@@ -1,6 +1,6 @@
 {
   "name": "@jambonz/node-red-contrib-jambonz",
-  "version": "2.2.56",
+  "version": "2.2.57",
   "description": "Node-RED nodes for jambonz",
   "keywords": [
     "node-red"
@@ -15,8 +15,8 @@
   "author": "Dave Horton",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.666.0",
-    "bent": "^7.3.7",
+    "aws-sdk": "^2.827.0",
+    "bent": "^7.3.12",
     "body-parser": "1.18.3",
     "cookie-parser": "1.4.3",
     "cors": "2.8.4",
@@ -28,6 +28,6 @@
     "on-headers": "1.0.1",
     "raw-body": "2.3.3",
     "s3-upload-stream": "^1.0.7",
-    "ws": "^7.2.5"
+    "ws": "^7.4.2"
   }
 }

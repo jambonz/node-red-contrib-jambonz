@@ -566,6 +566,8 @@
         serviceAccountCredentialsType: {value: 'msg'},
         project: {required: true, value: ''},
         projectType: {value: 'str'},
+        environment: {required: true, value: ''},
+        environmentType: {value: 'str'},
         welcomeEvent: {},
         welcomeEventType: {value: 'str'},
         welcomeEventParams: {},
@@ -607,6 +609,10 @@
         });
         $('#node-input-project').typedInput({
           typeField: $('#node-input-projectType'),
+          types: ['str','msg', 'flow', 'global']
+        });
+        $('#node-input-environment').typedInput({
+          typeField: $('#node-input-environmentType'),
           types: ['str','msg', 'flow', 'global']
         });
         $('#node-input-welcomeEvent').typedInput({
@@ -2679,6 +2685,11 @@ The sip:decline verb rejects an incoming call.
     <label for="node-input-project">Dialogflow project ID</label>
     <input type="text" id="node-input-project">
     <input type="hidden" id="node-input-projectType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-project">Environment</label>
+    <input type="text" id="node-input-environment">
+    <input type="hidden" id="node-input-enviromentType">
   </div>
   <div class="form-row">
     <label for="node-input-recognizerlang">Speaker language</label>
