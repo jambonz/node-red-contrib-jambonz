@@ -215,7 +215,7 @@ module.exports = function(RED) {
       };
 
       if (config.transcriptionhook) {
-        obj.transcription = {
+        obj.transcribe = {
           transcriptionHook: v_resolve(config.transcriptionhook, config.transcriptionhookType, this.context(), msg),
           language: config.transcribelang,
           interim: config.interim,
@@ -223,7 +223,7 @@ module.exports = function(RED) {
           dualChannel: config.mixtype === 'stereo'
         };
         node.log(`language: ${config.recognizerlang}`);
-        if (config.recognizerlang !== 'default') obj.transcription.language = config.recognizerlang;
+        if (config.recognizerlang !== 'default') obj.transcribe.language = config.recognizerlang;
       }
       if (/^\d+$/.test(config.timeout)) obj.timeout = parseInt(config.timeout);
       if (/^\d+$/.test(config.maxlength)) obj.maxLength = parseInt(config.maxLength);
