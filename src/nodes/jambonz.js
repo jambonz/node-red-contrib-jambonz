@@ -217,10 +217,13 @@ module.exports = function(RED) {
       if (config.transcriptionhook) {
         obj.transcribe = {
           transcriptionHook: v_resolve(config.transcriptionhook, config.transcriptionhookType, this.context(), msg),
-          language: config.transcribelang,
-          interim: config.interim,
-          profanityFilter: config.profanityFilter,
-          dualChannel: config.mixtype === 'stereo'
+          recognizer: {
+            vendor: "google",
+            language: config.transcribelang,
+            profanityFilter: config.profanityFilter,
+            interim: config.interim,
+            dualChannel: config.mixtype === 'stereo'              
+          },
         };
         node.log(`language: ${config.recognizerlang}`);
         if (config.recognizerlang !== 'default') obj.transcribe.language = config.recognizerlang;
