@@ -219,14 +219,13 @@ module.exports = function(RED) {
           transcriptionHook: v_resolve(config.transcriptionhook, config.transcriptionhookType, this.context(), msg),
           recognizer: {
             vendor: "google",
-            language: config.transcribelang,
             profanityFilter: config.profanityFilter,
             interim: config.interim,
             dualChannel: config.mixtype === 'stereo'              
           },
         };
         node.log(`language: ${config.recognizerlang}`);
-        if (config.recognizerlang !== 'default') obj.transcribe.language = config.recognizerlang;
+        if (config.recognizerlang !== 'default') obj.transcribe.recognizer.language = config.recognizerlang;
       }
       if (/^\d+$/.test(config.timeout)) obj.timeout = parseInt(config.timeout);
       if (/^\d+$/.test(config.maxlength)) obj.maxLength = parseInt(config.maxLength);
