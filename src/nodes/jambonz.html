@@ -6,8 +6,9 @@
   let googleLanguageOptions = '';
   let mapAws = {};
   let awsLanguageOptions = '';
-  let mapSpeechRec = {};
-  let speechRecOptions = '';
+  //let mapSpeechRec = {};
+  let sttLanguagesGoogle = '';
+  let sttLanguagesAws = '';
   let mapDialogflow = {};
   let dialogFlowOptions = '';
 
@@ -33,14 +34,22 @@
       awsLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
     });
   });
-  var speechRecUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/googleSpeech';
-    $.getJSON(speechRecUrl, function (data) {
-      //console.log('retrieved data for recognizer voices: ' + JSON.stringify(data));
-      data.forEach(function(l) {
-        mapSpeechRec[l.code] = l.name;
-        speechRecOptions += `<option value="${l.code}">${l.name}</option>`;        
-      });
+  var googleSttUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/googleSpeech';
+  $.getJSON(googleSttUrl, function (data) {
+    //console.log('retrieved data for recognizer voices: ' + JSON.stringify(data));
+    data.forEach(function(l) {
+      //mapSpeechRec[l.code] = l.name;
+      sttLanguagesGoogle += `<option value="${l.code}">${l.name}</option>`;        
     });
+  });
+  var awsSttUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/awsSpeech';
+  $.getJSON(awsSttUrl, function (data) {
+    //console.log('retrieved data for recognizer voices: ' + JSON.stringify(data));
+    data.forEach(function(l) {
+      //mapSpeechRec[l.code] = l.name;
+      sttLanguagesAws += `<option value="${l.code}">${l.name}</option>`;        
+    });
+  });
 
   var dialogflowUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/dialogflow';
   $.getJSON(dialogflowUrl, function (data) {
@@ -76,6 +85,77 @@
         console.log(`response from fetch of api keys: ${JSON.stringify(res)}`);
       }
     });
+  }
+
+  function prepareSttControls(node) {
+    var vendorElem = $('#node-input-transcriptionvendor');
+    var languageElem = $('#node-input-recognizerlang');
+    var mixtypeElem = $('#node-input-mixtype');
+
+    console.log(node, 'entering prepareSttControls');
+    
+    var setTranscriptionLanguage = function(vendor) {
+      console.log(`setting transcription vendor to ${vendor}`);
+      languageElem.find('option').remove();
+      switch (vendor) {
+        case 'google':
+          languageElem.append('<option value="default">--application default--</option>');
+          languageElem.append(sttLanguagesGoogle);
+          $('#google-stt-options').show();
+          $('#aws-stt-options').hide();
+          $('#interim').show();
+          if (node.mixtype === 'stereo') $('#stt-identify-channels').show();
+          else  $('#stt-identify-channels').hide();
+          break;
+        case 'aws':
+          languageElem.append('<option value="default">--application default--</option>');
+          languageElem.append(sttLanguagesAws);
+          $('#google-stt-options').hide();
+          $('#aws-stt-options').show();
+          $('#interim').show();
+          if (node.mixtype === 'stereo') $('#stt-identify-channels').show();
+          else  $('#stt-identify-channels').hide();
+          break
+        default:
+          languageElem.append('<option value="default">--application default--</option>');
+          node.transcriptionvendor = 'default';
+          $('#google-stt-options').hide();
+          $('#aws-stt-options').hide();
+          $('#stt-identify-channels').hide();
+          $('#interim').hide();
+          break;
+      }
+    }
+
+    var onVendorChanged = function() {
+      var vendor = vendorElem.find(':selected').val();
+      console.log(`stt vendor changed to ${node.transcriptionvendor}`);
+      setTranscriptionLanguage(vendor);
+      if (vendor === 'default') node.recognizerlang = 'default';
+      console.log(`initializing transcription language to ${node.recognizerlang}`);
+      languageElem.val(node.recognizerlang);
+    }
+  
+    var onLangChanged = function() {
+      var lang = languageElem.find(':selected').val();
+      console.log(`lang dropdown changed to ${lang}`);
+      node.recognizerlang = lang;
+    }
+
+    var onMixtypeChange = function() {
+      var mix = mixtypeElem.find(':selected').val();
+      console.log(`mixtype is now ${mix}`);
+      if (mix === 'stereo') $('#stt-identify-channels').show();
+      else  $('#stt-identify-channels').hide();
+    }
+
+    vendorElem.change(onVendorChanged);
+    languageElem.change(onLangChanged);
+    mixtypeElem.change(onMixtypeChange);
+
+    console.log(`initializing transcription vendor to ${node.transcriptionvendor}`);
+    vendorElem.val(node.transcriptionvendor);
+
   }
 
   function prepareTtsControls(node) {
@@ -746,10 +826,10 @@
         }
 
         var setTranscriptionLanguage = function() {
-          console.log(`setting transcription languages: ${speechRecOptions}`);
+          console.log(`setting transcription languages: ${sttLanguagesGoogle}`);
           recLangElem.find('option').remove();
           recLangElem.append('<option value="default">--application default--</option>');
-          recLangElem.append(speechRecOptions);
+          recLangElem.append(sttLanguagesGoogle);
         }
 
         var enableSpeech = function(enabled) {
@@ -938,15 +1018,37 @@
         timeout: {},
         transcriptionhook: {},
         transcriptionhookType: {value: 'str'},
+        transcriptionvendor: {value: 'default'},
         recognizerlang: {value: 'default'},
         interim: {value: false},
-        profanityfilter: {value: false}
+        profanityfilter: {value: false},
+        transcriptionhints: {},
+        transcriptionhintsType: {val: 'str'},
+        separaterecog: {value: false},
+        useenhanced: {value: false},
+        words: {value: false},
+        punctuation: {value: false},
+        diarization: {value: false},
+        diarizationmin: {value: 2},
+        diarizationminType: {value: 'num'},
+        diarizationmax: {value: 6},
+        diarizationmaxType: {value: 'num'},
+        interactiontype: {value: 'unspecified'},
+        naics: {value: 0},
+        naicsType: {value: 'num'},
+        identifychannels: {value: false},
+        speakerlabel: {value: false},
+        vocabularyname: {},
+        vocabularynameType: {value: 'str'},
+        vocabularyfiltername: {},
+        vocabularyfilternameType: {value: 'str'},
+        vocabularyfiltermethod: {}
       },
       inputs:1,
       outputs:1,
       icon: "font-awesome/fa-cubes",
       label: function() { return this.name || 'listen';},
-      oneditprepare: () => {
+      oneditprepare: function() {
         var node = this;
         $('#node-input-actionhook').typedInput({
           types: ['str', 'msg', 'flow', 'global'],
@@ -972,28 +1074,24 @@
           types: ['str', 'msg', 'flow', 'global'],
           typeField: $('#node-input-transcriptionhookType')
         });
- 
-        $('#node-input-transcriptionhook').typedInput({
+        $('#node-input-transcriptionhints').typedInput({
           types: ['str', 'msg', 'flow', 'global'],
-          typeField: $('#node-input-transcriptionhookType')
+          typeField: $('#node-input-transcriptionhintsType')
         });
-        var recLangElem = $('#node-input-recognizerlang');
-      
-        var onLangChanged = function() {
-          node.recognizerlang = recLangElem.find(':selected').val();
-          console.log(`language changed to ${node.recognizerlang}`);
-        }
+        $('#node-input-diarizationmin').typedInput({
+          types: ['num', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-diarizationminType')
+        });
+        $('#node-input-diarizationmax').typedInput({
+          types: ['num', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-diarizationmaxType')
+        });
+        $('#node-input-naics').typedInput({
+          types: ['num', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-naicsType')
+        });
 
-        var setTranscriptionLanguage = function() {
-          console.log(`setting transcription languages: ${speechRecOptions}`);
-          recLangElem.find('option').remove();
-          recLangElem.append('<option value="default">--application default--</option>');
-          recLangElem.append(speechRecOptions);
-        }
-        setTranscriptionLanguage();
-        recLangElem.val(node.recognizerlang);
-
-        recLangElem.change(onLangChanged);
+        prepareSttControls(node);
       }
   });
 
@@ -2285,18 +2383,113 @@ The pause verb waits a specified number of seconds before continuing to execute 
       <input type="hidden" id="node-input-transcriptionhookType">
     </div>
     <div class="form-row">
+      <label for="node-input-transcriptionvendor">Vendor</label>
+      <select id="node-input-transcriptionvendor">
+        <option value="default" selected>--application default--</option>
+        <option value="google">Google</option>
+        <option value="aws">AWS</option>
+      </select>
+    </div>
+    <div class="form-row">
       <label for="node-input-recognizerlang"><i class="icon-tag"></i> Language</label>
       <select id="node-input-recognizerlang">
       </select>
     </div>
-    <div class="form-row">
-      <label for="node-input-interim">Send interim transcriptions</label>
+    <div id="interim" class="form-row">
+      <label for="node-input-interim">Interim transcriptions</label>
       <input type="checkbox" id="node-input-interim">
-    </div>          
-    <div class="form-row">
-      <label for="node-input-interim">Profanity filter</label>
-      <input type="checkbox" id="node-input-profanityfilter">
-    </div>          
+    </div>
+    <div id="stt-identify-channels" class="form-row">
+      <label for="node-input-separaterecog">Separate recognition per channel</label>
+      <input type="checkbox" id="node-input-separaterecog">
+    </div>
+    <div id="google-stt-options">
+      <legend>Google Transcription Options</legend>
+      <div class="form-row">
+        <label for="node-input-transcriptionhints">Hints</label>
+        <input type="text" id="node-input-transcriptionhints" placeholder="comma-separated list of phrases">
+        <input type="hidden" id="node-input-transcriptionhintsType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-useenhanced">Use enhanced model</label>
+        <input type="checkbox" id="node-input-useenhanced">
+      </div>
+      <div class="form-row">
+        <label for="node-input-profanityfilter">Profanity filter</label>
+        <input type="checkbox" id="node-input-profanityfilter">
+      </div>
+      <div class="form-row">
+        <label for="node-input-words">Word time offsets</label>
+        <input type="checkbox" id="node-input-words">
+      </div>
+      <div class="form-row">
+        <label for="node-input-punctuation">Automatic punctuation</label>
+        <input type="checkbox" id="node-input-punctuation">
+      </div>
+      <div class="form-row">
+        <label for="node-input-diarization">Speaker diarization</label>
+        <input type="checkbox" id="node-input-diarization">
+      </div>
+      <div class="form-row">
+        <label for="node-input-diarizationmin">Min speaker count</label>
+        <input type="text" id="node-input-diarizationmin" placeholder="2">
+        <input type="hidden" id="node-input-diarizationminType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-diarizationmax">Max speaker count</label>
+        <input type="text" id="node-input-diarizationmax" placeholder="6">
+        <input type="hidden" id="node-input-diarizationmaxType">
+      </div>    
+      <div class="form-row">
+        <label for="node-input-interactiontype">Type of Interaction</label>
+        <select id="node-input-interactiontype">
+          <option value="unspecified" selected>Unspecified</option>
+          <option value="discussion">Discusssion</option>
+          <option value="presentation">Presentation</option>
+          <option value="phone_call">Phone call</option>
+          <option value="voicemail">Voicemail</option>
+          <option value="voice_search">Voice search</option>
+          <option value="voice_command">Voice command</option>
+          <option value="dictation">Dictation</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="node-input-naics">Industry NAICS code</label>
+        <input type="text" id="node-input-naics">
+        <input type="hidden" id="node-input-naicsType">
+      </div>
+    </div>
+    <div id="aws-stt-options" style="display: none;">
+      <legend>AWS Transcription Options</legend>
+      <div class="form-row">
+        <label for="node-input-identifychannels">Enable channel identification</label>
+        <input type="checkbox" id="node-input-identifychannels">
+      </div>
+      <div class="form-row">
+        <label for="node-input-speakerlabel">Show speaker labels</label>
+        <input type="checkbox" id="node-input-speakerlabel">
+      </div>
+      <div class="form-row">
+        <label for="node-input-vocabularyname">Vocabulary name</label>
+        <input type="text" id="node-input-vocabularyname">
+        <input type="hidden" id="node-input-vocabularynameType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-vocabularyfiltername">Vocabulary filter name</label>
+        <input type="text" id="node-input-vocabularyfiltername">
+        <input type="hidden" id="node-input-vocabularyfilternameType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-vocabularyfiltermethod">Filter method</label>
+        <select id="node-input-vocabularyfiltermethod">
+          <option value="remove" selected>Remove</option>
+          <option value="mask" selected>Mask</option>
+          <option value="tag" selected>Tag</option>
+        </select>
+      </div>
+
+    </div>
+
   </fieldset>
 
 </script>

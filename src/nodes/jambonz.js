@@ -215,17 +215,45 @@ module.exports = function(RED) {
       };
 
       if (config.transcriptionhook) {
+        const recognizer = {
+          vendor: config.transcriptionvendor,
+          language: config.recognizerlang,
+          interim: config.interim,
+          separateRecognitionPerChannel: config.mixtype === 'stereo' && config.separaterecog,
+          diarization: config.diarization
+        };
+        if (recognizer.vendor === 'google') {
+          var diarizationMin = v_resolve(config.diarizationmin, config.diarizationminType, this.context(), msg);
+          var diarizationMax = v_resolve(config.diarizationmax, config.diarizationmaxType, this.context(), msg);
+          var hints = v_resolve(config.transcriptionhints, config.transcriptionhintsType, this.context(), msg);
+          var naics = v_resolve(config.naics, config.naicsType, this.context(), msg);
+          Object.assign(recognizer, {
+            profanityFilter: config.profanityfilter,
+            hints: hints.length > 0 ?
+              hints.split(',').map((w) => w.trim()) :
+              [],
+            punctuation: config.punctuation,
+            enhancedModel: config.enhancedModel,
+            words: config.words,
+            diarizationMinSpeakers: parseInt(diarizationMin),
+            diarizationMaxSpeakers: parseInt(diarizationMax),
+            interactionType: config.interactiontype,
+            naicsCode: parseInt(naics)
+          });
+        }
+        else if (recognizer.vendor === 'aws') {
+          var vocab = v_resolve(config.vocabularyname, config.vocabularynameType, this.context(), msg);
+          var vocabFilter = v_resolve(config.vocabularyfiltername, config.vocabularynameType, this.context(), msg);
+          Object.assign(recognizer, {
+            vocabularyName: vocab,
+            vocabularyFilterName: vocabFilter,
+            filterMethod: config.vocabularyfiltermethod
+          });
+        }
         obj.transcribe = {
           transcriptionHook: v_resolve(config.transcriptionhook, config.transcriptionhookType, this.context(), msg),
-          recognizer: {
-            vendor: "google",
-            profanityFilter: config.profanityFilter,
-            interim: config.interim,
-            dualChannel: config.mixtype === 'stereo'              
-          },
+          recognizer
         };
-        node.log(`language: ${config.recognizerlang}`);
-        if (config.recognizerlang !== 'default') obj.transcribe.recognizer.language = config.recognizerlang;
       }
       if (/^\d+$/.test(config.timeout)) obj.timeout = parseInt(config.timeout);
       if (/^\d+$/.test(config.maxlength)) obj.maxLength = parseInt(config.maxLength);

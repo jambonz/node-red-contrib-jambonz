@@ -1,4 +1,15 @@
-{"google": 
+{ "aws": 
+  [
+    {"name": "Australian English", "code": "en-AU"},
+    {"name": "British English", "code": "en-GB"},
+    {"name": "US English", "code": "en-US"},
+    {"name": "French", "code": "fr-FR"},
+    {"name": "Canadian French", "code": "fr-CA"},
+    {"name": "German", "code": "de-DE"},
+    {"name": "Italian", "code": "it-IT"},
+    {"name": "US Spanish", "code": "es-US"}
+  ],
+  "google": 
   [
     { "name": "Afrikaans (South Africa)",                    "code": "af-ZA"},
     { "name": "Albanian (Albania)",                          "code": "sq-AL"},
