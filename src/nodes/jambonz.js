@@ -236,7 +236,6 @@ module.exports = function(RED) {
             enhancedModel: config.enhancedModel,
             words: config.words,
             interactionType: config.interactiontype,
-            naicsCode: parseInt(naics)
           });
           if (recognizer.diarization) {
             if (diarizationMin) recognizer.diarizationMinSpeakers = parseInt(diarizationMin) || 0;
