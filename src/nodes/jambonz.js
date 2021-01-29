@@ -233,7 +233,7 @@ module.exports = function(RED) {
               hints.split(',').map((w) => w.trim()) :
               [],
             punctuation: config.punctuation,
-            enhancedModel: config.enhancedModel,
+            enhancedModel: config.useenhanced,
             words: config.words,
             interactionType: config.interactiontype,
           });
