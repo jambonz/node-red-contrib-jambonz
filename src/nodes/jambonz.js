@@ -235,11 +235,13 @@ module.exports = function(RED) {
             punctuation: config.punctuation,
             enhancedModel: config.enhancedModel,
             words: config.words,
-            diarizationMinSpeakers: parseInt(diarizationMin),
-            diarizationMaxSpeakers: parseInt(diarizationMax),
             interactionType: config.interactiontype,
             naicsCode: parseInt(naics)
           });
+          if (recognizer.diarization) {
+            if (diarizationMin) recognizer.diarizationMinSpeakers = parseInt(diarizationMin) || 0;
+            if (diarizationMax) recognizer.diarizationMaxSpeakers = parseInt(diarizationMax) || 0;
+          }
         }
         else if (recognizer.vendor === 'aws') {
           var vocab = v_resolve(config.vocabularyname, config.vocabularynameType, this.context(), msg);
