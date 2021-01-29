@@ -242,6 +242,7 @@ module.exports = function(RED) {
             if (diarizationMin) recognizer.diarizationMinSpeakers = parseInt(diarizationMin) || 0;
             if (diarizationMax) recognizer.diarizationMaxSpeakers = parseInt(diarizationMax) || 0;
           }
+          if (naics) recognizer.naicsCode = parseInt(naics) || 0;
         }
         else if (recognizer.vendor === 'aws') {
           var vocab = v_resolve(config.vocabularyname, config.vocabularynameType, this.context(), msg);
