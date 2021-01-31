@@ -226,6 +226,7 @@ module.exports = function(RED) {
           var diarizationMin = v_resolve(config.diarizationmin, config.diarizationminType, this.context(), msg);
           var diarizationMax = v_resolve(config.diarizationmax, config.diarizationmaxType, this.context(), msg);
           var hints = v_resolve(config.transcriptionhints, config.transcriptionhintsType, this.context(), msg);
+          var altlangs = v_resolve(config.recognizeraltlang, config.recognizeraltlangType, this.context(), msg);
           var naics = v_resolve(config.naics, config.naicsType, this.context(), msg);
           Object.assign(recognizer, {
             profanityFilter: config.profanityfilter,
@@ -242,6 +243,9 @@ module.exports = function(RED) {
             if (diarizationMax) recognizer.diarizationMaxSpeakers = parseInt(diarizationMax) || 0;
           }
           if (naics) recognizer.naicsCode = parseInt(naics) || 0;
+          if (altlangs) {
+            recognizer.altLanguages = altlangs.split(',').map((e) => e.trim());
+          }
         }
         else if (recognizer.vendor === 'aws') {
           var vocab = v_resolve(config.vocabularyname, config.vocabularynameType, this.context(), msg);
@@ -449,14 +453,39 @@ module.exports = function(RED) {
       // input
       if (config.speechinput) {
         obj.input.push('speech');
-        obj.recognizer = {vendor: 'google'};
-        if (config.recognizerlang !== 'default') obj.recognizer.language = config.recognizerlang;
-        if (config.recognizerhints && config.recognizerhints.length) {
-          var hints = v_resolve(config.recognizerhints, config.recognizerhintsType, this.context(), msg);
-          obj.recognizer.hints = hints
-            .split(',')
-            .map((str) => str.trim());
+        const recognizer = {
+          vendor: config.transcriptionvendor,
+          language: config.recognizerlang
+        };
+        if (recognizer.vendor === 'google') {
+          var hints = v_resolve(config.transcriptionhints, config.transcriptionhintsType, this.context(), msg);
+          var altlangs = v_resolve(config.recognizeraltlang, config.recognizeraltlangType, this.context(), msg);
+          var naics = v_resolve(config.naics, config.naicsType, this.context(), msg);
+          Object.assign(recognizer, {
+            profanityFilter: config.profanityfilter,
+            hints: hints.length > 0 ?
+              hints.split(',').map((w) => w.trim()) :
+              [],
+            punctuation: config.punctuation,
+            enhancedModel: config.useenhanced,
+            words: config.words,
+            interactionType: config.interactiontype,
+          });
+          if (naics) recognizer.naicsCode = parseInt(naics) || 0;
+          if (altlangs) {
+            recognizer.altLanguages = altlangs.split(',').map((e) => e.trim());
+          }
         }
+        else if (recognizer.vendor === 'aws') {
+          var vocab = v_resolve(config.vocabularyname, config.vocabularynameType, this.context(), msg);
+          var vocabFilter = v_resolve(config.vocabularyfiltername, config.vocabularynameType, this.context(), msg);
+          Object.assign(recognizer, {
+            vocabularyName: vocab,
+            vocabularyFilterName: vocabFilter,
+            filterMethod: config.vocabularyfiltermethod
+          });
+        }
+        obj.recognizer = recognizer;
       }
       if (config.dtmfinput) {
         obj.input.push('digits');
@@ -555,17 +584,53 @@ module.exports = function(RED) {
       }
 
       // nested transcribe
-      if (config.transcribeurl && config.transcribeurl.length > 0) {
-        data.transcribe = {
-          transcriptionHook: v_resolve(config.transcribeurl, config.transcribeurlType, this.context(), msg),
-          recognizer: {
-            vendor: 'google',
-            language: config.transcribelang,
-            interim: config.interim
+      if (config.transcriptionhook) {
+        const recognizer = {
+          vendor: config.transcriptionvendor,
+          language: config.recognizerlang,
+          interim: config.interim,
+          separateRecognitionPerChannel: config.mixtype === 'stereo' && config.separaterecog,
+          diarization: config.diarization
+        };
+        if (recognizer.vendor === 'google') {
+          var diarizationMin = v_resolve(config.diarizationmin, config.diarizationminType, this.context(), msg);
+          var diarizationMax = v_resolve(config.diarizationmax, config.diarizationmaxType, this.context(), msg);
+          var hints = v_resolve(config.transcriptionhints, config.transcriptionhintsType, this.context(), msg);
+          var altlangs = v_resolve(config.recognizeraltlang, config.recognizeraltlangType, this.context(), msg);
+          var naics = v_resolve(config.naics, config.naicsType, this.context(), msg);
+          Object.assign(recognizer, {
+            profanityFilter: config.profanityfilter,
+            hints: hints.length > 0 ?
+              hints.split(',').map((w) => w.trim()) :
+              [],
+            punctuation: config.punctuation,
+            enhancedModel: config.useenhanced,
+            words: config.words,
+            interactionType: config.interactiontype,
+          });
+          if (recognizer.diarization) {
+            if (diarizationMin) recognizer.diarizationMinSpeakers = parseInt(diarizationMin) || 0;
+            if (diarizationMax) recognizer.diarizationMaxSpeakers = parseInt(diarizationMax) || 0;
           }
+          if (naics) recognizer.naicsCode = parseInt(naics) || 0;
+          if (altlangs) {
+            recognizer.altLanguages = altlangs.split(',').map((e) => e.trim());
+          }
+        }
+        else if (recognizer.vendor === 'aws') {
+          var vocab = v_resolve(config.vocabularyname, config.vocabularynameType, this.context(), msg);
+          var vocabFilter = v_resolve(config.vocabularyfiltername, config.vocabularynameType, this.context(), msg);
+          Object.assign(recognizer, {
+            vocabularyName: vocab,
+            vocabularyFilterName: vocabFilter,
+            filterMethod: config.vocabularyfiltermethod
+          });
+        }
+        data.transcribe = {
+          transcriptionHook: v_resolve(config.transcriptionhook, config.transcriptionhookType, this.context(), msg),
+          recognizer
         };
       }
-
       // dtmf capture
       const dtmfCapture = v_resolve(config.dtmfcapture, config.dtmfcaptureType, this.context(), msg);
       if (dtmfCapture && dtmfCapture.length) {
