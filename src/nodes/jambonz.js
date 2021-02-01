@@ -465,11 +465,7 @@ module.exports = function(RED) {
             profanityFilter: config.profanityfilter,
             hints: hints.length > 0 ?
               hints.split(',').map((w) => w.trim()) :
-              [],
-            punctuation: config.punctuation,
-            enhancedModel: config.useenhanced,
-            words: config.words,
-            interactionType: config.interactiontype,
+              []
           });
           if (naics) recognizer.naicsCode = parseInt(naics) || 0;
           if (altlangs) {
