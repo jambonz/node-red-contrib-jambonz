@@ -667,6 +667,7 @@ module.exports = function(RED) {
           config.serviceAccountCredentialsType, this.context(), msg),
         project:  v_resolve(config.project, config.projectType, this.context(), msg),
         lang:  config.recognizerlang,
+        bargein: config.bargein
       };
       if (welcomeEvent) {
         obj.welcomeEvent = welcomeEvent;
