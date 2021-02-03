@@ -710,6 +710,7 @@
         inputTimeoutType: {value: 'num'},
         noInputEvent: {},
         noInputEventType: {value: 'str'},
+        bargein: {value: false},
         eventHook: {},
         eventHookType: {value: 'str'},
         actionHook: {},
@@ -3135,6 +3136,10 @@ The sip:decline verb rejects an incoming call.
     <label for="node-input-noInputEvent">Input timeout intent</label>
     <input type="text" id="node-input-noInputEvent" placeholder="event to send on input timeout">
     <input type="hidden" id="node-input-noInputEventType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargein">Barge in on speech?</label>
+    <input type="checkbox" id="node-input-bargein">
   </div>
   <div class="form-row">
     <label for="node-input-eventHook">Event Hook</label>

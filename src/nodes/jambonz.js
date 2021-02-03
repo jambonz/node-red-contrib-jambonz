@@ -165,7 +165,6 @@ module.exports = function(RED) {
         botAlias,
         region: config.region,
         locale,
-        prompt: config.prompt,
         bargein: config.bargein,
         passDtmf: config.passDtmf
       };
