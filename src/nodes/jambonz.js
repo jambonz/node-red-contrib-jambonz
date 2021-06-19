@@ -542,7 +542,7 @@ module.exports = function(RED) {
             delete obj.pass;
             break;
           case 'teams':
-            obj.user = dest;
+            obj.number = dest;
             break;
         }
         delete obj.varType;
