@@ -774,6 +774,12 @@ module.exports = function(RED) {
         case 'unmute':
           opts.mute_status = 'unmute';
           break;
+        case 'mute_conf':
+          opts.conf_mute_status = 'mute';
+          break;
+        case 'unmute_conf':
+          opts.conf_mute_status = 'unmute';
+          break;
         case 'pause':
           opts.listen_status = 'pause';
           break;
@@ -784,6 +790,12 @@ module.exports = function(RED) {
           node.log(`LCC redirect callHook ${config.callHook} callHookType: ${config.callHookType}`);
           opts.call_hook = {url: v_resolve(config.callHook, config.callHookType, this.context(), msg)};
           break;
+        case 'hold_conf':
+          opts.conf_hold_status = 'hold';
+          opts.wait_hook = {url: v_resolve(config.waitHook, config.waitHookType, this.context(), msg)};
+          break;
+        case 'unhold_conf':
+          opts.conf_hold_status = 'unhold';
         case 'whisper':
           Object.assign(opts, {
             whisper: {
