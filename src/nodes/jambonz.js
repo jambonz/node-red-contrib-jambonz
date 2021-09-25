@@ -392,7 +392,7 @@ module.exports = function(RED) {
         waitHook: v_resolve(config.waitHook, config.waitHookType, this.context(), msg),
         maxParticipants,
         beep: config.beep,
-        startOnEnter: config.startOnEnter,
+        startConferenceOnEnter: config.startConferenceOnEnter,
         endOnExit: config.endOnExit,
         joinMuted : config.joinMuted
       });
