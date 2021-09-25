@@ -289,7 +289,8 @@
       enterHook: {},
       enterHookType: {value: 'str'},
       waitHook: {},
-      waitHookType: {value: 'str'}
+      waitHookType: {value: 'str'},
+      joinMuted : {value: false}
     },
     inputs:1,
     outputs:1,
@@ -1733,6 +1734,10 @@ The output of this node is to set <code>msg.authResponse</code> accordingly, and
   <div class="form-row">
     <label for="node-input-endConferenceOnExit">End on exit</label>
     <input type="checkbox" id="node-input-endConferenceOnExit">
+  </div>
+  <div class="form-row">
+    <label for="node-input-joinMuted">Join Muted</label>
+    <input type="checkbox" id="node-input-joinMuted">
   </div>
   <div class="form-row">
     <label for="node-input-maxParticipants">Max participants</label>

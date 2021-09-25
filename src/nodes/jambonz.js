@@ -393,7 +393,8 @@ module.exports = function(RED) {
         maxParticipants,
         beep: config.beep,
         startOnEnter: config.startOnEnter,
-        endOnExit: config.endOnExit
+        endOnExit: config.endOnExit,
+        joinMuted : config.joinMuted
       });
       node.send(msg);
     });
