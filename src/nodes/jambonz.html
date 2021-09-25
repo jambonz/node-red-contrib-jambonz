@@ -1429,8 +1429,8 @@
         var sayDiv = $('#say-options');
         var redirectDiv = $('#redirect-options');
         var waitHookDiv = $('#wait-options');
-
         sayDiv.hide();
+        waitHookDiv.hide();
 
         $('#node-input-callSid').typedInput({
           default: $('#node-input-callSidType').val(),
@@ -3358,7 +3358,7 @@ The sip:decline verb rejects an incoming call.
     <input type="hidden" id="node-input-callHookType">
   </div>  
 </div>
-<div id="waithookDiv-options">
+<div id="wait-options">
   <div class="form-row">
     <label for="node-input-waitHook">Wait webhook</label>
     <input type="text" id="node-input-waitHook" placeholder="/path">
