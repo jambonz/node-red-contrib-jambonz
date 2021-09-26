@@ -289,7 +289,8 @@
       enterHook: {},
       enterHookType: {value: 'str'},
       waitHook: {},
-      waitHookType: {value: 'str'}
+      waitHookType: {value: 'str'},
+      joinMuted : {value: false}
     },
     inputs:1,
     outputs:1,
@@ -1407,6 +1408,11 @@
           return action !== 'redirect' || v.length > 0;
         }},
         callHookType: {value: 'str'},
+        waitHook: {value: '', validate: function(v) {
+          const action = $('#node-input-action').val();
+          return action !== 'hold_conf' || v.length > 0;
+        }},
+        waitHookType: {value: 'str'},
       },
       inputs:1,
       outputs:1,
@@ -1422,8 +1428,9 @@
         var voiceElem = $('#node-input-voice');
         var sayDiv = $('#say-options');
         var redirectDiv = $('#redirect-options');
-
+        var waitHookDiv = $('#wait-options');
         sayDiv.hide();
+        waitHookDiv.hide();
 
         $('#node-input-callSid').typedInput({
           default: $('#node-input-callSidType').val(),
@@ -1435,6 +1442,11 @@
           types: ['str','msg', 'flow', 'global'],
           typeField: $('#node-input-callHookType')
         });
+        $('#node-input-waitHook').typedInput({
+          default: $('#node-input-waitHookType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-waitHookType')
+        });
 
         var onActionChanged = function () {
           node.action = actionElem.find(':selected').val();
@@ -1442,6 +1454,8 @@
           else sayDiv.hide();
           if ('redirect' === node.action) redirectDiv.show();
           else redirectDiv.hide();
+          if ('hold_conf' === node.action) waitHookDiv.show();
+          else waitHookDiv.hide();
         }
 
         var onVendorChanged = function() {
@@ -1727,12 +1741,16 @@ The output of this node is to set <code>msg.authResponse</code> accordingly, and
     <input type="checkbox" id="node-input-beep">
   </div>
   <div class="form-row">
-    <label for="node-input-startConferenceOnEntry">Start on entry</label>
-    <input type="checkbox" id="node-input-startConferenceOnEntry">
+    <label for="node-input-startConferenceOnEnter">Start on entry</label>
+    <input type="checkbox" id="node-input-startConferenceOnEnter">
   </div>
   <div class="form-row">
     <label for="node-input-endConferenceOnExit">End on exit</label>
     <input type="checkbox" id="node-input-endConferenceOnExit">
+  </div>
+  <div class="form-row">
+    <label for="node-input-joinMuted">Join Muted</label>
+    <input type="checkbox" id="node-input-joinMuted">
   </div>
   <div class="form-row">
     <label for="node-input-maxParticipants">Max participants</label>
@@ -3294,6 +3312,10 @@ The sip:decline verb rejects an incoming call.
     <option value="hangup">hangup call</option>
     <option value="mute">mute caller</option>
     <option value="unmute">unmute caller</option>
+    <option value="mute_conf">mute conference participants</option>
+    <option value="unmute_conf">unmute conference participants</option>
+    <option value="hold_conf">hold conference participant</option>
+    <option value="unhold_conf">unhold conference participant</option>
     <option value="pause">pause listen audio feed</option>
     <option value="resume">resume listen audio feed</option>
     <option value="redirect">redirect call</option>
@@ -3334,6 +3356,13 @@ The sip:decline verb rejects an incoming call.
     <label for="node-input-callHook">Call webhook</label>
     <input type="text" id="node-input-callHook" placeholder="/path">
     <input type="hidden" id="node-input-callHookType">
+  </div>  
+</div>
+<div id="wait-options">
+  <div class="form-row">
+    <label for="node-input-waitHook">Wait webhook</label>
+    <input type="text" id="node-input-waitHook" placeholder="/path">
+    <input type="hidden" id="node-input-waitHookType">
   </div>  
 </div>
 </script>

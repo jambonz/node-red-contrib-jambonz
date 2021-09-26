@@ -392,8 +392,9 @@ module.exports = function(RED) {
         waitHook: v_resolve(config.waitHook, config.waitHookType, this.context(), msg),
         maxParticipants,
         beep: config.beep,
-        startOnEnter: config.startOnEnter,
-        endOnExit: config.endOnExit
+        startConferenceOnEnter: config.startConferenceOnEnter,
+        endOnExit: config.endOnExit,
+        joinMuted : config.joinMuted
       });
       node.send(msg);
     });
@@ -721,7 +722,7 @@ module.exports = function(RED) {
   });
 
   function doLCC(node, baseUrl, accountSid, apiToken, callSid, opts) {
-    const post = bent(`${baseUrl}/v1/`, 'POST', 'json', 202, {
+    const post = bent(`${baseUrl}/v1/`, 'POST', 'string', 202, {
       'Authorization': `Bearer ${apiToken}`
     });
     const url = `Accounts/${accountSid}/Calls/${callSid}`;
@@ -773,6 +774,12 @@ module.exports = function(RED) {
         case 'unmute':
           opts.mute_status = 'unmute';
           break;
+        case 'mute_conf':
+          opts.conf_mute_status = 'mute';
+          break;
+        case 'unmute_conf':
+          opts.conf_mute_status = 'unmute';
+          break;
         case 'pause':
           opts.listen_status = 'pause';
           break;
@@ -783,6 +790,12 @@ module.exports = function(RED) {
           node.log(`LCC redirect callHook ${config.callHook} callHookType: ${config.callHookType}`);
           opts.call_hook = {url: v_resolve(config.callHook, config.callHookType, this.context(), msg)};
           break;
+        case 'hold_conf':
+          opts.conf_hold_status = 'hold';
+          opts.wait_hook = {url: v_resolve(config.waitHook, config.waitHookType, this.context(), msg)};
+          break;
+        case 'unhold_conf':
+          opts.conf_hold_status = 'unhold';
         case 'whisper':
           Object.assign(opts, {
             whisper: {
@@ -808,13 +821,12 @@ module.exports = function(RED) {
       }
 
       try {
-        await doLCC(node, url, accountSid, apiToken, callSid, opts);
+        msg.payload = await doLCC(node, url, accountSid, apiToken, callSid, opts);
         msg.statusCode = 202;
-        node.log(`successfully sent LCC with opts ${JSON.stringify(opts)}`);
       } catch (err) {
         if (err.statusCode) msg.statusCode = err.statusCode;
         else {
-          node.log(`Error sending LCC ${JSON.stringify(err)}`);
+          node.error(`Error sending LCC ${JSON.stringify(err)}`);
           if (done) done(err);
           else node.error(err, msg);
           send(msg);
