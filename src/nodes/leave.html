@@ -1,0 +1,43 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  RED.nodes.registerType('leave',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { return this.name || 'leave';}
+  });
+</script>
+
+
+<!-- HTML -->
+<script type="text/html" data-template-name="leave">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+  </script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="leave">
+    <p>transfer call out of queue</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+    </dl>
+  
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+     <dt>jambonz<span class="property-type">object</span></dt>
+     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>leave</code> action appended  </dd>
+  </dl>
+  
+  <h3>Details</h3>
+  The leave verb transfers a call out of a queue. The call then returns to the flow of execution following the enqueue verb that parked the call, or the document returned by that verbs actionHook property, if provided.<h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/jambonz/#leave">Jambonz leave reference</a></li>
+    </ul>
+  </script>

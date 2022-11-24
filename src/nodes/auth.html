@@ -1,0 +1,158 @@
+<!-- Javascript -->
+
+<script type="text/javascript">
+RED.nodes.registerType('user auth',{
+      category: 'jambonz',
+      color:"#c1f986",
+      defaults: {
+        name: {value: ''},
+        password: {},
+        passwordType: {},
+        ha1: {},
+        ha1Type: {}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-id-badge",
+      label: function() { return this.name || 'user auth';},
+      oneditprepare: function() {
+        $('#node-input-password').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-passwordType')
+        });
+        $('#node-input-ha1').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-ha1Type')
+        });
+      }
+  });
+
+  RED.nodes.registerType('jambonz_auth',{
+    category: 'config',
+    credentials: {
+      url: {type: 'text'},
+      accountSid: {type: 'text'},
+      apiToken: {type: 'text'}
+    },
+    label: function() { 
+      return this.credentials ? this.credentials.url : null;
+    },
+    oneditprepare: function() {
+      $('#btn-test-credentials').on('click', testCredentials);
+    }
+  });
+
+  RED.nodes.registerType('aws_auth',{
+    category: 'config',
+    credentials: {
+      accessKey: {type: 'text'},
+      secretAccessKey: {type: 'text'}
+    },
+    label: function() { 
+      if (!this.credentials) return null;
+      const akey = this.credentials.accessKey;
+      let mask = '';
+      for (let i = 4; i < akey.length; i++) mask += '*';
+      return akey.substr(0, 4) + mask;
+    }
+  });
+</script>
+
+
+<!-- HTML -->
+ <!-- user auth -->
+<script type="text/html" data-template-name="user auth">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <fieldset>
+      <legend>Enter either a plain-text or hashed password</legend>
+      <div class="form-row">
+        <label for="node-input-password">Plain text password</label>
+        <input type="text" id="node-input-password">
+        <input type="hidden" id="node-input-passwordType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-ha1">Hashed</label>
+        <input type="text" id="node-input-ha1">
+        <input type="hidden" id="node-input-ha1Type">
+      </div>
+    </fieldset>
+  </script>
+<!-- aws auth  -->
+<script type="text/html" data-template-name="aws_auth">
+  <div class="form-row">
+    <label for="node-config-input-accessKey">AWS Access Key ID</label>
+    <input type="text" id="node-config-input-accessKey">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-secretAccessKey">AWS Secret Access Key</label>
+    <input type="text" id="node-config-input-secretAccessKey">
+  </div>
+</script>
+<!-- jambonz auth -->
+<script type="text/html" data-template-name="jambonz_auth">
+  <div class="form-row">
+    <label for="node-config-input-url">Base URL</label>
+    <input type="text" id="node-config-input-url" placeholder="http://localhost:3000">
+</div>
+<div class="form-row">
+  <label for="node-config-input-accountSid">AccountSid</label>
+  <input type="text" id="node-config-input-accountSid">
+</div>
+<div class="form-row">
+  <label for="node-config-input-apiToken">API token</label>
+  <input type="text" id="node-config-input-apiToken">
+</div>
+<div class="form-row">
+  <button id="btn-test-credentials"><i class="fa fa-lock"></i> Test Credentials</button>
+  <span id="node-config-test-status" style="margin-left: 20px;"></span>
+</div>
+</script>
+
+
+
+
+<!-- Help Text -->
+<!-- User Text -->
+<script type="text/html" data-help-name="user auth">
+    <p>Authenticate a user</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>authRequest<span class="property-type">object</span></dt>
+        <dd>The digest parameters provided by the user</dd>
+    </dl>
+  
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+     <dt>authResponse<span class="property-type">object</span></dt>
+     <dd>An object containing a status property indicating whether the password provided has successfully authenticated the user</dd>
+  </dl>
+  
+  <h3>Details</h3>
+  The user auth command is used to authenticate a user based on the sip digest they presented and a password retrieved by some means by the application.
+  You may provide either a plaintext password, or a precomputed hash based on <a href="https://tools.ietf.org/html/rfc2617">RFC 2617</a>, i.e. MD5( username ":" realm ":" password ).<br/><br/>
+  It is valid to provide neither the plaintext nor hashed password, and in this case the user authentication will fail.  
+  It is useful to do this, for instance, when either the presented domain or username are unrecognized.<br/><br/>
+  The output of this node is to set <code>msg.authResponse</code> accordingly, and the <code>webhook out</code> node should then be used to send the result back to the jambonz server.
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/register-hook">Jambonz user authentication reference</a></li>
+    </ul>
+  </script>
+
+<!-- AWS auth-->
+  <script type="text/x-red" data-help-name="aws_auth">
+    <p>AWS access key and secret access key to use for Lex</p>
+    <h3>Details</h3>
+    <p>Enter the AWS access key and secret access key</p>
+  </script>
+
+<!-- jambonz auth -->
+
+<script type="text/x-red" data-help-name="jambonz_auth">
+  <p>Creates a new jambonz server credential </p>
+  <h3>Details</h3>
+  <p>Enter the base url of the server, along with your API key</p>
+</script>

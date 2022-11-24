@@ -1,0 +1,160 @@
+<!-- Javascript -->
+<script type="text/javascript">
+ RED.nodes.registerType('create-call',{
+      category: 'jambonz',
+      color: '#aebfb9',
+      defaults: {
+        name: {value: ''},
+        server: {value: '', required: true, type: 'jambonz_auth'},
+        from: {value: '', required: true},
+        fromType: {value: ''},
+        to: {value: '', required: true},
+        toType: {value: ''},
+        dest: {value: 'phone', required: true},
+        timeout: {},
+        application: {value: '', required: true},
+        appName: {}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { 
+        return this.name || 'create call';
+      },
+      oneditprepare: function() {
+        var node = this;
+        var destElem = $('#node-input-dest');
+        var serverElem = $('#node-input-server');
+        var applicationElem = $('#node-input-application');
+
+        $('#node-input-from').typedInput({
+          default: $('#node-input-fromType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-fromType')
+        });
+        $('#node-input-to').typedInput({
+          default: $('#node-input-toType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-toType')
+        });
+
+
+        var populateApplications = function() {
+          var serverId = $('#node-input-server option:selected').val();
+          var conn = RED.nodes.node(serverId);
+          console.log(`server id ${serverId} has conn`, conn);
+          if (conn && conn.credentials) {
+            const {url, accountSid, apiToken} = conn.credentials;
+
+            $.ajax({
+              url: `${url}/v1/Applications`,
+              headers: {
+                'Authorization': `Bearer ${apiToken}`
+              },
+              dataType: 'json',
+              timeout: 500,
+              error: (err) => {
+                console.log(err);
+              },
+              success: (res) => {
+                console.log(`response from fetch of applications: ${JSON.stringify(res)}`);
+                console.log(`selected app is ${JSON.stringify(node.application)}`);
+                applicationElem.find('option').remove();
+                var options = '';
+                res.forEach((app) => {
+                  if (node.application === app.application_sid) {
+                    options += `<option value="${app.application_sid}" selected>${app.name}</option>`;
+                    node.appName = app.name;
+                  }
+                  else {
+                    options += `<option value="${app.application_sid}">${app.name}</option>`;
+                  }
+                });
+                if (options.length) applicationElem.append(options);
+              }
+            });
+          }
+          else {
+            console.log(`can't retrieve config, but application_sid is '${node.appName}': ${node.application}`);
+            applicationElem.find('option').remove();
+            applicationElem.append(`<option value="${node.application}">${node.appName}</option>`);
+          }
+        }
+        serverElem.change(populateApplications);
+        applicationElem.change(() => {
+          node.appName = $('#node-input-application option:selected').text();
+          console.log(`setting appName to ${node.appName}`);
+        });
+      }
+  });
+</script>
+
+
+<!-- HTML -->
+<script type="text/html" data-template-name="create-call">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-server">Server</label>
+    <input type="text" id="node-input-server">
+  </div>
+  <div class="form-row">
+    <label for="node-input-from">From</label>
+    <input type="text" id="node-input-from" placeholder="calling party number">
+    <input type="hidden" id="node-input-fromType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-to">To</label>
+    <input type="text" id="node-input-to" placeholder="called party info">
+    <input type="hidden" id="node-input-toType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-dest">Call type</label>
+    <select id="node-input-dest">
+      <option value="phone">phone number</option>
+      <option value="user">registered sip device/user</option>
+      <option value="sip">sip endpoint</option>
+      <option value="ms-teams">Microsoft teams</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-timeout">Ring timeout</label>
+    <input type="text" id="node-input-timeout" placeholder="ring no answer timeout in secs (default: 60)">
+    <input type="hidden" id="node-input-timeoutType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-application">Application</label>
+    <select id="node-input-application">
+    </select>
+  </div>
+  
+  </script>
+
+<!-- Help Text -->
+
+<script type="text/html" data-help-name="create-call">
+    <p>Create an outbound call</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+      <dt>Server<span class="property-type">config</span></dt>
+      <dd>jambonz server to connect to</dd>
+      <dt>From<span class="property-type">string</span></dt>
+      <dd>Calling party phone number</dd>
+      <dt>To<span class="property-type">string</span></dt>
+      <dd>Called party phone number, or other identifier</dd>
+      <dt>Call type<span class="property-type">string</span></dt>
+      <dd>Type of destination: phone number, registered user, sip endpoint, or microsoft teams</dd>
+      <dt>Application<span class="property-type">string</span></dt>
+      <dd>Application to execute when call is answered</dd>
+    </dl>
+  
+  <h3>Details</h3>
+  The create call command is used to generate a new outbound call.  
+  When the call is answered the specified application's call hook will be invoked.
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/rest/#create-a-call">Jambonz reference</a></li>
+    </ul>
+  </script>

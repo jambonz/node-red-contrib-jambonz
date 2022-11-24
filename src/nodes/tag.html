@@ -1,0 +1,60 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  RED.nodes.registerType('tag',{
+    category: 'jambonz',
+    color: '#bbabaa',
+    defaults: {
+      name: {value: ''},
+      data: {required: true},
+      dataType: {value: 'json'}
+    },
+    inputs:1,
+    outputs:1,
+    icon: "font-awesome/fa-cubes",
+    label: function() { return this.name || 'tag';},
+    oneditprepare: function() {
+      $('#node-input-data').typedInput({
+        default: $('#node-input-dataType').val(),
+        types: ['json', 'msg', 'flow', 'global'],
+        typeField: $('#node-input-dataType')
+      });
+    }
+  });
+
+</script>
+
+<!-- HTML -->
+
+<script type="text/html" data-template-name="tag">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+      <label for="node-input-length">Data</label>
+      <input type="text" id="node-input-data" placeholder="data object">
+      <input type="hidden" id="node-input-dataType">
+    </div>
+  </script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="tag">
+    <p>Add additional metadata to a call</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>Data<span class="property-type">json</span></dt>
+        <dd>A JSON object containing values to be saved and included in future action or call status notifications.</dd>
+    </dl>
+  
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>tag</code> action appended  </dd>
+    </dl>
+  
+    <h3>Details</h3>
+    The tag verb is used to add properties to the standard call attributes that jambonz includes on every action or call status HTTP POST request.<h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/jambonz/#tag">Jambonz tag reference</a></li>
+    </ul>
+  </script>

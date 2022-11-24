@@ -1,0 +1,258 @@
+<!-- Javascript -->
+<script type="text/javascript">
+RED.nodes.registerType('dialogflow',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+        recognizerlang: {value: 'en-US'},
+        serviceAccountCredentials: {required: true, value: ''},
+        serviceAccountCredentialsType: {value: 'msg'},
+        project: {required: true, value: ''},
+        projectType: {value: 'str'},
+        environment: {value: ''},
+        environmentType: {value: 'str'},
+        welcomeEvent: {},
+        welcomeEventType: {value: 'str'},
+        welcomeEventParams: {},
+        welcomeEventParamsType: {value: 'json'},
+        passDtmf: {value: false},
+        inputTimeout: {},
+        inputTimeoutType: {value: 'num'},
+        noInputEvent: {},
+        noInputEventType: {value: 'str'},
+        bargein: {value: false},
+        eventHook: {},
+        eventHookType: {value: 'str'},
+        actionHook: {},
+        actionHookType: {value: 'str'},
+        evtAll: {value: true},
+        evtIntent: {value: false},
+        evtTranscript: {value: false},
+        evtInterimTranscript: {value: false},
+        evtDtmf: {value: false},
+        evtEndUtterance: {value: false},
+        evtStartPlay: {value: false},
+        evtEndPlay: {value: false},
+        evtNoInput: {value: false},
+        prompt: {value: 'dialogflow', required: true},
+        vendor: {value: 'default'},
+        lang: {value: 'default'},
+        voice: {value: 'default'},
+        xlang: {},
+        xvoice: {}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { return this.name || 'dialogflow';},
+      oneditprepare: function() {
+        var node = this;
+        $('#node-input-serviceAccountCredentials').typedInput({
+          typeField: $('#node-input-serviceAccountCredentialsType'),
+          types: ['json', 'msg', 'flow', 'global']
+        });
+        $('#node-input-project').typedInput({
+          typeField: $('#node-input-projectType'),
+          types: ['str','msg', 'flow', 'global']
+        });
+        $('#node-input-environment').typedInput({
+          typeField: $('#node-input-environmentType'),
+          types: ['str','msg', 'flow', 'global']
+        });
+        $('#node-input-welcomeEvent').typedInput({
+          typeField: $('#node-input-welcomeEventType'),
+          types: ['str','msg', 'flow', 'global']
+        });
+        $('#node-input-welcomeEventParams').typedInput({
+          typeField: $('#node-input-welcomeEventParamsType'),
+          types: ['json', 'msg', 'flow', 'global']
+        });
+        $('#node-input-eventHook').typedInput({
+          typeField: $('#node-input-eventHookType'),
+          types: ['str','msg', 'flow', 'global']
+        });
+        $('#node-input-actionHook').typedInput({
+          typeField: $('#node-input-actionHookType'),
+          types: ['str','msg', 'flow', 'global']
+        });
+        $('#node-input-inputTimeout').typedInput({
+          typeField: $('#node-input-inputTimeout'),
+          types: ['num','msg', 'flow', 'global']
+        });
+        $('#node-input-noinputEvent').typedInput({
+          typeField: $('#node-input-noinputEventType'),
+          types: ['str','msg', 'flow', 'global']
+        });
+        var promptElem = $('#node-input-prompt');
+        var ttsDiv = $('#tts-options');
+        var recLangElem = $('#node-input-recognizerlang');
+
+        prepareTtsControls(node);
+        var onPromptChanged = function () {
+          node.action = promptElem.find(':selected').val();
+          if ('tts' === node.action) ttsDiv.show();
+          else ttsDiv.hide();
+        }
+        promptElem.change(onPromptChanged);
+
+        var setTranscriptionLanguage = function() {
+          console.log(`setting transcription languages: ${dialogFlowOptions}`);
+          recLangElem.find('option').remove();
+          recLangElem.append(dialogFlowOptions);
+        }
+
+        setTranscriptionLanguage();
+        console.log(`setting lang to ${node.recognizerlang}`);
+        recLangElem.val(node.recognizerlang);
+      }
+    });
+
+</script>
+
+
+<!-- HTML -->
+<script type="text/html" data-template-name="dialogflow">
+    <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+      <label for="node-input-project">Dialogflow project ID</label>
+      <input type="text" id="node-input-project">
+      <input type="hidden" id="node-input-projectType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-project">Environment</label>
+      <input type="text" id="node-input-environment">
+      <input type="hidden" id="node-input-enviromentType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-recognizerlang">Speaker language</label>
+      <select id="node-input-recognizerlang">
+        <option value="placeholder"></option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-serviceAccountCredentials">Service account key</label>
+      <input type="text" id="node-input-serviceAccountCredentials">
+      <input type="hidden" id="node-input-serviceAccountCredentialsType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-welcomeEvent">Welcome intent</label>
+      <input type="text" id="node-input-welcomeEvent" placeholder="event to send on connect">
+      <input type="hidden" id="node-input-welcomeEventType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-welcomeEventParams">Welcome intent parameters</label>
+      <input type="text" id="node-input-welcomeEventParams">
+      <input type="hidden" id="node-input-welcomeEventParamsType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-inputTimeout">Input timeout</label>
+      <input type="text" id="node-input-inputTimeout" placeholder="seconds to wait for a response">
+      <input type="hidden" id="node-input-inputTimeoutType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-noInputEvent">Input timeout intent</label>
+      <input type="text" id="node-input-noInputEvent" placeholder="event to send on input timeout">
+      <input type="hidden" id="node-input-noInputEventType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-bargein">Barge in on speech?</label>
+      <input type="checkbox" id="node-input-bargein">
+    </div>
+    <div class="form-row">
+      <label for="node-input-eventHook">Event Hook</label>
+      <input type="text" id="node-input-eventHook">
+      <input type="hidden" id="node-input-eventHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-actionHook">Action Hook</label>
+      <input type="text" id="node-input-actionHook">
+      <input type="hidden" id="node-input-actionHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-prompt">Prompt audio</label>
+      <select id="node-input-prompt" style="width:250px;">
+        <option value="dialogflow">Use dialogflow-provided audio</option>
+        <option value="tts">Use text to speech</option>
+      </select>
+    </div>
+    <div id="tts-options">
+      <div class="form-row">
+        <label for="node-input-vendor"> Vendor</label>
+        <select id="node-input-vendor">
+          <option value="default" selected>--application default--</option>
+          <option value="google">google</option>
+          <option value="aws">aws/polly</option>
+        </select>
+      </div>
+      <div class="form-row" style="display: none;">
+        <label for="node-input-lang"> Lang</label>
+        <input type="text" id="node-input-lang">
+      </div>
+      <div class="form-row">
+        <label for="node-input-xlang">Language</label>
+        <select id="node-input-xlang">
+          <option value="default" selected>--application default--</option>
+        </select>
+      </div>
+      <div class="form-row" style="display: none;">
+        <label for="node-input-voice"> Voice</label>
+        <input type="text" id="node-input-voice">
+      </div>
+      <div class="form-row">
+        <label for="node-input-xvoice">Voice</label>
+        <select id="node-input-xvoice">
+          <option value="default" selected>--application default--</option>
+        </select>
+      </div>
+    </div>
+  </script>
+
+<!-- Help Text -->
+
+<script type="text/html" data-help-name="audio in">
+    <script type="text/html" data-help-name="dialogflow">
+        <p>Run a Google dialogflow bot on the call</p>
+        <h3>Inputs</h3>
+        <dl class="message-properties">
+          <dt>Dialogflow Project ID<span class="property-type">string</span></dt>
+          <dd> The name of the dialogflow project to execute. Required.</dd>
+          <dt>Service Account Key<span class="property-type">string</span></dt>
+          <dd> A Google service account key in JSON format is used to authenticate to dialogflow. Required.</dd>
+          <dt>Language<span class="property-type">string</span></dt>
+          <dd> The ISO language code to use for speech recognition. Required.</dd>
+          <dt>Welcome Intent<span class="property-type">string</span></dt>
+          <dd> The name of a dialogflow intent to send when the call is first connected. Optional.</dd>
+          <dt>Welcome Intent Parameters<span class="property-type">object</span></dt>
+          <dd> A JSON object containing parameters to send along with the welcome intent. Optional.</dd>
+          <dt>Input Timeout<span class="property-type">number</span></dt>
+          <dd> Number of seconds to wait for no response.  Optional.</dd>
+          <dt>Event Hook<span class="property-type">number</span></dt>
+          <dd> Webhook to call when an intent, transcription or other dialogflow event is received. Optional.</dd>
+          <dt>Action Hook<span class="property-type">number</span></dt>
+          <dd> Webhook to call when the dialogflow bot interaction concludes. Optional.</dd>
+      </dl>
+      
+        <h3>Outputs</h3>
+        <dl class="message-properties">
+          <dt>jambonz<span class="property-type">object</span></dt>
+          <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>dialogflow</code> action appended  </dd>
+        </dl>
+      
+        <h3>Details</h3>
+        The dialogflow action connects the call to a Google dialogflow voicebot.  
+        The action completes either when a new application is returned in a response to an eventHook, or the call is terminated from the dialogflow side.
+      
+        <h3>References</h3>
+          <ul>
+              <li><a href="https://docs.jambonz.org/jambonz/#dialogflow">Jambonz dialogflow reference</a></li>
+          </ul>
+      </script>
+      
+      
+  
+
+</script>

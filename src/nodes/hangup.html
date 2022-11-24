@@ -1,0 +1,49 @@
+<!-- Javascript -->
+
+
+<script type="text/javascript">
+
+RED.nodes.registerType('hangup',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { return this.name || 'hangup';},
+  });
+
+
+</script>
+
+
+<!-- HTML -->
+<script type="text/html" data-template-name="hangup">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  </script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="hangup">
+    <p>Hangup the call</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+    </dl>
+  
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+     <dt>jambonz<span class="property-type">object</span></dt>
+     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>hangup</code> action appended  </dd>
+  </dl>
+  
+  <h3>Details</h3>
+  The hangup verb hangs up the current call.
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/jambonz/#hangup">Jambonz hangup reference</a></li>
+    </ul>
+</script>

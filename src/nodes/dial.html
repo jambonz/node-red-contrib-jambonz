@@ -1,0 +1,616 @@
+<!-- Javascript -->
+<script type="text/javascript">
+RED.nodes.registerType('dial',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+        targets:{value:[{type: 'phone', dest: '', user: '', pass: '', varType: 'str', trunk: ''}]},
+        headers: {value: []},
+        actionhook: {value: ''},
+        actionhookType: {value: 'str'},
+        answeronbridge: {value: false},
+        callerid: {value: ''},
+        calleridType: {value: ''},
+        confirmhook: {value: ''},
+        confirmhookType: {value: 'str'},
+        dialmusic: {value: ''},
+        dialmusicType: {value: 'str'},
+        dtmfcapture: {value: ''},
+        dtmfcaptureType: {value: 'str'},
+        dtmfhook: {value: ''},
+        dtmfhookType: {value: 'str'},
+        timelimit: {validate:RED.validators.regex(/^\d*$/) },
+        timeout: {validate:RED.validators.regex(/^\d*$/) },
+        listenurl: {value: ''},
+        listenurlType: {value: 'str'},
+        transcriptionhook: {},
+        transcriptionhookType: {value: 'str'},
+        transcriptionvendor: {value: 'default'},
+        recognizerlang: {value: 'default'},
+        recognizeraltlang: {},
+        recognizeraltlangType: {val: 'str'},
+        interim: {value: false},
+        profanityfilter: {value: false},
+        transcriptionhints: {},
+        transcriptionhintsType: {val: 'str'},
+        separaterecog: {value: false},
+        useenhanced: {value: false},
+        words: {value: false},
+        punctuation: {value: false},
+        diarization: {value: false},
+        diarizationmin: {value: 2},
+        diarizationminType: {value: 'num'},
+        diarizationmax: {value: 6},
+        diarizationmaxType: {value: 'num'},
+        interactiontype: {value: 'unspecified'},
+        naics: {value: 0},
+        naicsType: {value: 'num'},
+        identifychannels: {value: false},
+        speakerlabel: {value: false},
+        vocabularyname: {},
+        vocabularynameType: {value: 'str'},
+        vocabularyfiltername: {},
+        vocabularyfilternameType: {value: 'str'},
+        vocabularyfiltermethod: {}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { return this.name || 'dial';},
+      oneditprepare: function() {
+        var node = this;
+        $('#node-input-callerid').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-calleridType')
+        });
+        $('#node-input-actionhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-actionhookType')
+        });
+        $('#node-input-confirmhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-confirmhookType')
+        });
+        $('#node-input-dialmusic').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-dialmusicType')
+        });
+        $('#node-input-dtmfcapture').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-dtmfcaptureType')
+        });
+        $('#node-input-dtmfhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-dtmfhookType')
+        });
+        $('#node-input-transcribeurl').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-transcribeurlType')
+        });
+        $('#node-input-listenurl').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-listenurlType')
+        });
+        $('#node-input-transcriptionhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-transcriptionhookType')
+        });
+        $('#node-input-transcriptionhints').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-transcriptionhintsType')
+        });
+        $('#node-input-recognizeraltlang').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-recognizeraltlangType')
+        });
+        $('#node-input-diarizationmin').typedInput({
+          types: ['num', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-diarizationminType')
+        });
+        $('#node-input-diarizationmax').typedInput({
+          types: ['num', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-diarizationmaxType')
+        });
+        $('#node-input-naics').typedInput({
+          types: ['num', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-naicsType')
+        });
+
+        console.log('oneditprepare - dial');
+        prepareSttControls(node);
+
+        $('#node-input-target-container').css('min-height','180px').css('min-width','450px').editableList({
+          addItem: function(container, i, opt) {
+            var target = opt;
+            console.log(`addItem: ${JSON.stringify(opt)}, keys ${Object.keys(opt).length}`);
+            if (!target.hasOwnProperty('type')) {
+              target = {
+                type: 'phone',
+                dest: '',
+                user: '',
+                pass: '',
+                varType: 'str'
+              };
+            }
+
+            container.css({
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            });
+            let fragment = document.createDocumentFragment();
+            var row1 = $('<div/>',{style:"display:flex;"}).appendTo(fragment);
+            var row2 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
+            var row3 = $('<div/>',{style:"margin-top:8px;"}).appendTo(fragment);
+            var row4 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
+            var row5 = $('<div/>',{style:"margin-top:8px;"}).appendTo(fragment);
+
+            var selectField = $('<select/>',{class:"node-input-target-type",style:"width:110px; margin-right:10px;"})
+              .appendTo(row1);
+            var selectOptions = ['phone', 'user', 'sip', 'teams'];
+            for (var i = 0; i < 4; i++) {
+                selectField.append($("<option></option>").val(selectOptions[i]).text(selectOptions[i]));
+            }
+            var propertyName = $('<input/>', {class:"node-input-target-property-name", type:"text"})
+              .appendTo(row1)
+              .typedInput({types: ['str', 'msg', 'flow', 'global']});
+
+            $('<label style="padding-top:8px; padding-right:20px">Auth Username:</label>')
+              .appendTo(row2);
+
+            $('<input/>',{
+              class:"node-input-target-property-authuser", 
+              type:"text", 
+              placeholder: '(if required by remote endpoint)'
+            })
+              .appendTo(row2);
+
+            $('<label style="padding-top:8px; padding-right:20px">Auth Password:</label>')
+              .appendTo(row3);
+            $('<input/>',{
+              class:"node-input-target-property-authpassword", 
+              type:"text", 
+              placeholder: '(if required by remote endpoint)'
+            })
+              .appendTo(row3);
+
+            $('<label style="padding-top:8px; padding-right:20px">Trunk:</label>')
+              .appendTo(row5);
+
+            $('<input/>',{
+              class:"node-input-target-property-trunk",
+              type:"text",
+              placeholder: 'Specify the name of the trunk used for this outbound call'
+            })
+              .appendTo(row5);
+            
+            selectField.on('change', function() {
+              var type = $(this).val();
+              console.log(`type changed to ${type}`);
+              var input = $(this).parent().find('input.red-ui-typedInput-input');
+              input.focus();
+              switch (type) {
+                case 'phone': 
+                  input.attr('placeholder', 'E.164 number to dial');
+                  break;
+                case 'teams':
+                  input.attr('placeholder', 'Microsoft Teams phone number or extension');
+                  break;
+                case 'user': 
+                  input.attr('placeholder', 'user@domain');
+                  break;
+                case 'sip': 
+                  input.attr('placeholder', 'sip:number@ip-address');
+                  break;
+              }
+              if (type !== 'sip') {
+                row2.hide();
+                row3.hide();
+              }
+              else {
+                row2.show();
+                row3.show();
+              }
+
+              if(type !== 'phone') {
+                row5.hide();
+              } else {
+                row5.show();
+              }
+            });
+            selectField.val(target.type);
+            propertyName.typedInput('value', target.dest);
+            propertyName.typedInput('type', target.varType);
+
+            var datafield = row1.find('.node-input-target-property-name');
+            var userfield = row2.find('.node-input-target-property-authuser');
+            var passfield = row3.find('.node-input-target-property-authpassword');
+            var trunkfield = row5.find('.node-input-target-property-trunk');
+
+            datafield.typedInput('type', target.varType);
+
+            switch (target.type) {
+              case 'phone':
+                trunkfield.val(target.trunk);
+              case 'sip': 
+                userfield.val(target.user);
+                passfield.val(target.pass);
+              default:
+                datafield.typedInput('value', target.dest);
+                break;
+            }
+            selectField.change();
+            container[0].appendChild(fragment);
+          },
+          removable: true,
+          addButton: 'add target'
+        });
+        console.log(`oneditprepare: coming in with targets: ${JSON.stringify(this.targets)}`);
+        if (!this.targets) {
+          var target = {
+            type: 'phone',
+            dest: '',
+            user: '',
+            pass: '',
+            trunk: '',
+            varType: 'str'
+          }
+          this.targets = [target];
+        }
+
+        for (var i=0; i < this.targets.length; i++) {
+            var target = this.targets[i];
+            $("#node-input-target-container").editableList('addItem', target);
+        }
+        // populate headers editable list
+        $('#node-input-headers-container').css('min-height','120px').css('min-width','450px').editableList({
+          addItem: function(container, i, opt) {
+            var header = opt;
+            if (!header.hasOwnProperty('h')) {
+                header = {h: '', v: ''};
+            }
+            container.css({
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            });
+            let fragment = document.createDocumentFragment();
+            var row1 = $('<div/>',{style:"display:flex;"}).appendTo(fragment);
+            $('<input/>', {
+              class:"node-input-header-property-name", 
+              type:"text", 
+              placeholder: 'SIP Header'
+            })
+              .appendTo(row1);
+            $('<input/>', {
+              class:"node-input-value-property-name", 
+              type:"text", 
+              placeholder: 'value'
+            })
+              .appendTo(row1);
+
+            row1.find('.node-input-header-property-name').val(header.h);
+            row1.find('.node-input-value-property-name').val(header.v);
+
+            container[0].appendChild(fragment);
+          },
+          removable: true
+        });
+        console.log(`oneditprepare: coming in with headers: ${JSON.stringify(this.headers)}`);
+        if (!this.headers) {
+          var header = {
+            h: '',
+            v: '',
+          };
+          this.headers = [header];
+        }
+
+        for (var i=0; i < this.headers.length; i++) {
+            var header = this.headers[i];
+            $("#node-input-headers-container").editableList('addItem', header);
+        }
+      },
+      oneditsave: function () {
+        var targets = $("#node-input-target-container").editableList('items');
+        var node = this;
+        node.targets = [];
+        console.log(`entering oneditsave with ${targets.length} targets`);
+        targets.each(function(i) {
+          var target = $(this);
+          var type = target.find('.node-input-target-type').val();
+          var varType = target.find('.node-input-target-property-name').typedInput('type');
+          var dest    = target.find('.node-input-target-property-name').typedInput('value');
+          var user = target.find('.node-input-target-property-authuser').val();
+          var pass = target.find('.node-input-target-property-authpassword').val();
+          var trunk = target.find('.node-input-target-property-trunk').val();
+          if (!['phone', 'user', 'sip', 'teams'].includes(type) || 0 === dest.length) return;
+
+          var t = {
+            type,
+            varType,
+            dest
+          };
+          if ('sip' === type && user.length > 0 && pass.length > 0) {
+            Object.assign(t, {user, pass});
+          }
+          if ('phone' === type && trunk.length > 0) {
+            t.trunk = trunk;
+          }
+          node.targets.push(t);
+        });
+        console.log(`saved targets ${JSON.stringify(node.targets)}`);
+        var headers = [];
+        $("#node-input-headers-container").editableList('items').each(function(i) {
+          var header = $(this);
+          console.log(`header: ${JSON.stringify(header)}`);
+          var h = header.find(".node-input-header-property-name").val();
+          var v = header.find(".node-input-value-property-name").val();
+          console.log(`added ${h}: ${v}`);
+          var obj = {};
+          obj[h] = v;
+          headers.push({h, v});
+        });
+        node.headers = headers;
+        console.log(`saved headers ${JSON.stringify(node.headers)}`);
+      },
+    });
+
+
+</script>
+
+
+<!-- HTML -->
+
+<script type="text/html" data-template-name="dial">
+    <style>
+      ol#node-input-target-container .red-ui-typedInput-container {
+        flex:1;
+      }
+    </style>
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row" style="margin-bottom:0;">
+      <label><i class="fa fa-list"></i><span>Dial Targets</span></label>
+    </div>
+    <div class="form-row node-input-target-container-row">
+        <ol id="node-input-target-container"></ol>
+    </div>
+    <div class="form-row">
+      <label for="node-input-actionhook">Action hook</label>
+      <input type="text" id="node-input-actionhook" placeholder="webhook to invoke when the call ends">
+      <input type="hidden" id="node-input-actionhookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-answeronbridge">Answer on bridge</label>
+      <input type="checkbox" id="node-input-answeronbridge">
+    </div>
+    <div class="form-row">
+      <label for="node-input-callerid">Caller ID</label>
+      <input type="text" id="node-input-callerid" placeholder="Caller ID to place on outbound call">
+      <input type="hidden" id="node-input-calleridType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-confirmhook">Confirm hook</label>
+      <input type="text" id="node-input-confirmhook" placeholder="webhook to run on called party after answer">
+      <input type="hidden" id="node-input-confirmhookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-dialmusic">Dial music</label>
+      <input type="text" id="node-input-dialmusic" placeholder="url to .wav or .mp3 file to play during dial">
+      <input type="hidden" id="node-input-dialMusicType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-dtmfcapture">Dtmf capture</label>
+      <input type="text" id="node-input-dtmfcapture" placeholder="comma-separated list of dtmf captures">
+      <input type="hidden" id="node-input-dtmfcaptureType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-dtmfhook">Dtmf hook</label>
+      <input type="text" id="node-input-dtmfhook" placeholder="webhook to call when dtmf is captured">
+      <input type="hidden" id="node-input-dtmfhookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-timelimit">Time limit</label>
+      <input type="text" id="node-input-timelimit" placeholder="max duration of call in secs">
+    </div>
+    <div class="form-row">
+      <label for="node-input-timeout"><i class="icon-tag"></i> Timeout</label>
+      <input type="text" id="node-input-timeout" placeholder="ring no answer timeout in secs (default: 60)">
+    </div>
+    <fieldset>
+      <legend>Live audio</legend>
+      <div class="form-row">
+        <label for="node-input-listenurl"><i class="icon-tag"></i> Websocket server url</label>
+        <input type="text" id="node-input-listenurl" placeholder="ws://example.com">
+        <input type="hidden" id="node-input-listenurlType">
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Transcription (optional)</legend>
+      <div class="form-row">
+        <label for="node-input-transcriptionhook"><i class="icon-tag"></i> Transcription hook</label>
+        <input type="text" id="node-input-transcriptionhook" placeholder="transcription webhook">
+        <input type="hidden" id="node-input-transcriptionhookType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-transcriptionvendor">Vendor</label>
+        <select id="node-input-transcriptionvendor">
+          <option value="default" selected>--application default--</option>
+          <option value="google">Google</option>
+          <option value="aws">AWS</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="node-input-recognizerlang"><i class="icon-tag"></i> Language</label>
+        <select id="node-input-recognizerlang">
+        </select>
+      </div>
+      <div id="interim" class="form-row">
+        <label for="node-input-interim">Interim transcriptions</label>
+        <input type="checkbox" id="node-input-interim">
+      </div>
+      <div id="stt-identify-channels" class="form-row">
+        <label for="node-input-separaterecog">Separate recognition per channel</label>
+        <input type="checkbox" id="node-input-separaterecog">
+      </div>
+      <div id="google-stt-options">
+        <legend>Google Transcription Options</legend>
+        <div class="form-row">
+          <label for="node-input-transcriptionhints">Hints</label>
+          <input type="text" id="node-input-transcriptionhints" placeholder="comma-separated list of phrases">
+          <input type="hidden" id="node-input-transcriptionhintsType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-recognizeraltlang">Alternative languages</label>
+          <input type="text" id="node-input-recognizeraltlang" placeholder="comma-separated list of add'l lang codes">
+          <input type="hidden" id="node-input-recognizeraltlangType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-useenhanced">Use enhanced model</label>
+          <input type="checkbox" id="node-input-useenhanced">
+        </div>
+        <div class="form-row">
+          <label for="node-input-profanityfilter">Profanity filter</label>
+          <input type="checkbox" id="node-input-profanityfilter">
+        </div>
+        <div class="form-row">
+          <label for="node-input-words">Word time offsets</label>
+          <input type="checkbox" id="node-input-words">
+        </div>
+        <div class="form-row">
+          <label for="node-input-punctuation">Automatic punctuation</label>
+          <input type="checkbox" id="node-input-punctuation">
+        </div>
+        <div class="form-row">
+          <label for="node-input-diarization">Speaker diarization</label>
+          <input type="checkbox" id="node-input-diarization">
+        </div>
+        <div class="form-row">
+          <label for="node-input-diarizationmin">Min speaker count</label>
+          <input type="text" id="node-input-diarizationmin" placeholder="2">
+          <input type="hidden" id="node-input-diarizationminType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-diarizationmax">Max speaker count</label>
+          <input type="text" id="node-input-diarizationmax" placeholder="6">
+          <input type="hidden" id="node-input-diarizationmaxType">
+        </div>    
+        <div class="form-row">
+          <label for="node-input-interactiontype">Type of Interaction</label>
+          <select id="node-input-interactiontype">
+            <option value="unspecified" selected>Unspecified</option>
+            <option value="discussion">Discusssion</option>
+            <option value="presentation">Presentation</option>
+            <option value="phone_call">Phone call</option>
+            <option value="voicemail">Voicemail</option>
+            <option value="voice_search">Voice search</option>
+            <option value="voice_command">Voice command</option>
+            <option value="dictation">Dictation</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="node-input-naics">Industry NAICS code</label>
+          <input type="text" id="node-input-naics">
+          <input type="hidden" id="node-input-naicsType">
+        </div>
+      </div>
+      <div id="aws-stt-options">
+        <legend>AWS Transcription Options</legend>
+        <div class="form-row">
+          <label for="node-input-identifychannels">Enable channel identification</label>
+          <input type="checkbox" id="node-input-identifychannels">
+        </div>
+        <div class="form-row">
+          <label for="node-input-speakerlabel">Show speaker labels</label>
+          <input type="checkbox" id="node-input-speakerlabel">
+        </div>
+        <div class="form-row">
+          <label for="node-input-vocabularyname">Vocabulary name</label>
+          <input type="text" id="node-input-vocabularyname">
+          <input type="hidden" id="node-input-vocabularynameType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-vocabularyfiltername">Vocabulary filter name</label>
+          <input type="text" id="node-input-vocabularyfiltername">
+          <input type="hidden" id="node-input-vocabularyfilternameType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-vocabularyfiltermethod">Filter method</label>
+          <select id="node-input-vocabularyfiltermethod">
+            <option value="remove" selected>Remove</option>
+            <option value="mask" selected>Mask</option>
+            <option value="tag" selected>Tag</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>SIP Headers</legend>
+      <div class="form-row" style="margin-bottom:0;">
+        <label style="width:100%"><i class="fa fa-list"></i> <span>Add custom headers on outdial</span></label>
+      </div>
+      <div class="form-row node-input-headers-container-row">
+          <ol id="node-input-headers-container"></ol>
+      </div>
+    </fieldset>
+  </div>
+  </script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="dial">
+    <p>Dial out to a phone number, registered user, sip endpoint, or Microsoft teams user</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+      <dt>Dial target - phone<span class="property-type">string</span></dt>
+      <dd>A telephone number to dial in E.164 format</dd>
+      <dt>Dial target - user<span class="property-type">string</span></dt>
+      <dd>A registered sip user in user@domain format</dd>
+      <dt>Dial target - sip<span class="property-type">string</span></dt>
+      <dd>A sip endpoint in sip uri format, optionally with sip username and password</dd>
+      <dt>Dial target - teams<span class="property-type">string</span></dt>
+      <dd>A phone number that is associated with a user in the Microsoft Teams tenant associated with this account</dd>
+      <dt>Action hook<span class="property-type">string</span></dt>
+      <dd>webhook to invoke when the call ends.	</dd>
+      <dt>Answer on bridge<span class="property-type">string</span></dt>
+      <dd>If set to true, the inbound call will ring until the number that was dialed answers the call, and at that point a 200 OK will be sent on the inbound leg. If false, the inbound call will be answered immediately as the outbound call is placed.</dd>
+      <dt>Action hook<span class="property-type">string</span></dt>
+      <dd>webhook to invoke when the call ends.	</dd>
+      <dt>Caller ID<span class="property-type">string</span></dt>
+      <dd>Calling phone number to display on outgoing call.</dd>
+      <dt>Confirm hook<span class="property-type">string</span></dt>
+      <dd>webhook for an application to run on the callee's end after the dialed number answers but before the call is connected.</dd>
+      <dt>Dial music<span class="property-type">string</span></dt>
+      <dd>url that specifies a .wav or .mp3 audio file of custom audio or ringback to play to the caller while the outbound call is ringing.</dd>
+      <dt>Dtmf capture<span class="property-type">string</span></dt>
+      <dd>an array of strings that represent dtmf sequence which, when detected, will trigger a mid-call notification to the application via the configured dtmfHook.</dd>
+      <dt>DTMF hook<span class="property-type">string</span></dt>
+      <dd>webhook to call when a dtmfCapture entry is matched.</dd>
+      <dt>Time limit<span class="property-type">number</span></dt>
+      <dd>max length of call in seconds.</dd>
+      <dt>Time limit<span class="property-type">number</span></dt>
+      <dd>max length of call in seconds.</dd>
+      <dt>Timeout<span class="property-type">number</span></dt>
+      <dd>ring no answer timeout in seconds.</dd>
+      <dt>Websocket server url<span class="property-type">string</span></dt>
+      <dd>url of remote websocket server to send live audio to.</dd>
+      <dt>Transcription hook<span class="property-type">string</span></dt>
+      <dd>webhook to call when a transcription is received.</dd>
+      <dt>Language<span class="property-type">string</span></dt>
+      <dd>language to use for speech transcription.</dd>
+      <dt>Send interim transcriptions<span class="property-type">boolean</span></dt>
+      <dd>if true interim transcriptions are sent.</dd>
+  </dl>
+  
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>dial</code> action appended  </dd>
+    </dl>
+  
+    <h3>Details</h3>
+    The dial verb is used to create a new call by dialing out to a number, a registered sip user, or sip endpoint
+      <ul>
+          <li><a href="https://docs.jambonz.org/jambonz/#dial">Jambonz dial reference</a></li>
+      </ul>
+  </script>

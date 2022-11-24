@@ -1,0 +1,108 @@
+<!-- Javascript -->
+<script type="text/javascript">
+RED.nodes.registerType('dequeue',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+        queue: {required: true, value: ''},
+        queueType: {value: 'str'},
+        actionHook: {},
+        actionHookType: {value: 'str'},
+        confirmHook: {},
+        confirmHookType: {value: 'str'},
+        beep: {value: false},
+        timeout: {},
+        timeoutType: {value: 'num'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { 
+        return this.name || 'dequeue';
+      },
+      oneditprepare: function() {
+        $('#node-input-queue').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-queueType')
+        });
+        $('#node-input-actionHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-actionHookType')
+        });
+        $('#node-input-confirmHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-confirmHookType')
+        });
+        $('#node-input-timeout').typedInput({
+          types: ['num', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-timeoutType')
+        });
+      }
+  });
+</script>
+
+
+<!-- HTML -->
+<script type="text/html" data-template-name="dequeue">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+      <label for="node-input-queue">Queue name</label>
+      <input type="text" id="node-input-queue" placeholder="name of queue to remove caller from">
+      <input type="hidden" id="node-input-queueType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-beep">Play beep on connecting</label>
+      <input type="checkbox" id="node-input-beep">
+    </div>
+    <div class="form-row">
+      <label for="node-input-actionHook">Action hook</label>
+      <input type="text" id="node-input-actionHook" placeholder="webhook url">
+      <input type="hidden" id="node-input-actionHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-confirmHook">Confirm hook</label>
+      <input type="text" id="node-input-confirmHook" placeholder="webhook url">
+      <input type="hidden" id="node-input-confirmHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-timeout">Timeout</label>
+      <input type="text" id="node-input-timeout" placeholder="seconds to wait if queue is empty">
+      <input type="hidden" id="node-input-timeoutType">
+    </div>
+  </script>
+  
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="dequeue">
+    <p>removes the a call from the front of a queue and bridges that call to the current caller.</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+      <dt>Queue name<span class="property-type">string</span></dt>
+      <dd>Name of the queue.</dd>
+      <dt>Play beep on connecting<span class="property-type">boolean</span></dt>
+      <dd>Play a beep tone to this caller only just prior to connecting the queued call.</dd>
+      <dt>Action hook<span class="property-type">string</span></dt>
+      <dd>A webhook invoke when call ends.</dd>
+      <dt>Confirm hook<span class="property-type">string</span></dt>
+      <dd>A webhook for an application to run on the callee's end before the call is bridged.</dd>
+      <dt>Timeout<span class="property-type">number</span></dt>
+      <dd>number of seconds to wait on an empty queue before returning.</dd>
+  </dl>
+  
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+     <dt>jambonz<span class="property-type">object</span></dt>
+     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>dequeue</code> action appended  </dd>
+  </dl>
+  
+  <h3>Details</h3>
+  The dequeue verb removes the a call from the front of a specified queue and bridges that call to the current caller.
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/jambonz/#dequeue">Jambonz dequeue reference</a></li>
+    </ul>
+  </script>

@@ -1,0 +1,99 @@
+<!-- Javascript -->
+<script type="text/javascript">
+RED.nodes.registerType('message', {
+    category: 'jambonz',
+    color: '#bbabaa',
+    defaults: {
+      name: {value: ''},
+      from: {value: '', required: true},
+      fromType: {value: ''},
+      to: {value: '', required: true},
+      toType: {value: ''},
+      text: {value: '', required: true},
+      textType: {value: ''},
+      provider: {value: ''},
+      providerType: {value: ''},
+    },
+    inputs:1,
+    outputs:1,
+    icon: "font-awesome/fa-cubes",
+    label: function() { 
+      return this.name || 'message';
+    },
+    oneditprepare: function() {
+      var node = this;
+
+      $('#node-input-from').typedInput({
+        default: $('#node-input-fromType').val(),
+        types: ['str','msg', 'flow', 'global'],
+        typeField: $('#node-input-fromType')
+      });
+      $('#node-input-to').typedInput({
+        default: $('#node-input-toType').val(),
+        types: ['str','msg', 'flow', 'global'],
+        typeField: $('#node-input-toType')
+      });
+      $('#node-input-text').typedInput({
+        default: $('#node-input-textType').val(),
+        types: ['str','msg', 'flow', 'global'],
+        typeField: $('#node-input-textType')
+      });
+      $('#node-input-provider').typedInput({
+        default: $('#node-input-providerType').val(),
+        types: ['str','msg', 'flow', 'global'],
+        typeField: $('#node-input-providerType')
+      });
+    }
+  });
+</script>
+
+
+<!-- HTML -->
+<script type="text/html" data-template-name="message">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+      <label for="node-input-from">From</label>
+      <input type="text" id="node-input-from" placeholder="sending number">
+      <input type="hidden" id="node-input-fromType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-to">To</label>
+      <input type="text" id="node-input-to" placeholder="destination number">
+      <input type="hidden" id="node-input-toType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-text">Text</label>
+      <input type="text" id="node-input-text" placeholder="Text">
+      <input type="hidden" id="node-input-textType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-provider">SMS Provider</label>
+      <input type="text" id="node-input-provider">
+      <input type="hidden" id="node-input-providerType">
+    </div>  
+  </script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="message">
+    <p>Send an SMS</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+  
+    </dl>
+  
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+     <dt>jambonz<span class="property-type">object</span></dt>
+     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>message</code> action appended  </dd>
+  </dl>
+  
+  <h3>Details</h3>
+  The message verb sends an SMS message.
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/jambonz/#message">Jambonz redirect reference</a></li>
+    </ul>
+  </script>

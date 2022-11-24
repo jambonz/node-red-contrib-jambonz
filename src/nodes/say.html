@@ -1,0 +1,112 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  RED.nodes.registerType('say',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+        text: {required: true},
+        early: {value: false},
+        loop: {value: 1},
+        vendor: {value: 'default'},
+        lang: {value: 'default'},
+        xlang: {},
+        voice: {value: 'default'},
+        xvoice: {}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { return this.name || 'say';},
+      oneditprepare: () => {
+        var node = this;
+        prepareTtsControls(node);
+      }
+  });
+
+</script>
+
+
+<!-- HTML -->
+<script type="text/html" data-template-name="say">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-text"><i class="icon-tag"></i> Text</label>
+    <textarea id="node-input-text" rows="4" placeholder="Text or SSML to speak" style="width:70%"></textarea>
+  </div>
+  <div class="form-row">
+    <label for="node-input-early"><i class="icon-tag"></i>Early media</label>
+    <input type="checkbox" id="node-input-early">
+  </div>
+  <div class="form-row">
+    <label for="node-input-loop"><i class="icon-tag"></i>Loop</label>
+    <input type="input" id="node-input-loop" placeholder="number of times to repeat"> 
+  </div>
+  <fieldset>
+    <legend>Speech synthesis options</legend>
+    <div class="form-row">
+      <label for="node-input-vendor">Vendor</label>
+      <select id="node-input-vendor">
+        <option value="default" selected>--application default--</option>
+        <option value="google">google</option>
+        <option value="aws">aws/polly</option>
+      </select>
+    </div>
+    <div class="form-row" style="display: none;">
+      <label for="node-input-lang"> Lang</label>
+      <input type="text" id="node-input-lang">
+    </div>
+    <div class="form-row">
+      <label for="node-input-xlang">Language</label>
+      <select id="node-input-xlang">
+        <option value="default" selected>--application default--</option>
+      </select>
+    </div>
+    <div class="form-row" style="display: none;">
+      <label for="node-input-voice"> Voice</label>
+      <input type="text" id="node-input-voice">
+    </div>
+    <div class="form-row">
+      <label for="node-input-xvoice">Voice</label>
+      <select id="node-input-xvoice">
+        <option value="default" selected>--application default--</option>
+      </select>
+    </div>
+  </fieldset>
+  </script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="say">
+    <p>Synthesize speech from text or SSML</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+      <dt>Text<span class="property-type">string</span></dt>
+      <dd>text to speak; may contain SSML tags</dd>
+      <dt>Early media<span class="property-type">boolean</span></dt>
+      <dd>if checked, play the prompt over an early media connection</dd>
+      <dt>Loop<span class="property-type">number</span></dt>
+      <dd>number of times to play the prompt</dd>
+      <dt>Vendor<span class="property-type">string</span></dt>
+      <dd>TTS vendor</dd>
+      <dt>Language<span class="property-type">string</span></dt>
+      <dd>TTS language</dd>
+      <dt>Voice<span class="property-type">string</span></dt>
+      <dd>TTS voice</dd>
+    </dl>
+  
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+     <dt>jambonz<span class="property-type">object</span></dt>
+     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>say</code> action appended  </dd>
+  </dl>
+  
+  <h3>Details</h3>
+  The say command is used to send synthesized speech to the remote party. 
+  The text provided may be either plain text or may use SSML tags.
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/jambonz/#say">Jambonz say reference</a></li>
+  </script>

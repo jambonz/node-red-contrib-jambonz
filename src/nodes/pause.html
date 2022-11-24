@@ -1,0 +1,62 @@
+<!-- Javascript -->
+<script type="text/javascript">
+ RED.nodes.registerType('pause',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+        len: {required: true},
+        lenType: {value: 'num'},
+
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { return this.name || 'pause';},
+      oneditprepare: function() {
+        $('#node-input-len').typedInput({
+          default: $('#node-input-lenType').val(),
+          types: ['num','msg', 'flow', 'global'],
+          typeField: $('#node-input-lenType')
+        });
+      }
+  });
+
+</script>
+
+
+<!-- HTML -->
+<script type="text/html" data-template-name="pause">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+      <label for="node-input-length">Duration</label>
+      <input type="text" id="node-input-len" placeholder="number of seconds to pause">
+      <input type="hidden" id="node-input-lenType">
+    </div>
+  </script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="pause">
+    <p>Pause a specified number of seconds</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+      <dt>Duration<span class="property-type">object</span></dt>
+      <dd>Number of seconds pause</dd>
+     </dl>
+  
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>pause</code> action appended  </dd>
+  </dl>
+  
+  <h3>Details</h3>
+  The pause verb waits a specified number of seconds before continuing to execute the application.
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/jambonz/#pause">Jambonz pause reference</a></li>
+    </ul>
+  </script>

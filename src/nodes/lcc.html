@@ -1,0 +1,257 @@
+<!-- Javascript -->
+<script type="text/javascript">
+RED.nodes.registerType('lcc',{
+      category: 'jambonz',
+      color: '#aebfb9',
+      defaults: {
+        name: {value: ''},
+        server: {value: '', required: true, type: 'jambonz_auth'},
+        callSid: {required: true},
+        callSidType: {value: 'msg'},
+        action: {value: 'hangup', required: true},
+        text: {value: '', validate: function(v) {
+          const action = $('#node-input-action').val();
+          return action !== 'whisper' || v.length > 0;
+        }},
+        vendor: {value: 'default'},
+        lang: {value: 'default'},
+        voice: {value: 'default'},
+        callHook: {value: '', validate: function(v) {
+          const action = $('#node-input-action').val();
+          return action !== 'redirect' || v.length > 0;
+        }},
+        callHookType: {value: 'str'},
+        waitHook: {value: '', validate: function(v) {
+          const action = $('#node-input-action').val();
+          return action !== 'hold_conf' || v.length > 0;
+        }},
+        waitHookType: {value: 'str'},
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { 
+        return this.name || (this.action ? `LCC - ${this.action}` : 'LCC');
+      },
+      oneditprepare: function() {
+        var node = this;
+        var actionElem = $('#node-input-action');
+        var vendorElem = $('#node-input-vendor');
+        var langElem = $('#node-input-lang');
+        var voiceElem = $('#node-input-voice');
+        var sayDiv = $('#say-options');
+        var redirectDiv = $('#redirect-options');
+        var waitHookDiv = $('#wait-options');
+        sayDiv.hide();
+        waitHookDiv.hide();
+
+        $('#node-input-callSid').typedInput({
+          default: $('#node-input-callSidType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-callSidType')
+        });
+        $('#node-input-callHook').typedInput({
+          default: $('#node-input-callHookType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-callHookType')
+        });
+        $('#node-input-waitHook').typedInput({
+          default: $('#node-input-waitHookType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-waitHookType')
+        });
+
+        var onActionChanged = function () {
+          node.action = actionElem.find(':selected').val();
+          if ('whisper' === node.action) sayDiv.show();
+          else sayDiv.hide();
+          if ('redirect' === node.action) redirectDiv.show();
+          else redirectDiv.hide();
+          if ('hold_conf' === node.action) waitHookDiv.show();
+          else waitHookDiv.hide();
+        }
+
+        var onVendorChanged = function() {
+          node.vendor = vendorElem.find(':selected').val();
+          console.log(`say vendor changed to ${node.vendor}`);
+          setLanguage(node.vendor);
+        }
+
+        var onLangChanged = function() {
+          node.lang = langElem.find(':selected').val();
+          console.log(`language changed to ${node.lang}`);
+          setVoice(node.vendor, node.lang)
+        }
+      
+        var onVoiceChanged = function() {
+          node.voice = voiceElem.find(':selected').val();
+          console.log(`voice changed to ${node.voice}`);
+        }
+
+        var setLanguage = function(v) {
+          langElem.find('option').remove();
+          voiceElem.find('option').remove();
+
+          switch (v) {
+            case 'default': 
+              langElem.append('<option value="default" selected>--application default--</option>');
+              voiceElem.append('<option value="default" selected>--application default--</option>');
+              node.lang = 'default';
+              node.voice = 'default';
+              break;
+
+            case 'google':
+              langElem.append(googleLanguageOptions);
+              break;
+
+            case 'aws':
+              langElem.append(awsLanguageOptions);
+              break;
+          }
+          langElem.val(node.lang);
+        }
+
+        var setVoice = function(vendor, lang) {
+          console.log(`say set voice for language ${lang} vendor ${vendor}`);
+          voiceElem.find('option').remove();
+
+          switch (vendor) {
+            case 'default':
+              voiceElem.append('<option value="default" selected>--application default--</option>');
+              break;
+
+            case 'google':
+            case 'aws':
+              var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
+              if (obj) {
+                var options = '';
+                for (var i = 0; i < obj.voices.length; i++) {
+                  if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+                  else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+                }
+                voiceElem.append(options);
+              }
+              break;
+          }
+          voiceElem.val(node.voice);
+        }
+
+        actionElem.change(onActionChanged);
+        vendorElem.change(onVendorChanged);
+        langElem.change(onLangChanged);
+        voiceElem.change(onVoiceChanged);
+      }
+  });
+
+</script>
+
+
+<!-- HTML -->
+<script type="text/html" data-template-name="lcc">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-server">Server</label>
+    <input type="text" id="node-input-server">
+  </div>
+  <div class="form-row">
+    <label for="node-input-callSid">CallSid</label>
+    <input type="text" id="node-input-callSid">
+    <input type="hidden" id="node-input-callSidType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-action">Action</label>
+    <select id="node-input-action">
+      <option value="hangup">hangup call</option>
+      <option value="mute">mute caller</option>
+      <option value="unmute">unmute caller</option>
+      <option value="mute_conf">mute conference participants</option>
+      <option value="unmute_conf">unmute conference participants</option>
+      <option value="hold_conf">hold conference participant</option>
+      <option value="unhold_conf">unhold conference participant</option>
+      <option value="pause">pause listen audio feed</option>
+      <option value="resume">resume listen audio feed</option>
+      <option value="redirect">redirect call</option>
+      <option value="whisper">whisper</option>
+    </select>
+  </div>
+  <div id="say-options">
+    <div class="form-row">
+      <label for="node-input-text">Text</label>
+      <textarea id="node-input-text" rows="4" placeholder="Text or SSML to whisper" style="width:70%"></textarea>
+    </div>
+    <fieldset>
+      <legend>Speech synthesis options</legend>
+      <div class="form-row">
+        <label for="node-input-vendor">Vendor</label>
+        <select id="node-input-vendor">
+          <option value="default" selected>--application default--</option>
+          <option value="google">google</option>
+          <option value="aws">aws/polly</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="node-input-lang">Language</label>
+        <select id="node-input-lang">
+          <option value="default" selected>--application default--</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="node-input-voice">Voice</label>
+        <select id="node-input-voice">
+          <option value="default" selected>--application default--</option>
+        </select>
+      </div>
+    </fieldset>
+  </div>
+  <div id="redirect-options">
+    <div class="form-row">
+      <label for="node-input-callHook">Call webhook</label>
+      <input type="text" id="node-input-callHook" placeholder="/path">
+      <input type="hidden" id="node-input-callHookType">
+    </div>  
+  </div>
+  <div id="wait-options">
+    <div class="form-row">
+      <label for="node-input-waitHook">Wait webhook</label>
+      <input type="text" id="node-input-waitHook" placeholder="/path">
+      <input type="hidden" id="node-input-waitHookType">
+    </div>  
+  </div>
+  </script>
+
+<!-- Help Text -->
+
+<script type="text/html" data-help-name="lcc">
+    <p>Perform Live Call Control</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+      <dt>Server<span class="property-type">config</span></dt>
+      <dd>jambonz server to connect to</dd>
+      <dt>CallSid<span class="property-type">string</span></dt>
+      <dd>Call identifier</dd>
+      <dt>Action<span class="property-type">string</span></dt>
+      <dd>Action to perform on the call</dd>
+      <dt>Text<span class="property-type">string</span></dt>
+      <dd>Text to speak, only if action is 'whisper'</dd>
+      <dt>Vendor<span class="property-type">string</span></dt>
+      <dd>TTS vendor to use for whisper</dd>
+      <dt>Language<span class="property-type">string</span></dt>
+      <dd>TTS language to use for whisper</dd>
+      <dt>Voice<span class="property-type">string</span></dt>
+      <dd>TTS voice to use for whisper</dd>
+    </dl>
+  
+  <h3>Details</h3>
+  The lcc command is used to perform live call control on a call in progress.
+  The call can be terminated, the caller can be muted or unmuted, or the live 
+  audio feed that is being sent via a <a href="https://docs.jambonz.org/jambonz/#listen">listen</a> verb can be paused or resumed.
+  <br/><br/>
+  A common use case is to use dtmf captures in a <a href="https://docs.jambonz.org/jambonz/#dial">dial</a> verb to call a webhook 
+  that then uses lcc to modify the state of the call.
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/rest/#updating-a-call">Jambonz reference</a></li>
+  </script>

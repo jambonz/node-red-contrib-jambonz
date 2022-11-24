@@ -1,0 +1,92 @@
+<!-- Javascript -->
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('enqueue',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+        queue: {required: true, value: ''},
+        queueType: {value: 'str'},
+        actionHook: {},
+        actionHookType: {value: 'str'},
+        waitHook: {},
+        waitHookType: {value: 'str'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { 
+        return this.name || 'enqueue';
+      },
+      oneditprepare: function() {
+        $('#node-input-queue').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-queueType')
+        });
+        $('#node-input-actionHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-actionHookType')
+        });
+        $('#node-input-waitHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-waitHookType')
+        });
+      }
+  });
+
+</script>
+
+
+<!-- HTML -->
+
+<script type="text/html" data-template-name="enqueue">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+      <label for="node-input-queue">Queue name</label>
+      <input type="text" id="node-input-queue" placeholder="name of queue">
+      <input type="hidden" id="node-input-queueType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-actionHook">Action hook</label>
+      <input type="text" id="node-input-actionHook" placeholder="webhook url">
+      <input type="hidden" id="node-input-actionHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-waitHook">Wait hook</label>
+      <input type="text" id="node-input-waitHook" placeholder="webhook url">
+      <input type="hidden" id="node-input-waitHookType">
+    </div>
+  </script>
+
+<!-- Help Text -->
+
+<script type="text/html" data-help-name="enqueue">
+    <p>places a caller in a queue.</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+      <dt>Queue name<span class="property-type">string</span></dt>
+      <dd>The name of the queue</dd>
+      <dt>Action hook<span class="property-type">string</span></dt>
+      <dd>A webhook invoke when operation completes.</dd>
+      <dt>Wait hook<span class="property-type">string</span></dt>
+      <dd>A webhook to invoke while the caller is in queue. The only allowed verbs in the application returned from this webhook are say, play, pause, and leave,.</dd>
+  </dl>
+  
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+     <dt>jambonz<span class="property-type">object</span></dt>
+     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>enqueue</code> action appended  </dd>
+  </dl>
+  
+  <h3>Details</h3>
+  The enqueue command is used to place a caller in a queue.
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/jambonz/#enqueue">Jambonz enqueue reference</a></li>
+    </ul>
+  </script>

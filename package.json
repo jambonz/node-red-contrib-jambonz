@@ -1,10 +1,14 @@
 {
   "name": "@jambonz/node-red-contrib-jambonz",
-  "version": "2.2.73",
+  "version": "2.3",
   "description": "Node-RED nodes for jambonz",
   "keywords": [
     "node-red"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jambonz/node-red-contrib-jambonz.git"
+  },
   "node-red": {
     "nodes": {
       "webhook": "src/nodes/webhooks.js",

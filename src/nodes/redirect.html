@@ -1,0 +1,64 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  RED.nodes.registerType('redirect', {
+    category: 'jambonz',
+    color: '#bbabaa',
+    defaults: {
+      name: {value: ''},
+      hook: {required: true},
+      hookType: {value: 'str'}
+    },
+    inputs:1,
+    outputs:1,
+    icon: "font-awesome/fa-cubes",
+    label: function() { 
+      return this.name || 'redirect';
+    },
+    oneditprepare: function() {
+      $('#node-input-hook').typedInput({
+        types: ['str', 'msg', 'flow', 'global'],
+        typeField: $('#node-input-hookType')
+      });
+      }
+  });
+</script>
+
+<!-- HTML -->
+<script type="text/html" data-template-name="redirect">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+      <label for="node-input-hook">Action hook</label>
+      <input type="text" id="node-input-hook" placeholder="url">
+      <input type="hidden" id="node-input-hookType">
+    </div>
+</script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="audio in">
+    <script type="text/html" data-help-name="redirect">
+        <p>Redirect a call to a new application URL</p>
+        <h3>Inputs</h3>
+        <dl class="message-properties">
+            <dt>Action hook<span class="property-type">string</span></dt>
+            <dd>URL of webhook to retrieve new application from.</dd>
+        </dl>
+      
+      <h3>Outputs</h3>
+      <dl class="message-properties">
+         <dt>jambonz<span class="property-type">object</span></dt>
+         <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>redirect</code> action appended  </dd>
+      </dl>
+      
+      <h3>Details</h3>
+      The redirect verb retrieves a new URL to execute for the current call.
+      <h3>References</h3>
+        <ul>
+            <li><a href="https://docs.jambonz.org/jambonz/#redirect">Jambonz redirect reference</a></li>
+        </ul>
+      </script>
+  
+
+</script>
