@@ -12,8 +12,29 @@
   "node-red": {
     "nodes": {
       "webhook": "src/nodes/webhooks.js",
-      "jambonz": "src/nodes/jambonz.js",
-      "s3:upload": "src/nodes/s3-upload.js"
+      "s3:upload": "src/nodes/s3-upload.js",
+      "auth": "src/nodes/auth.js",
+      "enqueue": "src/nodes/enqueue.js",
+      "lex": "src/nodes/lex.js",
+	    "say": "src/nodes/say.js",
+    	"conference": "src/nodes/conference.js",
+    	"gather": "src/nodes/gather.js",
+    	"listen": "src/nodes/listen.js",
+    	"sip:decline": "src/nodes/sip-decline.js",
+    	"create call": "src/nodes/create_call.js",
+    	"hangup": "src/nodes/hangup.js",
+    	"message": "src/nodes/message.js",
+    	"tag": "src/nodes/tag.js",
+    	"create sms": "src/nodes/create_sms.js",
+    	"pause": "src/nodes/pause.js",
+    	"dequeue": "src/nodes/dequeue.js",
+	    "play": "src/nodes/play.js",
+	    "webhooks": "src/nodes/webhooks.js",
+	    "dial": "src/nodes/dial.js",
+	    "lcc": "src/nodes/lcc.js",
+	    "redirect": "src/nodes/redirect.js",
+	    "dialogflow": "src/nodes/dialogflow.js",
+	    "leave": "src/nodes/leave.js"
     }
   },
   "author": "Dave Horton",
