@@ -2,7 +2,6 @@ var {createHash} = require('crypto');
 const bent = require('bent');
 var mustache = require('mustache');
 mustache.escape = function(text) {return text;};
-require('./http-helpers')(RED);
 var {v_resolve} = require('./libs')
 
 /** user auth */

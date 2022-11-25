@@ -1,7 +1,3 @@
-<!-- speech helpers -->
-<script type="text/javascript">
-  "use strict";
-
   let mapGoogle = {};
   let googleLanguageOptions = '';
   let mapAws = {};
@@ -12,7 +8,7 @@
   let mapDialogflow = {};
   let dialogFlowOptions = '';
 
-  var googleUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/googleTts';
+  var googleUrl = '_jambonz/googleTts';
   $.getJSON(googleUrl, function (data) {
     //console.log('retrieved data ' + JSON.stringify(data));
     data.forEach(function(l) {
@@ -23,7 +19,7 @@
       googleLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
     });
   });
-  var awsUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/awsTts';
+  var awsUrl = '_jambonz/awsTts';
   $.getJSON(awsUrl, function (data) {
     //console.log('retrieved data ' + JSON.stringify(data));
     data.forEach(function(l) {
@@ -34,7 +30,7 @@
       awsLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
     });
   });
-  var googleSttUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/googleSpeech';
+  var googleSttUrl =  '_jambonz/googleSpeech';
   $.getJSON(googleSttUrl, function (data) {
     //console.log('retrieved data for recognizer voices: ' + JSON.stringify(data));
     data.forEach(function(l) {
@@ -42,7 +38,7 @@
       sttLanguagesGoogle += `<option value="${l.code}">${l.name}</option>`;        
     });
   });
-  var awsSttUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/awsSpeech';
+  var awsSttUrl =  '_jambonz/awsSpeech';
   $.getJSON(awsSttUrl, function (data) {
     //console.log('retrieved data for recognizer voices: ' + JSON.stringify(data));
     data.forEach(function(l) {
@@ -51,7 +47,7 @@
     });
   });
 
-  var dialogflowUrl = (RED.settings.httpNodeRoot || RED.settings.httpAdminRoot || "").replace(/\/$/, "") + '/dialogflow';
+  var dialogflowUrl = '_jambonz/dialogflow';
   $.getJSON(dialogflowUrl, function (data) {
     console.log('retrieved data for dialogflow languages: ' + JSON.stringify(data));
     data.forEach(function(l) {
@@ -247,7 +243,6 @@
     voiceElem.change(onVoiceChanged);
     xvoiceElem.change(onXVoiceChanged);
   }
-</script>
 
 
 

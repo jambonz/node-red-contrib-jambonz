@@ -11,6 +11,7 @@
   },
   "node-red": {
     "nodes": {
+      "helpers": "src/utils/http-helpers.js",
       "webhook": "src/nodes/webhooks.js",
       "s3:upload": "src/nodes/s3-upload.js",
       "auth": "src/nodes/auth.js",
@@ -29,7 +30,6 @@
     	"pause": "src/nodes/pause.js",
     	"dequeue": "src/nodes/dequeue.js",
 	    "play": "src/nodes/play.js",
-	    "webhooks": "src/nodes/webhooks.js",
 	    "dial": "src/nodes/dial.js",
 	    "lcc": "src/nodes/lcc.js",
 	    "redirect": "src/nodes/redirect.js",
