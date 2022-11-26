@@ -7,8 +7,7 @@
         path: {value: ''},
         region: {value: ''},
         bucket: {value: '', required: true},
-        accesskey: {value: ''},
-        secret: {value: ''}
+        aws: {value: '', type: 'aws_auth'}
       },
       inputs:0,
       outputs:0,
@@ -22,6 +21,10 @@
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
   </div>
+  <div class="form-row">
+    <label for="node-input-aws">AWS credentials</label>
+    <input type="text" id="node-input-aws">
+  </div>  
   <div class="form-row">
     <label for="node-input-path">Path</label>
     <input type="text" id="node-input-path" placeholder="url path of websocket server">

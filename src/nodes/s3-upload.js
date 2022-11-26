@@ -26,13 +26,23 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, n);
     var node = this;
 
+    // Get AWS Creds
+    const awsCreds = RED.nodes.getNode(config.aws);
+          let accessKey, secretAccessKey;
+      if (awsCreds && awsCreds.credentials) {
+        accessKey = 
+        secretAccessKey = 
+        AWS.Config({
+          accessKeyId: awsCreds.credentials.accessKey, 
+          secretAccessKey: awsCreds.credentials.secretAccessKey
+        });
+      }
+
     // Store local copies of the node configuration (as defined in the .html)
     [
       'path',
       'bucket',
-      'region',
-      'accesskey',
-      'secret'
+      'region'
     ].forEach(function(attr) { node[attr] = n[attr];});
 
     node._clients = {};
