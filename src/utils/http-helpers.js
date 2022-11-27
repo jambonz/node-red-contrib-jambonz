@@ -1,7 +1,6 @@
 const {google, aws} = require('../data/tts');
 const obj = require('../data/recognizer');
 const dialogflow = require('../data/dialogflow');
-console.log('Loading Helpers')
 module.exports = function(RED) {
   RED.httpAdmin.get('/_jambonz/googleTts', (req, res) => {
     res.send(google);
