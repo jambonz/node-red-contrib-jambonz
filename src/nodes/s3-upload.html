@@ -5,12 +5,11 @@
       defaults: {
         name: {value: ''},
         path: {value: ''},
-        region: {value: ''},
         bucket: {value: '', required: true},
         aws: {value: '', type: 'aws_auth'}
       },
       inputs:0,
-      outputs:0,
+      outputs:1,
       icon: 'font-awesome/fa-headphones',
       label: function() { return this.name || 'audio in';},
   });
@@ -27,22 +26,35 @@
   </div>  
   <div class="form-row">
     <label for="node-input-path">Path</label>
-    <input type="text" id="node-input-path" placeholder="url path of websocket server">
+    <input type="text" id="node-input-path" placeholder="/socket">
   </div>
   <div class="form-row">
-    <label for="node-input-path">S3 Bucket</label>
-    <input type="text" id="node-input-bucket" placeholder="Bucket in which to store audio recording">
+    <label for="node-input-path">S3 Bucket Access Point</label>
+    <input type="text" id="node-input-bucket" placeholder="arn:aws:s3:us-east-1:1234567890:accesspoint/mybucket">
   </div>
 </script>
 
 <script type="text/html" data-help-name="audio in">
   <p>Receives audio from jambonz and uploads to S3</p>
-  <h3>Inputs</h3>
-  <dl class="message-properties">
-    <dt>Path<span class="property-type">string</span></dt>
-    <dd>URL path to listen for incoming audio stream on; i.e. a webhook defined in a dial or listen verb</dd>
-    <dt>S3 Bucket<span class="property-type">string</span></dt>
-    <dd>An S3 bucket to upload recording to.  This bucket must allow public access.</dd>
-</dl>
+  <h3>Outputs</h3>
+          <dl class="message-properties">
+              <dt>msg.event<span class="property-type">enum</span></dt>
+              <dd><code>newSession</code> for the start of a new session<br>
+                  <code>partUploaded</code> when a chunk has been uploaded to S3<br>
+                  <code>finishedUpload</code> when the session has ended and the upload completed
+              </dd>
+              <dt>msg.payload<span class="property-type">object</span></dt>
+              <dd>contains details of the newSession (callid, to from etc.) or the details of the upload to S3.
+              </dd>
+          </dl>
 
+
+  <h3>Details</h3>
+  <dl>
+    <dt>node-input-path</dt>
+    <dd>URL path to listen for incoming audio stream on; i.e. a webhook defined in a dial or listen verb</dd>
+    <dt>S3 Bucket Access Point </dt>dt>
+    <dd>The access point of an S3 bucket to upload recording to.  This must allow public access.</dd>
+  </dl>
+  
 </script>

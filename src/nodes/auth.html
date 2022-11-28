@@ -29,6 +29,7 @@ RED.nodes.registerType('user auth',{
   RED.nodes.registerType('jambonz_auth',{
     category: 'config',
     credentials: {
+      name: {value: ''},
       url: {type: 'text'},
       accountSid: {type: 'text'},
       apiToken: {type: 'text'}
@@ -79,7 +80,9 @@ RED.nodes.registerType('user auth',{
       </div>
     </fieldset>
   </script>
-<!-- aws auth  -->
+
+
+  <!-- aws auth  -->
 <script type="text/html" data-template-name="aws_auth">
   <div class="form-row">
     <label for="node-config-input-accessKey">AWS Access Key ID</label>
@@ -90,8 +93,15 @@ RED.nodes.registerType('user auth',{
     <input type="text" id="node-config-input-secretAccessKey">
   </div>
 </script>
+
+
+
 <!-- jambonz auth -->
 <script type="text/html" data-template-name="jambonz_auth">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
   <div class="form-row">
     <label for="node-config-input-url">Base URL</label>
     <input type="text" id="node-config-input-url" placeholder="http://localhost:3000">
