@@ -3,19 +3,29 @@
 
   RED.nodes.registerType('jambonz_auth',{
     category: 'config',
+    defaults: {
+      name: {},
+      urlType: {}
+    },
     credentials: {
-      name: {value: ''},
       url: {type: 'text'},
       accountSid: {type: 'text'},
       apiToken: {type: 'text'}
     },
-    label: function() { 
-      return this.credentials ? this.credentials.name : null;
-    },
+    label: function() { return this.name || 'auth';},
     oneditprepare: function() {
       $('#btn-test-credentials').on('click', testCredentials);
+      $('#node-config-input-url').typedInput({
+          types: ['str', 
+                  {value: 'https://api.jambonz.us', label : 'jambonz.us', hasValue: false},
+                  {value: 'https://api.jambonz.xyz', label : 'jambonz.xyz', hasValue: false}],
+          typeField: $('#node-config-input-urlType')
+        });
     }
   });
+
+
+
 
   RED.nodes.registerType('aws_auth',{
     category: 'config',
@@ -55,12 +65,14 @@
 <!-- jambonz auth -->
 <script type="text/html" data-template-name="jambonz_auth">
   <div class="form-row">
-    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-    <input type="text" id="node-input-name" placeholder="Name">
+    <label for="node-config-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-config-input-name" placeholder="Name">
   </div>
   <div class="form-row">
     <label for="node-config-input-url">Base URL</label>
     <input type="text" id="node-config-input-url" placeholder="http://localhost:3000">
+    <input type="hidden" id="node-config-input-urlType">
+
 </div>
 <div class="form-row">
   <label for="node-config-input-accountSid">AccountSid</label>

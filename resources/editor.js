@@ -57,13 +57,16 @@
   });
 
   function testCredentials() {
-    const baseUrl =  $("#node-config-input-url").val();
+    let baseUrl
+    if ($("#node-config-input-urlType").val() == 'str'){
+      baseUrl = $("#node-config-input-url").val();
+    } else {
+      baseUrl = $("#node-config-input-urlType").val();
+    }
     const accountSid =  $("#node-config-input-accountSid").val();
     const token =  $("#node-config-input-apiToken").val();
     const status = $("#node-config-test-status");
-
     status.text('');
-
     $.ajax({
       url: `${baseUrl}/v1/Accounts/${accountSid}/ApiKeys`,
       headers: {

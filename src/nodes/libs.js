@@ -1,3 +1,4 @@
+const bent = require('bent');
 
 // helper functions
 
