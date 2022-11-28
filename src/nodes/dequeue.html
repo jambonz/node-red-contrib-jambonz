@@ -23,19 +23,19 @@ RED.nodes.registerType('dequeue',{
       },
       oneditprepare: function() {
         $('#node-input-queue').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-queueType')
         });
         $('#node-input-actionHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-actionHookType')
         });
         $('#node-input-confirmHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-confirmHookType')
         });
         $('#node-input-timeout').typedInput({
-          types: ['num', 'msg', 'flow', 'global'],
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-timeoutType')
         });
       }

@@ -47,17 +47,17 @@ RED.nodes.registerType('lcc',{
 
         $('#node-input-callSid').typedInput({
           default: $('#node-input-callSidType').val(),
-          types: ['str','msg', 'flow', 'global'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-callSidType')
         });
         $('#node-input-callHook').typedInput({
           default: $('#node-input-callHookType').val(),
-          types: ['str','msg', 'flow', 'global'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-callHookType')
         });
         $('#node-input-waitHook').typedInput({
           default: $('#node-input-waitHookType').val(),
-          types: ['str','msg', 'flow', 'global'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-waitHookType')
         });
 

@@ -25,22 +25,22 @@ RED.nodes.registerType('message', {
 
       $('#node-input-from').typedInput({
         default: $('#node-input-fromType').val(),
-        types: ['str','msg', 'flow', 'global'],
+        types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
         typeField: $('#node-input-fromType')
       });
       $('#node-input-to').typedInput({
         default: $('#node-input-toType').val(),
-        types: ['str','msg', 'flow', 'global'],
+        types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
         typeField: $('#node-input-toType')
       });
       $('#node-input-text').typedInput({
         default: $('#node-input-textType').val(),
-        types: ['str','msg', 'flow', 'global'],
+        types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
         typeField: $('#node-input-textType')
       });
       $('#node-input-provider').typedInput({
         default: $('#node-input-providerType').val(),
-        types: ['str','msg', 'flow', 'global'],
+        types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
         typeField: $('#node-input-providerType')
       });
     }

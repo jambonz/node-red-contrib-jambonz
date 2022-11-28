@@ -17,7 +17,7 @@ RED.nodes.registerType('play',{
       oneditprepare: function() {
         $('#node-input-url').typedInput({
           default: $('#node-input-urlType').val(),
-          types: ['str','msg', 'flow', 'global'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-urlType')
         });
       }

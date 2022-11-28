@@ -16,11 +16,11 @@ RED.nodes.registerType('user auth',{
       label: function() { return this.name || 'user auth';},
       oneditprepare: function() {
         $('#node-input-password').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-passwordType')
         });
         $('#node-input-ha1').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-ha1Type')
         });
       }

@@ -22,15 +22,15 @@
       },
       oneditprepare: function() {
         $('#node-input-queue').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-queueType')
         });
         $('#node-input-actionHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-actionHookType')
         });
         $('#node-input-waitHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-waitHookType')
         });
       }

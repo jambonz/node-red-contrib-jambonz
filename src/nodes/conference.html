@@ -26,19 +26,19 @@ RED.nodes.registerType('conference',{
     },
     oneditprepare: function() {
       $('#node-input-conference').typedInput({
-        types: ['str', 'msg', 'flow', 'global'],
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
         typeField: $('#node-input-conferenceType')
       });
       $('#node-input-enterHook').typedInput({
-        types: ['str', 'msg', 'flow', 'global'],
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
         typeField: $('#node-input-enterHookType')
       });
       $('#node-input-waitHook').typedInput({
-        types: ['str', 'msg', 'flow', 'global'],
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
         typeField: $('#node-input-waitHookType')
       });
       $('#node-input-maxParticipants').typedInput({
-        types: ['num', 'msg', 'flow', 'global'],
+        types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
         typeField: $('#node-input-maxParticipantsType')
       });
     }

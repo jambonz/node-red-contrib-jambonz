@@ -58,19 +58,19 @@ RED.nodes.registerType('listen',{
       oneditprepare: function() {
         var node = this;
         $('#node-input-actionhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-actionhookType')
         });
         $('#node-input-url').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-urlType')
         });
         $('#node-input-authuser').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-authuserType')
         });
         $('#node-input-authpassword').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-authpasswordType')
         });
         $('#node-input-metadata').typedInput({
@@ -78,15 +78,15 @@ RED.nodes.registerType('listen',{
           typeField: $('#node-input-metadataType')
         });
         $('#node-input-transcriptionhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-transcriptionhookType')
         });
         $('#node-input-transcriptionhints').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-transcriptionhintsType')
         });
         $('#node-input-recognizeraltlang').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-recognizeraltlangType')
         });
         $('#node-input-diarizationmin').typedInput({
