@@ -34,7 +34,8 @@
 	    "lcc": "src/nodes/lcc.js",
 	    "redirect": "src/nodes/redirect.js",
 	    "dialogflow": "src/nodes/dialogflow.js",
-	    "leave": "src/nodes/leave.js"
+	    "leave": "src/nodes/leave.js",
+      "userauth" : "src/nodes/userauth.js"
     }
   },
   "author": "Dave Horton",
