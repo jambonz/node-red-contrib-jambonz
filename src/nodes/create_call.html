@@ -41,24 +41,14 @@
 
         var populateApplications = function() {
           var serverId = $('#node-input-server option:selected').val();
-          var conn = RED.nodes.node(serverId);
-          console.log(`server id ${serverId} has conn`, conn);
-          if (conn && conn.credentials) {
-            const {url, accountSid, apiToken} = conn.credentials;
-
             $.ajax({
-              url: `${url}/v1/Applications`,
-              headers: {
-                'Authorization': `Bearer ${apiToken}`
-              },
+              url: `_jambonz/applications/${serverId}`,
               dataType: 'json',
               timeout: 500,
               error: (err) => {
                 console.log(err);
               },
               success: (res) => {
-                console.log(`response from fetch of applications: ${JSON.stringify(res)}`);
-                console.log(`selected app is ${JSON.stringify(node.application)}`);
                 applicationElem.find('option').remove();
                 var options = '';
                 res.forEach((app) => {
@@ -74,16 +64,9 @@
               }
             });
           }
-          else {
-            console.log(`can't retrieve config, but application_sid is '${node.appName}': ${node.application}`);
-            applicationElem.find('option').remove();
-            applicationElem.append(`<option value="${node.application}">${node.appName}</option>`);
-          }
-        }
         serverElem.change(populateApplications);
         applicationElem.change(() => {
           node.appName = $('#node-input-application option:selected').text();
-          console.log(`setting appName to ${node.appName}`);
         });
       }
   });
