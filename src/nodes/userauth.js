@@ -17,7 +17,6 @@ module.exports = function(RED) {
         if (config.ha1 && config.ha1.length) {
           ha1_string =  v_resolve(config.ha1, config.ha1Type, this.context(), msg);
           attemptedAuthentication = true;
-          node.log(`user auth: validating user ${auth.username} domain ${auth.realm} based on hashed password`);
         }
         else if (config.password && config.password.length) {
           var password = v_resolve(config.password, config.passwordType, this.context(), msg);
@@ -25,10 +24,9 @@ module.exports = function(RED) {
           ha1.update([auth.username, auth.realm, password].join(':'));
           ha1_string = ha1.digest('hex');
           attemptedAuthentication = true;
-          node.log(`user auth: validating user ${auth.username} domain ${auth.realm} based on plaintext password`);
         }
         else {
-          node.log('user auth: failing due to no password provided');
+          node.error('user auth: failing due to no password provided');
         }
   
         if (attemptedAuthentication) {

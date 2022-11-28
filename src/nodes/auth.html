@@ -10,7 +10,7 @@
       apiToken: {type: 'text'}
     },
     label: function() { 
-      return this.credentials ? this.credentials.url : null;
+      return this.credentials ? this.credentials.name : null;
     },
     oneditprepare: function() {
       $('#btn-test-credentials').on('click', testCredentials);
