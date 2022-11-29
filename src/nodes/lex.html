@@ -230,5 +230,31 @@
 
 <!-- Help Text -->
 <script type="text/html" data-help-name="lex">
+  <p>Connects a call to a lex bot</p>
 
+  <h3>Properties</h3>
+  <p><code>Name</code> -  Label for the node</p>
+  <p><code>AWS Credentias</code> -  A config node containing AWS credentials that will execute the lex bot.</p>
+  <p><code>Bot ID</code> -  ID of the Lex bot on AWS</p>
+  <p><code>Bot Alias</code> -  Lex bot alias ID	</p>
+  <p><code>Locale</code> -    language code of speaker (currently supported languages:  en_AU, en_GB, en_US, fr_CA, fr_FR, es_ES, es_US, it_IT)</p>
+  <p><code>Region</code> -  AWS region bot is running in</p>
+  <p><code>Initial Intent?</code> -  Should lex use an initial intent on connection</p>
+  <p><code>Intent name</code> -  initial intent to trigger (i.e. "welcome intent")	</p>
+  <p><code>Slots</code> - key-value pairs for slot names and initial values to be pre-filled  </p>
+  <p><code>Metadata</code> - key-value pairs for context data to pass to Lex bot	  </p>
+  <p><code>Input timeout</code> - timeout in millseconds Lex will wait for a response before triggering fallback intent	  </p>
+  <p><code>Enable barge-in </code> - ??  </p>
+  <p><code>Enable DTMF </code> - If enabled then <code>dtmf</code> events will be sent to the event Hook  </p>
+  <p><code>Event Hook </code> - A webhook url to invoke when a Lex event occurs (e.g intent detected, transcription, etc)  </p>
+  <p><code>Action Hook </code> -  ?? </p>
+
+  <p><code>Prompt audio</code> - Controls whether jambonz wil playback the audio received from Lex or use its own text to speech to render the response   </p>
+  <p><code>Vendor</code> -  If using TTS then which vendor to use </p>
+  <p><code>Language </code> -  If using TTS then which language to use  </p>
+  <p><code>Voice </code> -  If using TTS then which voice to use  </p>
+  <p><code> </code> -   </p>
+  <p><code> </code> -   </p>
+
+  
 </script>
