@@ -560,47 +560,46 @@ RED.nodes.registerType('dial',{
 <!-- Help Text -->
 <script type="text/html" data-help-name="dial">
     <p>Dial out to a phone number, registered user, sip endpoint, or Microsoft teams user</p>
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-      <dt>Dial target - phone<span class="property-type">string</span></dt>
-      <dd>A telephone number to dial in E.164 format</dd>
-      <dt>Dial target - user<span class="property-type">string</span></dt>
-      <dd>A registered sip user in user@domain format</dd>
-      <dt>Dial target - sip<span class="property-type">string</span></dt>
-      <dd>A sip endpoint in sip uri format, optionally with sip username and password</dd>
-      <dt>Dial target - teams<span class="property-type">string</span></dt>
-      <dd>A phone number that is associated with a user in the Microsoft Teams tenant associated with this account</dd>
-      <dt>Action hook<span class="property-type">string</span></dt>
-      <dd>webhook to invoke when the call ends.	</dd>
-      <dt>Answer on bridge<span class="property-type">string</span></dt>
-      <dd>If set to true, the inbound call will ring until the number that was dialed answers the call, and at that point a 200 OK will be sent on the inbound leg. If false, the inbound call will be answered immediately as the outbound call is placed.</dd>
-      <dt>Action hook<span class="property-type">string</span></dt>
-      <dd>webhook to invoke when the call ends.	</dd>
-      <dt>Caller ID<span class="property-type">string</span></dt>
-      <dd>Calling phone number to display on outgoing call.</dd>
-      <dt>Confirm hook<span class="property-type">string</span></dt>
-      <dd>webhook for an application to run on the callee's end after the dialed number answers but before the call is connected.</dd>
-      <dt>Dial music<span class="property-type">string</span></dt>
-      <dd>url that specifies a .wav or .mp3 audio file of custom audio or ringback to play to the caller while the outbound call is ringing.</dd>
-      <dt>Dtmf capture<span class="property-type">string</span></dt>
-      <dd>an array of strings that represent dtmf sequence which, when detected, will trigger a mid-call notification to the application via the configured dtmfHook.</dd>
-      <dt>DTMF hook<span class="property-type">string</span></dt>
-      <dd>webhook to call when a dtmfCapture entry is matched.</dd>
-      <dt>Time limit<span class="property-type">number</span></dt>
-      <dd>max length of call in seconds.</dd>
-      <dt>Time limit<span class="property-type">number</span></dt>
-      <dd>max length of call in seconds.</dd>
-      <dt>Timeout<span class="property-type">number</span></dt>
-      <dd>ring no answer timeout in seconds.</dd>
-      <dt>Websocket server url<span class="property-type">string</span></dt>
-      <dd>url of remote websocket server to send live audio to.</dd>
-      <dt>Transcription hook<span class="property-type">string</span></dt>
-      <dd>webhook to call when a transcription is received.</dd>
-      <dt>Language<span class="property-type">string</span></dt>
-      <dd>language to use for speech transcription.</dd>
-      <dt>Send interim transcriptions<span class="property-type">boolean</span></dt>
-      <dd>if true interim transcriptions are sent.</dd>
-  </dl>
+    <h3>Properties</h3>
+      <p><code>Dial target - phone</code> - 
+      <dd>A telephone number to dial in E.164 format</p>
+      <p><code>Dial target - user</code> - 
+      <dd>A registered sip user in user@domain format</p>
+      <p><code>Dial target - sip</code> - 
+      <dd>A sip endpoint in sip uri format, optionally with sip username and password</p>
+      <p><code>Dial target - teams</code> - 
+      <dd>A phone number that is associated with a user in the Microsoft Teams tenant associated with this account</p>
+      <p><code>Action hook</code> - 
+      <dd>webhook to invoke when the call ends.	</p>
+      <p><code>Answer on bridge</code> - 
+      <dd>If set to true, the inbound call will ring until the number that was dialed answers the call, and at that point a 200 OK will be sent on the inbound leg. If false, the inbound call will be answered immediately as the outbound call is placed.</p>
+      <p><code>Action hook</code> - 
+      <dd>webhook to invoke when the call ends.	</p>
+      <p><code>Caller ID</code> - 
+      <dd>Calling phone number to display on outgoing call.</p>
+      <p><code>Confirm hook</code> - 
+      <dd>webhook for an application to run on the callee's end after the dialed number answers but before the call is connected.</p>
+      <p><code>Dial music</code> - 
+      <dd>url that specifies a .wav or .mp3 audio file of custom audio or ringback to play to the caller while the outbound call is ringing.</p>
+      <p><code>Dtmf capture</code> - 
+      <dd>an array of strings that represent dtmf sequence which, when detected, will trigger a mid-call notification to the application via the configured dtmfHook.</p>
+      <p><code>DTMF hook</code> - 
+      <dd>webhook to call when a dtmfCapture entry is matched.</p>
+      <p><code>Time limit</code> - 
+      <dd>max length of call in seconds.</p>
+      <p><code>Time limit</code> - 
+      <dd>max length of call in seconds.</p>
+      <p><code>Timeout</code> - 
+      <dd>ring no answer timeout in seconds.</p>
+      <p><code>Websocket server url</code> - 
+      <dd>url of remote websocket server to send live audio to.</p>
+      <p><code>Transcription hook</code> - 
+      <dd>webhook to call when a transcription is received.</p>
+      <p><code>Language</code> - 
+      <dd>language to use for speech transcription.</p>
+      <p><code>Send interim transcriptions</code> - 
+      <dd>if true interim transcriptions are sent.</p>
+
   
     <h3>Outputs</h3>
     <dl class="message-properties">

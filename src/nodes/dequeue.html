@@ -79,19 +79,13 @@ RED.nodes.registerType('dequeue',{
 <!-- Help Text -->
 <script type="text/html" data-help-name="dequeue">
     <p>removes the a call from the front of a queue and bridges that call to the current caller.</p>
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-      <dt>Queue name<span class="property-type">string</span></dt>
-      <dd>Name of the queue.</dd>
-      <dt>Play beep on connecting<span class="property-type">boolean</span></dt>
-      <dd>Play a beep tone to this caller only just prior to connecting the queued call.</dd>
-      <dt>Action hook<span class="property-type">string</span></dt>
-      <dd>A webhook invoke when call ends.</dd>
-      <dt>Confirm hook<span class="property-type">string</span></dt>
-      <dd>A webhook for an application to run on the callee's end before the call is bridged.</dd>
-      <dt>Timeout<span class="property-type">number</span></dt>
-      <dd>number of seconds to wait on an empty queue before returning.</dd>
-  </dl>
+    <h3>Properties</h3>
+    <p><code>Queue name</code> -  Name of the queue.</p>
+    <p><code>Play beep on connecting</code> -  Play a beep tone to this caller only just prior to connecting the queued call.</p>
+    <p><code>Action hook</code> - A webhook invoke when call ends.</p>
+    <p><code>Confirm hook</code> - A webhook for an application to run on the callee's end before the call is bridged.</p>
+    <p><code>Timeout</code> - number of seconds to wait on an empty queue before returning.</p>
+
   
   <h3>Outputs</h3>
   <dl class="message-properties">

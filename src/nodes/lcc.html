@@ -226,23 +226,22 @@ RED.nodes.registerType('lcc',{
 
 <script type="text/html" data-help-name="lcc">
     <p>Perform Live Call Control</p>
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-      <dt>Server<span class="property-type">config</span></dt>
-      <dd>jambonz server to connect to</dd>
-      <dt>CallSid<span class="property-type">string</span></dt>
-      <dd>Call identifier</dd>
-      <dt>Action<span class="property-type">string</span></dt>
-      <dd>Action to perform on the call</dd>
-      <dt>Text<span class="property-type">string</span></dt>
-      <dd>Text to speak, only if action is 'whisper'</dd>
-      <dt>Vendor<span class="property-type">string</span></dt>
-      <dd>TTS vendor to use for whisper</dd>
-      <dt>Language<span class="property-type">string</span></dt>
-      <dd>TTS language to use for whisper</dd>
-      <dt>Voice<span class="property-type">string</span></dt>
-      <dd>TTS voice to use for whisper</dd>
-    </dl>
+    <h3>Properties</h3>
+      <p><code>Server</code> - 
+       jambonz server to connect to</p>
+      <p><code>CallSid</code> - 
+       Call identifier</p>
+      <p><code>Action</code> - 
+       Action to perform on the call</p>
+      <p><code>Text</code> - 
+       Text to speak, only if action is 'whisper'</p>
+      <p><code>Vendor</code> - 
+       TTS vendor to use for whisper</p>
+      <p><code>Language</code> - 
+       TTS language to use for whisper</p>
+      <p><code>Voice</code> - 
+       TTS voice to use for whisper</p>
+     
   
   <h3>Details</h3>
   The lcc command is used to perform live call control on a call in progress.

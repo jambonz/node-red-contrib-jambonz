@@ -67,16 +67,14 @@
 
 <script type="text/html" data-help-name="enqueue">
     <p>places a caller in a queue.</p>
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-      <dt>Queue name<span class="property-type">string</span></dt>
-      <dd>The name of the queue</dd>
-      <dt>Action hook<span class="property-type">string</span></dt>
-      <dd>A webhook invoke when operation completes.</dd>
-      <dt>Wait hook<span class="property-type">string</span></dt>
-      <dd>A webhook to invoke while the caller is in queue. The only allowed verbs in the application returned from this webhook are say, play, pause, and leave,.</dd>
-  </dl>
-  
+    <h3>Properties</h3>
+      <p><code>Queue name</code> - 
+       The name of the queue</p>
+      <p><code>Action hook</code> - 
+       A webhook invoke when operation completes.</p>
+      <p><code>Wait hook</code> - 
+       A webhook to invoke while the caller is in queue. The only allowed verbs in the application returned from this webhook are say, play, pause, and leave,.</p>
+   
   <h3>Outputs</h3>
   <dl class="message-properties">
      <dt>jambonz<span class="property-type">object</span></dt>

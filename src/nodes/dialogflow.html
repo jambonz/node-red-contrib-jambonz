@@ -216,25 +216,24 @@ RED.nodes.registerType('dialogflow',{
 <script type="text/html" data-help-name="audio in">
     <script type="text/html" data-help-name="dialogflow">
         <p>Run a Google dialogflow bot on the call</p>
-        <h3>Inputs</h3>
-        <dl class="message-properties">
-          <dt>Dialogflow Project ID<span class="property-type">string</span></dt>
-          <dd> The name of the dialogflow project to execute. Required.</dd>
-          <dt>Service Account Key<span class="property-type">string</span></dt>
-          <dd> A Google service account key in JSON format is used to authenticate to dialogflow. Required.</dd>
-          <dt>Language<span class="property-type">string</span></dt>
-          <dd> The ISO language code to use for speech recognition. Required.</dd>
-          <dt>Welcome Intent<span class="property-type">string</span></dt>
-          <dd> The name of a dialogflow intent to send when the call is first connected. Optional.</dd>
-          <dt>Welcome Intent Parameters<span class="property-type">object</span></dt>
-          <dd> A JSON object containing parameters to send along with the welcome intent. Optional.</dd>
-          <dt>Input Timeout<span class="property-type">number</span></dt>
-          <dd> Number of seconds to wait for no response.  Optional.</dd>
-          <dt>Event Hook<span class="property-type">number</span></dt>
-          <dd> Webhook to call when an intent, transcription or other dialogflow event is received. Optional.</dd>
-          <dt>Action Hook<span class="property-type">number</span></dt>
-          <dd> Webhook to call when the dialogflow bot interaction concludes. Optional.</dd>
-      </dl>
+        <h3>Properties</h3>
+          <p><code>Dialogflow Project ID</code> - 
+            The name of the dialogflow project to execute. Required.</p>
+          <p><code>Service Account Key</code> - 
+            A Google service account key in JSON format is used to authenticate to dialogflow. Required.</p>
+          <p><code>Language</code> - 
+            The ISO language code to use for speech recognition. Required.</p>
+          <p><code>Welcome Intent</code> - 
+            The name of a dialogflow intent to send when the call is first connected. Optional.</p>
+          <p><code>Welcome Intent Parameters</code> - 
+            A JSON object containing parameters to send along with the welcome intent. Optional.</p>
+          <p><code>Input Timeout</code> - 
+            Number of seconds to wait for no response.  Optional.</p>
+          <p><code>Event Hook</code> - 
+            Webhook to call when an intent, transcription or other dialogflow event is received. Optional.</p>
+          <p><code>Action Hook</code> - 
+            Webhook to call when the dialogflow bot interaction concludes. Optional.</p>
+       
       
         <h3>Outputs</h3>
         <dl class="message-properties">

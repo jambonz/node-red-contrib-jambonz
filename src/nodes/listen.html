@@ -293,39 +293,36 @@ RED.nodes.registerType('listen',{
 <!-- Help Text -->
 <script type="text/html" data-help-name="listen">
     <p>send live audio for the call to an over a websocket connection</p>
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-      <dt>ws url<span class="property-type">string</span></dt>
-      <dd>url of remote server to connect to	</dd>
-      <dt>User<span class="property-type">string</span></dt>
-      <dd>Username for HTTP Basic Auth</dd>
-      <dt>Password<span class="property-type">string</span></dt>
-      <dd>Password for HTTP Basic Auth</dd>
-      <dt>Action hook<span class="property-type">string</span></dt>
-      <dd>webhook to invoke when listen operation ends</dd>
-      <dt>Metadata<span class="property-type">json</span></dt>
-      <dd>arbitrary data to add to the JSON payload sent to the remote server when websocket connection is first connected</dd>
-      <dt>Max duration<span class="property-type">number</span></dt>
-      <dd>the maximum length of the listened audio stream, in secs</dd>
-      <dt>End key<span class="property-type">string</span></dt>
-      <dd>The set of digits that can end the listen action</dd>
-      <dt>Beep<span class="property-type">string</span></dt>
-      <dd>if checked, play a beep at the start of the listen operation</dd>
-      <dt>Mix type<span class="property-type">string</span></dt>
-      <dd>whether to record a mono or stereo stream</dd>
-      <dt>Sample rate<span class="property-type">number</span></dt>
-      <dd>Sample rate of audio to stream</dd>
-      <dt>Transcription hook<span class="property-type">string</span></dt>
-      <dd>webhook to call when a transcription is received</dd>
-      <dt>Language<span class="property-type">string</span></dt>
-      <dd>Language to use for transcription</dd>
-      <dt>Send interim transcriptions<span class="property-type">boolean</span></dt>
-      <dd>if checked, send interim transcriptions</dd>
-      <dt>Profanity filter<span class="property-type">boolean</span></dt>
-      <dd>if checked, enable profanity filtering</dd>
-  
-  </dl>
-  
+    <h3>Properties</h3>
+      <p><code>ws url</code> - 
+       url of remote server to connect to	</p>
+      <p><code>User</code> - 
+       Username for HTTP Basic Auth</p>
+      <p><code>Password</code> - 
+       Password for HTTP Basic Auth</p>
+      <p><code>Action hook</code> - 
+       webhook to invoke when listen operation ends</p>
+      <p><code>Metadata</code> - 
+       arbitrary data to add to the JSON payload sent to the remote server when websocket connection is first connected</p>
+      <p><code>Max duration</code> - 
+       the maximum length of the listened audio stream, in secs</p>
+      <p><code>End key</code> - 
+       The set of digits that can end the listen action</p>
+      <p><code>Beep</code> - 
+       if checked, play a beep at the start of the listen operation</p>
+      <p><code>Mix type</code> - 
+       whether to record a mono or stereo stream</p>
+      <p><code>Sample rate</code> - 
+       Sample rate of audio to stream</p>
+      <p><code>Transcription hook</code> - 
+       webhook to call when a transcription is received</p>
+      <p><code>Language</code> - 
+       Language to use for transcription</p>
+      <p><code>Send interim transcriptions</code> - 
+       if checked, send interim transcriptions</p>
+      <p><code>Profanity filter</code> - 
+       if checked, enable profanity filtering</p>
+       
   <h3>Outputs</h3>
   <dl class="message-properties">
      <dt>jambonz<span class="property-type">object</span></dt>
