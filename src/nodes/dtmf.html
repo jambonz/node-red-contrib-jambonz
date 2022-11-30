@@ -1,0 +1,74 @@
+<!-- Javascript -->
+<script type="text/javascript">
+    RED.nodes.registerType('dtmf',{
+          category: 'jambonz',
+          color: '#bbabaa',
+          defaults: {
+            name: {value: ''},
+            dtmf: {required: true},
+            duration: {value: '500'}
+          },
+          inputs:1,
+          outputs:1,
+          icon: "font-awesome/fa-cubes",
+          label: function() { return this.name || 'dtmf';},
+          oneditprepare: function() {
+            
+            $('#node-input-dtmf').typedInput({
+              default: $('#node-input-dtmfType').val(),
+              types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+              typeField: $('#node-input-dtmfType')
+            })
+            $('#node-input-duration').typedInput({
+              default: $('#node-input-durationType').val(),
+              types: ['num','msg', 'flow', 'global', 'jsonata', 'env'],
+              typeField: $('#node-input-durationType')
+            })
+          }
+    });
+
+</script>
+
+
+<!-- HTML -->
+<script type="text/html" data-template-name="dtmf">
+    <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+      <label for="node-input-dtmf">DTMF</label>
+      <input type="text" id="node-input-dtmf" placeholder="0-9 * #">
+      <input type="hidden" id="node-input-dtmfType">
+    </div>
+    <div class="form-row">
+        <label for="node-input-duration">Duration</label>
+        <input type="text" id="node-input-duration" placeholder="500">
+        <input type="hidden" id="node-input-durationType">
+      </div>
+  </script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="play">
+    <p>generates a string of dtmf digit signals</p>
+    <h3>Properties</h3>
+    <p><code>DTMF</code> - a string containing a sequence of dtmf digits (0-9,*,#)</p>
+    <p><code>Duration</code> - 	the length of each digit, in milliseconds, Defaults to 500</p>
+ 
+  
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+     <dt>jambonz<span class="property-type">object</span></dt>
+     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>play</code> action appended  </dd>
+  </dl>
+  
+  <h3>Details</h3>
+  The dtmf action generates a string of dtmf digit signals. These are sent as RTP payloads using RFC 2833.
+
+
+  
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://www.jambonz.org/docs/webhooks/dtmf/">Jambonz play reference</a></li>
+    </ul>
+  </script>

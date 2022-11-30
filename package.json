@@ -39,7 +39,8 @@
 	    "redirect": "src/nodes/redirect.js",
 	    "dialogflow": "src/nodes/dialogflow.js",
 	    "leave": "src/nodes/leave.js",
-      "userauth" : "src/nodes/userauth.js"
+      "userauth" : "src/nodes/userauth.js",
+      "dtmf" : "src/nodes/dtmf.js"
     }
   },
   "author": "Dave Horton",
