@@ -9,7 +9,11 @@
     "type": "git",
     "url": "git://github.com/jambonz/node-red-contrib-jambonz.git"
   },
+  "engines": {
+    "node": ">=14.x"
+  },
   "node-red": {
+    "version": ">=2.0.0",
     "nodes": {
       "helpers": "src/utils/http-helpers.js",
       "webhook": "src/nodes/webhooks.js",
