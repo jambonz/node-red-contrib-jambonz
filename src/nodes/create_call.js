@@ -15,7 +15,7 @@ module.exports = function(RED) {
 
       const {url, accountSid, apiToken} = server.credentials;
       if (!url || !accountSid || !apiToken) {
-        node.log(`invalid / missing credentials, skipping create-call node: ${JSON.stringify(server.credentials)}`);
+        node.error(`invalid / missing credentials, skipping create-call node: ${JSON.stringify(server.credentials)}`);
         send(msg);
         if (done) done();
         return;
@@ -56,18 +56,16 @@ module.exports = function(RED) {
       }
 
       try {
-        node.log(`sending create call ${JSON.stringify(opts)}`);
         const res = await doCreateCall(url, accountSid, apiToken, opts);
         msg.statusCode = 202;
         msg.callSid = res.sid;
-        node.log(`successfully launched call with callSid ${msg.callSid}`);
       } catch (err) {
         if (err.statusCode) {
-          node.log(`create-call failed with ${err.statusCode}`);
+          node.error(`create-call failed with ${err.statusCode}`);
           msg.statusCode = err.statusCode;
         }
         else {
-          node.log(`Error sending create all ${JSON.stringify(err)}`);
+          node.error(`Error sending create all ${JSON.stringify(err)}`);
           if (done) done(err);
           else node.error(err, msg);
           send(msg);
