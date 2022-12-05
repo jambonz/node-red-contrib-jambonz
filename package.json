@@ -29,6 +29,7 @@
     	"listen": "src/nodes/listen.js",
     	"sip:decline": "src/nodes/sip-decline.js",
       "sip:request": "src/nodes/sip-request.js",
+      "sip:refer": "src/nodes/sip-refer.js",
     	"hangup": "src/nodes/hangup.js",
     	"message": "src/nodes/message.js",
     	"tag": "src/nodes/tag.js",
