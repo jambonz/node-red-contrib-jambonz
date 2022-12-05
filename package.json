@@ -22,25 +22,29 @@
       "enqueue": "src/nodes/enqueue.js",
       "lex": "src/nodes/lex.js",
 	    "say": "src/nodes/say.js",
+      "dtmf" : "src/nodes/dtmf.js",
+      "config" : "src/nodes/config.js",
     	"conference": "src/nodes/conference.js",
     	"gather": "src/nodes/gather.js",
     	"listen": "src/nodes/listen.js",
     	"sip:decline": "src/nodes/sip-decline.js",
-    	"create call": "src/nodes/create_call.js",
+      "sip:request": "src/nodes/sip-request.js",
     	"hangup": "src/nodes/hangup.js",
     	"message": "src/nodes/message.js",
     	"tag": "src/nodes/tag.js",
-    	"create sms": "src/nodes/create_sms.js",
     	"pause": "src/nodes/pause.js",
     	"dequeue": "src/nodes/dequeue.js",
 	    "play": "src/nodes/play.js",
 	    "dial": "src/nodes/dial.js",
-	    "lcc": "src/nodes/lcc.js",
 	    "redirect": "src/nodes/redirect.js",
 	    "dialogflow": "src/nodes/dialogflow.js",
 	    "leave": "src/nodes/leave.js",
       "userauth" : "src/nodes/userauth.js",
-      "dtmf" : "src/nodes/dtmf.js"
+      "create call": "src/nodes/create_call.js",
+      "create sms": "src/nodes/create_sms.js",
+      "lcc": "src/nodes/lcc.js"
+
+
     }
   },
   "author": "Dave Horton",

@@ -1,0 +1,99 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  RED.nodes.registerType('sip:request',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+        method: {},
+        headers: {value: ''},
+        headersType: {value: 'json'},
+        body: {value: ''},
+        bodyType: {value: 'str'},
+        actionHook: {value: ''},
+        actionHookType: {value: 'str'}      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { return this.name || 'sip:request';},
+      oneditprepare: function() {
+        $('#node-input-headers').typedInput({
+          default: $('#node-input-headersType').val(),
+          types: ['json','msg', 'flow', 'global'],
+          typeField: $('#node-input-headersType')
+        });
+        $('#node-input-body').typedInput({
+          default: $('#node-input-bodyType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-bodyType')
+        });
+        $('#node-input-actionHook').typedInput({
+          default: $('#node-input-actionHookType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-actionHookType')
+        });
+      }
+  });
+
+</script>
+
+
+
+<!-- HTML -->
+<script type="text/html" data-template-name="sip:request">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+      <label for="node-input-method">Method</label>
+      <select id="node-input-method">
+        <option value="INFO" selected>INFO</option>
+        <option value="MESSAGE">MESSAGE</option>
+        <option value="NOTIFY">MESSAGE</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-headers">Headers</label>
+      <input type="text" id="node-input-headers" placeholder="SIP headers">
+      <input type="hidden" id="node-input-headersType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-body">SIP Body</label>
+      <input type="text" id="node-input-body" placeholder="SIP body">
+      <input type="hidden" id="node-input-reasonbody">
+    </div>
+    <div class="form-row">
+      <label for="node-input-actionHook">Action Hook</label>
+      <input type="text" id="node-input-actionHook" placeholder="/action">
+      <input type="hidden" id="node-input-actionHookbody">
+    </div>
+  </script>
+
+
+
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="sip:decline">
+    <p>Reject an incoming call with a status code and, optionally, reason</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+      <dt>SIP status code<span class="property-type">number</span></dt>
+      <dd>A valid SIP status code in the range 4XX - 6XX</dd>
+      <dt>Reason<span class="property-type">string</span></dt>
+      <dd>A brief description</dd>
+  </dl>
+  
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+     <dt>jambonz<span class="property-type">object</span></dt>
+     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>sip:decline</code> action appended  </dd>
+  </dl>
+  
+  <h3>Details</h3>
+  The sip:decline verb rejects an incoming call.
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/jambonz/#sipdecline">Jambonz sip:decline reference</a></li>
+    </ul>
+  </script>
