@@ -38,6 +38,18 @@ module.exports = function(RED) {
               obj.recognizer.identifyChannels = config.identifyChannels
             }
           }
+          if (config.bargeIn){
+            console.log(config)
+            obj.bargeIn = {}
+            config.bargeIn_enable != '' ? obj.bargeIn.enable = config.bargeIn_enable : null
+            config.bargeIn_actionHook != '' ? obj.bargeIn.actionHook = config.bargeIn_actionHook : null
+            config.bargeIn_input != '' ? obj.bargeIn.input = config.bargeIn_input.split(',') : null
+            config.bargeIn_finishOnKey != '' ? obj.bargeIn.finishOnKey = config.bargeIn_finishOnKey : null
+            config.bargeIn_numDigits != '' ? obj.bargeIn.numDigits = config.bargeIn_numDigits : null
+            config.bargeIn_minDigits != '' ? obj.bargeIn.minDigits = config.bargeIn_minDigits : null
+            config.bargeIn_maxDigits != '' ? obj.bargeIn.maxDigits = config.bargeIn_maxDigits : null
+            config.bargeIn_interDigitTimeout != '' ? obj.bargeIn.interDigitTimeout = config.bargeIn_interDigitTimeout : null
+          }
           console.log(obj)
           appendVerb(msg,  obj);
           node.send(msg);

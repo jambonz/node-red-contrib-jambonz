@@ -5,13 +5,15 @@
       color: '#bbabaa',
       defaults: {
         name: {value: ''},
+
         tts: {value: 0},
-        speechinput: {value: 0},
         vendor: {value: 'default'},
         lang: {value: 'default'},
         xlang: {},
         voice: {value: 'default'},
         xvoice: {},
+
+        speechinput: {value: 0},
         transcriptionvendor: {value: 'default'},
         vocabularyname: {},
         vocabularynameType: {value: 'str'},
@@ -23,7 +25,27 @@
         recognizeraltlang: {},
         recognizeraltlangType: {val: 'str'},
         transcriptionhints: {},
-        transcriptionhintsType: {val: 'str'}
+        transcriptionhintsType: {val: 'str'},
+
+        bargeIn: {value: 0},
+        bargeIn_enable	:{},
+        bargeIn_enableType:{value: 'bool'},
+        bargeIn_actionHook:{},
+        bargeIn_actionHookType:{value: 'str'},
+        bargeIn_input:{},
+        bargeIn_inputType:{value: 'inptype'},
+        bargeIn_finishOnKey:{},
+        bargeIn_finishOnKeyType:{value: 'str'},
+        bargeIn_numDigits:{},
+        bargeIn_numDigitsType:{value: 'num'},
+        bargeIn_minDigits:{},
+        bargeIn_minDigitsType:{value: 'num'},
+        bargeIn_maxDigits:{},
+        bargeIn_maxDigitsType:{value: 'num'},
+        bargeIn_interDigitTimeout:{},
+        bargeIn_interDigitTimeoutType:{value: 'num'},
+
+
       },
       inputs:1,
       outputs:1,
@@ -38,6 +60,7 @@
 
         ttsDiv.hide();
         $('#speech-input-container').hide()
+        $('#bargeIn-options').hide()
 
         $('#node-input-transcriptionhints').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
@@ -51,8 +74,6 @@
           types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-naicsType')
         });
-
-
 
         $('#node-input-tts').change(function() {
           const doTTS = $('#node-input-tts:checked').val();
@@ -71,6 +92,57 @@
           var doSpeech = $('#node-input-speechinput:checked').val();
           enableSpeech(doSpeech);
         });
+
+        $('#node-input-bargeIn').change(function() {
+          const dobargeIn = $('#node-input-bargeIn:checked').val();
+          if (dobargeIn) {
+            $('#bargeIn-options').show();
+          }
+          else {
+            $('#bargeIn-options').hide();
+          }
+        });
+
+        $('#node-input-bargeIn_enable').typedInput({
+            types: ['bool'],
+          typeField: $('#node-input-bargeIn_enableType')
+        });
+
+        $('#node-input-bargeIn_actionHook').typedInput({
+            types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-bargeIn_actionHookType')
+        });
+        $('#node-input-bargeIn_input').typedInput({
+          type:"inptype", types:[{
+            value: "inptype",
+            multiple: true,
+            options: [
+              { value: "digits", label: "Digits"},
+              { value: "speech", label: "Speech"},
+            ]
+          }],
+          typeField: $('#node-input-bargeIn_inputType')
+        });
+        $('#node-input-bargeIn_finishOnKey').typedInput({
+            types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-bargeIn_finishOnKeyType')
+        });
+        $('#node-input-bargeIn_numDigits').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-bargeIn_numDigitsType')
+        });
+        $('#node-input-bargeIn_minDigits').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-bargeIn_minDigitsType')
+        });
+        $('#node-input-bargeIn_maxDigits').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-bargeIn_maxDigitsType')
+        });
+        $('#node-input-bargeIn_interDigitTimeout').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-bargeIn_interDigitTimeoutType')
+        });
       }
   });
 
@@ -85,7 +157,8 @@
       <input type="text" id="node-input-name" placeholder="Name">
   </div>
   <fieldset>
-    <legend>Text to Speech</legend>
+
+  <legend>Text to Speech</legend>
   <div class="form-row">
     <label for="node-input-tts">Modify TTS</label>
     <input type="checkbox" id="node-input-tts">
@@ -120,6 +193,7 @@
           </select>
         </div>
   </div>
+
   <legend>Speech Input</legend>
   <div class="form-row">
     <label for="node-input-tts">Modify Speech Input</label>
@@ -183,6 +257,54 @@
       </div>
     </div>
   </div>
+  <legend>Barge In</legend>
+  <div class="form-row">
+    <label for="node-input-bargeIn">Modify Barge In</label>
+    <input type="checkbox" id="node-input-bargeIn">
+  </div>
+  <div id="bargeIn-options">
+  <div class="form-row">
+    <label for="node-input-bargeIn_enable">Barge In Enabled</label>
+      <input type="text" id="node-input-bargeIn_enable" >
+      <input type="hidden" id="node-input-bargeIn_enableType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargeIn_actionHook">Action Hook</label>
+      <input type="text" id="node-input-bargeIn_actionHook" placeholder="PLACEHOLDER">
+      <input type="hidden" id="node-input-bargeIn_actionHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargeIn_input">Input</label>
+      <input type="text" id="node-input-bargeIn_input" placeholder="PLACEHOLDER">
+      <input type="hidden" id="node-input-bargeIn_inputType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargeIn_finishOnKey">Finish On Key</label>
+      <input type="text" id="node-input-bargeIn_finishOnKey" placeholder="PLACEHOLDER">
+      <input type="hidden" id="node-input-bargeIn_finishOnKeyType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargeIn_numDigits">Number of Digits</label>
+      <input type="text" id="node-input-bargeIn_numDigits" placeholder="PLACEHOLDER">
+      <input type="hidden" id="node-input-bargeIn_numDigitsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargeIn_minDigits">Min Digits</label>
+      <input type="text" id="node-input-bargeIn_minDigits" placeholder="PLACEHOLDER">
+      <input type="hidden" id="node-input-bargeIn_minDigitsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargeIn_maxDigits">Max Digits</label>
+      <input type="text" id="node-input-bargeIn_maxDigits" placeholder="PLACEHOLDER">
+      <input type="hidden" id="node-input-bargeIn_maxDigitsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargeIn_interDigitTimeout">Inter-Digit Timeout</label>
+      <input type="text" id="node-input-bargeIn_interDigitTimeout" placeholder="PLACEHOLDER">
+      <input type="hidden" id="node-input-bargeIn_interDigitTimeoutType">
+  </div>
+  </div>
+
   </fieldset>
 </script>
 
