@@ -58,32 +58,37 @@
 
   function testCredentials() {
     let baseUrl
+    const accountSid =  $("#node-config-input-accountSid").val();
+    const token =  $("#node-config-input-apiToken").val();
+    const status = $("#node-config-test-status");
+    status.text('');
     if ($("#node-config-input-urlType").val() == 'str'){
       baseUrl = $("#node-config-input-url").val();
     } else {
       baseUrl = $("#node-config-input-urlType").val();
     }
-    const accountSid =  $("#node-config-input-accountSid").val();
-    const token =  $("#node-config-input-apiToken").val();
-    const status = $("#node-config-test-status");
-    status.text('');
-    $.ajax({
-      url: `${baseUrl}/v1/Accounts/${accountSid}/ApiKeys`,
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-      dataType: 'json',
-      timeout: 500,
-      error: (err) => {
-        status.text('Failed');
-        console.log(err);
-      },
-      success: (res) => {
-        if (Array.isArray(res)) status.text('Success!');
-        else status.text('Failed');
-        console.log(`response from fetch of api keys: ${JSON.stringify(res)}`);
-      }
-    });
+    baseUrlProtocol = baseUrl.split(':')[0]
+    if (document.location.protocol == 'https:' && baseUrlProtocol == 'http'){
+      status.text('Cannot check https API from http editor');
+    } else{
+      $.ajax({
+        url: `${baseUrl}/v1/Accounts/${accountSid}/ApiKeys`,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        dataType: 'json',
+        timeout: 500,
+        error: (err) => {
+          status.text('Failed');
+          console.log(err);
+        },
+        success: (res) => {
+          if (Array.isArray(res)) status.text('Success!');
+          else status.text('Failed');
+          console.log(`response from fetch of api keys: ${JSON.stringify(res)}`);
+        }
+      });
+    }
   }
 
   function prepareSttControls(node) {
