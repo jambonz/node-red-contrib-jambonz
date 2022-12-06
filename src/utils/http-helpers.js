@@ -27,7 +27,6 @@ module.exports = function(RED) {
 
   RED.httpAdmin.get('/_jambonz/applications/:serverId', (req, res) => {
     var conn = RED.nodes.getNode(req.params.serverId);
-    console.log(`server id ${req.params.serverId} has conn`, conn);
     if (conn && conn.credentials) {
       const {url, accountSid, apiToken} = conn.credentials;
       const getApps = bent(`${url}/v1/Applications`, 'GET', 'json', 200, {
