@@ -45,6 +45,28 @@
         bargeIn_interDigitTimeout:{},
         bargeIn_interDigitTimeoutType:{value: 'num'},
 
+        amd:  {value: 0},
+        amd_actionHook:{},
+        amd_actionHookType:{value: 'str'},
+        amd_thresholdWordCount:{},
+        amd_thresholdWordCountType:{value: 'num'},
+        amd_timers_noSpeechTimeoutMs:{},
+        amd_timers_noSpeechTimeoutMsType:{value: 'num'},
+        amd_timers_decisionTimeoutMs:{},	
+        amd_timers_decisionTimeoutMsType:{value: 'num'},
+        amd_timers_toneTimeoutMs:{},	
+        amd_timers_toneTimeoutMsType:{value: 'num'},
+        amd_timers_greetingCompletionTimeoutMs:{},	
+        amd_timers_greetingCompletionTimeoutMsType:{value: 'num'},
+
+       
+        record: {value: 0},
+        record_action:{},
+        record_actionType:{value: 'rectype'},
+        record_siprecServerURL:{},
+        record_siprecServerURLType:{value: 'str'},
+        record_recordingID:{},
+        record_recordingIDType:{value: 'str'},
 
       },
       inputs:1,
@@ -142,6 +164,73 @@
         $('#node-input-bargeIn_interDigitTimeout').typedInput({
             types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-bargeIn_interDigitTimeoutType')
+        });
+
+        
+        $('#node-input-amd').change(function() {
+          const doamd = $('#node-input-amd:checked').val();
+          if (doamd) {
+            $('#amd-options').show();
+          }
+          else {
+            $('#amd-options').hide();
+          }
+        });
+        $('#node-input-amd_actionHook').typedInput({
+            types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-amd_actionHookType')
+        });
+        $('#node-input-amd_thresholdWordCount').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-amd_thresholdWordCountType')
+        });
+        $('#node-input-amd_timers_noSpeechTimeoutMs').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-amd_timers_noSpeechTimeoutMsType')
+        });
+        $('#node-input-amd_timers_decisionTimeoutMs').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-amd_timers_decisionTimeoutMsType')
+        });
+        $('#node-input-amd_timers_toneTimeoutMs').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-amd_timers_toneTimeoutMsType')
+        });
+        $('#node-input-amd_timers_greetingCompletionTimeoutMs').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-amd_timers_greetingCompletionTimeoutMsType')
+        });
+
+
+        $('#node-input-record').change(function() {
+          const dorecord = $('#node-input-record:checked').val();
+          if (dorecord) {
+            $('#record-options').show();
+          }
+          else {
+            $('#record-options').hide();
+          }
+        });
+        $('#node-input-record_action').typedInput({
+	        type:"rectype", types:[{
+          value: "rectype",
+          multiple: false, //TODO Check if multiple selection is valid
+          options: [
+            { value: "startCallRecording", label: "Start"},
+            { value: "stopCallRecording", label: "Stop"},
+            { value: "pauseCallRecording", label: "Pause"},
+            { value: "resumeCallRecording", label: "Resume"},	
+          ]
+          }],
+          typeField: $('#node-input-record_actionType')
+        });
+        $('#node-input-record_siprecServerURL').typedInput({
+            types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-record_siprecServerURLType')
+        });
+        $('#node-input-record_recordingID').typedInput({
+            types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-record_recordingIDType')
         });
       }
   });
@@ -304,6 +393,66 @@
       <input type="hidden" id="node-input-bargeIn_interDigitTimeoutType">
   </div>
   </div>
+  <legend>Answer Machine Detection</legend>
+  <div class="form-row">
+    <label for="node-input-amd">Modify AMD</label>
+    <input type="checkbox" id="node-input-amd">
+  </div>
+  <div id="amd-options">
+  <div class="form-row">
+    <label for="node-input-amd_actionHook">Action Hook</label>
+      <input type="text" id="node-input-amd_actionHook" placeholder="/action">
+      <input type="hidden" id="node-input-amd_actionHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-amd_thresholdWordCount">Threshold Word Count</label>
+      <input type="text" id="node-input-amd_thresholdWordCount" >
+      <input type="hidden" id="node-input-amd_thresholdWordCountType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-amd_timers_noSpeechTimeoutMs">No Speech Timeout</label>
+      <input type="text" id="node-input-amd_timers_noSpeechTimeoutMs" >
+      <input type="hidden" id="node-input-amd_timers_noSpeechTimeoutMsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-amd_timers_decisionTimeoutMs">Decision Timeout</label>
+      <input type="text" id="node-input-amd_timers_decisionTimeoutMs" >
+      <input type="hidden" id="node-input-amd_timers_decisionTimeoutMsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-amd_timers_toneTimeoutMs">Tone Timeout</label>
+      <input type="text" id="node-input-amd_timers_toneTimeoutMs" >
+      <input type="hidden" id="node-input-amd_timers_toneTimeoutMsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-amd_timers_greetingCompletionTimeoutMs">Greeting Completion Timeout</label>
+      <input type="text" id="node-input-amd_timers_greetingCompletionTimeoutMs">
+      <input type="hidden" id="node-input-amd_timers_greetingCompletionTimeoutMsType">
+  </div>
+</div>
+  
+<legend>SIPREC Recording</legend>
+  <div class="form-row">
+    <label for="node-input-record">Modify Record</label>
+    <input type="checkbox" id="node-input-record">
+  </div>
+  <div id="record-options">
+<div class="form-row">
+	<label for="node-input-record_action">Action</label>
+    <input type="text" id="node-input-record_action" >
+    <input type="hidden" id="node-input-record_actionType">
+</div>
+<div class="form-row">
+	<label for="node-input-record_siprecServerURL">SIPREC URL</label>
+    <input type="text" id="node-input-record_siprecServerURL">
+    <input type="hidden" id="node-input-record_siprecServerURLType">
+</div>
+<div class="form-row">
+	<label for="node-input-record_recordingID">Recording ID</label>
+    <input type="text" id="node-input-record_recordingID">
+    <input type="hidden" id="node-input-record_recordingIDType">
+</div>
+</div>
 
   </fieldset>
 </script>
@@ -311,7 +460,22 @@
 <!-- Help Text -->
 
 <script type="text/html" data-help-name="cfg">
- 
-  
+  <p>Modify the default settings for the current session</p>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>config</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The config verb allows the developer to change the default speech settings for the current session, or to gather speech or dtmf input in the background while other verbs are executing. The latter technique is useful mainly for certain scenarios when integrating with certain conversational AI systems.
+This verb is non-blocking; i.e. the specified settings are changed and execution immediately continues with the next verb in the application.
+
+
+<h3>References</h3>
+  <ul>
+      <li><a href="https://www.jambonz.org/docs/webhooks/config/">Jambonz config reference</a></li>
+  </ul>
 
 </script>
