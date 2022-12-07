@@ -13,6 +13,11 @@ module.exports = function(RED) {
       this.apiKey = config.apiKey;
       this.name = config.name;
       this.urlType = config.urlType
+      if (this.urlType == 'str'){
+        this.url = config.url;
+      } else {
+        this.url = config.urlType;
+      }
     }
     RED.nodes.registerType('jambonz_auth', jambonz_auth, {
       credentials: {

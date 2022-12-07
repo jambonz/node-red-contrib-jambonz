@@ -44,7 +44,8 @@
       "userauth" : "src/nodes/userauth.js",
       "create call": "src/nodes/create_call.js",
       "create sms": "src/nodes/create_sms.js",
-      "lcc": "src/nodes/lcc.js"
+      "lcc": "src/nodes/lcc.js",
+      "get_alerts" : "src/nodes/get_alerts.js"
 
 
     }

@@ -14,7 +14,8 @@ function lcc(config) {
     node.on('input', async(msg, send, done) => {
       send = send || function() { node.send.apply(node, arguments);};
 
-      const {url, accountSid, apiToken} = server.credentials;
+      const {accountSid, apiToken} = server.credentials;
+      const url = server.url;
       const callSid = v_resolve(config.callSid, config.callSidType, this.context(), msg);
       if (!url || !accountSid || !apiToken || !callSid) {
         node.log(`invalid / missing credentials or callSid, skipping LCC node: ${JSON.stringify(server.credentials)}`);

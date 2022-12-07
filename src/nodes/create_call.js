@@ -13,7 +13,8 @@ module.exports = function(RED) {
     node.on('input', async(msg, send, done) => {
       send = send || function() { node.send.apply(node, arguments);};
 
-      const {url, accountSid, apiToken} = server.credentials;
+      const {accountSid, apiToken} = server.credentials;
+      const url = server.url
       if (!url || !accountSid || !apiToken) {
         node.error(`invalid / missing credentials, skipping create-call node: ${JSON.stringify(server.credentials)}`);
         send(msg);
