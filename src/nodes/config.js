@@ -39,7 +39,6 @@ module.exports = function(RED) {
             }
           }
           if (config.bargeIn){
-            console.log(config)
             obj.bargeIn = {}
             config.bargeIn_enable != '' ? obj.bargeIn.enable = config.bargeIn_enable : null
             config.bargeIn_actionHook != '' ? obj.bargeIn.actionHook = config.bargeIn_actionHook : null
