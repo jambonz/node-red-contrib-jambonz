@@ -14,16 +14,14 @@ module.exports = function(RED) {
     var node = this;
 
     node.on('input', function(msg) {
-      node.log(`say config: ${JSON.stringify(config)}, msg.call: ${JSON.stringify(msg.call)}`);
       const text = v_text_resolve(node, this.text, this.context(), msg);
-      // jambonz say verb
       var obj = {
         verb: 'say',
         text,
         loop: parseInt(node.loop),
         earlyMedia: node.early
       };
-      if (['aws', 'google'].includes(node.vendor)) {
+      if (config.vendor != 'default') {
         Object.assign(obj, {
           synthesizer: {
             vendor: config.vendor,
