@@ -46,7 +46,8 @@
       "create sms": "src/nodes/create_sms.js",
       "lcc": "src/nodes/lcc.js",
       "get_alerts" : "src/nodes/get_alerts.js",
-      "get_calls" : "src/nodes/get_calls.js"
+      "get_calls" : "src/nodes/get_calls.js",
+      "get_recent_calls" : "src/nodes/get_recent_calls.js"
 
     }
   },

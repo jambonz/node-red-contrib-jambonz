@@ -8,7 +8,6 @@ module.exports = function(RED) {
 
     function jambonz_auth(config) {
       RED.nodes.createNode(this, config);
-      this.url = config.url;
       this.accountSid = config.accountSid;
       this.apiKey = config.apiKey;
       this.name = config.name;

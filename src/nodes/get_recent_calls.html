@@ -2,7 +2,7 @@
 
 
 <script type="text/javascript">
- RED.nodes.registerType('get_alerts',{
+ RED.nodes.registerType('get_recent_calls',{
       category: 'jambonz',
       color: '#aebfb9',
       defaults: {
@@ -18,8 +18,8 @@
       inputs:1,
       outputs:1,
       icon: "font-awesome/fa-cubes",
-      paletteLabel: "Get - Alerts",
-      label: function() { return this.name || 'Get Alerts';},
+      paletteLabel: "Get - Recent Calls",
+      label: function() { return this.name || 'Get Recent Calls';},
       oneditprepare: () => {
         var node = this;
         $('#node-input-page').typedInput({
@@ -43,7 +43,7 @@
 
 <!-- HTML -->
 
-<script type="text/html" data-template-name="get_alerts">
+<script type="text/html" data-template-name="get_recent_calls">
         <div class="form-row">
           <label for="node-input-name"><i class="icon-tag"></i> Name</label>
           <input type="text" id="node-input-name" placeholder="Name">
@@ -73,8 +73,8 @@
 
 <!-- Help Text -->
 
-<script type="text/html" data-help-name="get_alerts">
-        <p>DESCRIPTION</p>
+<script type="text/html" data-help-name="get_recent_calls">
+        <p>Get previous call records</p>
       <h3>Properties</h3>
           <p><code>XXXX</code> - TEXT</p>
         
@@ -85,9 +85,10 @@
        </dl>
       
       <h3>Details</h3>
-      The listen verb establishes a connection to a websocket server and sends live audio for the current call.<h3>References</h3>
-        <ul>
-            <li><a href="https://docs.jambonz.org/jambonz/#listen">Jambonz listen reference</a></li>
+      Call detail records are only kept in the system for 30 days. As there could be a large number of CDRs, this node allows you to query pages of data at a time.
+
+      <ul>
+            <li><a href="https://api.jambonz.org/#4e82bdc2-327b-40a5-9b52-f86357647b45">Jambonz Get Recent Calls reference</a></li>
         </ul>
       </script>
 
