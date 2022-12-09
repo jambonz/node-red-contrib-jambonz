@@ -28,7 +28,8 @@ module.exports = function(RED) {
   RED.httpAdmin.get('/_jambonz/applications/:serverId', (req, res) => {
     var conn = RED.nodes.getNode(req.params.serverId);
     if (conn && conn.credentials) {
-      const {url, accountSid, apiToken} = conn.credentials;
+      const {accountSid, apiToken} = conn.credentials;
+      const url = conn.url
       const getApps = bent(`${url}/v1/Applications`, 'GET', 'json', 200, {
       'Authorization': `Bearer ${apiToken}`
       });
