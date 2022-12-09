@@ -2,10 +2,12 @@
   let mapAws = {};
   let mapMicrosoft = {};
   let mapIbm = {};
+  let mapNuance = {};
   let googleLanguageOptions = '';
   let awsLanguageOptions = '';
   let microsoftLanguageOptions = '';
   let ibmLanguageOptions = '';
+  let nuanceLanguageOptions = '';
   //let mapSpeechRec = {};
   let sttLanguagesGoogle = '';
   let sttLanguagesAws = '';
@@ -46,7 +48,6 @@
       microsoftLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
     });
   });
-
   var ibmUrl = '_jambonz/ibmTts';
   $.getJSON(ibmUrl, function (data) {
     //console.log('retrieved data ' + JSON.stringify(data));
@@ -58,6 +59,19 @@
       ibmLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
     });
   });
+  var nuanceUrl = '_jambonz/nuanceTts';
+  $.getJSON(nuanceUrl, function (data) {
+    //console.log('retrieved data ' + JSON.stringify(data));
+    data.forEach(function(l) {
+      mapNuance[l.code] = {
+        name: l.name,
+        voices: l.voices
+      };
+      nuanceLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
+    });
+  });
+
+
   var googleSttUrl =  '_jambonz/googleSpeech';
   $.getJSON(googleSttUrl, function (data) {
     //console.log('retrieved data for recognizer voices: ' + JSON.stringify(data));
@@ -230,6 +244,9 @@
         case 'ibm':
          xlangElem.append(ibmLanguageOptions);
         break;
+        case 'nuance':
+         xlangElem.append(nuanceLanguageOptions);
+        break;
       }
       console.log(`installed language choices for ${v}`);
       xlangElem.val(langElem.val());
@@ -287,6 +304,17 @@
           break;
         case 'ibm':
           var obj =  mapIbm[lang]
+          if (obj) {
+            var options = '';
+            for (var i = 0; i < obj.voices.length; i++) {
+              if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+              else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+            }
+            xvoiceElem.append(options);
+          }
+        break;
+        case 'nuance':
+          var obj =  mapNuance[lang]
           if (obj) {
             var options = '';
             for (var i = 0; i < obj.voices.length; i++) {
