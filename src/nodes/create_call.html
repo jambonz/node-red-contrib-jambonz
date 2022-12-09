@@ -12,8 +12,27 @@
         toType: {value: ''},
         dest: {value: 'phone', required: true},
         timeout: {},
-        application: {value: '', required: true},
-        appName: {}
+        application: {value: ''},
+        appName: {},
+        mode: {value: 'app'},
+        call_hook_url : {},
+        call_hook_urlType : {value: 'str'},
+        call_hook_method : {value : 'GET'},
+        call_status_url : {},
+        call_status_urlType : {value: 'str'},
+        call_status_method :  {value : 'GET'},
+        vendor: {value: 'default', validate : function (v) {
+          console.log(v)
+          if ( v == null &&  $('#node-input-mode').val() == 'url'){
+            return(false)
+          } else {
+            return(true)
+          }
+        }},
+        lang: {value: 'default'},
+        xlang: {},
+        voice: {value: 'default'},
+        xvoice: {}
       },
       inputs:1,
       outputs:1,
@@ -26,6 +45,8 @@
         var destElem = $('#node-input-dest');
         var serverElem = $('#node-input-server');
         var applicationElem = $('#node-input-application');
+        prepareTtsControls(node);
+
 
         $('#node-input-from').typedInput({
           default: $('#node-input-fromType').val(),
@@ -37,7 +58,16 @@
           types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-toType')
         });
-
+        $('#node-input-call_hook_url').typedInput({
+          default: $('#node-input-call_hook_urlType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-call_hook_urlType')
+        });
+        $('#node-input-call_status_url').typedInput({
+          default: $('#node-input-call_status_urlType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-call_status_urlType')
+        });
 
         var populateApplications = function() {
           var serverId = $('#node-input-server option:selected').val();
@@ -67,6 +97,19 @@
         serverElem.change(populateApplications);
         applicationElem.change(() => {
           node.appName = $('#node-input-application option:selected').text();
+        });
+        $('#url-options').hide();
+        $('#node-input-mode').change(function() {
+          const mode = $('#node-input-mode').val();
+          if (mode == 'app') {
+            $('#app-options').show();
+            $('#url-options').hide();
+          }
+          else {
+            $('#app-options').hide();
+            $('#url-options').show();
+
+          }
         });
       }
   });
@@ -108,10 +151,80 @@
     <input type="hidden" id="node-input-timeoutType">
   </div>
   <div class="form-row">
-    <label for="node-input-application">Application</label>
-    <select id="node-input-application">
+    <label for="node-input-application">Connect to</label>
+    <select id="node-input-mode">
+      <option value="app">Application</option>
+      <option value="url">Webhooks</option>
     </select>
   </div>
+  <div id="app-options">
+    <div class="form-row">
+      <label for="node-input-application">Application</label>
+      <select id="node-input-application">
+      </select>
+    </div>
+  </div>
+  <div id="url-options">
+    <fieldset>
+      <legend>Webhook options</legend>
+    <div class="form-row">
+      <label for="node-input-call_hook_url">Call Hook URL</label>
+      <input type="text" id="node-input-call_hook_url" placeholder="https://example.com/answer">
+      <input type="hidden" id="node-input-call_hook_urlType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-call_hook_method">Method</label>
+      <select id="node-input-call_hook_method">
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-call_status_url">Call Status URL</label>
+      <input type="text" id="node-input-call_status_url" placeholder="https://example.com/status">
+      <input type="hidden" id="node-input-call_status_urlType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-call_status_method">Method</label>
+      <select id="node-input-call_status_method">
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+      </select>
+    </div>
+    <fieldset>
+      <legend>Speech synthesis options</legend>
+      <div class="form-row">
+        <label for="node-input-vendor">Vendor</label>
+        <select id="node-input-vendor">
+          <option value="default" selected disabled>--Select Vendor--</option>
+          <option value="google">google</option>
+          <option value="aws">aws/polly</option>
+          <option value="microsoft">microsoft</option>
+          <option value="ibm">ibm</option>
+          <option value="nuance">nuance</option>
+        </select>
+      </div>
+      <div class="form-row" style="display: none;">
+        <label for="node-input-lang"> Lang</label>
+        <input type="text" id="node-input-lang">
+      </div>
+      <div class="form-row">
+        <label for="node-input-xlang">Language</label>
+        <select id="node-input-xlang">
+        </select>
+      </div>
+      <div class="form-row" style="display: none;">
+        <label for="node-input-voice"> Voice</label>
+        <input type="text" id="node-input-voice">
+      </div>
+      <div class="form-row">
+        <label for="node-input-xvoice">Voice</label>
+        <select id="node-input-xvoice">
+        </select>
+      </div>
+    </fieldset>
+  </div>
+  
   
   </script>
 

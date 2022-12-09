@@ -1,5 +1,6 @@
 var {createHash} = require('crypto');
 var mustache = require('mustache');
+const { toNamespacedPath } = require('path');
 mustache.escape = function(text) {return text;};
 var {v_resolve, doCreateCall, } = require('./libs')
 
@@ -26,12 +27,34 @@ module.exports = function(RED) {
       var to = v_resolve(config.to, config.toType, this.context(), msg);
 
       const opts = {
-        application_sid: config.application,
         from,
         to: {
           type: config.dest
         },
       };
+
+      switch (config.mode) {
+        case 'app':
+          opts.application_sid =  config.application 
+          break
+        case 'url':
+          opts.call_hook = {
+            url: config.call_hook_url,
+            method: config.call_hook_method
+          }
+          opts.call_status_hook = {
+            url: config.call_status_url,
+            method: config.call_status_method
+          }
+          //todo make settings params
+          opts.speech_synthesis_vendor = config.vendor
+          opts.speech_synthesis_language = config.lang
+          opts.speech_synthesis_voice = config.voice
+          opts.speech_recognizer_vendor = "aws"
+          opts.speech_recognizer_language = "en-GB"
+          break
+      }
+
       if (config.timeout) {
         const timeout = parseInt(config.timeout);
         if (timeout > 0) opts.timeout = timeout;
@@ -55,13 +78,14 @@ module.exports = function(RED) {
           send(msg);
           return;
       }
-
+      node.log(JSON.stringify(opts))
       try {
         const res = await doCreateCall(url, accountSid, apiToken, opts);
         msg.statusCode = 202;
         msg.callSid = res.sid;
       } catch (err) {
         if (err.statusCode) {
+          console.log(JSON.stringify(err))
           node.error(`create-call failed with ${err.statusCode}`);
           msg.statusCode = err.statusCode;
         }
