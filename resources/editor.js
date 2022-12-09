@@ -1,7 +1,9 @@
   let mapGoogle = {};
   let googleLanguageOptions = '';
   let mapAws = {};
+  let mapMicrosoft = {};
   let awsLanguageOptions = '';
+  let microsoftLanguageOptions = '';
   //let mapSpeechRec = {};
   let sttLanguagesGoogle = '';
   let sttLanguagesAws = '';
@@ -30,6 +32,19 @@
       awsLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
     });
   });
+
+  var microsoftUrl = '_jambonz/microsoftTts';
+  $.getJSON(microsoftUrl, function (data) {
+    //console.log('retrieved data ' + JSON.stringify(data));
+    data.forEach(function(l) {
+      mapMicrosoft[l.code] = {
+        name: l.name,
+        voices: l.voices
+      };
+      microsoftLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
+    });
+  });
+
   var googleSttUrl =  '_jambonz/googleSpeech';
   $.getJSON(googleSttUrl, function (data) {
     //console.log('retrieved data for recognizer voices: ' + JSON.stringify(data));
@@ -49,7 +64,7 @@
 
   var dialogflowUrl = '_jambonz/dialogflow';
   $.getJSON(dialogflowUrl, function (data) {
-    console.log('retrieved data for dialogflow languages: ' + JSON.stringify(data));
+    //console.log('retrieved data for dialogflow languages: ' + JSON.stringify(data));
     data.forEach(function(l) {
       mapDialogflow[l.code] = l.name;
       dialogFlowOptions += `<option value="${l.code}">${l.name}</option>`;        
@@ -120,6 +135,7 @@
           if (node.mixtype === 'stereo') $('#stt-identify-channels').show();
           else  $('#stt-identify-channels').hide();
           break
+        
         default:
           languageElem.append('<option value="default">--application default--</option>');
           node.transcriptionvendor = 'default';
@@ -195,6 +211,9 @@
         case 'aws':
           xlangElem.append(awsLanguageOptions);
           break;
+        case 'microsoft':
+          xlangElem.append(microsoftLanguageOptions);
+         break;
       }
       console.log(`installed language choices for ${v}`);
       xlangElem.val(langElem.val());
@@ -217,10 +236,30 @@
         case 'default':
           xvoiceElem.append('<option value="default" selected>--application default--</option>');
           break;
-
         case 'google':
+          var obj =  mapGoogle[lang]
+          if (obj) {
+            var options = '';
+            for (var i = 0; i < obj.voices.length; i++) {
+              if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+              else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+            }
+            xvoiceElem.append(options);
+          }
+          break;
         case 'aws':
-          var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
+          var obj =  mapAws[lang]
+          if (obj) {
+            var options = '';
+            for (var i = 0; i < obj.voices.length; i++) {
+              if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+              else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+            }
+            xvoiceElem.append(options);
+          }
+          break; 
+        case 'microsoft':
+          var obj =  mapMicrosoft[lang]
           if (obj) {
             var options = '';
             for (var i = 0; i < obj.voices.length; i++) {
