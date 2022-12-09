@@ -1,9 +1,11 @@
   let mapGoogle = {};
-  let googleLanguageOptions = '';
   let mapAws = {};
   let mapMicrosoft = {};
+  let mapIbm = {};
+  let googleLanguageOptions = '';
   let awsLanguageOptions = '';
   let microsoftLanguageOptions = '';
+  let ibmLanguageOptions = '';
   //let mapSpeechRec = {};
   let sttLanguagesGoogle = '';
   let sttLanguagesAws = '';
@@ -45,6 +47,17 @@
     });
   });
 
+  var ibmUrl = '_jambonz/ibmTts';
+  $.getJSON(ibmUrl, function (data) {
+    //console.log('retrieved data ' + JSON.stringify(data));
+    data.forEach(function(l) {
+      mapIbm[l.code] = {
+        name: l.name,
+        voices: l.voices
+      };
+      ibmLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
+    });
+  });
   var googleSttUrl =  '_jambonz/googleSpeech';
   $.getJSON(googleSttUrl, function (data) {
     //console.log('retrieved data for recognizer voices: ' + JSON.stringify(data));
@@ -214,6 +227,9 @@
         case 'microsoft':
           xlangElem.append(microsoftLanguageOptions);
          break;
+        case 'ibm':
+         xlangElem.append(ibmLanguageOptions);
+        break;
       }
       console.log(`installed language choices for ${v}`);
       xlangElem.val(langElem.val());
@@ -260,6 +276,17 @@
           break; 
         case 'microsoft':
           var obj =  mapMicrosoft[lang]
+          if (obj) {
+            var options = '';
+            for (var i = 0; i < obj.voices.length; i++) {
+              if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+              else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
+            }
+            xvoiceElem.append(options);
+          }
+          break;
+        case 'ibm':
+          var obj =  mapIbm[lang]
           if (obj) {
             var options = '';
             for (var i = 0; i < obj.voices.length; i++) {

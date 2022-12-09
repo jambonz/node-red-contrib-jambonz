@@ -1,7 +1,7 @@
 const bent = require('bent');
 
 
-const {google, aws, microsoft} = require('../data/tts');
+const {google, aws, microsoft, ibm} = require('../data/tts');
 const obj = require('../data/recognizer');
 const dialogflow = require('../data/dialogflow');
 module.exports = function(RED) {
@@ -15,6 +15,10 @@ module.exports = function(RED) {
 
   RED.httpAdmin.get('/_jambonz/microsoftTts', (req, res) => {
     res.send(microsoft);
+  });
+
+  RED.httpAdmin.get('/_jambonz/ibmTts', (req, res) => {
+    res.send(ibm);
   });
 
   RED.httpAdmin.get('/_jambonz/googleSpeech', (req, res) => {
