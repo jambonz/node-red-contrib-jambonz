@@ -33,7 +33,14 @@
         xlang: {},
         voice: {value: 'default'},
         xvoice: {},
-        transcriptionvendor: {value: 'default'},
+        transcriptionvendor: {value: 'default', validate : function (v) {
+          console.log(v)
+          if ( v == null &&  $('#node-input-mode').val() == 'url'){
+            return(false)
+          } else {
+            return(true)
+          }
+        }},
         recognizerlang: {value: 'default'}
       },
       inputs:1,
@@ -225,6 +232,26 @@
         <select id="node-input-xvoice">
         </select>
       </div>
+      <legend>Transcription options</legend>
+      <div id="speech-input-container">
+        <div class="form-row">
+          <label for="node-input-transcriptionvendor">Vendor</label>
+          <select id="node-input-transcriptionvendor">
+            <option value="default" selected disabled>--Select Vendor--</option>
+            <option value="google">Google</option>
+            <option value="aws">AWS</option>
+            <option value="deepgram">deepgram</option>
+            <option value="microsoft">microsoft</option>
+            <option value="ibm">ibm</option>
+            <option value="nuance">nuance</option>
+  
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="node-input-recognizerlang"><i class="icon-tag"></i> Language</label>
+          <select id="node-input-recognizerlang">
+          </select>
+        </div>
     </fieldset>
   </div>
   

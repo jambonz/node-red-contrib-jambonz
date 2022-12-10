@@ -46,12 +46,11 @@ module.exports = function(RED) {
             url: config.call_status_url,
             method: config.call_status_method
           }
-          //todo make settings params
           opts.speech_synthesis_vendor = config.vendor
           opts.speech_synthesis_language = config.lang
           opts.speech_synthesis_voice = config.voice
-          opts.speech_recognizer_vendor = "aws"
-          opts.speech_recognizer_language = "en-GB"
+          opts.speech_recognizer_vendor = config.transcriptionvendor
+          opts.speech_recognizer_language = config.recognizerlang
           break
       }
 
