@@ -8,15 +8,18 @@
   let microsoftLanguageOptions = '';
   let ibmLanguageOptions = '';
   let nuanceLanguageOptions = '';
-  //let mapSpeechRec = {};
   let sttLanguagesGoogle = '';
   let sttLanguagesAws = '';
+  let sttLanguagesDeepgram = '';
+  let sttLanguagesIbm = '';
+  let sttLanguagesMicrosoft = '';
+  let sttLanguagesNuance = '';
   let mapDialogflow = {};
   let dialogFlowOptions = '';
 
+// Get TTS Providers
   var googleUrl = '_jambonz/googleTts';
   $.getJSON(googleUrl, function (data) {
-    //console.log('retrieved data ' + JSON.stringify(data));
     data.forEach(function(l) {
       mapGoogle[l.code] = {
         name: l.name,
@@ -27,7 +30,6 @@
   });
   var awsUrl = '_jambonz/awsTts';
   $.getJSON(awsUrl, function (data) {
-    //console.log('retrieved data ' + JSON.stringify(data));
     data.forEach(function(l) {
       mapAws[l.code] = {
         name: l.name,
@@ -36,10 +38,8 @@
       awsLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
     });
   });
-
   var microsoftUrl = '_jambonz/microsoftTts';
   $.getJSON(microsoftUrl, function (data) {
-    //console.log('retrieved data ' + JSON.stringify(data));
     data.forEach(function(l) {
       mapMicrosoft[l.code] = {
         name: l.name,
@@ -50,7 +50,6 @@
   });
   var ibmUrl = '_jambonz/ibmTts';
   $.getJSON(ibmUrl, function (data) {
-    //console.log('retrieved data ' + JSON.stringify(data));
     data.forEach(function(l) {
       mapIbm[l.code] = {
         name: l.name,
@@ -61,7 +60,6 @@
   });
   var nuanceUrl = '_jambonz/nuanceTts';
   $.getJSON(nuanceUrl, function (data) {
-    //console.log('retrieved data ' + JSON.stringify(data));
     data.forEach(function(l) {
       mapNuance[l.code] = {
         name: l.name,
@@ -71,32 +69,57 @@
     });
   });
 
-
+// GET STT Providers
   var googleSttUrl =  '_jambonz/googleSpeech';
   $.getJSON(googleSttUrl, function (data) {
-    //console.log('retrieved data for recognizer voices: ' + JSON.stringify(data));
     data.forEach(function(l) {
-      //mapSpeechRec[l.code] = l.name;
       sttLanguagesGoogle += `<option value="${l.code}">${l.name}</option>`;        
     });
   });
   var awsSttUrl =  '_jambonz/awsSpeech';
   $.getJSON(awsSttUrl, function (data) {
-    //console.log('retrieved data for recognizer voices: ' + JSON.stringify(data));
     data.forEach(function(l) {
-      //mapSpeechRec[l.code] = l.name;
       sttLanguagesAws += `<option value="${l.code}">${l.name}</option>`;        
     });
   });
+  var deepgramSttUrl =  '_jambonz/deepgramSpeech';
+  $.getJSON(deepgramSttUrl, function (data) {
+    data.forEach(function(l) {
+      sttLanguagesDeepgram += `<option value="${l.code}">${l.name}</option>`;        
+    });
+  });
+  var ibmSttUrl =  '_jambonz/ibmSpeech';
+  $.getJSON(ibmSttUrl, function (data) {
+    data.forEach(function(l) {
+      sttLanguagesIbm += `<option value="${l.code}">${l.name}</option>`;        
+    });
+  });
+  var microsoftSttUrl =  '_jambonz/microsoftSpeech';
+  $.getJSON(microsoftSttUrl, function (data) {
+    data.forEach(function(l) {
+      sttLanguagesMicrosoft += `<option value="${l.code}">${l.name}</option>`;        
+    });
+  });
+  var nuanceSttUrl =  '_jambonz/nuanceSpeech';
+  $.getJSON(nuanceSttUrl, function (data) {
+    data.forEach(function(l) {
+      sttLanguagesNuance += `<option value="${l.code}">${l.name}</option>`;        
+    });
+  });
 
+
+
+// Get Bot providers
+  
   var dialogflowUrl = '_jambonz/dialogflow';
   $.getJSON(dialogflowUrl, function (data) {
-    //console.log('retrieved data for dialogflow languages: ' + JSON.stringify(data));
     data.forEach(function(l) {
       mapDialogflow[l.code] = l.name;
       dialogFlowOptions += `<option value="${l.code}">${l.name}</option>`;        
     });
   });
+
+
 
   function testCredentials() {
     let baseUrl
@@ -162,7 +185,42 @@
           if (node.mixtype === 'stereo') $('#stt-identify-channels').show();
           else  $('#stt-identify-channels').hide();
           break
-        
+        case 'deepgram':
+          languageElem.append('<option value="default">--application default--</option>');
+          languageElem.append(sttLanguagesDeepgram);
+          $('#google-stt-options').hide();
+          $('#aws-stt-options').show();
+          $('#interim').hide();
+          if (node.mixtype === 'stereo') $('#stt-identify-channels').show();
+          else  $('#stt-identify-channels').hide();
+          break
+        case 'ibm':
+          languageElem.append('<option value="default">--application default--</option>');
+          languageElem.append(sttLanguagesIbm);
+          $('#google-stt-options').hide();
+          $('#aws-stt-options').hide();
+          $('#interim').show();
+          if (node.mixtype === 'stereo') $('#stt-identify-channels').show();
+          else  $('#stt-identify-channels').hide();
+          break
+        case 'microsoft':
+          languageElem.append('<option value="default">--application default--</option>');
+          languageElem.append(sttLanguagesMicrosoft);
+          $('#google-stt-options').hide();
+          $('#aws-stt-options').hide();
+          $('#interim').show();
+          if (node.mixtype === 'stereo') $('#stt-identify-channels').show();
+          else  $('#stt-identify-channels').hide();
+          break
+        case 'nuance':
+          languageElem.append('<option value="default">--application default--</option>');
+          languageElem.append(sttLanguagesNuance);
+          $('#google-stt-options').hide();
+          $('#aws-stt-options').hide();
+          $('#interim').show();
+          if (node.mixtype === 'stereo') $('#stt-identify-channels').show();
+          else  $('#stt-identify-channels').hide();
+          break
         default:
           languageElem.append('<option value="default">--application default--</option>');
           node.transcriptionvendor = 'default';

@@ -32,7 +32,9 @@
         lang: {value: 'default'},
         xlang: {},
         voice: {value: 'default'},
-        xvoice: {}
+        xvoice: {},
+        transcriptionvendor: {value: 'default'},
+        recognizerlang: {value: 'default'}
       },
       inputs:1,
       outputs:1,
@@ -46,6 +48,7 @@
         var serverElem = $('#node-input-server');
         var applicationElem = $('#node-input-application');
         prepareTtsControls(node);
+        prepareSttControls(node);
 
 
         $('#node-input-from').typedInput({

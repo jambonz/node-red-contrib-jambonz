@@ -33,6 +33,20 @@ module.exports = function(RED) {
     res.send(obj.aws);
   });
 
+  RED.httpAdmin.get('/_jambonz/deepgramSpeech', (req, res) => {
+    res.send(obj.deepgram);
+  });
+  RED.httpAdmin.get('/_jambonz/ibmSpeech', (req, res) => {
+    res.send(obj.ibm);
+  });
+  RED.httpAdmin.get('/_jambonz/microsoftSpeech', (req, res) => {
+    res.send(obj.microsoft);
+  });
+  RED.httpAdmin.get('/_jambonz/nuanceSpeech', (req, res) => {
+    res.send(obj.nuance);
+  });
+
+
   RED.httpAdmin.get('/_jambonz/dialogflow', (req, res) => {
     res.send(dialogflow);
   });
