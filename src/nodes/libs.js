@@ -1,4 +1,6 @@
 const bent = require('bent');
+var mustache = require('mustache');
+mustache.escape = function(text) {return text;};
 
 // helper functions
 
