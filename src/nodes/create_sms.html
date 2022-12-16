@@ -1,0 +1,106 @@
+<!-- Javascript -->
+<script type="text/javascript">
+ RED.nodes.registerType('create-sms',{
+      category: 'jambonz',
+      color: '#aebfb9',
+      defaults: {
+        name: {value: ''},
+        server: {value: '', required: true, type: 'jambonz_auth'},
+        from: {value: '', required: true},
+        fromType: {value: ''},
+        to: {value: '', required: true},
+        toType: {value: ''},
+        text: {value: '', required: true},
+        textType: {value: ''},
+        provider: {value: ''},
+        providerType: {value: ''},
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { 
+        return this.name || 'create sms';
+      },
+      oneditprepare: function() {
+        var node = this;
+
+        $('#node-input-from').typedInput({
+          default: $('#node-input-fromType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-fromType')
+        });
+        $('#node-input-to').typedInput({
+          default: $('#node-input-toType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-toType')
+        });
+        $('#node-input-text').typedInput({
+          default: $('#node-input-textType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-textType')
+        });
+        $('#node-input-provider').typedInput({
+          default: $('#node-input-providerType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-providerType')
+        });
+      }
+  });
+
+</script>
+
+
+<!-- HTML -->
+
+<script type="text/html" data-template-name="create-sms">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+  <div class="form-row">
+    <label for="node-input-server">Server</label>
+    <input type="text" id="node-input-server">
+  </div>
+  <div class="form-row">
+    <label for="node-input-from">From</label>
+    <input type="text" id="node-input-from" placeholder="sending number">
+    <input type="hidden" id="node-input-fromType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-to">To</label>
+    <input type="text" id="node-input-to" placeholder="destination number">
+    <input type="hidden" id="node-input-toType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-text">Text</label>
+    <input type="text" id="node-input-text" placeholder="Text">
+    <input type="hidden" id="node-input-textType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-provider">SMS Provider</label>
+    <input type="text" id="node-input-provider">
+    <input type="hidden" id="node-input-providerType">
+  </div>
+  </script>
+  
+
+<!-- Help Text -->
+
+<script type="text/html" data-help-name="create-sms">
+    <p>Send an SMS</p>
+    <h3>Properties</h3>
+    <p><code>Server</code> -  jambonz server to connect to</p>
+    <p><code>From</code> -  Sending party phone number</p>
+    <p><code>To</code> -  Destination phone number</p>
+    <p><code>Text</code> - Text message</p>
+
+  
+  <h3>Details</h3>
+  The create message command is used to send an SMS message.  
+  <!--
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/rest/#create-a-call">Jambonz reference</a></li>
+    </ul>
+  -->
+  </script>

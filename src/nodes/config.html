@@ -1,0 +1,484 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  RED.nodes.registerType('cfg',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+
+        tts: {value: 0},
+        vendor: {value: 'default'},
+        lang: {value: 'default'},
+        xlang: {},
+        voice: {value: 'default'},
+        xvoice: {},
+
+        speechinput: {value: 0},
+        transcriptionvendor: {value: 'default'},
+        vocabularyname: {},
+        vocabularynameType: {value: 'str'},
+        vocabularyfiltername: {},
+        vocabularyfilternameType: {value: 'str'},
+        vocabularyfiltermethod: {},
+        identifyChannels: {},
+        recognizerlang: {value: 'default'},
+        recognizeraltlang: {},
+        recognizeraltlangType: {val: 'str'},
+        transcriptionhints: {},
+        transcriptionhintsType: {val: 'str'},
+
+        bargeIn: {value: 0},
+        bargeIn_enable	:{},
+        bargeIn_enableType:{value: 'bool'},
+        bargeIn_actionHook:{},
+        bargeIn_actionHookType:{value: 'str'},
+        bargeIn_input:{},
+        bargeIn_inputType:{value: 'inptype'},
+        bargeIn_finishOnKey:{},
+        bargeIn_finishOnKeyType:{value: 'str'},
+        bargeIn_numDigits:{},
+        bargeIn_numDigitsType:{value: 'num'},
+        bargeIn_minDigits:{},
+        bargeIn_minDigitsType:{value: 'num'},
+        bargeIn_maxDigits:{},
+        bargeIn_maxDigitsType:{value: 'num'},
+        bargeIn_interDigitTimeout:{},
+        bargeIn_interDigitTimeoutType:{value: 'num'},
+
+        amd:  {value: 0},
+        amd_actionHook:{},
+        amd_actionHookType:{value: 'str'},
+        amd_thresholdWordCount:{},
+        amd_thresholdWordCountType:{value: 'num'},
+        amd_timers_noSpeechTimeoutMs:{},
+        amd_timers_noSpeechTimeoutMsType:{value: 'num'},
+        amd_timers_decisionTimeoutMs:{},	
+        amd_timers_decisionTimeoutMsType:{value: 'num'},
+        amd_timers_toneTimeoutMs:{},	
+        amd_timers_toneTimeoutMsType:{value: 'num'},
+        amd_timers_greetingCompletionTimeoutMs:{},	
+        amd_timers_greetingCompletionTimeoutMsType:{value: 'num'},
+
+       
+        record: {value: 0},
+        record_action:{},
+        record_actionType:{value: 'rectype'},
+        record_siprecServerURL:{},
+        record_siprecServerURLType:{value: 'str'},
+        record_recordingID:{},
+        record_recordingIDType:{value: 'str'},
+
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      paletteLabel: "config",
+      label: function() { return this.name || 'config';},
+      oneditprepare: () => {
+        var node = this;
+        var ttsDiv = $('#tts-options');
+        prepareTtsControls(node);
+        prepareSttControls(node);
+
+        ttsDiv.hide();
+        $('#speech-input-container').hide()
+        $('#bargeIn-options').hide()
+
+        $('#node-input-transcriptionhints').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-transcriptionhintsType')
+        });
+        $('#node-input-recognizeraltlang').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-recognizeraltlangType')
+        });
+        $('#node-input-naics').typedInput({
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-naicsType')
+        });
+
+        $('#node-input-tts').change(function() {
+          const doTTS = $('#node-input-tts:checked').val();
+          if (doTTS) {
+            $('#tts-options').show();
+          }
+          else {
+            $('#tts-options').hide();
+          }
+        });
+        var enableSpeech = function(enabled) {
+          if (enabled) $('#speech-input-container').show();
+          else $('#speech-input-container').hide();
+        }
+        $('#node-input-speechinput').change(function() {
+          var doSpeech = $('#node-input-speechinput:checked').val();
+          enableSpeech(doSpeech);
+        });
+
+        $('#node-input-bargeIn').change(function() {
+          const dobargeIn = $('#node-input-bargeIn:checked').val();
+          if (dobargeIn) {
+            $('#bargeIn-options').show();
+          }
+          else {
+            $('#bargeIn-options').hide();
+          }
+        });
+
+        $('#node-input-bargeIn_enable').typedInput({
+            types: ['bool'],
+          typeField: $('#node-input-bargeIn_enableType')
+        });
+
+        $('#node-input-bargeIn_actionHook').typedInput({
+            types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-bargeIn_actionHookType')
+        });
+        $('#node-input-bargeIn_input').typedInput({
+          type:"inptype", types:[{
+            value: "inptype",
+            multiple: true,
+            options: [
+              { value: "digits", label: "Digits"},
+              { value: "speech", label: "Speech"},
+            ]
+          }],
+          typeField: $('#node-input-bargeIn_inputType')
+        });
+        $('#node-input-bargeIn_finishOnKey').typedInput({
+            types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-bargeIn_finishOnKeyType')
+        });
+        $('#node-input-bargeIn_numDigits').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-bargeIn_numDigitsType')
+        });
+        $('#node-input-bargeIn_minDigits').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-bargeIn_minDigitsType')
+        });
+        $('#node-input-bargeIn_maxDigits').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-bargeIn_maxDigitsType')
+        });
+        $('#node-input-bargeIn_interDigitTimeout').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-bargeIn_interDigitTimeoutType')
+        });
+
+        
+        $('#node-input-amd').change(function() {
+          const doamd = $('#node-input-amd:checked').val();
+          if (doamd) {
+            $('#amd-options').show();
+          }
+          else {
+            $('#amd-options').hide();
+          }
+        });
+        $('#node-input-amd_actionHook').typedInput({
+            types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-amd_actionHookType')
+        });
+        $('#node-input-amd_thresholdWordCount').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-amd_thresholdWordCountType')
+        });
+        $('#node-input-amd_timers_noSpeechTimeoutMs').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-amd_timers_noSpeechTimeoutMsType')
+        });
+        $('#node-input-amd_timers_decisionTimeoutMs').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-amd_timers_decisionTimeoutMsType')
+        });
+        $('#node-input-amd_timers_toneTimeoutMs').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-amd_timers_toneTimeoutMsType')
+        });
+        $('#node-input-amd_timers_greetingCompletionTimeoutMs').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-amd_timers_greetingCompletionTimeoutMsType')
+        });
+
+
+        $('#node-input-record').change(function() {
+          const dorecord = $('#node-input-record:checked').val();
+          if (dorecord) {
+            $('#record-options').show();
+          }
+          else {
+            $('#record-options').hide();
+          }
+        });
+        $('#node-input-record_action').typedInput({
+	        type:"rectype", types:[{
+          value: "rectype",
+          multiple: false, //TODO Check if multiple selection is valid
+          options: [
+            { value: "startCallRecording", label: "Start"},
+            { value: "stopCallRecording", label: "Stop"},
+            { value: "pauseCallRecording", label: "Pause"},
+            { value: "resumeCallRecording", label: "Resume"},	
+          ]
+          }],
+          typeField: $('#node-input-record_actionType')
+        });
+        $('#node-input-record_siprecServerURL').typedInput({
+            types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-record_siprecServerURLType')
+        });
+        $('#node-input-record_recordingID').typedInput({
+            types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-record_recordingIDType')
+        });
+      }
+  });
+
+</script>
+
+
+<!-- HTML -->
+
+<script type="text/html" data-template-name="cfg">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <fieldset>
+
+  <legend>Text to Speech</legend>
+  <div class="form-row">
+    <label for="node-input-tts">Modify TTS</label>
+    <input type="checkbox" id="node-input-tts">
+  </div>
+  <div id="tts-options">
+        <div class="form-row">
+          <label for="node-input-vendor">Vendor</label>
+          <select id="node-input-vendor">
+            <option value="default" selected>--application default--</option>
+            <option value="google">google</option>
+            <option value="aws">aws/polly</option>
+            <option value="microsoft">microsoft</option>
+            <option value="ibm">ibm</option>
+            <option value="nuance">nuance</option>
+          </select>
+        </div>
+        <div class="form-row" style="display: none;">
+          <label for="node-input-lang"> Lang</label>
+          <input type="text" id="node-input-lang">
+        </div>
+        <div class="form-row">
+          <label for="node-input-xlang">Language</label>
+          <select id="node-input-xlang">
+            <option value="default" selected>--application default--</option>
+          </select>
+        </div>
+        <div class="form-row" style="display: none;">
+          <label for="node-input-voice"> Voice</label>
+          <input type="text" id="node-input-voice">
+        </div>
+        <div class="form-row">
+          <label for="node-input-xvoice">Voice</label>
+          <select id="node-input-xvoice">
+            <option value="default" selected>--application default--</option>
+          </select>
+        </div>
+  </div>
+
+  <legend>Speech Input</legend>
+  <div class="form-row">
+    <label for="node-input-tts">Modify Speech Input</label>
+    <input type="checkbox" id="node-input-speechinput">
+  </div>
+  <div id="speech-input-container">
+    <div class="form-row">
+      <label for="node-input-transcriptionvendor">Vendor</label>
+      <select id="node-input-transcriptionvendor">
+        <option value="default" selected>--application default--</option>
+        <option value="google">Google</option>
+        <option value="aws">AWS</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-recognizerlang"><i class="icon-tag"></i> Language</label>
+      <select id="node-input-recognizerlang">
+      </select>
+    </div>
+    <div id="google-stt-options">
+      <legend>Google Transcription Options</legend>
+      <div class="form-row">
+        <label for="node-input-transcriptionhints">Hints</label>
+        <input type="text" id="node-input-transcriptionhints" placeholder="comma-separated list of phrases">
+        <input type="hidden" id="node-input-transcriptionhintsType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-recognizeraltlang">Alternative languages</label>
+        <input type="text" id="node-input-recognizeraltlang" placeholder="comma-separated list of add'l lang codes">
+        <input type="hidden" id="node-input-recognizeraltlangType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-naics">Industry NAICS code</label>
+        <input type="text" id="node-input-naics">
+        <input type="hidden" id="node-input-naicsType">
+      </div>
+    </div>
+    <div id="aws-stt-options">
+      <legend>AWS Transcription Options</legend>
+      <div class="form-row">
+        <label for="node-input-vocabularyname">Vocabulary name</label>
+        <input type="text" id="node-input-vocabularyname">
+        <input type="hidden" id="node-input-vocabularynameType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-vocabularyfiltername">Vocabulary filter name</label>
+        <input type="text" id="node-input-vocabularyfiltername">
+        <input type="hidden" id="node-input-vocabularyfilternameType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-vocabularyfiltername">Vocabulary filter name</label>
+        <input type="text" id="node-input-identifyChannels">
+      </div>
+      <div class="form-row">
+        <label for="node-input-vocabularyfiltermethod">Filter method</label>
+        <select id="node-input-vocabularyfiltermethod">
+          <option value="remove" selected>Remove</option>
+          <option value="mask" selected>Mask</option>
+          <option value="tag" selected>Tag</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <legend>Barge In</legend>
+  <div class="form-row">
+    <label for="node-input-bargeIn">Modify Barge In</label>
+    <input type="checkbox" id="node-input-bargeIn">
+  </div>
+  <div id="bargeIn-options">
+  <div class="form-row">
+    <label for="node-input-bargeIn_enable">Barge In Enabled</label>
+      <input type="text" id="node-input-bargeIn_enable" >
+      <input type="hidden" id="node-input-bargeIn_enableType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargeIn_actionHook">Action Hook</label>
+      <input type="text" id="node-input-bargeIn_actionHook" placeholder="PLACEHOLDER">
+      <input type="hidden" id="node-input-bargeIn_actionHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargeIn_input">Input</label>
+      <input type="text" id="node-input-bargeIn_input" placeholder="PLACEHOLDER">
+      <input type="hidden" id="node-input-bargeIn_inputType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargeIn_finishOnKey">Finish On Key</label>
+      <input type="text" id="node-input-bargeIn_finishOnKey" placeholder="PLACEHOLDER">
+      <input type="hidden" id="node-input-bargeIn_finishOnKeyType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargeIn_numDigits">Number of Digits</label>
+      <input type="text" id="node-input-bargeIn_numDigits" placeholder="PLACEHOLDER">
+      <input type="hidden" id="node-input-bargeIn_numDigitsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargeIn_minDigits">Min Digits</label>
+      <input type="text" id="node-input-bargeIn_minDigits" placeholder="PLACEHOLDER">
+      <input type="hidden" id="node-input-bargeIn_minDigitsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargeIn_maxDigits">Max Digits</label>
+      <input type="text" id="node-input-bargeIn_maxDigits" placeholder="PLACEHOLDER">
+      <input type="hidden" id="node-input-bargeIn_maxDigitsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-bargeIn_interDigitTimeout">Inter-Digit Timeout</label>
+      <input type="text" id="node-input-bargeIn_interDigitTimeout" placeholder="PLACEHOLDER">
+      <input type="hidden" id="node-input-bargeIn_interDigitTimeoutType">
+  </div>
+  </div>
+  <legend>Answer Machine Detection</legend>
+  <div class="form-row">
+    <label for="node-input-amd">Modify AMD</label>
+    <input type="checkbox" id="node-input-amd">
+  </div>
+  <div id="amd-options">
+  <div class="form-row">
+    <label for="node-input-amd_actionHook">Action Hook</label>
+      <input type="text" id="node-input-amd_actionHook" placeholder="/action">
+      <input type="hidden" id="node-input-amd_actionHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-amd_thresholdWordCount">Threshold Word Count</label>
+      <input type="text" id="node-input-amd_thresholdWordCount" >
+      <input type="hidden" id="node-input-amd_thresholdWordCountType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-amd_timers_noSpeechTimeoutMs">No Speech Timeout</label>
+      <input type="text" id="node-input-amd_timers_noSpeechTimeoutMs" >
+      <input type="hidden" id="node-input-amd_timers_noSpeechTimeoutMsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-amd_timers_decisionTimeoutMs">Decision Timeout</label>
+      <input type="text" id="node-input-amd_timers_decisionTimeoutMs" >
+      <input type="hidden" id="node-input-amd_timers_decisionTimeoutMsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-amd_timers_toneTimeoutMs">Tone Timeout</label>
+      <input type="text" id="node-input-amd_timers_toneTimeoutMs" >
+      <input type="hidden" id="node-input-amd_timers_toneTimeoutMsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-amd_timers_greetingCompletionTimeoutMs">Greeting Completion Timeout</label>
+      <input type="text" id="node-input-amd_timers_greetingCompletionTimeoutMs">
+      <input type="hidden" id="node-input-amd_timers_greetingCompletionTimeoutMsType">
+  </div>
+</div>
+  
+<legend>SIPREC Recording</legend>
+  <div class="form-row">
+    <label for="node-input-record">Modify Record</label>
+    <input type="checkbox" id="node-input-record">
+  </div>
+  <div id="record-options">
+<div class="form-row">
+	<label for="node-input-record_action">Action</label>
+    <input type="text" id="node-input-record_action" >
+    <input type="hidden" id="node-input-record_actionType">
+</div>
+<div class="form-row">
+	<label for="node-input-record_siprecServerURL">SIPREC URL</label>
+    <input type="text" id="node-input-record_siprecServerURL">
+    <input type="hidden" id="node-input-record_siprecServerURLType">
+</div>
+<div class="form-row">
+	<label for="node-input-record_recordingID">Recording ID</label>
+    <input type="text" id="node-input-record_recordingID">
+    <input type="hidden" id="node-input-record_recordingIDType">
+</div>
+</div>
+
+  </fieldset>
+</script>
+
+<!-- Help Text -->
+
+<script type="text/html" data-help-name="cfg">
+  <p>Modify the default settings for the current session</p>
+
+<h3>Outputs</h3>
+<dl class="message-properties">
+   <dt>jambonz<span class="property-type">object</span></dt>
+   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>config</code> action appended  </dd>
+</dl>
+
+<h3>Details</h3>
+The config verb allows the developer to change the default speech settings for the current session, or to gather speech or dtmf input in the background while other verbs are executing. The latter technique is useful mainly for certain scenarios when integrating with certain conversational AI systems.
+This verb is non-blocking; i.e. the specified settings are changed and execution immediately continues with the next verb in the application.
+
+
+<h3>References</h3>
+  <ul>
+      <li><a href="https://www.jambonz.org/docs/webhooks/config/">Jambonz config reference</a></li>
+  </ul>
+
+</script>

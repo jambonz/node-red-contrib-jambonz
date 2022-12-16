@@ -1,0 +1,116 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  RED.nodes.registerType('sip:refer',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+        referTo: {required: true},
+        referToType: {value: 'str'},
+        referredBy: {value: ''},
+        referredByType: {value: 'str'},
+        headers: {value: ''},
+        headersType: {value: 'json'},
+        eventHook: {value: ''},
+        eventHookType: {value: 'str'},
+        actionHook: {value: ''},
+        actionHookType: {value: 'str'}     
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { return this.name || 'sip:refer';},
+      oneditprepare: function() {
+
+        $('#node-input-referTo').typedInput({
+          default: $('#node-input-referToType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-referToType')
+        });
+        $('#node-input-referredBy').typedInput({
+          default: $('#node-input-referredByType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-referredByType')
+        });
+        $('#node-input-actionHook').typedInput({
+          default: $('#node-input-actionHookType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-actionHookType')
+        });
+        $('#node-input-eventHook').typedInput({
+          default: $('#node-input-eventHookType').val(),
+          types: ['str','msg', 'flow', 'global'],
+          typeField: $('#node-input-actionHookType')
+        });
+        $('#node-input-headers').typedInput({
+          default: $('#node-input-headersType').val(),
+          types: ['json','msg', 'flow', 'global'],
+          typeField: $('#node-input-headersType')
+        });
+      }
+  });
+
+</script>
+
+
+
+<!-- HTML -->
+<script type="text/html" data-template-name="sip:refer">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+
+    <div class="form-row">
+      <label for="node-input-referTo">referTo</label>
+      <input type="text" id="node-input-referTo" placeholder="address">
+      <input type="hidden" id="node-input-referTobody">
+    </div>
+    <div class="form-row">
+      <label for="node-input-referredBy">referredBy</label>
+      <input type="text" id="node-input-referredBy" placeholder="address">
+      <input type="hidden" id="node-input-referredByType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-actionHook">Action Hook</label>
+      <input type="text" id="node-input-actionHook" placeholder="/action">
+      <input type="hidden" id="node-input-actionHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-eventHook">Event Hook</label>
+      <input type="text" id="node-input-eventHook" placeholder="/event">
+      <input type="hidden" id="node-input-eventHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-headers">Headers</label>
+      <input type="text" id="node-input-headers" placeholder="SIP headers">
+      <input type="hidden" id="node-input-headersType">
+    </div>
+  </script>
+
+
+
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="sip:refer">
+    <p>The sip:refer action will send a sip REFER to the far end carrier or sip phone</p>
+    <h3>Properties</h3>
+    <p><code>referTo</code> -  a sip uri or a phone number / user identifier	</p>
+    <p><code>referredBy</code> -  	a sip uri or a phone number / user identifier; if not provided it will default to the identity of the party being transferred</p>
+    <p><code>actionHook</code> -  a webhook to call when the transfer has completed	</p>
+    <p><code>eventHook</code> -  a webhook to call when NOTIFY messages of follow-on call status are received	</p>
+    <p><code>headers</code> -  additional SIP headers to include in the response	</p>
+    
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+     <dt>jambonz<span class="property-type">object</span></dt>
+     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>sip:decline</code> action appended  </dd>
+  </dl>
+  
+  <h3>Details</h3>
+  The sip:refer action is used to blind transfer a call. It will send a sip REFER to the far end carrier or sip phone, which must support the REFER in order for the transfer to work. After the sip:refer completes successfully, the call leg will have left the jambonz platform.  <h3>References</h3>
+    <ul>
+        <li><a href="https://www.jambonz.org/docs/webhooks/sip-refer/">Jambonz sip:refer reference</a></li>
+    </ul>
+  </script>

@@ -264,11 +264,11 @@
       label: function() { return this.name || 'user auth';},
       oneditprepare: function() {
         $('#node-input-password').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-passwordType')
         });
         $('#node-input-ha1').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-ha1Type')
         });
       }
@@ -300,15 +300,15 @@
     },
     oneditprepare: function() {
       $('#node-input-conference').typedInput({
-        types: ['str', 'msg', 'flow', 'global'],
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
         typeField: $('#node-input-conferenceType')
       });
       $('#node-input-enterHook').typedInput({
-        types: ['str', 'msg', 'flow', 'global'],
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
         typeField: $('#node-input-enterHookType')
       });
       $('#node-input-waitHook').typedInput({
-        types: ['str', 'msg', 'flow', 'global'],
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
         typeField: $('#node-input-waitHookType')
       });
       $('#node-input-maxParticipants').typedInput({
@@ -341,15 +341,15 @@
       },
       oneditprepare: function() {
         $('#node-input-queue').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-queueType')
         });
         $('#node-input-actionHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-actionHookType')
         });
         $('#node-input-confirmHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-confirmHookType')
         });
         $('#node-input-timeout').typedInput({
@@ -420,47 +420,47 @@
       oneditprepare: function() {
         var node = this;
         $('#node-input-callerid').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-calleridType')
         });
         $('#node-input-actionhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-actionhookType')
         });
         $('#node-input-confirmhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-confirmhookType')
         });
         $('#node-input-dialmusic').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-dialmusicType')
         });
         $('#node-input-dtmfcapture').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-dtmfcaptureType')
         });
         $('#node-input-dtmfhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-dtmfhookType')
         });
         $('#node-input-transcribeurl').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-transcribeurlType')
         });
         $('#node-input-listenurl').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-listenurlType')
         });
         $('#node-input-transcriptionhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-transcriptionhookType')
         });
         $('#node-input-transcriptionhints').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-transcriptionhintsType')
         });
         $('#node-input-recognizeraltlang').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-recognizeraltlangType')
         });
         $('#node-input-diarizationmin').typedInput({
@@ -843,15 +843,15 @@
       },
       oneditprepare: function() {
         $('#node-input-queue').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-queueType')
         });
         $('#node-input-actionHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-actionHookType')
         });
         $('#node-input-waitHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-waitHookType')
         });
       }
@@ -915,15 +915,15 @@
         prepareSttControls(node);
 
         $('#node-input-playurl').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-playurlType')
         });
         $('#node-input-transcriptionhints').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-transcriptionhintsType')
         });
         $('#node-input-recognizeraltlang').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-recognizeraltlangType')
         });
         $('#node-input-naics').typedInput({
@@ -1040,19 +1040,19 @@
         prepareTtsControls(node);
 
         $('#node-input-bot').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-botType')
         });
         $('#node-input-alias').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-aliasType')
         });
         $('#node-input-locale').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-localeType')
         });
         $('#node-input-intent').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-intentType')
         });
         $('#node-input-inputTimeout').typedInput({
@@ -1148,19 +1148,19 @@
       oneditprepare: function() {
         var node = this;
         $('#node-input-actionhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-actionhookType')
         });
         $('#node-input-url').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-urlType')
         });
         $('#node-input-authuser').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-authuserType')
         });
         $('#node-input-authpassword').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-authpasswordType')
         });
         $('#node-input-metadata').typedInput({
@@ -1168,15 +1168,15 @@
           typeField: $('#node-input-metadataType')
         });
         $('#node-input-transcriptionhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-transcriptionhookType')
         });
         $('#node-input-transcriptionhints').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-transcriptionhintsType')
         });
         $('#node-input-recognizeraltlang').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-recognizeraltlangType')
         });
         $('#node-input-diarizationmin').typedInput({
@@ -1303,7 +1303,7 @@
     },
     oneditprepare: function() {
       $('#node-input-hook').typedInput({
-        types: ['str', 'msg', 'flow', 'global'],
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
         typeField: $('#node-input-hookType')
       });
       }

@@ -1,0 +1,94 @@
+<!-- Javascript -->
+
+
+<script type="text/javascript">
+ RED.nodes.registerType('get_alerts',{
+      category: 'jambonz',
+      color: '#aebfb9',
+      defaults: {
+        name: {value: ''},
+        server: {value: '', required: true, type: 'jambonz_auth'},
+        page:{value: 1},
+        pageType:{value: 'num'},
+        count:{value: 25},
+        countType:{value: 'num'},
+        days:{value: 7},
+        countType:{value: 'num'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      paletteLabel: "Get - Alerts",
+      label: function() { return this.name || 'Get Alerts';},
+      oneditprepare: () => {
+        var node = this;
+        $('#node-input-page').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+            typeField: $('#node-input-pageType')
+        });
+        $('#node-input-count').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+            typeField: $('#node-input-countType')
+        });
+        $('#node-input-days').typedInput({
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+            typeField: $('#node-input-daysType')
+        });
+      }
+  });
+
+
+</script>
+
+
+<!-- HTML -->
+
+<script type="text/html" data-template-name="get_alerts">
+        <div class="form-row">
+          <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+          <input type="text" id="node-input-name" placeholder="Name">
+        </div>
+        <div class="form-row">
+          <label for="node-input-server">Server</label>
+          <input type="text" id="node-input-server">
+        </div>
+        <div class="form-row">
+          <label for="node-input-page">Page</label>
+          <input type="text" id="node-input-page" >
+          <input type="hidden" id="node-input-pageType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-count">Count</label>
+          <input type="text" id="node-input-count" >
+          <input type="hidden" id="node-input-countType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-days">Days</label>
+          <input type="text" id="node-input-days" >
+          <input type="hidden" id="node-input-daysType">
+        </div>
+
+  
+</script>
+
+<!-- Help Text -->
+
+<script type="text/html" data-help-name="get_alerts">
+        <p>DESCRIPTION</p>
+      <h3>Properties</h3>
+          <p><code>XXXX</code> - TEXT</p>
+        
+      <h3>Outputs</h3>
+       <dl class="message-properties">
+         <dt>payload<span class="property-type">object</span></dt>
+         <dd> <code>msg.payload</code> will contain ...  </dd>
+       </dl>
+      
+      <h3>Details</h3>
+      The listen verb establishes a connection to a websocket server and sends live audio for the current call.<h3>References</h3>
+        <ul>
+            <li><a href="https://docs.jambonz.org/jambonz/#listen">Jambonz listen reference</a></li>
+        </ul>
+      </script>
+
+</script>

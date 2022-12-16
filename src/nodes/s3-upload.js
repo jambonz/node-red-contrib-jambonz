@@ -1,3 +1,6 @@
+const { notDeepStrictEqual } = require('assert');
+const { memoryStorage } = require('multer');
+
 module.exports = function(RED) {
   var WebSocket = require('ws');
   var url = require('url');
@@ -26,13 +29,19 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, n);
     var node = this;
 
+    // Get AWS Creds
+    const awsCreds = RED.nodes.getNode(n.aws);
+    if (awsCreds && awsCreds.credentials) {
+        AWS.Credentials({
+          accessKeyId: awsCreds.credentials.accessKey, 
+          secretAccessKey: awsCreds.credentials.secretAccessKey
+        });
+    }
+
     // Store local copies of the node configuration (as defined in the .html)
     [
       'path',
-      'bucket',
-      'region',
-      'accesskey',
-      'secret'
+      'bucket'
     ].forEach(function(attr) { node[attr] = n[attr];});
 
     node._clients = {};
@@ -54,7 +63,9 @@ module.exports = function(RED) {
         try {
           socket.removeAllListeners('message');
           node.metadata = JSON.parse(data);
-          node.log(`received metadata: ${data}`);
+          var msg = {payload : node.metadata}
+          msg.event = 'newSession'
+          node.send(msg)
           const md = {
             callSid: node.metadata.callSid,
             accountSid: node.metadata.accountSid,
@@ -73,18 +84,22 @@ module.exports = function(RED) {
             Metadata: md
           });
           upload.on('error', function(err) {
-            node.log(`Error uploading: ${JSON.stringify(err)}`);
+            node.error(`Error uploading: ${JSON.stringify(err)}`);
           });
           upload.on('part', function(details) {
-            node.log(`part: ${JSON.stringify(details)}`);
+            var msg = {payload : details}
+            msg.event = 'partUploaded'
+            node.send(msg)
           });
           upload.on('uploaded', function(details) {
-            node.log(`uploaded: ${JSON.stringify(details)}`);
+            var msg = {payload : details}
+            msg.event = 'finishedUpload'
+            node.send(msg)
           });
           const duplex = WebSocket.createWebSocketStream(socket);
           duplex.pipe(upload);
         } catch (err) {
-          node.log(`Error starting upload: ${err.message}`);
+          node.error(`Error starting upload: ${err.message}`);
         }
       });
       socket.on('error', function(err) {

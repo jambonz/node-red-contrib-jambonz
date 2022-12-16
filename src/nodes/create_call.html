@@ -1,0 +1,287 @@
+<!-- Javascript -->
+<script type="text/javascript">
+ RED.nodes.registerType('create-call',{
+      category: 'jambonz',
+      color: '#aebfb9',
+      defaults: {
+        name: {value: ''},
+        server: {value: '', required: true, type: 'jambonz_auth'},
+        from: {value: '', required: true},
+        fromType: {value: ''},
+        to: {value: '', required: true},
+        toType: {value: ''},
+        dest: {value: 'phone', required: true},
+        timeout: {},
+        application: {value: ''},
+        appName: {},
+        mode: {value: 'app'},
+        call_hook_url : {},
+        call_hook_urlType : {value: 'str'},
+        call_hook_method : {value : 'GET'},
+        call_status_url : {},
+        call_status_urlType : {value: 'str'},
+        call_status_method :  {value : 'GET'},
+        vendor: {value: 'default', validate : function (v) {
+          console.log(v)
+          if ( v == null &&  $('#node-input-mode').val() == 'url'){
+            return(false)
+          } else {
+            return(true)
+          }
+        }},
+        lang: {value: 'default'},
+        xlang: {},
+        voice: {value: 'default'},
+        xvoice: {},
+        transcriptionvendor: {value: 'default', validate : function (v) {
+          console.log(v)
+          if ( v == null &&  $('#node-input-mode').val() == 'url'){
+            return(false)
+          } else {
+            return(true)
+          }
+        }},
+        recognizerlang: {value: 'default'}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { 
+        return this.name || 'create call';
+      },
+      oneditprepare: function() {
+        var node = this;
+        var destElem = $('#node-input-dest');
+        var serverElem = $('#node-input-server');
+        var applicationElem = $('#node-input-application');
+        prepareTtsControls(node);
+        prepareSttControls(node);
+
+
+        $('#node-input-from').typedInput({
+          default: $('#node-input-fromType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-fromType')
+        });
+        $('#node-input-to').typedInput({
+          default: $('#node-input-toType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-toType')
+        });
+        $('#node-input-call_hook_url').typedInput({
+          default: $('#node-input-call_hook_urlType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-call_hook_urlType')
+        });
+        $('#node-input-call_status_url').typedInput({
+          default: $('#node-input-call_status_urlType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-call_status_urlType')
+        });
+
+        var populateApplications = function() {
+          var serverId = $('#node-input-server option:selected').val();
+            $.ajax({
+              url: `_jambonz/applications/${serverId}`,
+              dataType: 'json',
+              timeout: 500,
+              error: (err) => {
+                console.log(err);
+              },
+              success: (res) => {
+                applicationElem.find('option').remove();
+                var options = '';
+                res.forEach((app) => {
+                  if (node.application === app.application_sid) {
+                    options += `<option value="${app.application_sid}" selected>${app.name}</option>`;
+                    node.appName = app.name;
+                  }
+                  else {
+                    options += `<option value="${app.application_sid}">${app.name}</option>`;
+                  }
+                });
+                if (options.length) applicationElem.append(options);
+              }
+            });
+          }
+        serverElem.change(populateApplications);
+        applicationElem.change(() => {
+          node.appName = $('#node-input-application option:selected').text();
+        });
+        $('#url-options').hide();
+        $('#node-input-mode').change(function() {
+          const mode = $('#node-input-mode').val();
+          if (mode == 'app') {
+            $('#app-options').show();
+            $('#url-options').hide();
+          }
+          else {
+            $('#app-options').hide();
+            $('#url-options').show();
+
+          }
+        });
+      }
+  });
+</script>
+
+
+<!-- HTML -->
+<script type="text/html" data-template-name="create-call">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-server">Server</label>
+    <input type="text" id="node-input-server">
+  </div>
+  <div class="form-row">
+    <label for="node-input-from">From</label>
+    <input type="text" id="node-input-from" placeholder="calling party number">
+    <input type="hidden" id="node-input-fromType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-to">To</label>
+    <input type="text" id="node-input-to" placeholder="called party info">
+    <input type="hidden" id="node-input-toType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-dest">Call type</label>
+    <select id="node-input-dest">
+      <option value="phone">phone number</option>
+      <option value="user">registered sip device/user</option>
+      <option value="sip">sip endpoint</option>
+      <option value="ms-teams">Microsoft teams</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-timeout">Ring timeout</label>
+    <input type="text" id="node-input-timeout" placeholder="ring no answer timeout in secs (default: 60)">
+    <input type="hidden" id="node-input-timeoutType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-application">Connect to</label>
+    <select id="node-input-mode">
+      <option value="app">Application</option>
+      <option value="url">Webhooks</option>
+    </select>
+  </div>
+  <div id="app-options">
+    <div class="form-row">
+      <label for="node-input-application">Application</label>
+      <select id="node-input-application">
+      </select>
+    </div>
+  </div>
+  <div id="url-options">
+    <fieldset>
+      <legend>Webhook options</legend>
+    <div class="form-row">
+      <label for="node-input-call_hook_url">Call Hook URL</label>
+      <input type="text" id="node-input-call_hook_url" placeholder="https://example.com/answer">
+      <input type="hidden" id="node-input-call_hook_urlType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-call_hook_method">Method</label>
+      <select id="node-input-call_hook_method">
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-call_status_url">Call Status URL</label>
+      <input type="text" id="node-input-call_status_url" placeholder="https://example.com/status">
+      <input type="hidden" id="node-input-call_status_urlType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-call_status_method">Method</label>
+      <select id="node-input-call_status_method">
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+      </select>
+    </div>
+    <fieldset>
+      <legend>Speech synthesis options</legend>
+      <div class="form-row">
+        <label for="node-input-vendor">Vendor</label>
+        <select id="node-input-vendor">
+          <option value="default" selected disabled>--Select Vendor--</option>
+          <option value="google">google</option>
+          <option value="aws">aws/polly</option>
+          <option value="microsoft">microsoft</option>
+          <option value="ibm">ibm</option>
+          <option value="nuance">nuance</option>
+        </select>
+      </div>
+      <div class="form-row" style="display: none;">
+        <label for="node-input-lang"> Lang</label>
+        <input type="text" id="node-input-lang">
+      </div>
+      <div class="form-row">
+        <label for="node-input-xlang">Language</label>
+        <select id="node-input-xlang">
+        </select>
+      </div>
+      <div class="form-row" style="display: none;">
+        <label for="node-input-voice"> Voice</label>
+        <input type="text" id="node-input-voice">
+      </div>
+      <div class="form-row">
+        <label for="node-input-xvoice">Voice</label>
+        <select id="node-input-xvoice">
+        </select>
+      </div>
+      <legend>Transcription options</legend>
+      <div id="speech-input-container">
+        <div class="form-row">
+          <label for="node-input-transcriptionvendor">Vendor</label>
+          <select id="node-input-transcriptionvendor">
+            <option value="default" selected disabled>--Select Vendor--</option>
+            <option value="google">Google</option>
+            <option value="aws">AWS</option>
+            <option value="deepgram">deepgram</option>
+            <option value="microsoft">microsoft</option>
+            <option value="ibm">ibm</option>
+            <option value="nuance">nuance</option>
+  
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="node-input-recognizerlang"><i class="icon-tag"></i> Language</label>
+          <select id="node-input-recognizerlang">
+          </select>
+        </div>
+    </fieldset>
+  </div>
+  
+  
+  </script>
+
+<!-- Help Text -->
+
+<script type="text/html" data-help-name="create-call">
+  <p>Create an outbound call</p>
+  <h3>Properties</h3>
+    <p><code>Server</code> -jambonz server to connect to</p>
+    <p><code>From</code> - Calling party phone number</p>
+    <p><code>To</code> - Called party phone number, or other identifier</p>
+    <p><code>Call type</code> - Type of destination: phone number, registered user, sip endpoint, or microsoft teams</p>
+    <p><code>Application</code> - Application to execute when call is answered</p>
+  
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+   <dt>statusCode<span class="property-type">int</span></dt>
+   <dd> <code>msg.statusCode</code> will contain the response code from Jambomnz to the createCall request</dd>
+   <dt>callSid<span class="property-type">string</span></dt>
+   <dd> <code>msg.callSid</code> will contain the SID of the call that was created</dd>
+  </dl>
+  
+  <h3>Details</h3>
+  The create call command is used to generate a new outbound call.  
+  When the call is answered the specified application's call hook will be invoked.
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://docs.jambonz.org/rest/#create-a-call">Jambonz reference</a></li>
+    </ul>
+  </script>

@@ -1,0 +1,106 @@
+<!-- Javascript -->
+
+
+<script type="text/javascript">
+ RED.nodes.registerType('rasa',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+        url:{required : true},
+        urlType:{value: 'str'},
+        prompt:{},
+        promptType:{value: 'str'},
+        eventHook:{},
+        eventHookType:{value: 'str'},
+        actionHook:{},
+        actionHookType:{value: 'str'},
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      paletteLabel: "rasa",
+      label: function() { return this.name || 'rasa';},
+      oneditprepare: () => {
+        var node = this;
+        $('#node-input-url').typedInput({
+            types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+            typeField: $('#node-input-urlType')
+        });
+        $('#node-input-prompt').typedInput({
+            types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+            typeField: $('#node-input-promptType')
+        });
+        $('#node-input-eventHook').typedInput({
+            types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+            typeField: $('#node-input-eventHookType')
+        });
+        $('#node-input-actionHook').typedInput({
+            types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+            typeField: $('#node-input-actionHookType')
+        });
+      }
+  });
+
+
+</script>
+
+
+<!-- HTML -->
+
+<script type="text/html" data-template-name="rasa">
+        <div class="form-row">
+          <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+          <input type="text" id="node-input-name" placeholder="Name">
+        </div>
+        
+        <div class="form-row">
+          <label for="node-input-url"><i class="icon-tag"></i> URL</label>
+          <input type="text" id="node-input-url" placeholder="http">
+          <input type="hidden" id="node-input-urlType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-prompt"><i class="icon-tag"></i> Prompt</label>
+          <input type="text" id="node-input-prompt" placeholder="Hello....">
+          <input type="hidden" id="node-input-promptType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-eventHook"><i class="icon-tag"></i> Event Hook</label>
+          <input type="text" id="node-input-eventHook" placeholder="/event">
+          <input type="hidden" id="node-input-eventHookType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-actionHook"><i class="icon-tag"></i> Action Hook</label>
+          <input type="text" id="node-input-actionHook" placeholder="/action">
+          <input type="hidden" id="node-input-actionHookType">
+        </div>
+</script>
+
+<!-- Help Text -->
+
+<script type="text/html" data-help-name="rasa">
+        <p>The rasa verb is used to connect a call to a Rasa assistant.
+
+        </p>
+      <h3>Properties</h3>
+          <p><code>url</code> - URL to connect to the Rasa assistant using the Rasa RestInput channel</p>
+          <p><code>prompt</code> - an initial greeting to play to the user	</p>
+          <p><code>eventHook</code> - a webhook that is called when the rasa assistant returns either a user message or a bot message</p>
+          <p><code>actionHook	</code> - A webhook that is called when the rasa verb completes	</p>
+
+      <h3>Outputs</h3>
+       <dl class="message-properties">
+         <dt>payload<span class="property-type">object</span></dt>
+         <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>rasa</code> action appended  </dd>
+       </dl>
+      
+      <h3>Details</h3>
+      The rasa verb performs speech recognition on the caller audio stream and sends it as text input to the rasa assistant using the rasa RestInput channel. Text returned from the assistant is played to the caller using text-to-speech. As the conversation proceeds, webhook events can be sent to notify of all of the messages being exchanged between the user and the bot, allowing your application to intercede at any point, e.g. to transfer the call to an agent.
+      
+      <h3>References</h3>
+        <ul>
+            <li><a href="https://www.jambonz.org/docs/webhooks/rasa/">Jambonz rasa reference</a></li>
+        </ul>
+      </script>
+
+</script>

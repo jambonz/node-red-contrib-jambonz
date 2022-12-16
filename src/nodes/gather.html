@@ -1,0 +1,322 @@
+<!-- Javascript -->
+
+
+<script type="text/javascript">
+  RED.nodes.registerType('gather',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+        actionhook: {value: ''},
+        finishonkey: {value: ''},
+        dtmfinput: {value: 0},
+        speechinput: {value: 1},
+        numdigits: {value: ''},
+        timeout: {value: ''},
+        prompttype: {value: 'say'},
+        playurl: {value: ''},
+        playurlType: {value: 'str'},
+        playLoop: {value: ''},
+        text: {value: ''},
+        vendor: {value: 'default'},
+        lang: {value: 'default'},
+        voice: {value: 'default'},
+        xvoice: {},
+        xlang: {},
+        transcriptionvendor: {value: 'default'},
+        recognizerlang: {value: 'default'},
+        recognizeraltlang: {},
+        recognizeraltlangType: {val: 'str'},
+        interim: {value: false},
+        profanityfilter: {value: false},
+        transcriptionhints: {},
+        transcriptionhintsType: {val: 'str'},
+        separaterecog: {value: false},
+        useenhanced: {value: false},
+        words: {value: false},
+        punctuation: {value: false},
+        diarization: {value: false},
+        diarizationmin: {value: 2},
+        diarizationminType: {value: 'num'},
+        diarizationmax: {value: 6},
+        diarizationmaxType: {value: 'num'},
+        interactiontype: {value: 'voice_command'},
+        naics: {value: 0},
+        naicsType: {value: 'num'},
+        identifychannels: {value: false},
+        speakerlabel: {value: false},
+        vocabularyname: {},
+        vocabularynameType: {value: 'str'},
+        vocabularyfiltername: {},
+        vocabularyfilternameType: {value: 'str'},
+        vocabularyfiltermethod: {}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { return this.name || 'gather';},
+      oneditprepare: function() {
+        var node = this;
+        prepareTtsControls(node);
+        prepareSttControls(node);
+
+        $('#node-input-playurl').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-playurlType')
+        });
+        $('#node-input-transcriptionhints').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-transcriptionhintsType')
+        });
+        $('#node-input-recognizeraltlang').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-recognizeraltlangType')
+        });
+        $('#node-input-naics').typedInput({
+          types: ['num', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-naicsType')
+        });
+
+        var enableSpeech = function(enabled) {
+          console.log(`enable speech: ${enabled}`);
+          if (enabled) $('#speech-input-container').show();
+          else $('#speech-input-container').hide();
+        }
+        var enableDtmf = function(enabled) {
+          console.log(`enable dtmf: ${enabled}`);
+          if (enabled) $('#dtmf-input-container').show();
+          else $('#dtmf-input-container').hide();          
+        }
+
+        $('#node-input-speechinput').change(function() {
+          var doSpeech = $('#node-input-speechinput:checked').val();
+          enableSpeech(doSpeech);
+        });
+        $('#node-input-dtmfinput').change(function() {
+          var doDtmf = $('#node-input-dtmfinput:checked').val();
+          enableDtmf(doDtmf);
+        });
+
+        var onSayPlayChanged = function () {
+          var type = $('#node-input-prompttype').find(':selected').val();
+          console.log(`prompt type changed to ${type}`);
+          if (type === 'say') {
+            $('#say-container').show();
+            $('#play-container').hide();
+          }
+          else {
+            $('#play-container').show();
+            $('#say-container').hide();
+          }
+        }
+        
+        $('#node-input-prompttype').change(onSayPlayChanged);
+      }
+  });
+
+</script>
+
+
+<!-- HTML -->
+
+<script type="text/html" data-template-name="gather">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-actionhook"><i class="icon-tag"></i> Action hook</label>
+    <input type="text" id="node-input-actionhook" placeholder="webhook with results of gather">
+  </div>
+  <fieldset>
+    <legend>Prompt</legend>
+    <div class="form-row">
+      <label for="node-input-prompttype"><i class="icon-tag"></i> Verb</label>
+      <select id="node-input-prompttype">
+        <option>play</option>
+        <option selected>say</option>
+      </select>
+    </div>
+  
+    <div id="say-container">
+      <div class="form-row">
+        <label for="node-input-text"><i class="icon-tag"></i> Text</label>
+        <textarea id="node-input-text" rows="4" placeholder="Text or SSML to speak" style="width:70%"></textarea>
+      </div>
+      <div class="form-row">
+        <label for="node-input-vendor"> Vendor</label>
+        <select id="node-input-vendor">
+          <option value="default" selected>--application default--</option>
+          <option value="google">google</option>
+          <option value="aws">aws/polly</option>
+          <option value="microsoft">microsoft</option>
+          <option value="ibm">ibm</option>
+          <option value="nuance">nuance</option>
+
+        </select>
+      </div>
+      <div class="form-row" style="display: none;">
+        <label for="node-input-lang"> Lang</label>
+        <input type="text" id="node-input-lang">
+      </div>
+      <div class="form-row">
+        <label for="node-input-xlang">Language</label>
+        <select id="node-input-xlang">
+          <option value="default" selected>--application default--</option>
+        </select>
+      </div>
+      <div class="form-row" style="display: none;">
+        <label for="node-input-voice"> Voice</label>
+        <input type="text" id="node-input-voice">
+      </div>
+      <div class="form-row">
+        <label for="node-input-xvoice">Voice</label>
+        <select id="node-input-xvoice">
+          <option value="default" selected>--application default--</option>
+        </select>
+      </div>
+    </div>
+  
+    <div id="play-container">
+      <div class="form-row">
+        <label for="node-input-playurl"> Url</label>
+        <input type="text" id="node-input-playurl" placeholder="url of file to play">
+        <input type="hidden" id="node-input-playurlType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-playLoop"> Loop</label>
+        <input type="text" id="node-input-playLoop" placeholder="count">
+      </div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>DTMF Input</legend>
+    <div class="form-row">
+      <label for="node-input-dtmfinput">Accept DTMF input</label>
+      <input type="checkbox" id="node-input-dtmfinput">
+    </div>
+    <div id="dtmf-input-container">
+      <div class="form-row">
+        <label for="node-input-finishonkey"><i class="icon-tag"></i> Finish key</label>
+        <input type="text" id="node-input-finishonkey" placeholder="dtmf key to signal end of input">
+      </div>
+      <div class="form-row">
+        <label for="node-input-numdigits"><i class="icon-tag"></i> Num. digits</label>
+        <input type="text" id="node-input-numdigits" placeholder="number of digits to collect">
+      </div>
+      <div class="form-row">
+        <label for="node-input-numtimeout"><i class="icon-tag"></i> Timeout</label>
+        <input type="text" id="node-input-timeout" placeholder="dtmf timeout in secs">
+      </div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Speech Input</legend>
+    <div class="form-row">
+      <label for="node-input-speechinput">Accept Speech input</label>
+      <input type="checkbox" id="node-input-speechinput">
+    </div>
+    <div id="speech-input-container">
+      <div class="form-row">
+        <label for="node-input-transcriptionvendor">Vendor</label>
+        <select id="node-input-transcriptionvendor">
+          <option value="default" selected>--application default--</option>
+          <option value="google">Google</option>
+          <option value="aws">AWS</option>
+          <option value="deepgram">deepgram</option>
+          <option value="microsoft">microsoft</option>
+          <option value="ibm">ibm</option>
+          <option value="nuance">nuance</option>
+
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="node-input-recognizerlang"><i class="icon-tag"></i> Language</label>
+        <select id="node-input-recognizerlang">
+        </select>
+      </div>
+      <div id="google-stt-options">
+        <legend>Google Transcription Options</legend>
+        <div class="form-row">
+          <label for="node-input-transcriptionhints">Hints</label>
+          <input type="text" id="node-input-transcriptionhints" placeholder="comma-separated list of phrases">
+          <input type="hidden" id="node-input-transcriptionhintsType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-recognizeraltlang">Alternative languages</label>
+          <input type="text" id="node-input-recognizeraltlang" placeholder="comma-separated list of add'l lang codes">
+          <input type="hidden" id="node-input-recognizeraltlangType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-naics">Industry NAICS code</label>
+          <input type="text" id="node-input-naics">
+          <input type="hidden" id="node-input-naicsType">
+        </div>
+      </div>
+      <div id="aws-stt-options">
+        <legend>AWS Transcription Options</legend>
+        <div class="form-row">
+          <label for="node-input-vocabularyname">Vocabulary name</label>
+          <input type="text" id="node-input-vocabularyname">
+          <input type="hidden" id="node-input-vocabularynameType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-vocabularyfiltername">Vocabulary filter name</label>
+          <input type="text" id="node-input-vocabularyfiltername">
+          <input type="hidden" id="node-input-vocabularyfilternameType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-vocabularyfiltermethod">Filter method</label>
+          <select id="node-input-vocabularyfiltermethod">
+            <option value="remove" selected>Remove</option>
+            <option value="mask" selected>Mask</option>
+            <option value="tag" selected>Tag</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  </script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="gather">
+    <p>Collect speech or dtmf input from the caller</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+      <dt>Action hook<span class="property-type">string</span></dt>
+      <dd>A webhook invoke when operation completes.</dd>
+      <dt>Speech<span class="property-type">boolean</span></dt>
+      <dd>Enable speech input.</dd>
+      <dt>Digits<span class="property-type">boolean</span></dt>
+      <dd>Enable DTMF input.</dd>
+      <dt>Language<span class="property-type">string</span></dt>
+      <dd>Language to use for speech recognition</dd>
+      <dt>Hints<span class="property-type">string</span></dt>
+      <dd>Comma-separate list of words or phrases to assist speech detection</dd>
+      <dt>Verb<span class="property-type">string</span></dt>
+      <dd>Whether to use the play or say verb to prompt the caller</dd>
+      <dt>Url<span class="property-type">string</span></dt>
+      <dd>Url of prompt to play</dd>
+      <dt>Text<span class="property-type">string</span></dt>
+      <dd>Text to speak as a prompt to caller</dd>
+      <dt>Vendor<span class="property-type">string</span></dt>
+      <dd>TTS vendor</dd>
+      <dt>Language<span class="property-type">string</span></dt>
+      <dd>TTS language</dd>
+      <dt>Voice<span class="property-type">string</span></dt>
+      <dd>TTS voice</dd>
+    </dl>
+  
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>gather</code> action appended  </dd>
+    </dl>
+  
+    <h3>Details</h3>
+    The gather command is used to collect dtmf or speech input.
+    <h3>References</h3>
+      <ul>
+          <li><a href="https://docs.jambonz.org/jambonz/#gather">Jambonz gather reference</a></li>
+      </ul>
+  </script>

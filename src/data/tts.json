@@ -646,5 +646,2974 @@
         { "value": "Gwyneth", "name": "Gwyneth (Female)" }
       ]
     }
-  ]
+  ],
+  "microsoft": [{
+    "code": "af-ZA",
+    "name": "Afrikaans (South Africa)",
+    "voices": [{
+      "value": "af-ZA-AdriNeural",
+      "name": "AdriNeural (Female)"
+    }, {
+      "value": "af-ZA-WillemNeural",
+      "name": "WillemNeural (Male)"
+    }]
+  }, {
+    "code": "am-ET",
+    "name": "Amharic (Ethiopia)",
+    "voices": [{
+      "value": "am-ET-AmehaNeural",
+      "name": "AmehaNeural (Male)"
+    }, {
+      "value": "am-ET-MekdesNeural",
+      "name": "MekdesNeural (Female)"
+    }]
+  }, {
+    "code": "ar-AE",
+    "name": "Arabic (United Arab Emirates)",
+    "voices": [{
+      "value": "ar-AE-FatimaNeural",
+      "name": "FatimaNeural (Female)"
+    }, {
+      "value": "ar-AE-HamdanNeural",
+      "name": "HamdanNeural (Male)"
+    }]
+  }, {
+    "code": "ar-BH",
+    "name": "Arabic (Bahrain)",
+    "voices": [{
+      "value": "ar-BH-AliNeural",
+      "name": "AliNeural (Male)"
+    }, {
+      "value": "ar-BH-LailaNeural",
+      "name": "LailaNeural (Female)"
+    }]
+  }, {
+    "code": "ar-DZ",
+    "name": "Arabic (Algeria)",
+    "voices": [{
+      "value": "ar-DZ-AminaNeural",
+      "name": "AminaNeural (Female)"
+    }, {
+      "value": "ar-DZ-IsmaelNeural",
+      "name": "IsmaelNeural (Male)"
+    }]
+  }, {
+    "code": "ar-EG",
+    "name": "Arabic (Egypt)",
+    "voices": [{
+      "value": "ar-EG-SalmaNeural",
+      "name": "SalmaNeural (Female)"
+    }, {
+      "value": "ar-EG-ShakirNeural",
+      "name": "ShakirNeural (Male)"
+    }]
+  }, {
+    "code": "ar-IL",
+    "name": "Arabic (Israel)",
+    "voices": [{
+      "value": "Not",
+      "name": "Not supported"
+    }]
+  }, {
+    "code": "ar-IQ",
+    "name": "Arabic (Iraq)",
+    "voices": [{
+      "value": "ar-IQ-BasselNeural",
+      "name": "BasselNeural (Male)"
+    }, {
+      "value": "ar-IQ-RanaNeural",
+      "name": "RanaNeural (Female)"
+    }]
+  }, {
+    "code": "ar-JO",
+    "name": "Arabic (Jordan)",
+    "voices": [{
+      "value": "ar-JO-SanaNeural",
+      "name": "SanaNeural (Female)"
+    }, {
+      "value": "ar-JO-TaimNeural",
+      "name": "TaimNeural (Male)"
+    }]
+  }, {
+    "code": "ar-KW",
+    "name": "Arabic (Kuwait)",
+    "voices": [{
+      "value": "ar-KW-FahedNeural",
+      "name": "FahedNeural (Male)"
+    }, {
+      "value": "ar-KW-NouraNeural",
+      "name": "NouraNeural (Female)"
+    }]
+  }, {
+    "code": "ar-LB",
+    "name": "Arabic (Lebanon)",
+    "voices": [{
+      "value": "ar-LB-LaylaNeural",
+      "name": "LaylaNeural (Female)"
+    }, {
+      "value": "ar-LB-RamiNeural",
+      "name": "RamiNeural (Male)"
+    }]
+  }, {
+    "code": "ar-LY",
+    "name": "Arabic (Libya)",
+    "voices": [{
+      "value": "ar-LY-ImanNeural",
+      "name": "ImanNeural (Female)"
+    }, {
+      "value": "ar-LY-OmarNeural",
+      "name": "OmarNeural (Male)"
+    }]
+  }, {
+    "code": "ar-MA",
+    "name": "Arabic (Morocco)",
+    "voices": [{
+      "value": "ar-MA-JamalNeural",
+      "name": "JamalNeural (Male)"
+    }, {
+      "value": "ar-MA-MounaNeural",
+      "name": "MounaNeural (Female)"
+    }]
+  }, {
+    "code": "ar-OM",
+    "name": "Arabic (Oman)",
+    "voices": [{
+      "value": "ar-OM-AbdullahNeural",
+      "name": "AbdullahNeural (Male)"
+    }, {
+      "value": "ar-OM-AyshaNeural",
+      "name": "AyshaNeural (Female)"
+    }]
+  }, {
+    "code": "ar-PS",
+    "name": "Arabic (Palestinian Territories)",
+    "voices": [{
+      "value": "Not",
+      "name": "Not supported"
+    }]
+  }, {
+    "code": "ar-QA",
+    "name": "Arabic (Qatar)",
+    "voices": [{
+      "value": "ar-QA-AmalNeural",
+      "name": "AmalNeural (Female)"
+    }, {
+      "value": "ar-QA-MoazNeural",
+      "name": "MoazNeural (Male)"
+    }]
+  }, {
+    "code": "ar-SA",
+    "name": "Arabic (Saudi Arabia)",
+    "voices": [{
+      "value": "ar-SA-HamedNeural",
+      "name": "HamedNeural (Male)"
+    }, {
+      "value": "ar-SA-ZariyahNeural",
+      "name": "ZariyahNeural (Female)"
+    }]
+  }, {
+    "code": "ar-SY",
+    "name": "Arabic (Syria)",
+    "voices": [{
+      "value": "ar-SY-AmanyNeural",
+      "name": "AmanyNeural (Female)"
+    }, {
+      "value": "ar-SY-LaithNeural",
+      "name": "LaithNeural (Male)"
+    }]
+  }, {
+    "code": "ar-TN",
+    "name": "Arabic (Tunisia)",
+    "voices": [{
+      "value": "ar-TN-HediNeural",
+      "name": "HediNeural (Male)"
+    }, {
+      "value": "ar-TN-ReemNeural",
+      "name": "ReemNeural (Female)"
+    }]
+  }, {
+    "code": "ar-YE",
+    "name": "Arabic (Yemen)",
+    "voices": [{
+      "value": "ar-YE-MaryamNeural",
+      "name": "MaryamNeural (Female)"
+    }, {
+      "value": "ar-YE-SalehNeural",
+      "name": "SalehNeural (Male)"
+    }]
+  }, {
+    "code": "az-AZ",
+    "name": "Azerbaijani (Azerbaijan)",
+    "voices": [{
+      "value": "az-AZ-BabekNeural",
+      "name": "BabekNeural (Male)"
+    }, {
+      "value": "az-AZ-BanuNeural",
+      "name": "BanuNeural (Female)"
+    }]
+  }, {
+    "code": "bg-BG",
+    "name": "Bulgarian (Bulgaria)",
+    "voices": [{
+      "value": "bg-BG-BorislavNeural",
+      "name": "BorislavNeural (Male)"
+    }, {
+      "value": "bg-BG-KalinaNeural",
+      "name": "KalinaNeural (Female)"
+    }]
+  }, {
+    "code": "bn-BD",
+    "name": "Bangla (Bangladesh)",
+    "voices": [{
+      "value": "bn-BD-NabanitaNeural",
+      "name": "NabanitaNeural (Female)"
+    }, {
+      "value": "bn-BD-PradeepNeural",
+      "name": "PradeepNeural (Male)"
+    }]
+  }, {
+    "code": "bn-IN",
+    "name": "Bengali (India)",
+    "voices": [{
+      "value": "bn-IN-BashkarNeural",
+      "name": "BashkarNeural (Male)"
+    }, {
+      "value": "bn-IN-TanishaaNeural",
+      "name": "TanishaaNeural (Female)"
+    }]
+  }, {
+    "code": "bs-BA",
+    "name": "Bosnian (Bosnia)",
+    "voices": [{
+      "value": "bs-BA-GoranNeural",
+      "name": "GoranNeural (Male)"
+    }, {
+      "value": "bs-BA-VesnaNeural",
+      "name": "VesnaNeural (Female)"
+    }]
+  }, {
+    "code": "ca-ES",
+    "name": "Catalan (Spain)",
+    "voices": [{
+      "value": "ca-ES-AlbaNeural",
+      "name": "AlbaNeural (Female)"
+    }, {
+      "value": "ca-ES-EnricNeural",
+      "name": "EnricNeural (Male)"
+    }, {
+      "value": "ca-ES-JoanaNeural",
+      "name": "JoanaNeural (Female)"
+    }]
+  }, {
+    "code": "cs-CZ",
+    "name": "Czech (Czech)",
+    "voices": [{
+      "value": "cs-CZ-AntoninNeural",
+      "name": "AntoninNeural (Male)"
+    }, {
+      "value": "cs-CZ-VlastaNeural",
+      "name": "VlastaNeural (Female)"
+    }]
+  }, {
+    "code": "cy-GB",
+    "name": "Welsh (United Kingdom)",
+    "voices": [{
+      "value": "cy-GB-AledNeural",
+      "name": "AledNeural (Male)"
+    }, {
+      "value": "cy-GB-NiaNeural",
+      "name": "NiaNeural (Female)"
+    }]
+  }, {
+    "code": "da-DK",
+    "name": "Danish (Denmark)",
+    "voices": [{
+      "value": "da-DK-ChristelNeural",
+      "name": "ChristelNeural (Female)"
+    }, {
+      "value": "da-DK-JeppeNeural",
+      "name": "JeppeNeural (Male)"
+    }]
+  }, {
+    "code": "de-AT",
+    "name": "German (Austria)",
+    "voices": [{
+      "value": "de-AT-IngridNeural",
+      "name": "IngridNeural (Female)"
+    }, {
+      "value": "de-AT-JonasNeural",
+      "name": "JonasNeural (Male)"
+    }]
+  }, {
+    "code": "de-CH",
+    "name": "German (Switzerland)",
+    "voices": [{
+      "value": "de-CH-JanNeural",
+      "name": "JanNeural (Male)"
+    }, {
+      "value": "de-CH-LeniNeural",
+      "name": "LeniNeural (Female)"
+    }]
+  }, {
+    "code": "de-DE",
+    "name": "German (Germany)",
+    "voices": [{
+      "value": "de-DE-AmalaNeural",
+      "name": "AmalaNeural (Female)"
+    }, {
+      "value": "de-DE-BerndNeural",
+      "name": "BerndNeural (Male)"
+    }, {
+      "value": "de-DE-ChristophNeural",
+      "name": "ChristophNeural (Male)"
+    }, {
+      "value": "de-DE-ConradNeural",
+      "name": "ConradNeural (Male)"
+    }, {
+      "value": "de-DE-ElkeNeural",
+      "name": "ElkeNeural (Female)"
+    }, {
+      "value": "de-DE-GiselaNeural",
+      "name": "GiselaNeural (Female)"
+    }, {
+      "value": "de-DE-KasperNeural",
+      "name": "KasperNeural (Male)"
+    }, {
+      "value": "de-DE-KatjaNeural",
+      "name": "KatjaNeural (Female)"
+    }, {
+      "value": "de-DE-KillianNeural",
+      "name": "KillianNeural (Male)"
+    }, {
+      "value": "de-DE-KlarissaNeural",
+      "name": "KlarissaNeural (Female)"
+    }, {
+      "value": "de-DE-KlausNeural",
+      "name": "KlausNeural (Male)"
+    }, {
+      "value": "de-DE-LouisaNeural",
+      "name": "LouisaNeural (Female)"
+    }, {
+      "value": "de-DE-MajaNeural",
+      "name": "MajaNeural (Female)"
+    }, {
+      "value": "de-DE-RalfNeural",
+      "name": "RalfNeural (Male)"
+    }, {
+      "value": "de-DE-TanjaNeural",
+      "name": "TanjaNeural (Female)"
+    }]
+  }, {
+    "code": "el-GR",
+    "name": "Greek (Greece)",
+    "voices": [{
+      "value": "el-GR-AthinaNeural",
+      "name": "AthinaNeural (Female)"
+    }, {
+      "value": "el-GR-NestorasNeural",
+      "name": "NestorasNeural (Male)"
+    }]
+  }, {
+    "code": "en-AU",
+    "name": "English (Australia)",
+    "voices": [{
+      "value": "en-AU-AnnetteNeural",
+      "name": "AnnetteNeural (Female)"
+    }, {
+      "value": "en-AU-CarlyNeural",
+      "name": "CarlyNeural (Female)"
+    }, {
+      "value": "en-AU-DarrenNeural",
+      "name": "DarrenNeural (Male)"
+    }, {
+      "value": "en-AU-DuncanNeural",
+      "name": "DuncanNeural (Male)"
+    }, {
+      "value": "en-AU-ElsieNeural",
+      "name": "ElsieNeural (Female)"
+    }, {
+      "value": "en-AU-FreyaNeural",
+      "name": "FreyaNeural (Female)"
+    }, {
+      "value": "en-AU-JoanneNeural",
+      "name": "JoanneNeural (Female)"
+    }, {
+      "value": "en-AU-KenNeural",
+      "name": "KenNeural (Male)"
+    }, {
+      "value": "en-AU-KimNeural",
+      "name": "KimNeural (Female)"
+    }, {
+      "value": "en-AU-NatashaNeural",
+      "name": "NatashaNeural (Female)"
+    }, {
+      "value": "en-AU-NeilNeural",
+      "name": "NeilNeural (Male)"
+    }, {
+      "value": "en-AU-TimNeural",
+      "name": "TimNeural (Male)"
+    }, {
+      "value": "en-AU-TinaNeural",
+      "name": "TinaNeural (Female)"
+    }, {
+      "value": "en-AU-WilliamNeural",
+      "name": "WilliamNeural (Male)"
+    }]
+  }, {
+    "code": "en-CA",
+    "name": "English (Canada)",
+    "voices": [{
+      "value": "en-CA-ClaraNeural",
+      "name": "ClaraNeural (Female)"
+    }, {
+      "value": "en-CA-LiamNeural",
+      "name": "LiamNeural (Male)"
+    }]
+  }, {
+    "code": "en-GB",
+    "name": "English (United Kingdom)",
+    "voices": [{
+      "value": "en-GB-AbbiNeural",
+      "name": "AbbiNeural (Female)"
+    }, {
+      "value": "en-GB-AlfieNeural",
+      "name": "AlfieNeural (Male)"
+    }, {
+      "value": "en-GB-BellaNeural",
+      "name": "BellaNeural (Female)"
+    }, {
+      "value": "en-GB-ElliotNeural",
+      "name": "ElliotNeural (Male)"
+    }, {
+      "value": "en-GB-EthanNeural",
+      "name": "EthanNeural (Male)"
+    }, {
+      "value": "en-GB-HollieNeural",
+      "name": "HollieNeural (Female)"
+    }, {
+      "value": "en-GB-LibbyNeural",
+      "name": "LibbyNeural (Female)"
+    }, {
+      "value": "en-GB-MaisieNeural",
+      "name": "MaisieNeural (Female)"
+    }, {
+      "value": "en-GB-NoahNeural",
+      "name": "NoahNeural (Male)"
+    }, {
+      "value": "en-GB-OliverNeural",
+      "name": "OliverNeural (Male)"
+    }, {
+      "value": "en-GB-OliviaNeural",
+      "name": "OliviaNeural (Female)"
+    }, {
+      "value": "en-GB-RyanNeural",
+      "name": "RyanNeural (Male)"
+    }, {
+      "value": "en-GB-SoniaNeural",
+      "name": "SoniaNeural (Female)"
+    }, {
+      "value": "en-GB-ThomasNeural",
+      "name": "ThomasNeural (Male)"
+    }]
+  }, {
+    "code": "en-GH",
+    "name": "English (Ghana)",
+    "voices": [{
+      "value": "Not",
+      "name": "Not supported"
+    }]
+  }, {
+    "code": "en-HK",
+    "name": "English (Hongkong)",
+    "voices": [{
+      "value": "en-HK-SamNeural",
+      "name": "SamNeural (Male)"
+    }, {
+      "value": "en-HK-YanNeural",
+      "name": "YanNeural (Female)"
+    }]
+  }, {
+    "code": "en-IE",
+    "name": "English (Ireland)",
+    "voices": [{
+      "value": "en-IE-ConnorNeural",
+      "name": "ConnorNeural (Male)"
+    }, {
+      "value": "en-IE-EmilyNeural",
+      "name": "EmilyNeural (Female)"
+    }]
+  }, {
+    "code": "en-IN",
+    "name": "English (India)",
+    "voices": [{
+      "value": "en-IN-NeerjaNeural",
+      "name": "NeerjaNeural (Female)"
+    }, {
+      "value": "en-IN-PrabhatNeural",
+      "name": "PrabhatNeural (Male)"
+    }]
+  }, {
+    "code": "en-KE",
+    "name": "English (Kenya)",
+    "voices": [{
+      "value": "en-KE-AsiliaNeural",
+      "name": "AsiliaNeural (Female)"
+    }, {
+      "value": "en-KE-ChilembaNeural",
+      "name": "ChilembaNeural (Male)"
+    }]
+  }, {
+    "code": "en-NG",
+    "name": "English (Nigeria)",
+    "voices": [{
+      "value": "en-NG-AbeoNeural",
+      "name": "AbeoNeural (Male)"
+    }, {
+      "value": "en-NG-EzinneNeural",
+      "name": "EzinneNeural (Female)"
+    }]
+  }, {
+    "code": "en-NZ",
+    "name": "English (New Zealand)",
+    "voices": [{
+      "value": "en-NZ-MitchellNeural",
+      "name": "MitchellNeural (Male)"
+    }, {
+      "value": "en-NZ-MollyNeural",
+      "name": "MollyNeural (Female)"
+    }]
+  }, {
+    "code": "en-PH",
+    "name": "English (Philippines)",
+    "voices": [{
+      "value": "en-PH-JamesNeural",
+      "name": "JamesNeural (Male)"
+    }, {
+      "value": "en-PH-RosaNeural",
+      "name": "RosaNeural (Female)"
+    }]
+  }, {
+    "code": "en-SG",
+    "name": "English (Singapore)",
+    "voices": [{
+      "value": "en-SG-LunaNeural",
+      "name": "LunaNeural (Female)"
+    }, {
+      "value": "en-SG-WayneNeural",
+      "name": "WayneNeural (Male)"
+    }]
+  }, {
+    "code": "en-TZ",
+    "name": "English (Tanzania)",
+    "voices": [{
+      "value": "en-TZ-ElimuNeural",
+      "name": "ElimuNeural (Male)"
+    }, {
+      "value": "en-TZ-ImaniNeural",
+      "name": "ImaniNeural (Female)"
+    }]
+  }, {
+    "code": "en-US",
+    "name": "English (United States)",
+    "voices": [{
+      "value": "en-US-AIGenerateNeural",
+      "name": "AIGenerateNeural (Male)"
+    }, {
+      "value": "en-US-AIGenerateNeural",
+      "name": "AIGenerateNeural (Female)"
+    }, {
+      "value": "en-US-AmberNeural",
+      "name": "AmberNeural (Female)"
+    }, {
+      "value": "en-US-AnaNeural",
+      "name": "AnaNeural (Female)"
+    }, {
+      "value": "en-US-AriaNeural",
+      "name": "AriaNeural (Female)"
+    }, {
+      "value": "en-US-AshleyNeural",
+      "name": "AshleyNeural (Female)"
+    }, {
+      "value": "en-US-BrandonNeural",
+      "name": "BrandonNeural (Male)"
+    }, {
+      "value": "en-US-ChristopherNeural",
+      "name": "ChristopherNeural (Male)"
+    }, {
+      "value": "en-US-CoraNeural",
+      "name": "CoraNeural (Female)"
+    }, {
+      "value": "en-US-DavisNeural",
+      "name": "DavisNeural (Male)"
+    }, {
+      "value": "en-US-ElizabethNeural",
+      "name": "ElizabethNeural (Female)"
+    }, {
+      "value": "en-US-EricNeural",
+      "name": "EricNeural (Male)"
+    }, {
+      "value": "en-US-GuyNeural",
+      "name": "GuyNeural (Male)"
+    }, {
+      "value": "en-US-JacobNeural",
+      "name": "JacobNeural (Male)"
+    }, {
+      "value": "en-US-JaneNeural",
+      "name": "JaneNeural (Female)"
+    }, {
+      "value": "en-US-JasonNeural",
+      "name": "JasonNeural (Male)"
+    }, {
+      "value": "en-US-JennyMultilingualNeural",
+      "name": "JennyMultilingualNeural (Female)"
+    }, {
+      "value": "en-US-JennyNeural",
+      "name": "JennyNeural (Female)"
+    }, {
+      "value": "en-US-MichelleNeural",
+      "name": "MichelleNeural (Female)"
+    }, {
+      "value": "en-US-MonicaNeural",
+      "name": "MonicaNeural (Female)"
+    }, {
+      "value": "en-US-NancyNeural",
+      "name": "NancyNeural (Female)"
+    }, {
+      "value": "en-US-RogerNeural",
+      "name": "RogerNeural (Male)"
+    }, {
+      "value": "en-US-SaraNeural",
+      "name": "SaraNeural (Female)"
+    }, {
+      "value": "en-US-SteffanNeural",
+      "name": "SteffanNeural (Male)"
+    }, {
+      "value": "en-US-TonyNeural",
+      "name": "TonyNeural (Male)"
+    }]
+  }, {
+    "code": "en-ZA",
+    "name": "English (South Africa)",
+    "voices": [{
+      "value": "en-ZA-LeahNeural",
+      "name": "LeahNeural (Female)"
+    }, {
+      "value": "en-ZA-LukeNeural",
+      "name": "LukeNeural (Male)"
+    }]
+  }, {
+    "code": "es-AR",
+    "name": "Spanish (Argentina)",
+    "voices": [{
+      "value": "es-AR-ElenaNeural",
+      "name": "ElenaNeural (Female)"
+    }, {
+      "value": "es-AR-TomasNeural",
+      "name": "TomasNeural (Male)"
+    }]
+  }, {
+    "code": "es-BO",
+    "name": "Spanish (Bolivia)",
+    "voices": [{
+      "value": "es-BO-MarceloNeural",
+      "name": "MarceloNeural (Male)"
+    }, {
+      "value": "es-BO-SofiaNeural",
+      "name": "SofiaNeural (Female)"
+    }]
+  }, {
+    "code": "es-CL",
+    "name": "Spanish (Chile)",
+    "voices": [{
+      "value": "es-CL-CatalinaNeural",
+      "name": "CatalinaNeural (Female)"
+    }, {
+      "value": "es-CL-LorenzoNeural",
+      "name": "LorenzoNeural (Male)"
+    }]
+  }, {
+    "code": "es-CO",
+    "name": "Spanish (Colombia)",
+    "voices": [{
+      "value": "es-CO-GonzaloNeural",
+      "name": "GonzaloNeural (Male)"
+    }, {
+      "value": "es-CO-SalomeNeural",
+      "name": "SalomeNeural (Female)"
+    }]
+  }, {
+    "code": "es-CR",
+    "name": "Spanish (Costa Rica)",
+    "voices": [{
+      "value": "es-CR-JuanNeural",
+      "name": "JuanNeural (Male)"
+    }, {
+      "value": "es-CR-MariaNeural",
+      "name": "MariaNeural (Female)"
+    }]
+  }, {
+    "code": "es-CU",
+    "name": "Spanish (Cuba)",
+    "voices": [{
+      "value": "es-CU-BelkysNeural",
+      "name": "BelkysNeural (Female)"
+    }, {
+      "value": "es-CU-ManuelNeural",
+      "name": "ManuelNeural (Male)"
+    }]
+  }, {
+    "code": "es-DO",
+    "name": "Spanish (Dominican Republic)",
+    "voices": [{
+      "value": "es-DO-EmilioNeural",
+      "name": "EmilioNeural (Male)"
+    }, {
+      "value": "es-DO-RamonaNeural",
+      "name": "RamonaNeural (Female)"
+    }]
+  }, {
+    "code": "es-EC",
+    "name": "Spanish (Ecuador)",
+    "voices": [{
+      "value": "es-EC-AndreaNeural",
+      "name": "AndreaNeural (Female)"
+    }, {
+      "value": "es-EC-LuisNeural",
+      "name": "LuisNeural (Male)"
+    }]
+  }, {
+    "code": "es-ES",
+    "name": "Spanish (Spain)",
+    "voices": [{
+      "value": "es-ES-AbrilNeural",
+      "name": "AbrilNeural (Female)"
+    }, {
+      "value": "es-ES-AlvaroNeural",
+      "name": "AlvaroNeural (Male)"
+    }, {
+      "value": "es-ES-ArnauNeural",
+      "name": "ArnauNeural (Male)"
+    }, {
+      "value": "es-ES-DarioNeural",
+      "name": "DarioNeural (Male)"
+    }, {
+      "value": "es-ES-EliasNeural",
+      "name": "EliasNeural (Male)"
+    }, {
+      "value": "es-ES-ElviraNeural",
+      "name": "ElviraNeural (Female)"
+    }, {
+      "value": "es-ES-EstrellaNeural",
+      "name": "EstrellaNeural (Female)"
+    }, {
+      "value": "es-ES-IreneNeural",
+      "name": "IreneNeural (Female)"
+    }, {
+      "value": "es-ES-LaiaNeural",
+      "name": "LaiaNeural (Female)"
+    }, {
+      "value": "es-ES-LiaNeural",
+      "name": "LiaNeural (Female)"
+    }, {
+      "value": "es-ES-NilNeural",
+      "name": "NilNeural (Male)"
+    }, {
+      "value": "es-ES-SaulNeural",
+      "name": "SaulNeural (Male)"
+    }, {
+      "value": "es-ES-TeoNeural",
+      "name": "TeoNeural (Male)"
+    }, {
+      "value": "es-ES-TrianaNeural",
+      "name": "TrianaNeural (Female)"
+    }, {
+      "value": "es-ES-VeraNeural",
+      "name": "VeraNeural (Female)"
+    }]
+  }, {
+    "code": "es-GQ",
+    "name": "Spanish (Equatorial Guinea)",
+    "voices": [{
+      "value": "es-GQ-JavierNeural",
+      "name": "JavierNeural (Male)"
+    }, {
+      "value": "es-GQ-TeresaNeural",
+      "name": "TeresaNeural (Female)"
+    }]
+  }, {
+    "code": "es-GT",
+    "name": "Spanish (Guatemala)",
+    "voices": [{
+      "value": "es-GT-AndresNeural",
+      "name": "AndresNeural (Male)"
+    }, {
+      "value": "es-GT-MartaNeural",
+      "name": "MartaNeural (Female)"
+    }]
+  }, {
+    "code": "es-HN",
+    "name": "Spanish (Honduras)",
+    "voices": [{
+      "value": "es-HN-CarlosNeural",
+      "name": "CarlosNeural (Male)"
+    }, {
+      "value": "es-HN-KarlaNeural",
+      "name": "KarlaNeural (Female)"
+    }]
+  }, {
+    "code": "es-MX",
+    "name": "Spanish (Mexico)",
+    "voices": [{
+      "value": "es-MX-BeatrizNeural",
+      "name": "BeatrizNeural (Female)"
+    }, {
+      "value": "es-MX-CandelaNeural",
+      "name": "CandelaNeural (Female)"
+    }, {
+      "value": "es-MX-CarlotaNeural",
+      "name": "CarlotaNeural (Female)"
+    }, {
+      "value": "es-MX-CecilioNeural",
+      "name": "CecilioNeural (Male)"
+    }, {
+      "value": "es-MX-DaliaNeural",
+      "name": "DaliaNeural (Female)"
+    }, {
+      "value": "es-MX-GerardoNeural",
+      "name": "GerardoNeural (Male)"
+    }, {
+      "value": "es-MX-JorgeNeural",
+      "name": "JorgeNeural (Male)"
+    }, {
+      "value": "es-MX-LarissaNeural",
+      "name": "LarissaNeural (Female)"
+    }, {
+      "value": "es-MX-LibertoNeural",
+      "name": "LibertoNeural (Male)"
+    }, {
+      "value": "es-MX-LucianoNeural",
+      "name": "LucianoNeural (Male)"
+    }, {
+      "value": "es-MX-MarinaNeural",
+      "name": "MarinaNeural (Female)"
+    }, {
+      "value": "es-MX-NuriaNeural",
+      "name": "NuriaNeural (Female)"
+    }, {
+      "value": "es-MX-PelayoNeural",
+      "name": "PelayoNeural (Male)"
+    }, {
+      "value": "es-MX-RenataNeural",
+      "name": "RenataNeural (Female)"
+    }, {
+      "value": "es-MX-YagoNeural",
+      "name": "YagoNeural (Male)"
+    }]
+  }, {
+    "code": "es-NI",
+    "name": "Spanish (Nicaragua)",
+    "voices": [{
+      "value": "es-NI-FedericoNeural",
+      "name": "FedericoNeural (Male)"
+    }, {
+      "value": "es-NI-YolandaNeural",
+      "name": "YolandaNeural (Female)"
+    }]
+  }, {
+    "code": "es-PA",
+    "name": "Spanish (Panama)",
+    "voices": [{
+      "value": "es-PA-MargaritaNeural",
+      "name": "MargaritaNeural (Female)"
+    }, {
+      "value": "es-PA-RobertoNeural",
+      "name": "RobertoNeural (Male)"
+    }]
+  }, {
+    "code": "es-PE",
+    "name": "Spanish (Peru)",
+    "voices": [{
+      "value": "es-PE-AlexNeural",
+      "name": "AlexNeural (Male)"
+    }, {
+      "value": "es-PE-CamilaNeural",
+      "name": "CamilaNeural (Female)"
+    }]
+  }, {
+    "code": "es-PR",
+    "name": "Spanish (Puerto Rico)",
+    "voices": [{
+      "value": "es-PR-KarinaNeural",
+      "name": "KarinaNeural (Female)"
+    }, {
+      "value": "es-PR-VictorNeural",
+      "name": "VictorNeural (Male)"
+    }]
+  }, {
+    "code": "es-PY",
+    "name": "Spanish (Paraguay)",
+    "voices": [{
+      "value": "es-PY-MarioNeural",
+      "name": "MarioNeural (Male)"
+    }, {
+      "value": "es-PY-TaniaNeural",
+      "name": "TaniaNeural (Female)"
+    }]
+  }, {
+    "code": "es-SV",
+    "name": "Spanish (El Salvador)",
+    "voices": [{
+      "value": "es-SV-LorenaNeural",
+      "name": "LorenaNeural (Female)"
+    }, {
+      "value": "es-SV-RodrigoNeural",
+      "name": "RodrigoNeural (Male)"
+    }]
+  }, {
+    "code": "es-US",
+    "name": "Spanish (United States)",
+    "voices": [{
+      "value": "es-US-AlonsoNeural",
+      "name": "AlonsoNeural (Male)"
+    }, {
+      "value": "es-US-PalomaNeural",
+      "name": "PalomaNeural (Female)"
+    }]
+  }, {
+    "code": "es-UY",
+    "name": "Spanish (Uruguay)",
+    "voices": [{
+      "value": "es-UY-MateoNeural",
+      "name": "MateoNeural (Male)"
+    }, {
+      "value": "es-UY-ValentinaNeural",
+      "name": "ValentinaNeural (Female)"
+    }]
+  }, {
+    "code": "es-VE",
+    "name": "Spanish (Venezuela)",
+    "voices": [{
+      "value": "es-VE-PaolaNeural",
+      "name": "PaolaNeural (Female)"
+    }, {
+      "value": "es-VE-SebastianNeural",
+      "name": "SebastianNeural (Male)"
+    }]
+  }, {
+    "code": "et-EE",
+    "name": "Estonian (Estonia)",
+    "voices": [{
+      "value": "et-EE-AnuNeural",
+      "name": "AnuNeural (Female)"
+    }, {
+      "value": "et-EE-KertNeural",
+      "name": "KertNeural (Male)"
+    }]
+  }, {
+    "code": "eu-ES",
+    "name": "Basque",
+    "voices": [{
+      "value": "eu-ES-AinhoaNeural",
+      "name": "AinhoaNeural (Female)"
+    }, {
+      "value": "eu-ES-AnderNeural",
+      "name": "AnderNeural (Male)"
+    }]
+  }, {
+    "code": "fa-IR",
+    "name": "Persian (Iran)",
+    "voices": [{
+      "value": "fa-IR-DilaraNeural",
+      "name": "DilaraNeural (Female)"
+    }, {
+      "value": "fa-IR-FaridNeural",
+      "name": "FaridNeural (Male)"
+    }]
+  }, {
+    "code": "fi-FI",
+    "name": "Finnish (Finland)",
+    "voices": [{
+      "value": "fi-FI-HarriNeural",
+      "name": "HarriNeural (Male)"
+    }, {
+      "value": "fi-FI-NooraNeural",
+      "name": "NooraNeural (Female)"
+    }, {
+      "value": "fi-FI-SelmaNeural",
+      "name": "SelmaNeural (Female)"
+    }]
+  }, {
+    "code": "fil-PH",
+    "name": "Filipino (Philippines)",
+    "voices": [{
+      "value": "fil-PH-AngeloNeural",
+      "name": "AngeloNeural (Male)"
+    }, {
+      "value": "fil-PH-BlessicaNeural",
+      "name": "BlessicaNeural (Female)"
+    }]
+  }, {
+    "code": "fr-BE",
+    "name": "French (Belgium)",
+    "voices": [{
+      "value": "fr-BE-CharlineNeural",
+      "name": "CharlineNeural (Female)"
+    }, {
+      "value": "fr-BE-GerardNeural",
+      "name": "GerardNeural (Male)"
+    }]
+  }, {
+    "code": "fr-CA",
+    "name": "French (Canada)",
+    "voices": [{
+      "value": "fr-CA-AntoineNeural",
+      "name": "AntoineNeural (Male)"
+    }, {
+      "value": "fr-CA-JeanNeural",
+      "name": "JeanNeural (Male)"
+    }, {
+      "value": "fr-CA-SylvieNeural",
+      "name": "SylvieNeural (Female)"
+    }]
+  }, {
+    "code": "fr-CH",
+    "name": "French (Switzerland)",
+    "voices": [{
+      "value": "fr-CH-ArianeNeural",
+      "name": "ArianeNeural (Female)"
+    }, {
+      "value": "fr-CH-FabriceNeural",
+      "name": "FabriceNeural (Male)"
+    }]
+  }, {
+    "code": "fr-FR",
+    "name": "French (France)",
+    "voices": [{
+      "value": "fr-FR-AlainNeural",
+      "name": "AlainNeural (Male)"
+    }, {
+      "value": "fr-FR-BrigitteNeural",
+      "name": "BrigitteNeural (Female)"
+    }, {
+      "value": "fr-FR-CelesteNeural",
+      "name": "CelesteNeural (Female)"
+    }, {
+      "value": "fr-FR-ClaudeNeural",
+      "name": "ClaudeNeural (Male)"
+    }, {
+      "value": "fr-FR-CoralieNeural",
+      "name": "CoralieNeural (Female)"
+    }, {
+      "value": "fr-FR-DeniseNeural",
+      "name": "DeniseNeural (Female)"
+    }, {
+      "value": "fr-FR-EloiseNeural",
+      "name": "EloiseNeural (Female)"
+    }, {
+      "value": "fr-FR-HenriNeural",
+      "name": "HenriNeural (Male)"
+    }, {
+      "value": "fr-FR-JacquelineNeural",
+      "name": "JacquelineNeural (Female)"
+    }, {
+      "value": "fr-FR-JeromeNeural",
+      "name": "JeromeNeural (Male)"
+    }, {
+      "value": "fr-FR-JosephineNeural",
+      "name": "JosephineNeural (Female)"
+    }, {
+      "value": "fr-FR-MauriceNeural",
+      "name": "MauriceNeural (Male)"
+    }, {
+      "value": "fr-FR-YvesNeural",
+      "name": "YvesNeural (Male)"
+    }, {
+      "value": "fr-FR-YvetteNeural",
+      "name": "YvetteNeural (Female)"
+    }]
+  }, {
+    "code": "ga-IE",
+    "name": "Irish (Ireland)",
+    "voices": [{
+      "value": "ga-IE-ColmNeural",
+      "name": "ColmNeural (Male)"
+    }, {
+      "value": "ga-IE-OrlaNeural",
+      "name": "OrlaNeural (Female)"
+    }]
+  }, {
+    "code": "gl-ES",
+    "name": "Galician",
+    "voices": [{
+      "value": "gl-ES-RoiNeural",
+      "name": "RoiNeural (Male)"
+    }, {
+      "value": "gl-ES-SabelaNeural",
+      "name": "SabelaNeural (Female)"
+    }]
+  }, {
+    "code": "gu-IN",
+    "name": "Gujarati (India)",
+    "voices": [{
+      "value": "gu-IN-DhwaniNeural",
+      "name": "DhwaniNeural (Female)"
+    }, {
+      "value": "gu-IN-NiranjanNeural",
+      "name": "NiranjanNeural (Male)"
+    }]
+  }, {
+    "code": "he-IL",
+    "name": "Hebrew (Israel)",
+    "voices": [{
+      "value": "he-IL-AvriNeural",
+      "name": "AvriNeural (Male)"
+    }, {
+      "value": "he-IL-HilaNeural",
+      "name": "HilaNeural (Female)"
+    }]
+  }, {
+    "code": "hi-IN",
+    "name": "Hindi (India)",
+    "voices": [{
+      "value": "hi-IN-MadhurNeural",
+      "name": "MadhurNeural (Male)"
+    }, {
+      "value": "hi-IN-SwaraNeural",
+      "name": "SwaraNeural (Female)"
+    }]
+  }, {
+    "code": "hr-HR",
+    "name": "Croatian (Croatia)",
+    "voices": [{
+      "value": "hr-HR-GabrijelaNeural",
+      "name": "GabrijelaNeural (Female)"
+    }, {
+      "value": "hr-HR-SreckoNeural",
+      "name": "SreckoNeural (Male)"
+    }]
+  }, {
+    "code": "hu-HU",
+    "name": "Hungarian (Hungary)",
+    "voices": [{
+      "value": "hu-HU-NoemiNeural",
+      "name": "NoemiNeural (Female)"
+    }, {
+      "value": "hu-HU-TamasNeural",
+      "name": "TamasNeural (Male)"
+    }]
+  }, {
+    "code": "hy-AM",
+    "name": "Armenian (Armenia)",
+    "voices": [{
+      "value": "hy-AM-AnahitNeural",
+      "name": "AnahitNeural (Female)"
+    }, {
+      "value": "hy-AM-HaykNeural",
+      "name": "HaykNeural (Male)"
+    }]
+  }, {
+    "code": "id-ID",
+    "name": "Indonesian (Indonesia)",
+    "voices": [{
+      "value": "id-ID-ArdiNeural",
+      "name": "ArdiNeural (Male)"
+    }, {
+      "value": "id-ID-GadisNeural",
+      "name": "GadisNeural (Female)"
+    }]
+  }, {
+    "code": "is-IS",
+    "name": "Icelandic (Iceland)",
+    "voices": [{
+      "value": "is-IS-GudrunNeural",
+      "name": "GudrunNeural (Female)"
+    }, {
+      "value": "is-IS-GunnarNeural",
+      "name": "GunnarNeural (Male)"
+    }]
+  }, {
+    "code": "it-CH",
+    "name": "Italian (Switzerland)",
+    "voices": [{
+      "value": "Not",
+      "name": "Not supported"
+    }]
+  }, {
+    "code": "it-IT",
+    "name": "Italian (Italy)",
+    "voices": [{
+      "value": "it-IT-BenignoNeural",
+      "name": "BenignoNeural (Male)"
+    }, {
+      "value": "it-IT-CalimeroNeural",
+      "name": "CalimeroNeural (Male)"
+    }, {
+      "value": "it-IT-CataldoNeural",
+      "name": "CataldoNeural (Male)"
+    }, {
+      "value": "it-IT-DiegoNeural",
+      "name": "DiegoNeural (Male)"
+    }, {
+      "value": "it-IT-ElsaNeural",
+      "name": "ElsaNeural (Female)"
+    }, {
+      "value": "it-IT-FabiolaNeural",
+      "name": "FabiolaNeural (Female)"
+    }, {
+      "value": "it-IT-FiammaNeural",
+      "name": "FiammaNeural (Female)"
+    }, {
+      "value": "it-IT-GianniNeural",
+      "name": "GianniNeural (Male)"
+    }, {
+      "value": "it-IT-ImeldaNeural",
+      "name": "ImeldaNeural (Female)"
+    }, {
+      "value": "it-IT-IrmaNeural",
+      "name": "IrmaNeural (Female)"
+    }, {
+      "value": "it-IT-IsabellaNeural",
+      "name": "IsabellaNeural (Female)"
+    }, {
+      "value": "it-IT-LisandroNeural",
+      "name": "LisandroNeural (Male)"
+    }, {
+      "value": "it-IT-PalmiraNeural",
+      "name": "PalmiraNeural (Female)"
+    }, {
+      "value": "it-IT-PierinaNeural",
+      "name": "PierinaNeural (Female)"
+    }, {
+      "value": "it-IT-RinaldoNeural",
+      "name": "RinaldoNeural (Male)"
+    }]
+  }, {
+    "code": "ja-JP",
+    "name": "Japanese (Japan)",
+    "voices": [{
+      "value": "ja-JP-AoiNeural",
+      "name": "AoiNeural (Female)"
+    }, {
+      "value": "ja-JP-DaichiNeural",
+      "name": "DaichiNeural (Male)"
+    }, {
+      "value": "ja-JP-KeitaNeural",
+      "name": "KeitaNeural (Male)"
+    }, {
+      "value": "ja-JP-MayuNeural",
+      "name": "MayuNeural (Female)"
+    }, {
+      "value": "ja-JP-NanamiNeural",
+      "name": "NanamiNeural (Female)"
+    }, {
+      "value": "ja-JP-NaokiNeural",
+      "name": "NaokiNeural (Male)"
+    }, {
+      "value": "ja-JP-ShioriNeural",
+      "name": "ShioriNeural (Female)"
+    }]
+  }, {
+    "code": "jv-ID",
+    "name": "Javanese (Indonesia)",
+    "voices": [{
+      "value": "jv-ID-DimasNeural",
+      "name": "DimasNeural (Male)"
+    }, {
+      "value": "jv-ID-SitiNeural",
+      "name": "SitiNeural (Female)"
+    }]
+  }, {
+    "code": "ka-GE",
+    "name": "Georgian (Georgia)",
+    "voices": [{
+      "value": "ka-GE-EkaNeural",
+      "name": "EkaNeural (Female)"
+    }, {
+      "value": "ka-GE-GiorgiNeural",
+      "name": "GiorgiNeural (Male)"
+    }]
+  }, {
+    "code": "kk-KZ",
+    "name": "Kazakh (Kazakhstan)",
+    "voices": [{
+      "value": "kk-KZ-AigulNeural",
+      "name": "AigulNeural (Female)"
+    }, {
+      "value": "kk-KZ-DauletNeural",
+      "name": "DauletNeural (Male)"
+    }]
+  }, {
+    "code": "km-KH",
+    "name": "Khmer (Cambodia)",
+    "voices": [{
+      "value": "km-KH-PisethNeural",
+      "name": "PisethNeural (Male)"
+    }, {
+      "value": "km-KH-SreymomNeural",
+      "name": "SreymomNeural (Female)"
+    }]
+  }, {
+    "code": "kn-IN",
+    "name": "Kannada (India)",
+    "voices": [{
+      "value": "kn-IN-GaganNeural",
+      "name": "GaganNeural (Male)"
+    }, {
+      "value": "kn-IN-SapnaNeural",
+      "name": "SapnaNeural (Female)"
+    }]
+  }, {
+    "code": "ko-KR",
+    "name": "Korean (Korea)",
+    "voices": [{
+      "value": "ko-KR-BongJinNeural",
+      "name": "BongJinNeural (Male)"
+    }, {
+      "value": "ko-KR-GookMinNeural",
+      "name": "GookMinNeural (Male)"
+    }, {
+      "value": "ko-KR-InJoonNeural",
+      "name": "InJoonNeural (Male)"
+    }, {
+      "value": "ko-KR-JiMinNeural",
+      "name": "JiMinNeural (Female)"
+    }, {
+      "value": "ko-KR-SeoHyeonNeural",
+      "name": "SeoHyeonNeural (Female)"
+    }, {
+      "value": "ko-KR-SoonBokNeural",
+      "name": "SoonBokNeural (Female)"
+    }, {
+      "value": "ko-KR-SunHiNeural",
+      "name": "SunHiNeural (Female)"
+    }, {
+      "value": "ko-KR-YuJinNeural",
+      "name": "YuJinNeural (Female)"
+    }]
+  }, {
+    "code": "lo-LA",
+    "name": "Lao (Laos)",
+    "voices": [{
+      "value": "lo-LA-ChanthavongNeural",
+      "name": "ChanthavongNeural (Male)"
+    }, {
+      "value": "lo-LA-KeomanyNeural",
+      "name": "KeomanyNeural (Female)"
+    }]
+  }, {
+    "code": "lt-LT",
+    "name": "Lithuanian (Lithuania)",
+    "voices": [{
+      "value": "lt-LT-LeonasNeural",
+      "name": "LeonasNeural (Male)"
+    }, {
+      "value": "lt-LT-OnaNeural",
+      "name": "OnaNeural (Female)"
+    }]
+  }, {
+    "code": "lv-LV",
+    "name": "Latvian (Latvia)",
+    "voices": [{
+      "value": "lv-LV-EveritaNeural",
+      "name": "EveritaNeural (Female)"
+    }, {
+      "value": "lv-LV-NilsNeural",
+      "name": "NilsNeural (Male)"
+    }]
+  }, {
+    "code": "mk-MK",
+    "name": "Macedonian (Republic of North Macedonia)",
+    "voices": [{
+      "value": "mk-MK-AleksandarNeural",
+      "name": "AleksandarNeural (Male)"
+    }, {
+      "value": "mk-MK-MarijaNeural",
+      "name": "MarijaNeural (Female)"
+    }]
+  }, {
+    "code": "ml-IN",
+    "name": "Malayalam (India)",
+    "voices": [{
+      "value": "ml-IN-MidhunNeural",
+      "name": "MidhunNeural (Male)"
+    }, {
+      "value": "ml-IN-SobhanaNeural",
+      "name": "SobhanaNeural (Female)"
+    }]
+  }, {
+    "code": "mn-MN",
+    "name": "Mongolian (Mongolia)",
+    "voices": [{
+      "value": "mn-MN-BataaNeural",
+      "name": "BataaNeural (Male)"
+    }, {
+      "value": "mn-MN-YesuiNeural",
+      "name": "YesuiNeural (Female)"
+    }]
+  }, {
+    "code": "mr-IN",
+    "name": "Marathi (India)",
+    "voices": [{
+      "value": "mr-IN-AarohiNeural",
+      "name": "AarohiNeural (Female)"
+    }, {
+      "value": "mr-IN-ManoharNeural",
+      "name": "ManoharNeural (Male)"
+    }]
+  }, {
+    "code": "ms-MY",
+    "name": "Malay (Malaysia)",
+    "voices": [{
+      "value": "ms-MY-OsmanNeural",
+      "name": "OsmanNeural (Male)"
+    }, {
+      "value": "ms-MY-YasminNeural",
+      "name": "YasminNeural (Female)"
+    }]
+  }, {
+    "code": "mt-MT",
+    "name": "Maltese (Malta)",
+    "voices": [{
+      "value": "mt-MT-GraceNeural",
+      "name": "GraceNeural (Female)"
+    }, {
+      "value": "mt-MT-JosephNeural",
+      "name": "JosephNeural (Male)"
+    }]
+  }, {
+    "code": "my-MM",
+    "name": "Burmese (Myanmar)",
+    "voices": [{
+      "value": "my-MM-NilarNeural",
+      "name": "NilarNeural (Female)"
+    }, {
+      "value": "my-MM-ThihaNeural",
+      "name": "ThihaNeural (Male)"
+    }]
+  }, {
+    "code": "nb-NO",
+    "name": "Norwegian (Bokmål, Norway)",
+    "voices": [{
+      "value": "nb-NO-FinnNeural",
+      "name": "FinnNeural (Male)"
+    }, {
+      "value": "nb-NO-IselinNeural",
+      "name": "IselinNeural (Female)"
+    }, {
+      "value": "nb-NO-PernilleNeural",
+      "name": "PernilleNeural (Female)"
+    }]
+  }, {
+    "code": "ne-NP",
+    "name": "Nepali (Nepal)",
+    "voices": [{
+      "value": "ne-NP-HemkalaNeural",
+      "name": "HemkalaNeural (Female)"
+    }, {
+      "value": "ne-NP-SagarNeural",
+      "name": "SagarNeural (Male)"
+    }]
+  }, {
+    "code": "nl-BE",
+    "name": "Dutch (Belgium)",
+    "voices": [{
+      "value": "nl-BE-ArnaudNeural",
+      "name": "ArnaudNeural (Male)"
+    }, {
+      "value": "nl-BE-DenaNeural",
+      "name": "DenaNeural (Female)"
+    }]
+  }, {
+    "code": "nl-NL",
+    "name": "Dutch (Netherlands)",
+    "voices": [{
+      "value": "nl-NL-ColetteNeural",
+      "name": "ColetteNeural (Female)"
+    }, {
+      "value": "nl-NL-FennaNeural",
+      "name": "FennaNeural (Female)"
+    }, {
+      "value": "nl-NL-MaartenNeural",
+      "name": "MaartenNeural (Male)"
+    }]
+  }, {
+    "code": "pl-PL",
+    "name": "Polish (Poland)",
+    "voices": [{
+      "value": "pl-PL-AgnieszkaNeural",
+      "name": "AgnieszkaNeural (Female)"
+    }, {
+      "value": "pl-PL-MarekNeural",
+      "name": "MarekNeural (Male)"
+    }, {
+      "value": "pl-PL-ZofiaNeural",
+      "name": "ZofiaNeural (Female)"
+    }]
+  }, {
+    "code": "ps-AF",
+    "name": "Pashto (Afghanistan)",
+    "voices": [{
+      "value": "ps-AF-GulNawazNeural",
+      "name": "GulNawazNeural (Male)"
+    }, {
+      "value": "ps-AF-LatifaNeural",
+      "name": "LatifaNeural (Female)"
+    }]
+  }, {
+    "code": "pt-BR",
+    "name": "Portuguese (Brazil)",
+    "voices": [{
+      "value": "pt-BR-AntonioNeural",
+      "name": "AntonioNeural (Male)"
+    }, {
+      "value": "pt-BR-BrendaNeural",
+      "name": "BrendaNeural (Female)"
+    }, {
+      "value": "pt-BR-DonatoNeural",
+      "name": "DonatoNeural (Male)"
+    }, {
+      "value": "pt-BR-ElzaNeural",
+      "name": "ElzaNeural (Female)"
+    }, {
+      "value": "pt-BR-FabioNeural",
+      "name": "FabioNeural (Male)"
+    }, {
+      "value": "pt-BR-FranciscaNeural",
+      "name": "FranciscaNeural (Female)"
+    }, {
+      "value": "pt-BR-GiovannaNeural",
+      "name": "GiovannaNeural (Female)"
+    }, {
+      "value": "pt-BR-HumbertoNeural",
+      "name": "HumbertoNeural (Male)"
+    }, {
+      "value": "pt-BR-JulioNeural",
+      "name": "JulioNeural (Male)"
+    }, {
+      "value": "pt-BR-LeilaNeural",
+      "name": "LeilaNeural (Female)"
+    }, {
+      "value": "pt-BR-LeticiaNeural",
+      "name": "LeticiaNeural (Female)"
+    }, {
+      "value": "pt-BR-ManuelaNeural",
+      "name": "ManuelaNeural (Female)"
+    }, {
+      "value": "pt-BR-NicolauNeural",
+      "name": "NicolauNeural (Male)"
+    }, {
+      "value": "pt-BR-ValerioNeural",
+      "name": "ValerioNeural (Male)"
+    }, {
+      "value": "pt-BR-YaraNeural",
+      "name": "YaraNeural (Female)"
+    }]
+  }, {
+    "code": "pt-PT",
+    "name": "Portuguese (Portugal)",
+    "voices": [{
+      "value": "pt-PT-DuarteNeural",
+      "name": "DuarteNeural (Male)"
+    }, {
+      "value": "pt-PT-FernandaNeural",
+      "name": "FernandaNeural (Female)"
+    }, {
+      "value": "pt-PT-RaquelNeural",
+      "name": "RaquelNeural (Female)"
+    }]
+  }, {
+    "code": "ro-RO",
+    "name": "Romanian (Romania)",
+    "voices": [{
+      "value": "ro-RO-AlinaNeural",
+      "name": "AlinaNeural (Female)"
+    }, {
+      "value": "ro-RO-EmilNeural",
+      "name": "EmilNeural (Male)"
+    }]
+  }, {
+    "code": "ru-RU",
+    "name": "Russian (Russia)",
+    "voices": [{
+      "value": "ru-RU-DariyaNeural",
+      "name": "DariyaNeural (Female)"
+    }, {
+      "value": "ru-RU-DmitryNeural",
+      "name": "DmitryNeural (Male)"
+    }, {
+      "value": "ru-RU-SvetlanaNeural",
+      "name": "SvetlanaNeural (Female)"
+    }]
+  }, {
+    "code": "si-LK",
+    "name": "Sinhala (Sri Lanka)",
+    "voices": [{
+      "value": "si-LK-SameeraNeural",
+      "name": "SameeraNeural (Male)"
+    }, {
+      "value": "si-LK-ThiliniNeural",
+      "name": "ThiliniNeural (Female)"
+    }]
+  }, {
+    "code": "sk-SK",
+    "name": "Slovak (Slovakia)",
+    "voices": [{
+      "value": "sk-SK-LukasNeural",
+      "name": "LukasNeural (Male)"
+    }, {
+      "value": "sk-SK-ViktoriaNeural",
+      "name": "ViktoriaNeural (Female)"
+    }]
+  }, {
+    "code": "sl-SI",
+    "name": "Slovenian (Slovenia)",
+    "voices": [{
+      "value": "sl-SI-PetraNeural",
+      "name": "PetraNeural (Female)"
+    }, {
+      "value": "sl-SI-RokNeural",
+      "name": "RokNeural (Male)"
+    }]
+  }, {
+    "code": "so-SO",
+    "name": "Somali (Somalia)",
+    "voices": [{
+      "value": "so-SO-MuuseNeural",
+      "name": "MuuseNeural (Male)"
+    }, {
+      "value": "so-SO-UbaxNeural",
+      "name": "UbaxNeural (Female)"
+    }]
+  }, {
+    "code": "sq-AL",
+    "name": "Albanian (Albania)",
+    "voices": [{
+      "value": "sq-AL-AnilaNeural",
+      "name": "AnilaNeural (Female)"
+    }, {
+      "value": "sq-AL-IlirNeural",
+      "name": "IlirNeural (Male)"
+    }]
+  }, {
+    "code": "sr-RS",
+    "name": "Serbian (Serbia)",
+    "voices": [{
+      "value": "sr-RS-NicholasNeural",
+      "name": "NicholasNeural (Male)"
+    }, {
+      "value": "sr-RS-SophieNeural",
+      "name": "SophieNeural (Female)"
+    }]
+  }, {
+    "code": "su-ID",
+    "name": "Sundanese (Indonesia)",
+    "voices": [{
+      "value": "su-ID-JajangNeural",
+      "name": "JajangNeural (Male)"
+    }, {
+      "value": "su-ID-TutiNeural",
+      "name": "TutiNeural (Female)"
+    }]
+  }, {
+    "code": "sv-SE",
+    "name": "Swedish (Sweden)",
+    "voices": [{
+      "value": "sv-SE-HilleviNeural",
+      "name": "HilleviNeural (Female)"
+    }, {
+      "value": "sv-SE-MattiasNeural",
+      "name": "MattiasNeural (Male)"
+    }, {
+      "value": "sv-SE-SofieNeural",
+      "name": "SofieNeural (Female)"
+    }]
+  }, {
+    "code": "sw-KE",
+    "name": "Swahili (Kenya)",
+    "voices": [{
+      "value": "sw-KE-RafikiNeural",
+      "name": "RafikiNeural (Male)"
+    }, {
+      "value": "sw-KE-ZuriNeural",
+      "name": "ZuriNeural (Female)"
+    }]
+  }, {
+    "code": "sw-TZ",
+    "name": "Swahili (Tanzania)",
+    "voices": [{
+      "value": "sw-TZ-DaudiNeural",
+      "name": "DaudiNeural (Male)"
+    }, {
+      "value": "sw-TZ-RehemaNeural",
+      "name": "RehemaNeural (Female)"
+    }]
+  }, {
+    "code": "ta-IN",
+    "name": "Tamil (India)",
+    "voices": [{
+      "value": "ta-IN-PallaviNeural",
+      "name": "PallaviNeural (Female)"
+    }, {
+      "value": "ta-IN-ValluvarNeural",
+      "name": "ValluvarNeural (Male)"
+    }]
+  }, {
+    "code": "ta-LK",
+    "name": "Tamil (Sri Lanka)",
+    "voices": [{
+      "value": "ta-LK-KumarNeural",
+      "name": "KumarNeural (Male)"
+    }, {
+      "value": "ta-LK-SaranyaNeural",
+      "name": "SaranyaNeural (Female)"
+    }]
+  }, {
+    "code": "ta-MY",
+    "name": "Tamil (Malaysia)",
+    "voices": [{
+      "value": "ta-MY-KaniNeural",
+      "name": "KaniNeural (Female)"
+    }, {
+      "value": "ta-MY-SuryaNeural",
+      "name": "SuryaNeural (Male)"
+    }]
+  }, {
+    "code": "ta-SG",
+    "name": "Tamil (Singapore)",
+    "voices": [{
+      "value": "ta-SG-AnbuNeural",
+      "name": "AnbuNeural (Male)"
+    }, {
+      "value": "ta-SG-VenbaNeural",
+      "name": "VenbaNeural (Female)"
+    }]
+  }, {
+    "code": "te-IN",
+    "name": "Telugu (India)",
+    "voices": [{
+      "value": "te-IN-MohanNeural",
+      "name": "MohanNeural (Male)"
+    }, {
+      "value": "te-IN-ShrutiNeural",
+      "name": "ShrutiNeural (Female)"
+    }]
+  }, {
+    "code": "th-TH",
+    "name": "Thai (Thailand)",
+    "voices": [{
+      "value": "th-TH-AcharaNeural",
+      "name": "AcharaNeural (Female)"
+    }, {
+      "value": "th-TH-NiwatNeural",
+      "name": "NiwatNeural (Male)"
+    }, {
+      "value": "th-TH-PremwadeeNeural",
+      "name": "PremwadeeNeural (Female)"
+    }]
+  }, {
+    "code": "tr-TR",
+    "name": "Turkish (Turkey)",
+    "voices": [{
+      "value": "tr-TR-AhmetNeural",
+      "name": "AhmetNeural (Male)"
+    }, {
+      "value": "tr-TR-EmelNeural",
+      "name": "EmelNeural (Female)"
+    }]
+  }, {
+    "code": "uk-UA",
+    "name": "Ukrainian (Ukraine)",
+    "voices": [{
+      "value": "uk-UA-OstapNeural",
+      "name": "OstapNeural (Male)"
+    }, {
+      "value": "uk-UA-PolinaNeural",
+      "name": "PolinaNeural (Female)"
+    }]
+  }, {
+    "code": "ur-IN",
+    "name": "Urdu (India)",
+    "voices": [{
+      "value": "ur-IN-GulNeural",
+      "name": "GulNeural (Female)"
+    }, {
+      "value": "ur-IN-SalmanNeural",
+      "name": "SalmanNeural (Male)"
+    }]
+  }, {
+    "code": "ur-PK",
+    "name": "Urdu (Pakistan)",
+    "voices": [{
+      "value": "ur-PK-AsadNeural",
+      "name": "AsadNeural (Male)"
+    }, {
+      "value": "ur-PK-UzmaNeural",
+      "name": "UzmaNeural (Female)"
+    }]
+  }, {
+    "code": "uz-UZ",
+    "name": "Uzbek (Uzbekistan)",
+    "voices": [{
+      "value": "uz-UZ-MadinaNeural",
+      "name": "MadinaNeural (Female)"
+    }, {
+      "value": "uz-UZ-SardorNeural",
+      "name": "SardorNeural (Male)"
+    }]
+  }, {
+    "code": "vi-VN",
+    "name": "Vietnamese (Vietnam)",
+    "voices": [{
+      "value": "vi-VN-HoaiMyNeural",
+      "name": "HoaiMyNeural (Female)"
+    }, {
+      "value": "vi-VN-NamMinhNeural",
+      "name": "NamMinhNeural (Male)"
+    }]
+  }, {
+    "code": "wuu-CN",
+    "name": "Chinese (Wu, Simplified)",
+    "voices": [{
+      "value": "wuu-CN-XiaotongNeural",
+      "name": "XiaotongNeural (Female)"
+    }, {
+      "value": "wuu-CN-YunzheNeural",
+      "name": "YunzheNeural (Male)"
+    }]
+  }, {
+    "code": "yue-CN",
+    "name": "Chinese (Cantonese, Simplified)",
+    "voices": [{
+      "value": "yue-CN-XiaoMinNeural",
+      "name": "XiaoMinNeural (Female)"
+    }, {
+      "value": "yue-CN-YunSongNeural",
+      "name": "YunSongNeural (Male)"
+    }]
+  }, {
+    "code": "zh-CN",
+    "name": "Chinese (Mandarin, Simplified)",
+    "voices": [{
+      "value": "zh-CN-XiaochenNeural",
+      "name": "XiaochenNeural (Female)"
+    }, {
+      "value": "zh-CN-XiaohanNeural",
+      "name": "XiaohanNeural (Female)"
+    }, {
+      "value": "zh-CN-XiaomengNeural",
+      "name": "XiaomengNeural (Female)"
+    }, {
+      "value": "zh-CN-XiaomoNeural",
+      "name": "XiaomoNeural (Female)"
+    }, {
+      "value": "zh-CN-XiaoqiuNeural",
+      "name": "XiaoqiuNeural (Female)"
+    }, {
+      "value": "zh-CN-XiaoruiNeural",
+      "name": "XiaoruiNeural (Female)"
+    }, {
+      "value": "zh-CN-XiaoshuangNeural",
+      "name": "XiaoshuangNeural (Female)"
+    }, {
+      "value": "zh-CN-XiaoxiaoNeural",
+      "name": "XiaoxiaoNeural (Female)"
+    }, {
+      "value": "zh-CN-XiaoxuanNeural",
+      "name": "XiaoxuanNeural (Female)"
+    }, {
+      "value": "zh-CN-XiaoyanNeural",
+      "name": "XiaoyanNeural (Female)"
+    }, {
+      "value": "zh-CN-XiaoyiNeural",
+      "name": "XiaoyiNeural (Female)"
+    }, {
+      "value": "zh-CN-XiaoyouNeural",
+      "name": "XiaoyouNeural (Female)"
+    }, {
+      "value": "zh-CN-XiaozhenNeural",
+      "name": "XiaozhenNeural (Female)"
+    }, {
+      "value": "zh-CN-YunfengNeural",
+      "name": "YunfengNeural (Male)"
+    }, {
+      "value": "zh-CN-YunhaoNeural",
+      "name": "YunhaoNeural (Male)"
+    }, {
+      "value": "zh-CN-YunjianNeural",
+      "name": "YunjianNeural (Male)"
+    }, {
+      "value": "zh-CN-YunxiaNeural",
+      "name": "YunxiaNeural (Male)"
+    }, {
+      "value": "zh-CN-YunxiNeural",
+      "name": "YunxiNeural (Male)"
+    }, {
+      "value": "zh-CN-YunyangNeural",
+      "name": "YunyangNeural (Male)"
+    }, {
+      "value": "zh-CN-YunyeNeural",
+      "name": "YunyeNeural (Male)"
+    }, {
+      "value": "zh-CN-YunzeNeural",
+      "name": "YunzeNeural (Male)"
+    }]
+  }, {
+    "code": "zh-CN-henan",
+    "name": "Chinese (Zhongyuan Mandarin Henan, Simplified)",
+    "voices": [{
+      "value": "zh-CN-henan-YundengNeural",
+      "name": "YundengNeural (Male)"
+    }]
+  }, {
+    "code": "zh-CN-liaoning",
+    "name": "Chinese (Northeastern Mandarin, Simplified)",
+    "voices": [{
+      "value": "zh-CN-liaoning-XiaobeiNeural",
+      "name": "XiaobeiNeural (Female)"
+    }]
+  }, {
+    "code": "zh-CN-shaanxi",
+    "name": "Chinese (Zhongyuan Mandarin Shaanxi, Simplified)",
+    "voices": [{
+      "value": "zh-CN-shaanxi-XiaoniNeural",
+      "name": "XiaoniNeural (Female)"
+    }]
+  }, {
+    "code": "zh-CN-shandong",
+    "name": "Chinese (Jilu Mandarin, Simplified)",
+    "voices": [{
+      "value": "zh-CN-shandong-YunxiangNeural",
+      "name": "YunxiangNeural (Male)"
+    }]
+  }, {
+    "code": "zh-CN-sichuan",
+    "name": "Chinese (Southwestern Mandarin, Simplified)",
+    "voices": [{
+      "value": "zh-CN-sichuan-YunxiNeural",
+      "name": "YunxiNeural (Male)"
+    }]
+  }, {
+    "code": "zh-HK",
+    "name": "Chinese (Cantonese, Traditional)",
+    "voices": [{
+      "value": "zh-HK-HiuGaaiNeural",
+      "name": "HiuGaaiNeural (Female)"
+    }, {
+      "value": "zh-HK-HiuMaanNeural",
+      "name": "HiuMaanNeural (Female)"
+    }, {
+      "value": "zh-HK-WanLungNeural",
+      "name": "WanLungNeural (Male)"
+    }]
+  }, {
+    "code": "zh-TW",
+    "name": "Chinese (Taiwanese Mandarin)",
+    "voices": [{
+      "value": "zh-TW-HsiaoChenNeural",
+      "name": "HsiaoChenNeural (Female)"
+    }, {
+      "value": "zh-TW-HsiaoYuNeural",
+      "name": "HsiaoYuNeural (Female)"
+    }, {
+      "value": "zh-TW-YunJheNeural",
+      "name": "YunJheNeural (Male)"
+    }]
+  }, {
+    "code": "zu-ZA",
+    "name": "Zulu (South Africa)",
+    "voices": [{
+      "value": "zu-ZA-ThandoNeural",
+      "name": "ThandoNeural (Female)"
+    }, {
+      "value": "zu-ZA-ThembaNeural",
+      "name": "ThembaNeural (Male)"
+    }]
+  }],
+  "ibm" : [{
+    "code": "de-DE",
+    "name": "German (Germany)",
+    "voices": [{
+      "value": "de-DE_DieterVoice",
+      "name": "Dieter (Male): Standard German"
+    }, {
+      "value": "de-DE_DieterV2Voice",
+      "name": "Dieter 2 (Male): Standard German"
+    }, {
+      "value": "de-DE_DieterV3Voice",
+      "name": "Dieter 3 (Male): Standard German"
+    }, {
+      "value": "de-DE_ErikaV3Voice",
+      "name": "Erika (Female): Standard German"
+    }, {
+      "value": "de-DE_BirgitVoice",
+      "name": "Brigit (Female): Standard German"
+    }, {
+      "value": "de-DE_BirgitV2Voice",
+      "name": "Brigit 2 (Female): Standard German"
+    }, {
+      "value": "de-DE_BirgitV3Voice",
+      "name": "Brigit 3 (Female): Standard German"
+    }]
+  }, {
+    "code": "en-US",
+    "name": "English (US)",
+    "voices": [{
+      "value": "en-US_MichaelExpressive",
+      "name": "Michael (Male): American English - Expressive"
+    }, {
+      "value": "en-US_MichaelVoice",
+      "name": "Michael (Male): American English"
+    }, {
+      "value": "en-US_MichaelV2Voice",
+      "name": "Michael 2 (Male): American English"
+    }, {
+      "value": "en-US_MichaelV3Voice",
+      "name": "Michael 3 (Male): American English"
+    }, {
+      "value": "en-US_HenryV3Voice",
+      "name": "Henry (Male): American English"
+    }, {
+      "value": "en-US_EmilyV3Voice",
+      "name": "Emily (Female): American English"
+    }, {
+      "value": "en-US_OliviaV3Voice",
+      "name": "Olivia (Female): American English"
+    }, {
+      "value": "en-US_AllisonExpressive",
+      "name": "Allison (Female): American English - Expressive"
+    }, {
+      "value": "en-US_AllisonVoice",
+      "name": "Allison (Female): American English"
+    }, {
+      "value": "en-US_AllisonV2Voice",
+      "name": "Allison 2 (Female): American English"
+    }, {
+      "value": "en-US_AllisonV3Voice",
+      "name": "Allison 3 (Female): American English"
+    }, {
+      "value": "en-US_LisaExpressive",
+      "name": "Lisa (Female): American English - Expressive"
+    }, {
+      "value": "en-US_LisaVoice",
+      "name": "Lisa (Female): American English"
+    }, {
+      "value": "en-US_LisaV2Voice",
+      "name": "Lisa 2 (Female): American English"
+    }, {
+      "value": "en-US_LisaV3Voice",
+      "name": "Lisa 3 (Female): American English"
+    }, {
+      "value": "en-US_KevinV3Voice",
+      "name": "Kevin (Male): American English"
+    }, {
+      "value": "en-US_EmmaExpressive",
+      "name": "Emma (Female): American English - Expressive"
+    }]
+  }, {
+    "code": "en-GB",
+    "name": "English (GB)",
+    "voices": [{
+      "value": "en-GB_JamesV3Voice",
+      "name": "James (Male)"
+    }, {
+      "value": "en-GB_KateVoice",
+      "name": "Kate (Female)"
+    }, {
+      "value": "en-GB_KateV3Voice",
+      "name": "Kate 2 (Female)"
+    }, {
+      "value": "en-GB_CharlotteV3Voice",
+      "name": "Charlotte (Female)"
+    }]
+  }, {
+    "code": "es-US",
+    "name": "Spanish (North America)",
+    "voices": [{
+      "value": "es-US_SofiaVoice",
+      "name": "Sofia (Female): North American Spanish"
+    }, {
+      "value": "es-US_SofiaV3Voice",
+      "name": "Sofia 2 (Female): North American Spanish"
+    }]
+  }, {
+    "code": "es-LA",
+    "name": "Spanish (Latin America)",
+    "voices": [{
+      "value": "es-LA_SofiaVoice",
+      "name": "Sofia (Female): Latin American Spanish"
+    }, {
+      "value": "es-LA_SofiaV3Voice",
+      "name": "Sofia 2 (Female): Latin American Spanish"
+    }]
+  }, {
+    "code": "es-ES",
+    "name": "Spanish (Castilian)",
+    "voices": [{
+      "value": "es-ES_LauraVoice",
+      "name": "Laura (Female)"
+    }, {
+      "value": "es-ES_LauraV3Voice",
+      "name": "Laura 2 (Female)"
+    }, {
+      "value": "es-ES_EnriqueVoice",
+      "name": "Enrique (Male)"
+    }, {
+      "value": "es-ES_EnriqueV3Voice",
+      "name": "Enrique 2 (Male)"
+    }]
+  }, {
+    "code": "fr-FR",
+    "name": "French (FR)",
+    "voices": [{
+      "value": "fr-FR_NicolasV3Voice",
+      "name": "Nicolas (Male)"
+    }, {
+      "value": "fr-FR_ReneeVoice",
+      "name": "Renee (Female)"
+    }, {
+      "value": "fr-FR_ReneeV3Voice",
+      "name": "Renee 2 (Female)"
+    }]
+  }, {
+    "code": "fr-CA",
+    "name": "French (CA)",
+    "voices": [{
+      "value": "fr-CA_LouiseV3Voice",
+      "name": "Louise (Female)"
+    }]
+  }, {
+    "code": "it-IT",
+    "name": "Italian",
+    "voices": [{
+      "value": "it-IT_FrancescaVoice",
+      "name": "Francesca (Female)"
+    }, {
+      "value": "it-IT_FrancescaV2Voice",
+      "name": "Francesca 2 (Female)"
+    }, {
+      "value": "it-IT_FrancescaV3Voice",
+      "name": "Francesca 3 (Female)"
+    }]
+  }, {
+    "code": "pt-BR",
+    "name": "Portuguese (Brazil)",
+    "voices": [{
+      "value": "pt-BR_IsabelaVoice",
+      "name": "Isabela (Female)"
+    }, {
+      "value": "pt-BR_IsabelaV3Voice",
+      "name": "Isabela 2 (Female)"
+    }]
+  }, {
+    "code": "ja-JP",
+    "name": "Japanese",
+    "voices": [{
+      "value": "ja-JP_EmiVoice",
+      "name": "Emi (Female)"
+    }, {
+      "value": "ja-JP_EmiV3Voice",
+      "name": "Emi 2 (Female)"
+    }]
+  }],
+  "nuance" : [{
+    "code": "ar-WW",
+    "name": "Arabic (Worldwide)",
+    "voices": [{
+      "value": "Laila - standard",
+      "name": "Laila (standard)",
+      "model": "standard"
+    }, {
+      "value": "Tarik - standard",
+      "name": "Tarik (standard)",
+      "model": "standard"
+    }, {
+      "value": "Miriam - standard",
+      "name": "Miriam (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "eu-ES",
+    "name": "Basque (Spain)",
+    "voices": [{
+      "value": "Miren",
+      "name": "Miren (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "bn-IN",
+    "name": "Bengali (India)",
+    "voices": [{
+      "value": "Paya - standard",
+      "name": "Paya (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "bho-IN",
+    "name": "Bhojpuri (India)",
+    "voices": [{
+      "value": "Jaya - standard",
+      "name": "Jaya (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "bg-BG",
+    "name": "Bulgarian (Bulgaria)",
+    "voices": [{
+      "value": "Daria - standard",
+      "name": "Daria (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "yue-HK",
+    "name": "Cantonese (Hong Kong)",
+    "voices": [{
+      "value": "Sinji-Ml - standard",
+      "name": "Sinji-Ml (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "ca-ES",
+    "name": "Catalan (Spain)",
+    "voices": [{
+      "value": "Jordi - standard",
+      "name": "Jordi (standard)",
+      "model": "standard"
+    }, {
+      "value": "Montserrat - standard",
+      "name": "Montserrat (standard)",
+      "model": "enhanced"
+    }]
+  }, {
+    "code": "yue-HK",
+    "name": "Croatian (Croatia)",
+    "voices": [{
+      "value": "Lana - standard",
+      "name": "Lana (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "cs-CZ",
+    "name": "Czech (Czech Republic)",
+    "voices": [{
+      "value": "Iveta - standard",
+      "name": "Iveta (standard)",
+      "model": "standard"
+    }, {
+      "value": "Zuzana - standard",
+      "name": "Zuzana (standard)",
+      "model": "standard"
+    }, {
+      "value": "Zuzana-ml - enhanced",
+      "name": "Zuzana (enhanced)",
+      "model": "enhanced"
+    }]
+  }, {
+    "code": "da-DK",
+    "name": "Danish (Denmark)",
+    "voices": [{
+      "value": "Magnus - standard",
+      "name": "Magnus (standard)",
+      "model": "standard"
+    }, {
+      "value": "Sara - standard",
+      "name": "Sara (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "nl-BE",
+    "name": "Dutch (Belgium)",
+    "voices": [{
+      "value": "Ellen - standard",
+      "name": "Ellen (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "nl-NL",
+    "name": "Dutch (Belgium)",
+    "voices": [{
+      "value": "Claire-Ml - standard",
+      "name": "Claire-Ml (standard)",
+      "model": "standard"
+    }, {
+      "value": "Xander - standard",
+      "name": "Xander (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "en-AU",
+    "name": "English (Australia)",
+    "voices": [{
+      "value": "Karen - standard",
+      "name": "Karen (standard)",
+      "model": "standard"
+    }, {
+      "value": "Lee - standard",
+      "name": "Lee (standard)",
+      "model": "standard"
+    }, {
+      "value": "Matilda - enhanced",
+      "name": "Matilda (enhanced)",
+      "model": "enhanced"
+    }]
+  }, {
+    "code": "en-IN",
+    "name": "English (India)",
+    "voices": [{
+      "value": "Isha-Ml - enhanced",
+      "name": "Isha-Ml (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Rishi - standard",
+      "name": "Rishi (standard)",
+      "model": "standard"
+    }, {
+      "value": "Rishi-Ml - standard",
+      "name": "Rishi-Ml (standard)",
+      "model": "standard"
+    }, {
+      "value": "Sangeeta - standard",
+      "name": "Sangeeta (standard)",
+      "model": "standard"
+    }, {
+      "value": "Veena - standard",
+      "name": "Veena (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "en-IE",
+    "name": "English (Ireland)",
+    "voices": [{
+      "value": "Moira - standard",
+      "name": "Moira (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "en-SC",
+    "name": "English (Scotland)",
+    "voices": [{
+      "value": "Fiona - standard",
+      "name": "Fiona (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "en-ZA",
+    "name": "English (South Africa)",
+    "voices": [{
+      "value": "Tessa - standard",
+      "name": "Tessa (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "en-GB",
+    "name": "English (United Kingdom)",
+    "voices": [{
+      "value": "Daniel - standard",
+      "name": "Daniel (standard)",
+      "model": "standard"
+    }, {
+      "value": "Kate - standard",
+      "name": "Kate (standard)",
+      "model": "standard"
+    }, {
+      "value": "Malcolm - standard",
+      "name": "Malcolm (standard)",
+      "model": "standard"
+    }, {
+      "value": "Oliver - standard",
+      "name": "Oliver (standard)",
+      "model": "standard"
+    }, {
+      "value": "Serena - enhanced",
+      "name": "Serena (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Simon - standard",
+      "name": "Simon (standard)",
+      "model": "standard"
+    }, {
+      "value": "Stephanie - standard",
+      "name": "Stephanie (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "en-US",
+    "name": "English (United States)",
+    "voices": [{
+      "value": "Allison - standard",
+      "name": "Allison (standard)",
+      "model": "standard"
+    }, {
+      "value": "Ava-Ml - enhanced",
+      "name": "Ava-Ml (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Chloe - standard",
+      "name": "Chloe (standard)",
+      "model": "standard"
+    }, {
+      "value": "Evan - enhanced",
+      "name": "Evan (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Nathan - enhanced",
+      "name": "Nathan (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Evelyn - standard",
+      "name": "Evelyn (standard)",
+      "model": "standard"
+    }, {
+      "value": "Nolan - standard",
+      "name": "Nolan (standard)",
+      "model": "standard"
+    }, {
+      "value": "Samantha - standard",
+      "name": "Samantha (standard)",
+      "model": "standard"
+    }, {
+      "value": "Susan - standard",
+      "name": "Susan (standard)",
+      "model": "standard"
+    }, {
+      "value": "Tom - standard",
+      "name": "Tom (standard)",
+      "model": "standard"
+    }, {
+      "value": "Zoe-Ml - enhanced",
+      "name": "Zoe-Ml (enhanced)",
+      "model": "enhanced"
+    }]
+  }, {
+    "code": "fi-FI",
+    "name": "Finnish (Finland)",
+    "voices": [{
+      "value": "Onni - standard",
+      "name": "Onni (standard)",
+      "model": "standard"
+    }, {
+      "value": "Satu - standard",
+      "name": "Satu (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "fr-BE",
+    "name": "French (Belgium)",
+    "voices": [{
+      "value": "Aude - standard",
+      "name": "Aude (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "fr-CA",
+    "name": "French (Canada)",
+    "voices": [{
+      "value": "Amelie-Ml - enhanced",
+      "name": "Amelie-Ml (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Chantal - standard",
+      "name": "Chantal (standard)",
+      "model": "standard"
+    }, {
+      "value": "Nicolas - standard",
+      "name": "Nicolas (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "fr-FR",
+    "name": "French (France)",
+    "voices": [{
+      "value": "Audrey-Ml - enhanced",
+      "name": "Audrey-Ml (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Aurelie - standard",
+      "name": "Aurelie (standard)",
+      "model": "standard"
+    }, {
+      "value": "Thomas - standard",
+      "name": "Thomas (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "gl-ES",
+    "name": "Galician (Spain)",
+    "voices": [{
+      "value": "Carmela - standard",
+      "name": "Carmela (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "de-DE",
+    "name": "German (Germany)",
+    "voices": [{
+      "value": "Anna-Ml - enhanced",
+      "name": "Anna-Ml (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Markus - standard",
+      "name": "Markus (standard)",
+      "model": "standard"
+    }, {
+      "value": "Petra-Ml - enhanced",
+      "name": "Petra-Ml (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Viktor - standard",
+      "name": "Viktor (standard)",
+      "model": "standard"
+    }, {
+      "value": "Yannick - standard",
+      "name": "Yannick (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "el-GR",
+    "name": "Greek (Greece)",
+    "voices": [{
+      "value": "Melina - standard",
+      "name": "Melina (standard)",
+      "model": "standard"
+    }, {
+      "value": "Nikos - standard",
+      "name": "Nikos (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "he-IL",
+    "name": "Hebrew (Israel)",
+    "voices": [{
+      "value": "Carmit - standard",
+      "name": "Carmit (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "hi-IN",
+    "name": "Hindi (India)",
+    "voices": [{
+      "value": "Kiyara-Ml - enhanced",
+      "name": "Kiyara-Ml (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Lekha - standard",
+      "name": "Lekha (standard)",
+      "model": "standard"
+    }, {
+      "value": "neel - standard",
+      "name": "Neel (standard)",
+      "model": "standard"
+    }, {
+      "value": "Neel-Ml - standard",
+      "name": "Neel-Ml (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "hu-HU",
+    "name": "Hungarian (Hungary)",
+    "voices": [{
+      "value": "Mariska - standard",
+      "name": "Mariska (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "id-ID",
+    "name": "Indonesian (Indonesia)",
+    "voices": [{
+      "value": "Damayanti - standard",
+      "name": "Damayanti (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "it-IT",
+    "name": "Italian (Italy)",
+    "voices": [{
+      "value": "Emma - enhanced",
+      "name": "Emma (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Federica-Ml - standard",
+      "name": "Federica-Ml (standard)",
+      "model": "standard"
+    }, {
+      "value": "Luca - standard",
+      "name": "Luca (standard)",
+      "model": "standard"
+    }, {
+      "value": "Neel-Ml - standard",
+      "name": "Neel-Ml (standard)",
+      "model": "standard"
+    }, {
+      "value": "Paola - standard",
+      "name": "Paola (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "ja-JP",
+    "name": "Japanese (Japan)",
+    "voices": [{
+      "value": "Ayane - standard",
+      "name": "Ayane (standard)",
+      "model": "standard"
+    }, {
+      "value": "Daisuke - standard",
+      "name": "Daisuke (standard)",
+      "model": "standard"
+    }, {
+      "value": "Ichiro - standard",
+      "name": "Ichiro (standard)",
+      "model": "standard"
+    }, {
+      "value": "Koharu - standard",
+      "name": "Koharu (standard)",
+      "model": "standard"
+    }, {
+      "value": "Kyoko - standard",
+      "name": "Kyoko (standard)",
+      "model": "standard"
+    }, {
+      "value": "Mizuki - standard",
+      "name": "Mizuki (standard)",
+      "model": "standard"
+    }, {
+      "value": "Otoya - standard",
+      "name": "Otoya (standard)",
+      "model": "standard"
+    }, {
+      "value": "Sakura - standard",
+      "name": "Sakura (standard)",
+      "model": "standard"
+    }, {
+      "value": "Seiji - standard",
+      "name": "Seiji (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "kn-IN",
+    "name": "Kannada (India)",
+    "voices": [{
+      "value": "Alpana - standard",
+      "name": "Alpana (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "ko-KR",
+    "name": "Korean (South Korea)",
+    "voices": [{
+      "value": "Jina - enhanced",
+      "name": "Jina (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Sora - standard",
+      "name": "Sora (standard)",
+      "model": "standard"
+    }, {
+      "value": "Yuna - standard",
+      "name": "Yuna (standard)",
+      "model": "standard"
+    }, {
+      "value": "Yuna-Ml - enhanced",
+      "name": "Yuna-Ml (enhanced)",
+      "model": "enhanced"
+    }]
+  }, {
+    "code": "zlm-MY",
+    "name": "Malay (Malaysia)",
+    "voices": [{
+      "value": "Amira - standard",
+      "name": "Amira (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "zh-CN",
+    "name": "Mandarin (China)",
+    "voices": [{
+      "value": "Lili-Ml - enhanced",
+      "name": "Lili-Ml (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Binbin-Ml - standard",
+      "name": "Binbin-Ml (standard)",
+      "model": "standard"
+    }, {
+      "value": "Lilian-Ml - standard",
+      "name": "Lilian-Ml (standard)",
+      "model": "standard"
+    }, {
+      "value": "Lisheng-Ml - standard",
+      "name": "Lisheng-Ml (standard)",
+      "model": "standard"
+    }, {
+      "value": "Tiantian-Ml - standard",
+      "name": "Tiantian-Ml (standard)",
+      "model": "standard"
+    }, {
+      "value": "Tingting-Ml - standard",
+      "name": "Tingting-Ml (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "cmn-TW",
+    "name": "Mandarin (Taiwan)",
+    "voices": [{
+      "value": "Meijia-Ml - standard",
+      "name": "Meijia-Ml (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "mr-IN",
+    "name": "Marathi (India)",
+    "voices": [{
+      "value": "Ananya - standard",
+      "name": "Ananya (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "nb-NO",
+    "name": "Norwegian Bokmål (Norway)",
+    "voices": [{
+      "value": "Henrik - standard",
+      "name": "Henrik (standard)",
+      "model": "standard"
+    }, {
+      "value": "Nora - standard",
+      "name": "Nora (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "pl-PL",
+    "name": "Polish (Poland)",
+    "voices": [{
+      "value": "Ewa - enhanced",
+      "name": "Ewa (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Krzysztof - standard",
+      "name": "Krzysztof (standard)",
+      "model": "standard"
+    }, {
+      "value": "Zosia - standard",
+      "name": "Zosia (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "pt-BR",
+    "name": "Portuguese (Brazil)",
+    "voices": [{
+      "value": "luciana - enhanced",
+      "name": "Luciana (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Fernanda - standard",
+      "name": "Fernanda (standard)",
+      "model": "standard"
+    }, {
+      "value": "Felipe - standard",
+      "name": "Felipe (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "pt-PT",
+    "name": "Portuguese (Portugal)",
+    "voices": [{
+      "value": "Catarina - standard",
+      "name": "Catarina (standard)",
+      "model": "standard"
+    }, {
+      "value": "Joana - standard",
+      "name": "Joana (standard)",
+      "model": "standard"
+    }, {
+      "value": "Joaquim - standard",
+      "name": "Joaquim (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "ro-RO",
+    "name": "Romanian (Romania)",
+    "voices": [{
+      "value": "Ioana - standard",
+      "name": "Ioana (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "ru-RU",
+    "name": "Russian (Russia)",
+    "voices": [{
+      "value": "Katya - standard",
+      "name": "Katya (standard)",
+      "model": "standard"
+    }, {
+      "value": "Katya-Ml - standard",
+      "name": "Katya-Ml (standard)",
+      "model": "standard"
+    }, {
+      "value": "Milena - standard",
+      "name": "Milena (standard)",
+      "model": "standard"
+    }, {
+      "value": "yuri - standard",
+      "name": "Yuri (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "sk-SK",
+    "name": "Slovak (Slovakia)",
+    "voices": [{
+      "value": "Laura - standard",
+      "name": "Laura (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "es-AR",
+    "name": "Spanish (Argentina)",
+    "voices": [{
+      "value": "Diego - standard",
+      "name": "Diego (standard)",
+      "model": "standard"
+    }, {
+      "value": "Isabela - standard",
+      "name": "Isabela (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "es-CL",
+    "name": "Spanish (Chile)",
+    "voices": [{
+      "value": "Francisca - standard",
+      "name": "Francisca (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "es-CO",
+    "name": "Spanish (Colombia)",
+    "voices": [{
+      "value": "Carlos - standard",
+      "name": "Carlos (standard)",
+      "model": "standard"
+    }, {
+      "value": "Soledad - standard",
+      "name": "Soledad (standard)",
+      "model": "standard"
+    }, {
+      "value": "Ximena - standard",
+      "name": "Ximena (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "es-MX",
+    "name": "Spanish (Mexico)",
+    "voices": [{
+      "value": "Angelica - standard",
+      "name": "Angelica (standard)",
+      "model": "standard"
+    }, {
+      "value": "Javier - standard",
+      "name": "Javier (standard)",
+      "model": "standard"
+    }, {
+      "value": "Juan - standard",
+      "name": "Juan (standard)",
+      "model": "standard"
+    }, {
+      "value": "Paulina-Ml - enhanced",
+      "name": "Paulina-Ml (enhanced)",
+      "model": "enhanced"
+    }]
+  }, {
+    "code": "es-ES",
+    "name": "Spanish (Spain)",
+    "voices": [{
+      "value": "Jorge - standard",
+      "name": "Jorge (standard)",
+      "model": "standard"
+    }, {
+      "value": "Marisol-Ml - standard",
+      "name": "Marisol-Ml (standard)",
+      "model": "standard"
+    }, {
+      "value": "Monica-Ml - standard",
+      "name": "Monica-Ml (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "sv-SE",
+    "name": "Swedish (Sweden)",
+    "voices": [{
+      "value": "Alva - standard",
+      "name": "Alva (standard)",
+      "model": "standard"
+    }, {
+      "value": "Klara - standard",
+      "name": "Klara (standard)",
+      "model": "standard"
+    }, {
+      "value": "Oskar - standard",
+      "name": "Oskar (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "ta-IN",
+    "name": "Tamil (India)",
+    "voices": [{
+      "value": "Vani - standard",
+      "name": "Vani (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "te-IN",
+    "name": "Telugu (India)",
+    "voices": [{
+      "value": "Geeta - standard",
+      "name": "Geeta (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "th-TH",
+    "name": "Thai (Thailand)",
+    "voices": [{
+      "value": "Kanya - enhanced",
+      "name": "Kanya (enhanced)",
+      "model": "enhanced"
+    }, {
+      "value": "Narisa - standard",
+      "name": "Narisa (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "tr-TR",
+    "name": "Turkish (Turkey)",
+    "voices": [{
+      "value": "Cem-Ml - standard",
+      "name": "Cem-Ml (standard)",
+      "model": "standard"
+    }, {
+      "value": "Yelda - standard",
+      "name": "Yelda (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "uk-UA",
+    "name": "Ukrainian (Ukraine)",
+    "voices": [{
+      "value": "Lesya - standard",
+      "name": "Lesya (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "va-ES",
+    "name": "Valencian (Spain)",
+    "voices": [{
+      "value": "Empar - standard",
+      "name": "Empar (standard)",
+      "model": "standard"
+    }]
+  }, {
+    "code": "vi-VN",
+    "name": "Vietnamese (Vietnam)",
+    "voices": [{
+      "value": "Linh - standard",
+      "name": "Linh (standard)",
+      "model": "standard"
+    }]
+  }]
 }
