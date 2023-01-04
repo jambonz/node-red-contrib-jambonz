@@ -5,7 +5,7 @@ RED.nodes.registerType('dial',{
       color: '#bbabaa',
       defaults: {
         name: {value: ''},
-        targets:{value:[{type: 'phone', dest: '', user: '', pass: '', varType: 'str', trunk: ''}]},
+        targets:{value:[{type: 'phone', dest: '', user: '', pass: '', varType: 'str', trunk: '', trunkType: 'str'}]},
         headers: {value: []},
         actionhook: {value: ''},
         actionhookType: {value: 'str'},
@@ -63,6 +63,10 @@ RED.nodes.registerType('dial',{
         $('#node-input-callerid').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-calleridType')
+        });
+        $('#node-input-target-property-trunk').typedInput({
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-target-property-trunk')
         });
         $('#node-input-actionhook').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
@@ -130,7 +134,9 @@ RED.nodes.registerType('dial',{
                 dest: '',
                 user: '',
                 pass: '',
-                varType: 'str'
+                varType: 'str',
+                trunk: '',
+                trunkType: 'str'
               };
             }
 
@@ -143,7 +149,7 @@ RED.nodes.registerType('dial',{
             var row2 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
             var row3 = $('<div/>',{style:"margin-top:8px;"}).appendTo(fragment);
             var row4 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
-            var row5 = $('<div/>',{style:"margin-top:8px;"}).appendTo(fragment);
+            var row5 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
 
             var selectField = $('<select/>',{class:"node-input-target-type",style:"width:110px; margin-right:10px;"})
               .appendTo(row1);
@@ -177,12 +183,13 @@ RED.nodes.registerType('dial',{
             $('<label style="padding-top:8px; padding-right:20px">Trunk:</label>')
               .appendTo(row5);
 
-            $('<input/>',{
+              var trunkName = $('<input/>',{
               class:"node-input-target-property-trunk",
               type:"text",
               placeholder: 'Specify the name of the trunk used for this outbound call'
             })
-              .appendTo(row5);
+              .appendTo(row5)
+              .typedInput({types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env']});
             
             selectField.on('change', function() {
               var type = $(this).val();
@@ -231,7 +238,8 @@ RED.nodes.registerType('dial',{
 
             switch (target.type) {
               case 'phone':
-                trunkfield.val(target.trunk);
+                trunkfield.typedInput('type', target.trunkType);
+                trunkfield.typedInput('value', target.trunk);
               case 'sip': 
                 userfield.val(target.user);
                 passfield.val(target.pass);
@@ -321,7 +329,8 @@ RED.nodes.registerType('dial',{
           var dest    = target.find('.node-input-target-property-name').typedInput('value');
           var user = target.find('.node-input-target-property-authuser').val();
           var pass = target.find('.node-input-target-property-authpassword').val();
-          var trunk = target.find('.node-input-target-property-trunk').val();
+          var trunk = target.find('.node-input-target-property-trunk').typedInput('value');
+          var trunkType = target.find('.node-input-target-property-trunk').typedInput('type');
           if (!['phone', 'user', 'sip', 'teams'].includes(type) || 0 === dest.length) return;
 
           var t = {
@@ -333,6 +342,7 @@ RED.nodes.registerType('dial',{
             Object.assign(t, {user, pass});
           }
           if ('phone' === type && trunk.length > 0) {
+            t.trunkType = trunkType;
             t.trunk = trunk;
           }
           node.targets.push(t);

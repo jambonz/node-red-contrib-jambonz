@@ -13,10 +13,12 @@ module.exports = function(RED) {
       var target = config.targets.map((t) => {
         const obj = Object.assign({}, t);
         var dest = v_resolve(obj.dest, obj.varType, this.context(), msg);
+        var trunk = v_resolve(obj.trunk, obj.trunkType, this.context(), msg);
         node.log(`dial: dest ${t.varType}:${t.dest} resolved to ${dest}`);
         switch (t.type) {
           case 'phone':
             obj.number = dest;
+            obj.trunk = trunk;
             break;
           case 'user':
             obj.name = dest;
@@ -37,6 +39,7 @@ module.exports = function(RED) {
             break;
         }
         delete obj.varType;
+        delete obj.trunkType;
         delete obj.dest;
         return obj;
       });
