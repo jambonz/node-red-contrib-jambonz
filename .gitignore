@@ -18,4 +18,3 @@ node_modules
 .DS_Store
 
 .vscode
-package copy.json
