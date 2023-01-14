@@ -71,7 +71,8 @@ exports.appendVerb = (msg, obj) => {
       }
       return '${' + b + '}';
     });
-    return newString;
+    data = {'global' : glob, 'flow' : flow, 'msg' : msg}
+    return mustache.render(newString, data);
   }
   
 

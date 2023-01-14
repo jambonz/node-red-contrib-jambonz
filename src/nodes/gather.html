@@ -315,6 +315,10 @@
   
     <h3>Details</h3>
     The gather command is used to collect dtmf or speech input.
+
+    Within the text field you can use mustache syntax to insert properties of the msg, flow or global objects.
+    For example if you wanted to insert the value of msg.payload into the text you could put
+    <code>The payload is {{msg.payload}}</code>
     <h3>References</h3>
       <ul>
           <li><a href="https://docs.jambonz.org/jambonz/#gather">Jambonz gather reference</a></li>
