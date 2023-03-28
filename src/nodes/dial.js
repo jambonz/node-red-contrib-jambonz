@@ -1,5 +1,3 @@
-var {createHash} = require('crypto');
-const bent = require('bent');
 var {appendVerb, v_resolve} = require('./libs')
 
 module.exports = function(RED) {
@@ -8,7 +6,6 @@ module.exports = function(RED) {
     var node = this;
 
     node.on('input', function(msg) {
-
       node.log(`dial config: ${JSON.stringify(config)}, msg.call: ${JSON.stringify(msg.call)}`);
       var target = config.targets.map((t) => {
         const obj = Object.assign({}, t);
@@ -55,7 +52,6 @@ module.exports = function(RED) {
         dialMusic: v_resolve(config.dialmusic, config.dialmusicType, this.context(), msg),
         dtmfHook: v_resolve(config.dtmfhook, config.dtmfhookType, this.context(), msg)
       };
-
 
       // headers
       var headers = {};
@@ -128,7 +124,6 @@ module.exports = function(RED) {
       else {
         delete data.dtmfHook;
       }
-
 
       node.log(`dial verb: ${JSON.stringify(data)}`);
 

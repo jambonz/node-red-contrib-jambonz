@@ -1,12 +1,8 @@
-var {createHash} = require('crypto');
-var mustache = require('mustache');
-const { toNamespacedPath } = require('path');
-mustache.escape = function(text) {return text;};
 var {v_resolve, doCreateCall, } = require('./libs')
 
 module.exports = function(RED) {
- /** Create call */
- function create_call(config) {
+  /** Create call */
+  function create_call(config) {
     RED.nodes.createNode(this, config);
     var node = this;
     const server = RED.nodes.getNode(config.server);

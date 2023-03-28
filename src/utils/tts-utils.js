@@ -11,6 +11,7 @@ googleData.forEach(function(l) {
   };
   googleLanguageOptions += `<option value="${l.code}">${l.name}</option>`;        
 });
+
 var mapDialogFlow = {};
 var dialogFlowLanguageOptions = '';
 dialogflowData.forEach(function(l) {

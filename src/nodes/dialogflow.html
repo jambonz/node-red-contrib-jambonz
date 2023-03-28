@@ -1,6 +1,6 @@
 <!-- Javascript -->
 <script type="text/javascript">
-RED.nodes.registerType('dialogflow',{
+  RED.nodes.registerType('dialogflow',{
       category: 'jambonz',
       color: '#bbabaa',
       defaults: {
@@ -107,9 +107,7 @@ RED.nodes.registerType('dialogflow',{
         recLangElem.val(node.recognizerlang);
       }
     });
-
 </script>
-
 
 <!-- HTML -->
 <script type="text/html" data-template-name="dialogflow">
@@ -215,7 +213,6 @@ RED.nodes.registerType('dialogflow',{
   </script>
 
 <!-- Help Text -->
-
 <script type="text/html" data-help-name="audio in">
     <script type="text/html" data-help-name="dialogflow">
         <p>Run a Google dialogflow bot on the call</p>
@@ -236,7 +233,6 @@ RED.nodes.registerType('dialogflow',{
             Webhook to call when an intent, transcription or other dialogflow event is received. Optional.</p>
           <p><code>Action Hook</code> - 
             Webhook to call when the dialogflow bot interaction concludes. Optional.</p>
-       
       
         <h3>Outputs</h3>
         <dl class="message-properties">
@@ -250,11 +246,7 @@ RED.nodes.registerType('dialogflow',{
       
         <h3>References</h3>
           <ul>
-              <li><a href="https://docs.jambonz.org/jambonz/#dialogflow">Jambonz dialogflow reference</a></li>
+              <li><a href="https://www.jambonz.org/docs/webhooks/dialogflow/">Jambonz dialogflow reference</a></li>
           </ul>
       </script>
-      
-      
-  
-
 </script>

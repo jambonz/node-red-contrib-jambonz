@@ -1,13 +1,12 @@
 <!-- Javascript -->
 <script type="text/javascript">
- RED.nodes.registerType('pause',{
+  RED.nodes.registerType('pause',{
       category: 'jambonz',
       color: '#bbabaa',
       defaults: {
         name: {value: ''},
         len: {required: true},
         lenType: {value: 'num'},
-
       },
       inputs:1,
       outputs:1,
@@ -21,9 +20,7 @@
         });
       }
   });
-
 </script>
-
 
 <!-- HTML -->
 <script type="text/html" data-template-name="pause">
@@ -36,7 +33,7 @@
       <input type="text" id="node-input-len" placeholder="number of seconds to pause">
       <input type="hidden" id="node-input-lenType">
     </div>
-  </script>
+</script>
 
 <!-- Help Text -->
 <script type="text/html" data-help-name="pause">
@@ -45,7 +42,7 @@
     <dl class="message-properties">
       <dt>Duration<span class="property-type">object</span></dt>
       <dd>Number of seconds pause</dd>
-     </dl>
+    </dl>
   
   <h3>Outputs</h3>
   <dl class="message-properties">
@@ -57,6 +54,6 @@
   The pause verb waits a specified number of seconds before continuing to execute the application.
   <h3>References</h3>
     <ul>
-        <li><a href="https://docs.jambonz.org/jambonz/#pause">Jambonz pause reference</a></li>
+        <li><a href="https://www.jambonz.org/docs/webhooks/pause/">Jambonz pause reference</a></li>
     </ul>
-  </script>
+</script>

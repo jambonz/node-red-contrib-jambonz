@@ -1,8 +1,6 @@
 <!-- Javascript -->
-
-
 <script type="text/javascript">
- RED.nodes.registerType('NAME',{
+  RED.nodes.registerType('NAME',{
       category: 'jambonz',
       color: '#bbabaa',
       defaults: {
@@ -23,41 +21,34 @@
         });
       }
   });
-
-
 </script>
 
-
 <!-- HTML -->
-
 <script type="text/html" data-template-name="NAME">
     <script type="text/html" data-template-name="listen">
         <div class="form-row">
           <label for="node-input-name"><i class="icon-tag"></i> Name</label>
           <input type="text" id="node-input-name" placeholder="Name">
         </div>
-  
 </script>
 
 <!-- Help Text -->
-
 <script type="text/html" data-help-name="NAME">
-     <script type="text/html" data-help-name="NAME">
+    <script type="text/html" data-help-name="NAME">
         <p>DESCRIPTION</p>
       <h3>Properties</h3>
           <p><code>XXXX</code> - TEXT</p>
         
       <h3>Outputs</h3>
-       <dl class="message-properties">
-         <dt>payload<span class="property-type">object</span></dt>
-         <dd> <code>msg.payload</code> will contain ...  </dd>
-       </dl>
+    <dl class="message-properties">
+      <dt>payload<span class="property-type">object</span></dt>
+        <dd> <code>msg.payload</code> will contain ...  </dd>
+    </dl>
       
       <h3>Details</h3>
       The listen verb establishes a connection to a websocket server and sends live audio for the current call.<h3>References</h3>
         <ul>
-            <li><a href="https://docs.jambonz.org/jambonz/#listen">Jambonz listen reference</a></li>
+            <li><a href="https://www.jambonz.org/docs/webhooks/listen/">Jambonz listen reference</a></li>
         </ul>
       </script>
-
 </script>

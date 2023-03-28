@@ -1,6 +1,6 @@
 <!-- Javascript -->
 <script type="text/javascript">
- RED.nodes.registerType('create-sms',{
+  RED.nodes.registerType('create-sms',{
       category: 'jambonz',
       color: '#aebfb9',
       defaults: {
@@ -46,12 +46,9 @@
         });
       }
   });
-
 </script>
 
-
 <!-- HTML -->
-
 <script type="text/html" data-template-name="create-sms">
     <div class="form-row">
       <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -81,11 +78,9 @@
     <input type="text" id="node-input-provider">
     <input type="hidden" id="node-input-providerType">
   </div>
-  </script>
+</script>
   
-
 <!-- Help Text -->
-
 <script type="text/html" data-help-name="create-sms">
     <p>Send an SMS</p>
     <h3>Properties</h3>
@@ -94,13 +89,6 @@
     <p><code>To</code> -  Destination phone number</p>
     <p><code>Text</code> - Text message</p>
 
-  
   <h3>Details</h3>
   The create message command is used to send an SMS message.  
-  <!--
-  <h3>References</h3>
-    <ul>
-        <li><a href="https://docs.jambonz.org/rest/#create-a-call">Jambonz reference</a></li>
-    </ul>
-  -->
-  </script>
+</script>

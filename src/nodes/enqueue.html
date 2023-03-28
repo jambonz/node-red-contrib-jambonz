@@ -1,6 +1,4 @@
 <!-- Javascript -->
-
-
 <script type="text/javascript">
     RED.nodes.registerType('enqueue',{
       category: 'jambonz',
@@ -35,12 +33,9 @@
         });
       }
   });
-
 </script>
 
-
 <!-- HTML -->
-
 <script type="text/html" data-template-name="enqueue">
     <div class="form-row">
       <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -64,27 +59,25 @@
   </script>
 
 <!-- Help Text -->
-
 <script type="text/html" data-help-name="enqueue">
     <p>places a caller in a queue.</p>
     <h3>Properties</h3>
       <p><code>Queue name</code> - 
-       The name of the queue</p>
+        The name of the queue</p>
       <p><code>Action hook</code> - 
-       A webhook invoke when operation completes.</p>
+        A webhook invoke when operation completes.</p>
       <p><code>Wait hook</code> - 
-       A webhook to invoke while the caller is in queue. The only allowed verbs in the application returned from this webhook are say, play, pause, and leave,.</p>
-   
+        A webhook to invoke while the caller is in queue. The only allowed verbs in the application returned from this webhook are say, play, pause, and leave,.</p>
   <h3>Outputs</h3>
   <dl class="message-properties">
-     <dt>jambonz<span class="property-type">object</span></dt>
-     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>enqueue</code> action appended  </dd>
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>enqueue</code> action appended  </dd>
   </dl>
   
   <h3>Details</h3>
   The enqueue command is used to place a caller in a queue.
   <h3>References</h3>
     <ul>
-        <li><a href="https://docs.jambonz.org/jambonz/#enqueue">Jambonz enqueue reference</a></li>
+        <li><a href="https://www.jambonz.org/docs/webhooks/enqueue/">Jambonz enqueue reference</a></li>
     </ul>
-  </script>
+</script>

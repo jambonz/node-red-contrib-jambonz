@@ -22,9 +22,7 @@ RED.nodes.registerType('play',{
         });
       }
   });
-
 </script>
-
 
 <!-- HTML -->
 <script type="text/html" data-template-name="play">
@@ -52,17 +50,16 @@ RED.nodes.registerType('play',{
     <p>Play a wav or mp3 file</p>
     <h3>Properties</h3>
     <p><code>Url</code> - 
-     a single url or array of urls (will play in sequence) to a wav or mp3 file</p>
+      a single url or array of urls (will play in sequence) to a wav or mp3 file</p>
     <p><code>Early media</code> - 
-     if checked, play the url over an early media connection</p>
+      if checked, play the url over an early media connection</p>
     <p><code>Loop</code> - 
-     number of times to play the url</p>
- 
+      number of times to play the url</p>
   
   <h3>Outputs</h3>
   <dl class="message-properties">
-     <dt>jambonz<span class="property-type">object</span></dt>
-     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>play</code> action appended  </dd>
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>play</code> action appended  </dd>
   </dl>
   
   <h3>Details</h3>
@@ -71,6 +68,6 @@ RED.nodes.registerType('play',{
   
   <h3>References</h3>
     <ul>
-        <li><a href="https://docs.jambonz.org/jambonz/#play">Jambonz play reference</a></li>
+        <li><a href="https://www.jambonz.org/docs/webhooks/play/">Jambonz play reference</a></li>
     </ul>
-  </script>
+</script>

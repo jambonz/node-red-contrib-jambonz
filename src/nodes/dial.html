@@ -1,6 +1,6 @@
 <!-- Javascript -->
 <script type="text/javascript">
-RED.nodes.registerType('dial',{
+  RED.nodes.registerType('dial',{
       category: 'jambonz',
       color: '#bbabaa',
       defaults: {
@@ -363,13 +363,9 @@ RED.nodes.registerType('dial',{
         console.log(`saved headers ${JSON.stringify(node.headers)}`);
       },
     });
-
-
 </script>
 
-
 <!-- HTML -->
-
 <script type="text/html" data-template-name="dial">
     <style>
       ol#node-input-target-container .red-ui-typedInput-container {
@@ -569,7 +565,7 @@ RED.nodes.registerType('dial',{
       </div>
     </fieldset>
   </div>
-  </script>
+</script>
 
 <!-- Help Text -->
 <script type="text/html" data-help-name="dial">
@@ -614,7 +610,6 @@ RED.nodes.registerType('dial',{
       <p><code>Send interim transcriptions</code> - 
       <dd>if true interim transcriptions are sent.</p>
 
-  
     <h3>Outputs</h3>
     <dl class="message-properties">
       <dt>jambonz<span class="property-type">object</span></dt>
@@ -624,6 +619,6 @@ RED.nodes.registerType('dial',{
     <h3>Details</h3>
     The dial verb is used to create a new call by dialing out to a number, a registered sip user, or sip endpoint
       <ul>
-          <li><a href="https://docs.jambonz.org/jambonz/#dial">Jambonz dial reference</a></li>
+          <li><a href="https://www.jambonz.org/docs/webhooks/dial/">Jambonz dial reference</a></li>
       </ul>
   </script>

@@ -1,8 +1,6 @@
 <!-- Javascript -->
-
-
 <script type="text/javascript">
- RED.nodes.registerType('rasa',{
+  RED.nodes.registerType('rasa',{
       category: 'jambonz',
       color: '#bbabaa',
       defaults: {
@@ -41,13 +39,9 @@
         });
       }
   });
-
-
 </script>
 
-
 <!-- HTML -->
-
 <script type="text/html" data-template-name="rasa">
         <div class="form-row">
           <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -77,7 +71,6 @@
 </script>
 
 <!-- Help Text -->
-
 <script type="text/html" data-help-name="rasa">
         <p>The rasa verb is used to connect a call to a Rasa assistant.
 
@@ -89,10 +82,10 @@
           <p><code>actionHook	</code> - A webhook that is called when the rasa verb completes	</p>
 
       <h3>Outputs</h3>
-       <dl class="message-properties">
-         <dt>payload<span class="property-type">object</span></dt>
-         <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>rasa</code> action appended  </dd>
-       </dl>
+        <dl class="message-properties">
+          <dt>payload<span class="property-type">object</span></dt>
+          <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>rasa</code> action appended  </dd>
+      </dl>
       
       <h3>Details</h3>
       The rasa verb performs speech recognition on the caller audio stream and sends it as text input to the rasa assistant using the rasa RestInput channel. Text returned from the assistant is played to the caller using text-to-speech. As the conversation proceeds, webhook events can be sent to notify of all of the messages being exchanged between the user and the bot, allowing your application to intercede at any point, e.g. to transfer the call to an agent.
@@ -102,5 +95,4 @@
             <li><a href="https://www.jambonz.org/docs/webhooks/rasa/">Jambonz rasa reference</a></li>
         </ul>
       </script>
-
 </script>

@@ -1,10 +1,4 @@
-var {createHash} = require('crypto');
-const bent = require('bent');
-var mustache = require('mustache');
-mustache.escape = function(text) {return text;};
-var {appendVerb, v_resolve} = require('./libs');
-const { type } = require('os');
-const { ConfigurationOptions } = require('aws-sdk');
+var {appendVerb} = require('./libs');
 
 module.exports = function(RED) {
   /** sip:decline */
@@ -32,5 +26,4 @@ module.exports = function(RED) {
     });
   }
   RED.nodes.registerType('sip:request', sip_request);
-
 }

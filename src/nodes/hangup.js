@@ -1,9 +1,4 @@
-var {createHash} = require('crypto');
-const bent = require('bent');
-var mustache = require('mustache');
-mustache.escape = function(text) {return text;};
 var {appendVerb} = require('./libs')
-
 
 module.exports = function(RED) {
     function hangup(config) {
@@ -15,6 +10,6 @@ module.exports = function(RED) {
           });
           node.send(msg);
         });
-      }
-      RED.nodes.registerType('hangup', hangup);
+    }
+    RED.nodes.registerType('hangup', hangup);
 }

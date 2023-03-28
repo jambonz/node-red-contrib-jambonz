@@ -1,8 +1,4 @@
-var {createHash} = require('crypto');
 const bent = require('bent');
-var mustache = require('mustache');
-mustache.escape = function(text) {return text;};
-var {appendVerb, v_resolve, v_text_resolve, doLCC, doCreateCall, doCreateMessage} = require('./libs')
 
 module.exports = function(RED) {
     function get_alerts(config) {
@@ -28,20 +24,20 @@ module.exports = function(RED) {
                 msg.page = res.page
             } catch (err) {
                 if (err.statusCode) {
-                  node.error(`create-call failed with ${err.statusCode}`);
-                  msg.statusCode = err.statusCode;
+                    node.error(`GetAlerts failed with ${err.statusCode}`);
+                    msg.statusCode = err.statusCode;
                 }
                 else {
-                  node.error(`Error getting alerts ${JSON.stringify(err)}`);
-                  if (done) done(err);
-                  else node.error(err, msg);
-                  send(msg);
-                  return;
+                    node.error(`Error getting alerts ${JSON.stringify(err)}`);
+                    if (done) done(err);
+                    else node.error(err, msg);
+                    send(msg);
+                    return;
                 }
             }
             send(msg);
             if (done) done();
         });
-      }
-      RED.nodes.registerType('get_alerts', get_alerts);
+    }
+    RED.nodes.registerType('get_alerts', get_alerts);
 }

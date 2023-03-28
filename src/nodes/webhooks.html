@@ -1,4 +1,4 @@
-  <script type="text/javascript">
+<script type="text/javascript">
     RED.nodes.registerType('webhook in',{
         category: 'jambonz',
         color:"#E6E0F8",
@@ -33,6 +33,7 @@
         },
     });
 </script>
+
 <script type="text/html" data-template-name="webhook in">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
@@ -41,8 +42,8 @@
     <div class="form-row">
         <label for="node-input-method"><i class="fa fa-tasks"></i> Method</label>
         <select type="text" id="node-input-method" style="width:70%;">
-          <option value="get">GET</option>
-          <option value="post">POST</option>
+            <option value="get">GET</option>
+            <option value="post">POST</option>
         </select>
     </div>
     <div class="form-row">
@@ -50,28 +51,26 @@
         <input id="node-input-url" type="text" placeholder="/answer">
     </div>
 </script>
-  
-<script type="text/html" data-help-name="webhook in">
-  <p>Receive jambonz webhook</p>
-  <h3>Inputs</h3>
-  <dl class="message-properties">
-    <dt>Method<span class="property-type">string</span></dt>
-    <dd>GET or POST</dd>
-    <dt>Path<span class="property-type">string</span></dt>
-    <dd>URL path</dd>
-   </dl>
 
-   <h3>Outputs</h3>
-   <dl class="message-properties">
-       <dt>jambonz<span class="property-type">object</span></dt>
-       <dd>For a voice webhook the <code>msg.call</code> will contain the parameters sent with the webhook</dd>
-       <dd>For a user authentication webhook the <code>msg.authRequest</code> will contain the digest authentication parameters sent with the webhook</dd>
-   </dl>
-   
-   <h3>Reference</h3>
-   See the <a href="https://docs.jambonz.org/jambonz#http-connection-details"> Jambonz API Webhooks Reference </a> for details of all the parameters on a voice webhook, 
-   and <a href="https://docs.jambonz.org/register-hook"> for the details of the parameters on a user authentication webhook
-   
+<script type="text/html" data-help-name="webhook in">
+    <p>Receive jambonz webhook</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>Method<span class="property-type">string</span></dt>
+        <dd>GET or POST</dd>
+        <dt>Path<span class="property-type">string</span></dt>
+        <dd>URL path</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>jambonz<span class="property-type">object</span></dt>
+        <dd>For a voice webhook the <code>msg.call</code> will contain the parameters sent with the webhook</dd>
+        <dd>For a user authentication webhook the <code>msg.authRequest</code> will contain the digest authentication parameters sent with the webhook</dd>
+    </dl>
+
+    <h3>Reference</h3>
+    See the <a href="https://www.jambonz.org/docs/webhooks/overview/"> Jambonz API Webhooks Reference </a> for details of all the parameters on a voice webhook
 </script>
 
 <script type="text/javascript">
@@ -99,13 +98,11 @@
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="name">
     </div>
-  </script>
+</script>
 
 <script type="text/x-red" data-help-name="webhook out">
-  <p>Returns jambonz application or user authentication response.</p>
+    <p>Returns jambonz application or user authentication response.</p>
 
-  <h3>Reference</h3>
-  See the <a href="https://docs.jambonz.org/jambonz#http-connection-details"> Jambonz API Webhooks Reference </a> for details of all the parameters on a voice webhook, 
-  and <a href="https://docs.jambonz.org/jambonz#register-hook"> for the details of the parameters on a user authentication webhook
- 
+    <h3>Reference</h3>
+    See the <a href="https://www.jambonz.org/docs/webhooks/overview/"> Jambonz API Webhooks Reference </a> for details of all the parameters on a voice webhook
 </script>
