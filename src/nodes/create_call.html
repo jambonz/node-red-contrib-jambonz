@@ -1,6 +1,6 @@
 <!-- Javascript -->
 <script type="text/javascript">
- RED.nodes.registerType('create-call',{
+  RED.nodes.registerType('create-call',{
       category: 'jambonz',
       color: '#aebfb9',
       defaults: {
@@ -56,7 +56,6 @@
         var applicationElem = $('#node-input-application');
         prepareTtsControls(node);
         prepareSttControls(node);
-
 
         $('#node-input-from').typedInput({
           default: $('#node-input-fromType').val(),
@@ -124,7 +123,6 @@
       }
   });
 </script>
-
 
 <!-- HTML -->
 <script type="text/html" data-template-name="create-call">
@@ -254,12 +252,9 @@
         </div>
     </fieldset>
   </div>
-  
-  
-  </script>
+</script>
 
 <!-- Help Text -->
-
 <script type="text/html" data-help-name="create-call">
   <p>Create an outbound call</p>
   <h3>Properties</h3>
@@ -271,17 +266,13 @@
   
   <h3>Outputs</h3>
   <dl class="message-properties">
-   <dt>statusCode<span class="property-type">int</span></dt>
-   <dd> <code>msg.statusCode</code> will contain the response code from Jambomnz to the createCall request</dd>
-   <dt>callSid<span class="property-type">string</span></dt>
-   <dd> <code>msg.callSid</code> will contain the SID of the call that was created</dd>
+    <dt>statusCode<span class="property-type">int</span></dt>
+    <dd> <code>msg.statusCode</code> will contain the response code from Jambomnz to the createCall request</dd>
+    <dt>callSid<span class="property-type">string</span></dt>
+    <dd> <code>msg.callSid</code> will contain the SID of the call that was created</dd>
   </dl>
   
   <h3>Details</h3>
   The create call command is used to generate a new outbound call.  
   When the call is answered the specified application's call hook will be invoked.
-  <h3>References</h3>
-    <ul>
-        <li><a href="https://docs.jambonz.org/rest/#create-a-call">Jambonz reference</a></li>
-    </ul>
-  </script>
+</script>

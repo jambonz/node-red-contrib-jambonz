@@ -1,19 +1,17 @@
 <!-- Javascript -->
-
-
 <script type="text/javascript">
- RED.nodes.registerType('get_recent_calls',{
+  RED.nodes.registerType('get_recent_calls',{
       category: 'jambonz',
       color: '#aebfb9',
       defaults: {
         name: {value: ''},
         server: {value: '', required: true, type: 'jambonz_auth'},
-        page:{value: 1},
+        page:{value: 1, validate: RED.validators.number()},
         pageType:{value: 'num'},
-        count:{value: 25},
+        count:{value: 25, validate: RED.validators.number()},
         countType:{value: 'num'},
-        days:{value: 7},
-        countType:{value: 'num'}
+        days:{value: 7, validate: RED.validators.number()},
+        daysType:{value: 'num'}
       },
       inputs:1,
       outputs:1,
@@ -36,13 +34,9 @@
         });
       }
   });
-
-
 </script>
 
-
 <!-- HTML -->
-
 <script type="text/html" data-template-name="get_recent_calls">
         <div class="form-row">
           <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -67,29 +61,20 @@
           <input type="text" id="node-input-days" >
           <input type="hidden" id="node-input-daysType">
         </div>
-
-  
 </script>
 
 <!-- Help Text -->
-
 <script type="text/html" data-help-name="get_recent_calls">
         <p>Get previous call records</p>
       <h3>Properties</h3>
           <p><code>XXXX</code> - TEXT</p>
         
       <h3>Outputs</h3>
-       <dl class="message-properties">
-         <dt>payload<span class="property-type">object</span></dt>
-         <dd> <code>msg.payload</code> will contain ...  </dd>
-       </dl>
+        <dl class="message-properties">
+          <dt>payload<span class="property-type">object</span></dt>
+          <dd> <code>msg.payload</code> will contain ...  </dd>
+        </dl>
       
       <h3>Details</h3>
       Call detail records are only kept in the system for 30 days. As there could be a large number of CDRs, this node allows you to query pages of data at a time.
-
-      <ul>
-            <li><a href="https://api.jambonz.org/#4e82bdc2-327b-40a5-9b52-f86357647b45">Jambonz Get Recent Calls reference</a></li>
-        </ul>
-      </script>
-
 </script>

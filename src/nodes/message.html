@@ -1,6 +1,6 @@
 <!-- Javascript -->
 <script type="text/javascript">
-RED.nodes.registerType('message', {
+  RED.nodes.registerType('message', {
     category: 'jambonz',
     color: '#bbabaa',
     defaults: {
@@ -47,7 +47,6 @@ RED.nodes.registerType('message', {
   });
 </script>
 
-
 <!-- HTML -->
 <script type="text/html" data-template-name="message">
     <div class="form-row">
@@ -82,14 +81,14 @@ RED.nodes.registerType('message', {
   
   <h3>Outputs</h3>
   <dl class="message-properties">
-     <dt>jambonz<span class="property-type">object</span></dt>
-     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>message</code> action appended  </dd>
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>message</code> action appended  </dd>
   </dl>
   
   <h3>Details</h3>
   The message verb sends an SMS message.
   <h3>References</h3>
     <ul>
-        <li><a href="https://docs.jambonz.org/jambonz/#message">Jambonz redirect reference</a></li>
+        <li><a href="https://www.jambonz.org/docs/webhooks/message/">Jambonz message reference</a></li>
     </ul>
-  </script>
+</script>

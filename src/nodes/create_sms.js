@@ -1,9 +1,4 @@
-var {createHash} = require('crypto');
-const bent = require('bent');
-var mustache = require('mustache');
-mustache.escape = function(text) {return text;};
 var {v_resolve, doCreateMessage} = require('./libs')
-
 
 module.exports = function(RED) {
 /** Create sms */

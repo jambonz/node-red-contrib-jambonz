@@ -49,10 +49,7 @@
         });
       }
   });
-
 </script>
-
-
 
 <!-- HTML -->
 <script type="text/html" data-template-name="sip:refer">
@@ -60,8 +57,6 @@
       <label for="node-input-name"><i class="icon-tag"></i> Name</label>
       <input type="text" id="node-input-name" placeholder="Name">
     </div>
-
-
     <div class="form-row">
       <label for="node-input-referTo">referTo</label>
       <input type="text" id="node-input-referTo" placeholder="address">
@@ -87,10 +82,7 @@
       <input type="text" id="node-input-headers" placeholder="SIP headers">
       <input type="hidden" id="node-input-headersType">
     </div>
-  </script>
-
-
-
+</script>
 
 <!-- Help Text -->
 <script type="text/html" data-help-name="sip:refer">
@@ -104,8 +96,8 @@
     
   <h3>Outputs</h3>
   <dl class="message-properties">
-     <dt>jambonz<span class="property-type">object</span></dt>
-     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>sip:decline</code> action appended  </dd>
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>sip:decline</code> action appended  </dd>
   </dl>
   
   <h3>Details</h3>
@@ -113,4 +105,4 @@
     <ul>
         <li><a href="https://www.jambonz.org/docs/webhooks/sip-refer/">Jambonz sip:refer reference</a></li>
     </ul>
-  </script>
+</script>

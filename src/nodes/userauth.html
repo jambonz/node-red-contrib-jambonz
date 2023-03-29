@@ -27,10 +27,8 @@ RED.nodes.registerType('user auth',{
   });
 </script>
 
-
-
 <!-- HTML -->
- <!-- user auth -->
+<!-- user auth -->
 <script type="text/html" data-template-name="user auth">
     <div class="form-row">
       <label for="node-input-name"><i class="icon-tag"></i> Name</label>
@@ -51,10 +49,6 @@ RED.nodes.registerType('user auth',{
     </fieldset>
   </script>
 
-
-
-
-
 <!-- Help Text -->
 <!-- User Text -->
 <script type="text/html" data-help-name="user auth">
@@ -67,8 +61,8 @@ RED.nodes.registerType('user auth',{
   
   <h3>Outputs</h3>
   <dl class="message-properties">
-     <dt>authResponse<span class="property-type">object</span></dt>
-     <dd>An object containing a status property indicating whether the password provided has successfully authenticated the user</dd>
+    <dt>authResponse<span class="property-type">object</span></dt>
+    <dd>An object containing a status property indicating whether the password provided has successfully authenticated the user</dd>
   </dl>
   
   <h3>Details</h3>
@@ -77,9 +71,5 @@ RED.nodes.registerType('user auth',{
   It is valid to provide neither the plaintext nor hashed password, and in this case the user authentication will fail.  
   It is useful to do this, for instance, when either the presented domain or username are unrecognized.<br/><br/>
   The output of this node is to set <code>msg.authResponse</code> accordingly, and the <code>webhook out</code> node should then be used to send the result back to the jambonz server.
-  <h3>References</h3>
-    <ul>
-        <li><a href="https://docs.jambonz.org/register-hook">Jambonz user authentication reference</a></li>
-    </ul>
-  </script>
+</script>
 

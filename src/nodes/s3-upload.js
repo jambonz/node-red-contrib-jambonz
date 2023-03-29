@@ -1,12 +1,8 @@
-const { notDeepStrictEqual } = require('assert');
-const { memoryStorage } = require('multer');
-
 module.exports = function(RED) {
   var WebSocket = require('ws');
   var url = require('url');
-  var AWS      = require('aws-sdk') ;
+  var AWS = require('aws-sdk') ;
   var S3Stream = require('s3-upload-stream');
-
 
   var serverUpgradeAdded = false;
   function handleServerUpgrade(request, socket, head) {
@@ -21,7 +17,6 @@ module.exports = function(RED) {
     }
   }
   var listenerNodes = {};
-
 
   // A node red node that sets up a local websocket server
   function WebSocketListenerNode(n) {

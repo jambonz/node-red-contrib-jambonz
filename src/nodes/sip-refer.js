@@ -1,7 +1,4 @@
-var {createHash} = require('crypto');
-var mustache = require('mustache');
-mustache.escape = function(text) {return text;};
-var {appendVerb, } = require('./libs');
+var {appendVerb} = require('./libs');
 
 module.exports = function(RED) {
   function sip_refer(config) {
@@ -29,5 +26,4 @@ module.exports = function(RED) {
     });
   }
   RED.nodes.registerType('sip:refer', sip_refer);
-
 }

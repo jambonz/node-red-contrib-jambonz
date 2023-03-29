@@ -1,11 +1,4 @@
-var {createHash} = require('crypto');
-const bent = require('bent');
-var mustache = require('mustache');
-mustache.escape = function(text) {return text;};
-var {v_resolve} = require('./libs')
-
 module.exports = function(RED) {
-
     function jambonz_auth(config) {
       RED.nodes.createNode(this, config);
       this.accountSid = config.accountSid;
@@ -18,6 +11,7 @@ module.exports = function(RED) {
         this.url = config.urlType;
       }
     }
+    
     RED.nodes.registerType('jambonz_auth', jambonz_auth, {
       credentials: {
         url: {type: 'text'},
@@ -39,5 +33,4 @@ module.exports = function(RED) {
         secretAccessKey: {type: 'text'}
       }
     });
-  
-  }
+}

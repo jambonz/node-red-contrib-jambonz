@@ -1,6 +1,5 @@
 <!-- Javascript -->
 <script type="text/javascript">
-
   RED.nodes.registerType('jambonz_auth',{
     category: 'config',
     defaults: {
@@ -20,12 +19,15 @@
                   {value: 'https://api.jambonz.us', label : 'jambonz.us', hasValue: false},
                   {value: 'https://api.jambonz.xyz', label : 'jambonz.xyz', hasValue: false}],
           typeField: $('#node-config-input-urlType')
-        });
+      });
+    },
+    oneditsave: function() {
+      const baseUrl = $('#node-config-input-url').val();
+      if (baseUrl.endsWith('/')) {
+        $('#node-config-input-url').val(baseUrl.slice(0, -1));
+      }
     }
   });
-
-
-
 
   RED.nodes.registerType('aws_auth',{
     category: 'config',
@@ -43,12 +45,9 @@
   });
 </script>
 
-
 <!-- HTML -->
 
-
-
-  <!-- aws auth  -->
+<!-- aws auth  -->
 <script type="text/html" data-template-name="aws_auth">
   <div class="form-row">
     <label for="node-config-input-accessKey">AWS Access Key ID</label>
@@ -60,8 +59,6 @@
   </div>
 </script>
 
-
-
 <!-- jambonz auth -->
 <script type="text/html" data-template-name="jambonz_auth">
   <div class="form-row">
@@ -72,10 +69,9 @@
     <label for="node-config-input-url">Base URL</label>
     <input type="text" id="node-config-input-url" placeholder="http://localhost:3000">
     <input type="hidden" id="node-config-input-urlType">
-
 </div>
 <div class="form-row">
-  <label for="node-config-input-accountSid">AccountSid</label>
+  <label for="node-config-input-accountSid">Account SID</label>
   <input type="text" id="node-config-input-accountSid">
 </div>
 <div class="form-row">
@@ -88,8 +84,6 @@
 </div>
 </script>
 
-
-
 <!-- Help Text -->
 
 <!-- AWS auth-->
@@ -100,7 +94,6 @@
   </script>
 
 <!-- jambonz auth -->
-
 <script type="text/x-red" data-help-name="jambonz_auth">
   <p>Creates a new jambonz server credential </p>
   <h3>Properties</h3>

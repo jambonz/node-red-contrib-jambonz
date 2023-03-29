@@ -1,7 +1,3 @@
-var {createHash} = require('crypto');
-const bent = require('bent');
-var mustache = require('mustache');
-mustache.escape = function(text) {return text;};
 var {appendVerb, v_resolve} = require('./libs')
 
 module.exports = function(RED) {
@@ -21,5 +17,4 @@ module.exports = function(RED) {
     });
   }
   RED.nodes.registerType('sip:decline', sip_decline);
-
 }

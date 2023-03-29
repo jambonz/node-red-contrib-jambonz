@@ -13,7 +13,6 @@
           icon: "font-awesome/fa-cubes",
           label: function() { return this.name || 'dtmf';},
           oneditprepare: function() {
-            
             $('#node-input-dtmf').typedInput({
               default: $('#node-input-dtmfType').val(),
               types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
@@ -26,9 +25,7 @@
             })
           }
     });
-
 </script>
-
 
 <!-- HTML -->
 <script type="text/html" data-template-name="dtmf">
@@ -49,26 +46,23 @@
   </script>
 
 <!-- Help Text -->
-<script type="text/html" data-help-name="play">
+<script type="text/html" data-help-name="dtmf">
     <p>generates a string of dtmf digit signals</p>
     <h3>Properties</h3>
     <p><code>DTMF</code> - a string containing a sequence of dtmf digits (0-9,*,#)</p>
     <p><code>Duration</code> - 	the length of each digit, in milliseconds, Defaults to 500</p>
- 
   
   <h3>Outputs</h3>
   <dl class="message-properties">
-     <dt>jambonz<span class="property-type">object</span></dt>
-     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>play</code> action appended  </dd>
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>play</code> action appended  </dd>
   </dl>
   
   <h3>Details</h3>
   The dtmf action generates a string of dtmf digit signals. These are sent as RTP payloads using RFC 2833.
 
-
-  
   <h3>References</h3>
     <ul>
-        <li><a href="https://www.jambonz.org/docs/webhooks/dtmf/">Jambonz play reference</a></li>
+        <li><a href="https://www.jambonz.org/docs/webhooks/dtmf/">Jambonz dtmf reference</a></li>
     </ul>
-  </script>
+</script>

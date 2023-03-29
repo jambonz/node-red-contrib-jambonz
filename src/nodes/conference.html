@@ -1,6 +1,6 @@
 <!-- Javascript -->
 <script type="text/javascript">
-RED.nodes.registerType('conference',{
+  RED.nodes.registerType('conference',{
     category: 'jambonz',
     color: '#bbabaa',
     defaults: {
@@ -43,9 +43,7 @@ RED.nodes.registerType('conference',{
       });
     }
   });
-
 </script>
-
 
 <!-- HTML -->
 <script type="text/html" data-template-name="conference">
@@ -95,25 +93,24 @@ RED.nodes.registerType('conference',{
 <script type="text/html" data-help-name="conference">
     <p>places a caller in a conference.</p>
     <h3>Properties</h3>
-       <p><code>Conference Name </code> - The name of the conference to join the caller to.</p>
-       <p><code>Enter hook </code> - A webhook to retrieve something to play or say to the caller just before they are put into a conference after waiting for it to start</p>
-       <p><code>Wait hook </code> - A webhook to retrieve commands to play or say while the caller is waiting for the conference to start</p>
-       <p><code>Beep on entry</code> - if checked, play a beep tone to the conference when caller enters </p>
-       <p><code>Start on entry</code> - if checked, start the conference only when this caller enters</p>
-       <p><code>End on exit</code> - if checked, end the conference when this caller hangs up</p>
-       <p><code>Max participants</code> - maximum number of participants that will be allowed in the conference</p>
- 
-      <h3>Outputs</h3>
+      <p><code>Conference Name </code> - The name of the conference to join the caller to.</p>
+      <p><code>Enter hook </code> - A webhook to retrieve something to play or say to the caller just before they are put into a conference after waiting for it to start</p>
+      <p><code>Wait hook </code> - A webhook to retrieve commands to play or say while the caller is waiting for the conference to start</p>
+      <p><code>Beep on entry</code> - if checked, play a beep tone to the conference when caller enters </p>
+      <p><code>Start on entry</code> - if checked, start the conference only when this caller enters</p>
+      <p><code>End on exit</code> - if checked, end the conference when this caller hangs up</p>
+      <p><code>Max participants</code> - maximum number of participants that will be allowed in the conference</p>
+    <h3>Outputs</h3>
 <dl class="message-properties">
-   <dt>jambonz<span class="property-type">object</span></dt>
-   <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>conference</code> action appended  </dd>
+  <dt>jambonz<span class="property-type">object</span></dt>
+  <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>conference</code> action appended  </dd>
 </dl>
 
 <h3>Details</h3>
 The conference verb places a call into a conference.
 <h3>References</h3>
   <ul>
-      <li><a href="https://docs.jambonz.org/jambonz/#conference">Jambonz conference reference</a></li>
+      <li><a href="https://www.jambonz.org/docs/webhooks/conference/">Jambonz conference reference</a></li>
   </ul>
 </script>
 
