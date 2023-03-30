@@ -8,7 +8,13 @@ RED.nodes.registerType('user auth',{
         password: {},
         passwordType: {},
         ha1: {},
-        ha1Type: {}
+        ha1Type: {},
+        expires: {value: ''},
+        expiresType: {},
+        callHook: {value: ''},
+        callHookType: {},
+        callStatusHook: {value: ''},
+        callStatusHookType: {},
       },
       inputs:1,
       outputs:1,
@@ -22,6 +28,18 @@ RED.nodes.registerType('user auth',{
         $('#node-input-ha1').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-ha1Type')
+        });
+        $('#node-input-expires').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-expiresType')
+        });
+        $('#node-input-callHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-callHookType')
+        });
+        $('#node-input-callStatusHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-callStatusHookType')
         });
       }
   });
@@ -46,21 +64,39 @@ RED.nodes.registerType('user auth',{
         <input type="text" id="node-input-ha1">
         <input type="hidden" id="node-input-ha1Type">
       </div>
+      <legend>Additional auth options</legend>
+      <div class="form-row">
+        <label for="node-input-expires">Expires</label>
+        <input type="text" id="node-input-expires">
+        <input type="hidden" id="node-input-expiresType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-callHook">Call hook</label>
+        <input type="text" id="node-input-callHook">
+        <input type="hidden" id="node-input-callHookType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-callStatusHook">Call status hook</label>
+        <input type="text" id="node-input-callStatusHook">
+        <input type="hidden" id="node-input-callStatusHookType">
+      </div>
     </fieldset>
   </script>
 
 <!-- Help Text -->
 <!-- User Text -->
 <script type="text/html" data-help-name="user auth">
-    <p>Authenticate a user</p>
-    <h3>Inputs</h3>
-    <dl class="message-properties">
-        <dt>authRequest<span class="property-type">object</span></dt>
-        <dd>The digest parameters provided by the user</dd>
-    </dl>
+  <p>Authenticate a user</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>authRequest<span class="property-type">object</span></dt>
+    <dd>The digest parameters provided by the user</dd>
+  </dl>
   
   <h3>Outputs</h3>
   <dl class="message-properties">
+    <dt>authRequest<span class="property-type">object</span></dt>
+    <dd>The digest parameters provided by the user</dd>
     <dt>authResponse<span class="property-type">object</span></dt>
     <dd>An object containing a status property indicating whether the password provided has successfully authenticated the user</dd>
   </dl>

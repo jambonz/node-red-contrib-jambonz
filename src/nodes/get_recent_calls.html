@@ -6,11 +6,15 @@
       defaults: {
         name: {value: ''},
         server: {value: '', required: true, type: 'jambonz_auth'},
-        page:{value: 1, validate: RED.validators.number()},
+        direction: {value: ''},
+        directionType:{value: 'str'},
+        trunk: {value: ''},
+        trunkType:{value: 'str'},
+        page:{value: 1},
         pageType:{value: 'num'},
-        count:{value: 25, validate: RED.validators.number()},
+        count:{value: 25},
         countType:{value: 'num'},
-        days:{value: 7, validate: RED.validators.number()},
+        days:{value: 7},
         daysType:{value: 'num'}
       },
       inputs:1,
@@ -19,7 +23,6 @@
       paletteLabel: "Get - Recent Calls",
       label: function() { return this.name || 'Get Recent Calls';},
       oneditprepare: () => {
-        var node = this;
         $('#node-input-page').typedInput({
             types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
             typeField: $('#node-input-pageType')
@@ -31,6 +34,14 @@
         $('#node-input-days').typedInput({
             types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
             typeField: $('#node-input-daysType')
+        });
+        $('#node-input-direction').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-directionType')
+        });
+        $('#node-input-trunk').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-trunkType')
         });
       }
   });
@@ -45,6 +56,16 @@
         <div class="form-row">
           <label for="node-input-server">Server</label>
           <input type="text" id="node-input-server">
+        </div>
+        <div class="form-row">
+          <label for="node-input-direction">Direction</label>
+          <input type="text" id="node-input-direction" placeholder="inbound">
+          <input type="hidden" id="node-input-directionType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-trunk">Trunk</label>
+          <input type="text" id="node-input-trunk" placeholder="trunk name">
+          <input type="hidden" id="node-input-trunkType">
         </div>
         <div class="form-row">
           <label for="node-input-page">Page</label>
@@ -65,15 +86,7 @@
 
 <!-- Help Text -->
 <script type="text/html" data-help-name="get_recent_calls">
-        <p>Get previous call records</p>
-      <h3>Properties</h3>
-          <p><code>XXXX</code> - TEXT</p>
-        
-      <h3>Outputs</h3>
-        <dl class="message-properties">
-          <dt>payload<span class="property-type">object</span></dt>
-          <dd> <code>msg.payload</code> will contain ...  </dd>
-        </dl>
+      <p>Get recent call records</p>
       
       <h3>Details</h3>
       Call detail records are only kept in the system for 30 days. As there could be a large number of CDRs, this node allows you to query pages of data at a time.

@@ -11,10 +11,7 @@
       outputs:1,
       icon: "font-awesome/fa-cubes",
       paletteLabel: "Get - Calls",
-      label: function() { return this.name || 'Get Calls';},
-      oneditprepare: () => {
-        var node = this;
-      }
+      label: function() { return this.name || 'Get Calls';}
   });
 </script>
 
@@ -32,13 +29,9 @@
 
 <!-- Help Text -->
 <script type="text/html" data-help-name="get_calls">
-      <p>DESCRIPTION</p>
-      <h3>Properties</h3>
-          <p><code>XXXX</code> - TEXT</p>
-        
-      <h3>Outputs</h3>
-        <dl class="message-properties">
-          <dt>payload<span class="property-type">object</span></dt>
-          <dd> <code>msg.payload</code> will contain ...  </dd>
-        </dl>
+      <p>Get calls</p>
+
+      <h3>Details</h3>
+      Retrieve info for a group of calls under an account.
+      Call detail are only kept in the system for 10 minutes by default.
 </script>

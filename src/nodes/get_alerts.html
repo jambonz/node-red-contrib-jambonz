@@ -6,12 +6,12 @@ RED.nodes.registerType('get_alerts',{
       defaults: {
         name: {value: ''},
         server: {value: '', required: true, type: 'jambonz_auth'},
-        page:{value: 1, validate: RED.validators.number()},
+        page:{value: 1},
         pageType:{value: 'num'},
-        count:{value: 25, validate: RED.validators.number()},
+        count:{value: 25},
         countType:{value: 'num'},
-        days:{value: 7, validate: RED.validators.number()},
-        countType:{value: 'num'}
+        days:{value: 7},
+        daysType:{value: 'num'}
       },
       inputs:1,
       outputs:1,
@@ -65,13 +65,8 @@ RED.nodes.registerType('get_alerts',{
 
 <!-- Help Text -->
 <script type="text/html" data-help-name="get_alerts">
-        <p>DESCRIPTION</p>
-      <h3>Properties</h3>
-          <p><code>XXXX</code> - TEXT</p>
-        
-      <h3>Outputs</h3>
-        <dl class="message-properties">
-          <dt>payload<span class="property-type">object</span></dt>
-          <dd> <code>msg.payload</code> will contain ...  </dd>
-        </dl>
+      <p>Get alerts</p>
+
+      <h3>Details</h3>
+      Retrieve alerts for a specified account
 </script>
