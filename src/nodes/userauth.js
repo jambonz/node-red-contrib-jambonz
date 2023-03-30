@@ -1,5 +1,5 @@
 var {createHash} = require('crypto');
-var {v_resolve} = require('./libs')
+var {v_resolve} = require('./libs');
 
 /** user auth */
 module.exports = function(RED) {
@@ -12,7 +12,7 @@ module.exports = function(RED) {
         var authResponse = {};
         var ha1_string;
         if (config.ha1 && config.ha1.length) {
-          ha1_string =  v_resolve(config.ha1, config.ha1Type, this.context(), msg);
+          ha1_string = v_resolve(config.ha1, config.ha1Type, this.context(), msg);
           attemptedAuthentication = true;
         }
         else if (config.password && config.password.length) {
@@ -49,7 +49,22 @@ module.exports = function(RED) {
   
           var calculated = response.digest('hex');
           if (calculated === auth.response) {
-            Object.assign(authResponse, {status: 'ok'});
+            let grantedExpires = auth.expires;
+            if (config.expires && config.expires.length) {
+              const expires = v_resolve(config.expires, config.expiresType, this.context(), msg);
+              if (auth.expires && expires != null) {
+                grantedExpires = Math.min(auth.expires, expires);
+              }
+            }
+            const callHook = v_resolve(config.callHook, config.callHookType, this.context(), msg);
+            const callStatusHook = v_resolve(config.callStatusHook, config.callStatusHookType, this.context(), msg);
+            Object.assign(authResponse, {
+              status: 'ok',
+              expires: grantedExpires != null ? grantedExpires : null,
+              call_hook: callHook || null,
+              call_status_hook: callStatusHook || null,
+            });
+            Object.keys(authResponse).forEach((k) => authResponse[k] == null && delete authResponse[k]);
           }
           else {
             Object.assign(authResponse, {status: 'fail', msg: 'incorrect password'});
