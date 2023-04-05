@@ -73,8 +73,8 @@ module.exports = function(RED) {
           send(msg);
           return;
       }
-      node.log(JSON.stringify(opts));
       try {
+        node.log(`sending create call ${JSON.stringify(opts)}`);
         const res = await doCreateCall(url, accountSid, apiToken, opts);
         msg.statusCode = 201;
         msg.callSid = res.sid;

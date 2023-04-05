@@ -30,17 +30,21 @@ function create_sms(config) {
         text,
         provider
       };
-
       try {
         node.log(`sending create message ${JSON.stringify(opts)}`);
         const res = await doCreateMessage(url, accountSid, apiToken, opts);
-        msg.statusCode = 202;
+        msg.statusCode = 201;
         msg.messageSid = res.sid;
         msg.providerResponse = res.providerResponse;
-        node.log(`successfully launched call with messageSid ${msg.messageSid}`);
       } catch (err) {
         if (err.statusCode) {
-          node.log(`create_message failed with ${err.statusCode}`);
+          node.log(JSON.stringify(err));
+          try {
+            const responseBody = await err.json();
+            node.error(`create_sms failed with ${err.statusCode}. Response ${JSON.stringify(responseBody)}`);
+          } catch (e) {
+            node.error(`create_sms failed with ${err.statusCode}`);
+          }
           msg.statusCode = err.statusCode;
         }
         else {
@@ -56,5 +60,4 @@ function create_sms(config) {
     });
   }
   RED.nodes.registerType('create-sms', create_sms);
-
 }
