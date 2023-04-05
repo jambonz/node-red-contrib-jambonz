@@ -5,9 +5,17 @@ module.exports = function(RED) {
         RED.nodes.createNode(this, config);
         var node = this;
         node.on('input', function(msg) {
-          appendVerb(msg, {
+          var data = {
             verb: 'hangup'
+          };
+          // headers
+          var headers = {};
+          config.headers.forEach(function(h) {
+            if (h.h.length && h.v.length) headers[h.h] = h.v;
           });
+          Object.assign(data, {headers});
+          appendVerb(msg, data);
+          node.log(`hangup jambonz: ${JSON.stringify(msg.jambonz)}`);
           node.send(msg);
         });
     }

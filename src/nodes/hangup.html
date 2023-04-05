@@ -5,34 +5,102 @@
       color: '#bbabaa',
       defaults: {
         name: {value: ''},
+        headers: {value: []},
       },
       inputs:1,
       outputs:1,
       icon: "font-awesome/fa-cubes",
       label: function() { return this.name || 'hangup';},
+      oneditprepare: function() {
+        $('#node-input-headers-container').css('min-height','120px').css('min-width','450px').editableList({
+          addItem: function(container, i, opt) {
+            var header = opt;
+            if (!header.hasOwnProperty('h')) {
+                header = {h: '', v: ''};
+            }
+            container.css({
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            });
+            let fragment = document.createDocumentFragment();
+            var row1 = $('<div/>',{style:"display:flex;"}).appendTo(fragment);
+            $('<input/>', {
+              class:"node-input-header-property-name", 
+              type:"text", 
+              placeholder: 'SIP Header'
+            })
+              .appendTo(row1);
+            $('<input/>', {
+              class:"node-input-value-property-name", 
+              type:"text", 
+              placeholder: 'value'
+            })
+              .appendTo(row1);
+            row1.find('.node-input-header-property-name').val(header.h);
+            row1.find('.node-input-value-property-name').val(header.v);
+            container[0].appendChild(fragment);
+          },
+          removable: true
+        });
+        if (!this.headers) {
+          var header = {
+            h: '',
+            v: '',
+          };
+          this.headers = [header];
+        }
+        for (var i=0; i < this.headers.length; i++) {
+            var header = this.headers[i];
+            $("#node-input-headers-container").editableList('addItem', header);
+        }
+      },
+      oneditsave: function () {
+        var node = this;
+        var headers = [];
+        $("#node-input-headers-container").editableList('items').each(function(i) {
+          var header = $(this);
+          var h = header.find(".node-input-header-property-name").val();
+          var v = header.find(".node-input-value-property-name").val();
+          var obj = {};
+          obj[h] = v;
+          headers.push({h, v});
+        });
+        node.headers = headers;
+      }
   });
 </script>
 
 <!-- HTML -->
 <script type="text/html" data-template-name="hangup">
-    <div class="form-row">
-      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-      <input type="text" id="node-input-name" placeholder="Name">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
   </div>
+  <fieldset>
+    <legend>SIP Headers</legend>
+    <div class="form-row" style="margin-bottom:0;">
+      <label style="width:100%"><i class="fa fa-list"></i> <span>Add custom headers on hangup</span></label>
+    </div>
+    <div class="form-row node-input-headers-container-row">
+        <ol id="node-input-headers-container"></ol>
+    </div>
+  </fieldset>
 </script>
 
 <!-- Help Text -->
 <script type="text/html" data-help-name="hangup">
-    <p>Hangup the call</p>
-  
+  <p>Hangup the call</p>
+  <h3>Properties</h3>
+  <p><code>SIP Headers</code> - 
+  <dd>SIP headers to include in the BYE request</p>
   <h3>Outputs</h3>
-  <dl class="message-properties">
-    <dt>jambonz<span class="property-type">object</span></dt>
-    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>hangup</code> action appended  </dd>
-  </dl>
-  
+    <dl class="message-properties">
+      <dt>jambonz<span class="property-type">object</span></dt>
+      <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>hangup</code> action appended  </dd>
+    </dl>
+
   <h3>Details</h3>
-  The hangup verb hangs up the current call.
+  The hangup command terminates the call and ends the application.
   <h3>References</h3>
     <ul>
         <li><a href="https://www.jambonz.org/docs/webhooks/hangup/">Jambonz hangup reference</a></li>
