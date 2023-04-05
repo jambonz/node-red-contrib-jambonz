@@ -31,23 +31,23 @@ module.exports = function(RED) {
 
       switch (config.mode) {
         case 'app':
-          opts.application_sid =  config.application 
+          opts.application_sid = config.application;
           break
         case 'url':
           opts.call_hook = {
-            url: config.call_hook_url,
+            url: v_resolve(config.call_hook_url, config.call_hook_urlType, this.context(), msg),
             method: config.call_hook_method
-          }
+          };
           opts.call_status_hook = {
-            url: config.call_status_url,
+            url: v_resolve(config.call_status_url, config.call_status_urlType, this.context(), msg),
             method: config.call_status_method
-          }
-          opts.speech_synthesis_vendor = config.vendor
-          opts.speech_synthesis_language = config.lang
-          opts.speech_synthesis_voice = config.voice
-          opts.speech_recognizer_vendor = config.transcriptionvendor
-          opts.speech_recognizer_language = config.recognizerlang
-          break
+          };
+          opts.speech_synthesis_vendor = config.vendor;
+          opts.speech_synthesis_language = config.lang;
+          opts.speech_synthesis_voice = config.voice;
+          opts.speech_recognizer_vendor = config.transcriptionvendor;
+          opts.speech_recognizer_language = config.recognizerlang;
+          break;
       }
 
       if (config.timeout) {
@@ -73,19 +73,25 @@ module.exports = function(RED) {
           send(msg);
           return;
       }
-      node.log(JSON.stringify(opts))
+      node.log(JSON.stringify(opts));
       try {
         const res = await doCreateCall(url, accountSid, apiToken, opts);
-        msg.statusCode = 202;
+        msg.statusCode = 201;
         msg.callSid = res.sid;
+        msg.callId = res.callId;
       } catch (err) {
         if (err.statusCode) {
-          console.log(JSON.stringify(err))
-          node.error(`create-call failed with ${err.statusCode}`);
+          node.log(JSON.stringify(err));
+          try {
+            const responseBody = await err.json();
+            node.error(`create-call failed with ${err.statusCode}. Response ${JSON.stringify(responseBody)}`);
+          } catch (e) {
+            node.error(`create-call failed with ${err.statusCode}`);
+          }
           msg.statusCode = err.statusCode;
         }
         else {
-          node.error(`Error sending create all ${JSON.stringify(err)}`);
+          node.error(`Error sending create call ${JSON.stringify(err)}`);
           if (done) done(err);
           else node.error(err, msg);
           send(msg);
