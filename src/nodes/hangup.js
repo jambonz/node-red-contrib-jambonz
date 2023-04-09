@@ -10,9 +10,11 @@ module.exports = function(RED) {
           };
           // headers
           var headers = {};
-          config.headers.forEach(function(h) {
-            if (h.h.length && h.v.length) headers[h.h] = h.v;
-          });
+          if (config.headers) {
+            config.headers.forEach(function(h) {
+              if (h.h.length && h.v.length) headers[h.h] = h.v;
+            });
+          }
           Object.assign(data, {headers});
           appendVerb(msg, data);
           node.log(`hangup jambonz: ${JSON.stringify(msg.jambonz)}`);
