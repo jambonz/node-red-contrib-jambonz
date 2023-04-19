@@ -6,12 +6,38 @@
       defaults: {
         name: {value: ''},
         server: {value: '', required: true, type: 'jambonz_auth'},
+        direction: {value: ''},
+        directionType:{value: 'str'},
+        from: {value: ''},
+        fromType:{value: 'str'},
+        to: {value: ''},
+        toType:{value: 'str'},
+        callStatus: {value: ''},
+        callStatusType:{value: 'str'},
       },
       inputs:1,
       outputs:1,
       icon: "font-awesome/fa-cubes",
       paletteLabel: "Get - Calls",
-      label: function() { return this.name || 'Get Calls';}
+      label: function() { return this.name || 'Get Calls';},
+      oneditprepare: () => {
+        $('#node-input-direction').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-directionType')
+        });
+        $('#node-input-from').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-fromType')
+        });
+        $('#node-input-to').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-toType')
+        });
+        $('#node-input-callStatus').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-callStatusType')
+        });
+      }
   });
 </script>
 
@@ -25,6 +51,26 @@
           <label for="node-input-server">Server</label>
           <input type="text" id="node-input-server">
         </div> 
+        <div class="form-row">
+          <label for="node-input-direction">Direction</label>
+          <input type="text" id="node-input-direction" placeholder="inbound">
+          <input type="hidden" id="node-input-directionType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-from">From</label>
+          <input type="text" id="node-input-from" placeholder="calling number">
+          <input type="hidden" id="node-input-fromType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-to">To</label>
+          <input type="text" id="node-input-to" placeholder="called number">
+          <input type="hidden" id="node-input-toType">
+        </div>
+        <div class="form-row">
+          <label for="node-input-callStatus">Call Status</label>
+          <input type="text" id="node-input-callStatus" placeholder="in-progress">
+          <input type="hidden" id="node-input-callStatusType">
+        </div>
 </script>
 
 <!-- Help Text -->
