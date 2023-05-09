@@ -48,7 +48,7 @@ module.exports = function(RED) {
       }
       if (config.dtmfinput) {
         obj.input.push('digits');
-        if (config.finishonkey && config.finishonkey.length) obj.finishOnKey = obj.finishonkey;
+        if (config.finishonkey && config.finishonkey.length) obj.finishOnKey = config.finishonkey;
         if (/^\d+$/.test(config.numdigits)) obj.numDigits = parseInt(config.numdigits);
         if (/^\d+$/.test(config.timeout)) obj.timeout = parseInt(config.timeout);
       }
