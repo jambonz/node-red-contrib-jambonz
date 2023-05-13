@@ -81,7 +81,7 @@ exports.appendVerb = (msg, obj) => {
       'Authorization': `Bearer ${apiToken}`
     });
     const url = `Accounts/${accountSid}/Calls/${callSid}`;
-    node.log(`invoking LCC with callSid ${callSid} at ${baseUrl}/v1/${url}`);
+    node.log(`invoking LCC with payload ${JSON.stringify(opts)} at ${baseUrl}/v1/${url}`);
     return post(url, opts);
   }
 

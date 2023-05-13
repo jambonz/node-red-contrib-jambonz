@@ -1,3 +1,4 @@
+var crypto = require('crypto');
 var {v_resolve, doLCC} = require('./libs')
 
 module.exports = function(RED) {
@@ -44,7 +45,6 @@ function lcc(config) {
           opts.listen_status = 'resume';
           break;
         case 'redirect':
-          node.log(`LCC redirect callHook ${config.callHook} callHookType: ${config.callHookType}`);
           opts.call_hook = {url: v_resolve(config.callHook, config.callHookType, this.context(), msg)};
           break;
         case 'hold_conf':
@@ -69,6 +69,22 @@ function lcc(config) {
               }
             });
           }
+          break;
+        case 'start_call_recording':
+          opts.record = { 
+            action: 'startCallRecording',
+            siprecServerURL: v_resolve(config.siprecServerURL, config.siprecServerURLType, this.context(), msg),
+            recordingID: v_resolve(config.recordingID, config.recordingIDType, this.context(), msg) || crypto.randomUUID()
+          };
+          break;
+        case 'stop_call_recording':
+          opts.record = { action: 'stopCallRecording' };
+          break;
+        case 'pause_call_recording':
+          opts.record = { action: 'pauseCallRecording' };
+          break;
+        case 'resume_call_recording':
+          opts.record = { action: 'resumeCallRecording' };
           break;
         default:
           node.log(`invalid action: ${config.action}`);
