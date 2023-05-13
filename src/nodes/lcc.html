@@ -26,10 +26,18 @@
           return action !== 'hold_conf' || v.length > 0;
         }},
         waitHookType: {value: 'str'},
+        siprecServerURL: {value: '', validate: function(v) {
+          const action = $('#node-input-action').val();
+          return action !== 'start_call_recording' || v.length > 0;
+        }},
+        siprecServerURLType: {value: 'str'},
+        recordingID: {value: ''},
+        recordingIDType: {value: 'str'},
       },
       inputs:1,
       outputs:1,
       icon: "font-awesome/fa-cubes",
+      paletteLabel: "Live Call Control",
       label: function() { 
         return this.name || (this.action ? `LCC - ${this.action}` : 'LCC');
       },
@@ -42,8 +50,7 @@
         var sayDiv = $('#say-options');
         var redirectDiv = $('#redirect-options');
         var waitHookDiv = $('#wait-options');
-        sayDiv.hide();
-        waitHookDiv.hide();
+        var recordDiv = $('#record-options');
 
         $('#node-input-callSid').typedInput({
           default: $('#node-input-callSidType').val(),
@@ -60,15 +67,27 @@
           types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-waitHookType')
         });
+        $('#node-input-siprecServerURL').typedInput({
+          default: $('#node-input-siprecServerURLType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-siprecServerURLType')
+        });
+        $('#node-input-recordingID').typedInput({
+          default: $('#node-input-recordingIDType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-recordingIDType')
+        });
 
         var onActionChanged = function () {
-          node.action = actionElem.find(':selected').val();
-          if ('whisper' === node.action) sayDiv.show();
+          var selectedAction = actionElem.find(':selected').val();
+          if ('whisper' === selectedAction) sayDiv.show();
           else sayDiv.hide();
-          if ('redirect' === node.action) redirectDiv.show();
+          if ('redirect' === selectedAction) redirectDiv.show();
           else redirectDiv.hide();
-          if ('hold_conf' === node.action) waitHookDiv.show();
+          if ('hold_conf' === selectedAction) waitHookDiv.show();
           else waitHookDiv.hide();
+          if ('start_call_recording' === selectedAction) recordDiv.show();
+          else recordDiv.hide();
         }
 
         var onVendorChanged = function() {
@@ -146,7 +165,7 @@
 
 <!-- HTML -->
 <script type="text/html" data-template-name="lcc">
-    <div class="form-row">
+  <div class="form-row">
       <label for="node-input-name"><i class="icon-tag"></i> Name</label>
       <input type="text" id="node-input-name" placeholder="Name">
   </div>
@@ -173,6 +192,10 @@
       <option value="resume">resume listen audio feed</option>
       <option value="redirect">redirect call</option>
       <option value="whisper">whisper</option>
+      <option value="start_call_recording">start call recording</option>
+      <option value="stop_call_recording">stop call recording</option>
+      <option value="pause_call_recording">pause call recording</option>
+      <option value="resume_call_recording">resume call recording</option>
     </select>
   </div>
   <div id="say-options">
@@ -216,6 +239,18 @@
       <label for="node-input-waitHook">Wait webhook</label>
       <input type="text" id="node-input-waitHook" placeholder="/path">
       <input type="hidden" id="node-input-waitHookType">
+    </div>
+  </div>
+  <div id="record-options">
+    <div class="form-row">
+      <label for="node-input-siprecServerURL">SIPREC URI</label>
+      <input type="text" id="node-input-siprecServerURL" placeholder="sip:srs@recording.example.com">
+      <input type="hidden" id="node-input-siprecServerURLType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-recordingID">Recording ID</label>
+      <input type="text" id="node-input-recordingID" placeholder="545362a9-4cb3-4a55-85b8-b33ca83a6517">
+      <input type="hidden" id="node-input-recordingIDType">
     </div>  
   </div>
 </script>
