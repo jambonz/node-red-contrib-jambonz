@@ -53,17 +53,22 @@ module.exports = function(RED) {
   });
 
   RED.httpAdmin.get('/_jambonz/applications/:serverId', (req, res) => {
-    var conn = RED.nodes.getNode(req.params.serverId);
+    const conn = RED.nodes.getNode(req.params.serverId);
     if (conn && conn.credentials) {
-      const {apiToken} = conn.credentials;
-      const url = conn.url
+      const { apiToken } = conn.credentials;
+      const { url } = conn;
       const getApps = bent(`${url}/v1/Applications`, 'GET', 'json', 200, {
       'Authorization': `Bearer ${apiToken}`
       });
       getApps()
-      .then( (apps) =>{
-          res.send(apps)
+      .then((apps) => {
+        res.send(apps);
       })
+      .catch((error) => {
+        res.status(500).send(error.message);
+      });
+    } else {
+      res.status(404);
     }
   });
 };
