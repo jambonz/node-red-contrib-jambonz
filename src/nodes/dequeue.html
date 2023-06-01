@@ -7,6 +7,8 @@
         name: {value: ''},
         queue: {required: true, value: ''},
         queueType: {value: 'str'},
+        callSid: {value: ''},
+        callSidType: {value: 'str'},
         actionHook: {},
         actionHookType: {value: 'str'},
         confirmHook: {},
@@ -25,6 +27,10 @@
         $('#node-input-queue').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-queueType')
+        });
+        $('#node-input-callSid').typedInput({
+          types: ['str', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-callSidType')
         });
         $('#node-input-actionHook').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
@@ -54,6 +60,11 @@
       <input type="hidden" id="node-input-queueType">
     </div>
     <div class="form-row">
+      <label for="node-input-callSid">Call Sid</label>
+      <input type="text" id="node-input-callSid" placeholder="sid of the call">
+      <input type="hidden" id="node-input-callSidType">
+    </div>
+    <div class="form-row">
       <label for="node-input-beep">Play beep on connecting</label>
       <input type="checkbox" id="node-input-beep">
     </div>
@@ -79,6 +90,7 @@
     <p>removes the a call from the front of a queue and bridges that call to the current caller.</p>
     <h3>Properties</h3>
     <p><code>Queue name</code> -  Name of the queue.</p>
+    <p><code>Call Sid</code> -  An optional parameter to specify which call to dequeue.</p>
     <p><code>Play beep on connecting</code> -  Play a beep tone to this caller only just prior to connecting the queued call.</p>
     <p><code>Action hook</code> - A webhook invoke when call ends.</p>
     <p><code>Confirm hook</code> - A webhook for an application to run on the callee's end before the call is bridged.</p>

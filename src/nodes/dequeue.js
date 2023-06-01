@@ -9,6 +9,7 @@ module.exports = function(RED) {
       appendVerb(msg, {
         verb: 'dequeue',
         name:  v_resolve(config.queue, config.queueType, this.context(), msg),
+        callSid: v_resolve(config.callSid, config.callSidType, this.context(), msg),
         beep: config.beep,
         actionHook: v_resolve(config.actionHook, config.actionHookType, this.context(), msg),
         confirmHook: v_resolve(config.confirmHook, config.confirmHookType, this.context(), msg),
