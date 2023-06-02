@@ -7,6 +7,8 @@
         name: {value: ''},
         queue: {required: true, value: ''},
         queueType: {value: 'str'},
+        priority: {value: 999},
+        priorityType: {value: 'num'},
         actionHook: {},
         actionHookType: {value: 'str'},
         waitHook: {},
@@ -22,6 +24,10 @@
         $('#node-input-queue').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-queueType')
+        });
+        $('#node-input-priority').typedInput({
+          types: ['num', 'msg', 'flow', 'global'],
+          typeField: $('#node-input-priorityType')
         });
         $('#node-input-actionHook').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
@@ -47,6 +53,11 @@
       <input type="hidden" id="node-input-queueType">
     </div>
     <div class="form-row">
+      <label for="node-input-priority">Priority</label>
+      <input type="text" id="node-input-priority" placeholder="caller priority">
+      <input type="hidden" id="node-input-priorityType">
+    </div>
+    <div class="form-row">
       <label for="node-input-actionHook">Action hook</label>
       <input type="text" id="node-input-actionHook" placeholder="webhook url">
       <input type="hidden" id="node-input-actionHookType">
@@ -64,6 +75,8 @@
     <h3>Properties</h3>
       <p><code>Queue name</code> - 
         The name of the queue</p>
+      <p><code>Priority</code> - 
+        The priority for which the call will be added to the queue. Must be a non-negative value and defaults to 999 (low-priority) if not set.</p>
       <p><code>Action hook</code> - 
         A webhook invoke when operation completes.</p>
       <p><code>Wait hook</code> - 
