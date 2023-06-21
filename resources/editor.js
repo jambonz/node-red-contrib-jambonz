@@ -392,9 +392,11 @@
     }
     var onXVoiceChanged = function() {
       var voice = xvoiceElem.find(':selected').val();
-      node.voice = voice;
-      console.log(`voice dropdown changed to ${voice}`);
-      voiceElem.val(voice);
+      if (voice) {
+        node.voice = voice;
+        console.log(`voice dropdown changed to ${voice}`);
+        voiceElem.val(voice);
+      }
     }
 
     vendorElem.change(onVendorChanged);
