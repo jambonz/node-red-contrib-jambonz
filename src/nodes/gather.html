@@ -6,6 +6,7 @@
       defaults: {
         name: {value: ''},
         actionhook: {value: ''},
+        actionhooktype: {val: 'str'},
         finishonkey: {value: ''},
         dtmfinput: {value: 0},
         speechinput: {value: 1},
@@ -57,7 +58,11 @@
         var node = this;
         prepareTtsControls(node);
         prepareSttControls(node);
-
+        
+        $('#node-input-actionhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-actionhooktype')
+        });
         $('#node-input-playurl').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
           typeField: $('#node-input-playurlType')

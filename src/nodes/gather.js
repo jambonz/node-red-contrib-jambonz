@@ -11,7 +11,7 @@ module.exports = function(RED) {
       node.log(`config: ${JSON.stringify(config)}`);
 
       var obj = {verb: 'gather', input: []};
-      if (config.actionhook) obj.actionHook = config.actionhook;
+      if (config.actionhook) obj.actionHook = v_resolve(config.actionhook, config.actionhooktype, this.context(), msg);
 
       // input
       if (config.speechinput) {
