@@ -6,7 +6,7 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     var node = this;
     node.on('input', function(msg) {
-      var maxParticipants = new_resolve(RED, config.maxParticipants, config.maxParticipantsType, node, msg),
+      var maxParticipants = new_resolve(RED, config.maxParticipants, config.maxParticipantsType, node, msg)
       appendVerb(msg, {
         verb: 'conference',
         name: new_resolve(RED, config.conference, config.conferenceType, node, msg),
