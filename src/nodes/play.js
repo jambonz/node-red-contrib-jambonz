@@ -1,4 +1,4 @@
-var {appendVerb, v_resolve} = require('./libs')
+var {appendVerb,  new_resolve} = require('./libs')
 
 module.exports = function(RED) {
   function play(config) {
@@ -7,7 +7,7 @@ module.exports = function(RED) {
     node.on('input', function(msg) {
       appendVerb(msg,  {
         verb: 'play',
-        url: v_resolve(config.url, config.urlType, this.context(), msg),
+        url: new_resolve(RED, config.url, config.urlType, node, msg),
         earlyMedia: config.early,
         loop: config.loop
       });
