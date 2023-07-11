@@ -1,5 +1,11 @@
 <!-- Javascript -->
 <script type="text/javascript">
+  var mustacheType = {
+  value: 'mustache',
+  label: 'mustache',
+  hasvalue: true,
+  icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+}
   RED.nodes.registerType('sip:request',{
       category: 'jambonz',
       color: '#bbabaa',
@@ -19,17 +25,17 @@
       oneditprepare: function() {
         $('#node-input-headers').typedInput({
           default: $('#node-input-headersType').val(),
-          types: ['json','msg', 'flow', 'global'],
+          types: ['json','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-headersType')
         });
         $('#node-input-body').typedInput({
           default: $('#node-input-bodyType').val(),
-          types: ['str','msg', 'flow', 'global'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-bodyType')
         });
         $('#node-input-actionHook').typedInput({
           default: $('#node-input-actionHookType').val(),
-          types: ['str','msg', 'flow', 'global'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-actionHookType')
         });
       }

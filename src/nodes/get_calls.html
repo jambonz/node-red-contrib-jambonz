@@ -1,5 +1,11 @@
 <!-- Javascript -->
 <script type="text/javascript">
+var mustacheType = {
+  value: 'mustache',
+  label: 'mustache',
+  hasvalue: true,
+  icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+}
   RED.nodes.registerType('get_calls',{
       category: 'jambonz',
       color: '#aebfb9',
@@ -22,19 +28,19 @@
       label: function() { return this.name || 'Get Calls';},
       oneditprepare: () => {
         $('#node-input-direction').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-directionType')
         });
         $('#node-input-from').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-fromType')
         });
         $('#node-input-to').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-toType')
         });
         $('#node-input-callStatus').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-callStatusType')
         });
       }

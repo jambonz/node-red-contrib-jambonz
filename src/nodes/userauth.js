@@ -1,5 +1,5 @@
 var {createHash} = require('crypto');
-var {v_resolve} = require('./libs');
+var {new_resolve} = require('./libs');
 
 /** user auth */
 module.exports = function(RED) {
@@ -12,11 +12,11 @@ module.exports = function(RED) {
         var authResponse = {};
         var ha1_string;
         if (config.ha1 && config.ha1.length) {
-          ha1_string = v_resolve(config.ha1, config.ha1Type, this.context(), msg);
+          ha1_string = new_resolve(RED, config.ha1, config.ha1Type, node, msg),
           attemptedAuthentication = true;
         }
         else if (config.password && config.password.length) {
-          var password = v_resolve(config.password, config.passwordType, this.context(), msg);
+          var password = new_resolve(RED, config.password, config.passwordType, node, msg);
           var ha1 = createHash('md5');
           ha1.update([auth.username, auth.realm, password].join(':'));
           ha1_string = ha1.digest('hex');
@@ -51,13 +51,13 @@ module.exports = function(RED) {
           if (calculated === auth.response) {
             let grantedExpires = auth.expires;
             if (config.expires && config.expires.length) {
-              const expires = v_resolve(config.expires, config.expiresType, this.context(), msg);
+              const expires = new_resolve(RED, config.expires, config.expiresType, node, msg);
               if (auth.expires && expires != null) {
                 grantedExpires = Math.min(auth.expires, expires);
               }
             }
-            const callHook = v_resolve(config.callHook, config.callHookType, this.context(), msg);
-            const callStatusHook = v_resolve(config.callStatusHook, config.callStatusHookType, this.context(), msg);
+            const callHook = new_resolve(RED, config.callHook, config.callHookType, node, msg);
+            const callStatusHook = new_resolve(RED, config.callStatusHook, config.callStatusHookType, node, msg);
             Object.assign(authResponse, {
               status: 'ok',
               expires: grantedExpires != null ? grantedExpires : null,

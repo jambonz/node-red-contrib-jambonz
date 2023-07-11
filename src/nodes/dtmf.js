@@ -1,4 +1,4 @@
-var {appendVerb} = require('./libs')
+var {appendVerb, new_resolve} = require('./libs')
 
 module.exports = function(RED) {
   function dtmf(config) {
@@ -7,8 +7,8 @@ module.exports = function(RED) {
     node.on('input', function(msg) {
       appendVerb(msg,  {
         verb: 'dtmf',
-        dtmf: config.dtmf,
-        duration: parseInt(config.duration)
+        dtmf: new_resolve(RED, config.dtmf, config.dtmfType, node, msg),
+        duration: new_resolve(RED, config.duration, config.durationType, node, msg),
       });
       node.send(msg);
     });

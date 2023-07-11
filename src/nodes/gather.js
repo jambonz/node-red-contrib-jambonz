@@ -1,4 +1,4 @@
-var {appendVerb, v_resolve, v_text_resolve} = require('./libs')
+var {appendVerb,  v_text_resolve, new_resolve} = require('./libs')
 
 module.exports = function(RED) {
   /** gather */
@@ -11,7 +11,7 @@ module.exports = function(RED) {
       node.log(`config: ${JSON.stringify(config)}`);
 
       var obj = {verb: 'gather', input: []};
-      if (config.actionhook) obj.actionHook = v_resolve(config.actionhook, config.actionhooktype, this.context(), msg);
+      if (config.actionhook) obj.actionHook = new_resolve(RED, config.actionHook, config.actionHookType, node, msg)
 
       // input
       if (config.speechinput) {
@@ -21,9 +21,9 @@ module.exports = function(RED) {
           language: config.recognizerlang
         };
         if (recognizer.vendor === 'google') {
-          var hints = v_resolve(config.transcriptionhints, config.transcriptionhintsType, this.context(), msg);
-          var altlangs = v_resolve(config.recognizeraltlang, config.recognizeraltlangType, this.context(), msg);
-          var naics = v_resolve(config.naics, config.naicsType, this.context(), msg);
+          var hints = new_resolve(RED, config.transcriptionhints, config.transcriptionhintsType, node, msg);
+          var altlangs = new_resolve(RED, config.recognizeraltlang, config.recognizeraltlangType, node, msg);
+          var naics = new_resolve(RED, config.naics, config.naicsType, node, msg);
           Object.assign(recognizer, {
             profanityFilter: config.profanityfilter,
             hints: hints.length > 0 ?
@@ -36,8 +36,8 @@ module.exports = function(RED) {
           }
         }
         else if (recognizer.vendor === 'aws') {
-          var vocab = v_resolve(config.vocabularyname, config.vocabularynameType, this.context(), msg);
-          var vocabFilter = v_resolve(config.vocabularyfiltername, config.vocabularynameType, this.context(), msg);
+          var vocab = new_resolve(RED, config.vocabularyname, config.vocabularynameType, node, msg);
+          var vocabFilter = new_resolve(RED, config.vocabularyfiltername, config.vocabularyfilternameType, node, msg);
           Object.assign(recognizer, {
             vocabularyName: vocab,
             vocabularyFilterName: vocabFilter,
@@ -66,7 +66,7 @@ module.exports = function(RED) {
           });
         }
       }
-      else obj.play = {url: v_resolve(config.playurl, config.playurlType, this.context(), msg)};
+      else obj.play = {url: new_resolve(RED, config.playurl, config.playurlType, node, msg)};
 
       node.log(`gather: ${JSON.stringify(obj)}`);
 

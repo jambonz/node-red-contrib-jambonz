@@ -1,5 +1,11 @@
 <!-- Javascript -->
 <script type="text/javascript">
+  var mustacheType = {
+  value: 'mustache',
+  label: 'mustache',
+  hasvalue: true,
+  icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+}
   RED.nodes.registerType('message', {
     category: 'jambonz',
     color: '#bbabaa',
@@ -25,22 +31,22 @@
 
       $('#node-input-from').typedInput({
         default: $('#node-input-fromType').val(),
-        types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+        types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
         typeField: $('#node-input-fromType')
       });
       $('#node-input-to').typedInput({
         default: $('#node-input-toType').val(),
-        types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+        types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
         typeField: $('#node-input-toType')
       });
       $('#node-input-text').typedInput({
         default: $('#node-input-textType').val(),
-        types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+        types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
         typeField: $('#node-input-textType')
       });
       $('#node-input-provider').typedInput({
         default: $('#node-input-providerType').val(),
-        types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+        types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
         typeField: $('#node-input-providerType')
       });
     }

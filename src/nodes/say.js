@@ -1,4 +1,4 @@
-var {appendVerb, v_text_resolve} = require('./libs')
+var {appendVerb, new_resolve} = require('./libs')
 
 module.exports = function(RED) {
   /** say */
@@ -10,7 +10,7 @@ module.exports = function(RED) {
     var node = this;
 
     node.on('input', function(msg) {
-      const text = v_text_resolve(node, this.text, this.context(), msg);
+      const text = new_resolve(RED, config.text, 'mustache', node, msg);
       var obj = {
         verb: 'say',
         text,

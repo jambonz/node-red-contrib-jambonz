@@ -1,4 +1,4 @@
-var {appendVerb, v_resolve} = require('./libs')
+var {appendVerb, new_resolve} = require('./libs')
 
 module.exports = function(RED) {
   function dial(config) {
@@ -9,9 +9,9 @@ module.exports = function(RED) {
       node.log(`dial config: ${JSON.stringify(config)}, msg.call: ${JSON.stringify(msg.call)}`);
       var target = config.targets.map((t) => {
         const obj = Object.assign({}, t);
-        var dest = v_resolve(obj.dest, obj.varType, this.context(), msg);
-        var trunk = v_resolve(obj.trunk, obj.trunkType, this.context(), msg);
-        node.log(`dial: dest ${t.varType}:${t.dest} resolved to ${dest}`);
+        var dest = new_resolve(RED, config.dest, config.destType, node, msg)
+        var trunk = new_resolve(RED, config.trunk, config.trunkType, node, msg)
+        node.log(`dial: dest ${t.destType}:${t.dest} resolved to ${dest}`);
         switch (t.type) {
           case 'phone':
             obj.number = dest;
@@ -46,11 +46,11 @@ module.exports = function(RED) {
         answerOnBridge: config.answeronbridge,
         timeLimit: config.timelimit ? parseInt(config.timelimit) : null,
         timeout: config.timeout ? parseInt(config.timeout) : null,
-        callerId: v_resolve(config.callerid, config.calleridType, this.context(), msg),
-        actionHook: v_resolve(config.actionhook, config.actionhookType, this.context(), msg),
-        confirmHook: v_resolve(config.confirmhook, config.confirmhookType, this.context(), msg),
-        dialMusic: v_resolve(config.dialmusic, config.dialmusicType, this.context(), msg),
-        dtmfHook: v_resolve(config.dtmfhook, config.dtmfhookType, this.context(), msg)
+        callerId: new_resolve(RED, config.callerId, config.callerIdType, node, msg),
+        actionHook: new_resolve(RED, config.actionHook, config.actionHookType, node, msg),
+        confirmHook: new_resolve(RED, config.confirmHook, config.confirmHookType, node, msg), 
+        dialMusic: new_resolve(RED, config.dialMusic, config.dialMusicType, node, msg),
+        dtmfHook: new_resolve(RED, config.dtmfHook, config.dtmfHookType, node, msg),
       };
 
       // headers
@@ -63,7 +63,7 @@ module.exports = function(RED) {
       // nested listen
       if (config.listenurl && config.listenurl.length > 0) {
         data.listen = {
-          url: v_resolve(config.listenurl, config.listenurlType, this.context(), msg),
+          url: new_resolve(RED, config.listenurl, config.listenurlType, node, msg),
           mixType: 'stereo'
         };
       }
@@ -78,11 +78,11 @@ module.exports = function(RED) {
           diarization: config.diarization
         };
         if (recognizer.vendor === 'google') {
-          var diarizationMin = v_resolve(config.diarizationmin, config.diarizationminType, this.context(), msg);
-          var diarizationMax = v_resolve(config.diarizationmax, config.diarizationmaxType, this.context(), msg);
-          var hints = v_resolve(config.transcriptionhints, config.transcriptionhintsType, this.context(), msg);
-          var altlangs = v_resolve(config.recognizeraltlang, config.recognizeraltlangType, this.context(), msg);
-          var naics = v_resolve(config.naics, config.naicsType, this.context(), msg);
+          var diarizationMin = new_resolve(RED, config.diarizationMin, config.diarizationMinType, node, msg);
+          var diarizationMax = new_resolve(RED, config.diarizationMax, config.diarizationMaxType, node, msg)
+          var hints = new_resolve(RED, config.hints, config.hintsType, node, msg)
+          var altlangs = new_resolve(RED, config.altlangs, config.altlangsType, node, msg)
+          var naics = new_resolve(RED, config.naics, config.naicsType, node, msg)
           Object.assign(recognizer, {
             profanityFilter: config.profanityfilter,
             hints: hints.length > 0 ?
@@ -103,8 +103,8 @@ module.exports = function(RED) {
           }
         }
         else if (recognizer.vendor === 'aws') {
-          var vocab = v_resolve(config.vocabularyname, config.vocabularynameType, this.context(), msg);
-          var vocabFilter = v_resolve(config.vocabularyfiltername, config.vocabularynameType, this.context(), msg);
+          var vocab = new_resolve(RED, config.vocabularyname, config.vocabularynameType, node, msg);
+          var vocabFilter = new_resolve(RED, config.vocabularyfiltername, config.vocabularyfilternameType, node, msg);
           Object.assign(recognizer, {
             vocabularyName: vocab,
             vocabularyFilterName: vocabFilter,
@@ -112,12 +112,12 @@ module.exports = function(RED) {
           });
         }
         data.transcribe = {
-          transcriptionHook: v_resolve(config.transcriptionhook, config.transcriptionhookType, this.context(), msg),
+          transcriptionHook: new_resolve(RED, config.transcriptionHook, config.transcriptionHookType, node, msg),
           recognizer
         };
       }
       // dtmf capture
-      const dtmfCapture = v_resolve(config.dtmfcapture, config.dtmfcaptureType, this.context(), msg);
+      const dtmfCapture = new_resolve(RED, config.dtmfcapture, config.dtmfcaptureType, node, msg);
       if (dtmfCapture && dtmfCapture.length) {
         data.dtmfCapture = dtmfCapture.split(',').map((i) => i.trim());
       }

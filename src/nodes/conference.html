@@ -1,5 +1,12 @@
 <!-- Javascript -->
 <script type="text/javascript">
+    var mustacheType = {
+    value: 'mustache',
+    label: 'mustache',
+    hasvalue: true,
+    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+  }
+
   RED.nodes.registerType('conference',{
     category: 'jambonz',
     color: '#bbabaa',
@@ -26,19 +33,19 @@
     },
     oneditprepare: function() {
       $('#node-input-conference').typedInput({
-        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
         typeField: $('#node-input-conferenceType')
       });
       $('#node-input-enterHook').typedInput({
-        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
         typeField: $('#node-input-enterHookType')
       });
       $('#node-input-waitHook').typedInput({
-        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
         typeField: $('#node-input-waitHookType')
       });
       $('#node-input-maxParticipants').typedInput({
-        types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+        types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
         typeField: $('#node-input-maxParticipantsType')
       });
     }

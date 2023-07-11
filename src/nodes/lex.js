@@ -1,4 +1,4 @@
-var {appendVerb, v_resolve} = require('./libs')
+var {appendVerb, new_resolve} = require('./libs')
 
 module.exports = function(RED) {
  /** lex */
@@ -12,22 +12,21 @@ module.exports = function(RED) {
         accessKey = awsCreds.credentials.accessKey;
         secretAccessKey = awsCreds.credentials.secretAccessKey;
       }
-      var botId = v_resolve(config.bot, config.botType, this.context(), msg);
-      var botAlias = v_resolve(config.alias, config.aliasType, this.context(), msg);
-      var locale = v_resolve(config.locale, config.localeType, this.context(), msg) || 'en_US';
-      var val = v_resolve(config.inputTimeout, config.inputTimeoutType, this.context(), msg);
+      var eventHook = new_resolve(RED, config.eventHook, config.eventHookType, node, msg);
+      var actionHook = new_resolve(RED, config.actionHook, config.actionHookType, node, msg);
+      var botId = new_resolve(RED, config.bot, config.botType, node, msg);
+      var botAlias = new_resolve(RED, config.alais, config.aliasType, node, msg);
+      var locale = new_resolve(RED, config.locale, config.localeType, node, msg) || 'en_US';  
+      var val = new_resolve(RED, config.inputTimeout, config.inputTimeoutType, node, msg);
       var timeout = /^\d+$/.test(val) ? parseInt(val) : 0;
-      var eventHook = v_resolve(config.eventHook, config.eventHookType, this.context(), msg);
-      var actionHook = v_resolve(config.actionHook, config.actionHookType, this.context(), msg);
-      var metadata =  v_resolve(config.metadata, config.metadataType, this.context(), msg);
       var slots, intentName;
-
       if (config.specifyIntent) {
-        intentName =  v_resolve(config.intent, config.intentType, this.context(), msg);
+        intentName =  new_resolve(RED, config.intent, config.intentType, node, msg);
         if (intentName) {
-          slots =  v_resolve(config.slots, config.slotsType, this.context(), msg);
+          slots =  new_resolve(RED, config.slots, config.slotsType, node, msg);
         }
       }
+      var metadata =  new_resolve(RED, config.metadata, config.metadataType, node, msg);
 
       const obj = {
         verb: 'lex',

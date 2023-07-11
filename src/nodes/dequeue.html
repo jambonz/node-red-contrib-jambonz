@@ -1,5 +1,11 @@
 <!-- Javascript -->
 <script type="text/javascript">
+  var mustacheType = {
+    value: 'mustache',
+    label: 'mustache',
+    hasvalue: true,
+    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+  }
   RED.nodes.registerType('dequeue',{
       category: 'jambonz',
       color: '#bbabaa',
@@ -25,23 +31,23 @@
       },
       oneditprepare: function() {
         $('#node-input-queue').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-queueType')
         });
         $('#node-input-callSid').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-callSidType')
         });
         $('#node-input-actionHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-actionHookType')
         });
         $('#node-input-confirmHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-confirmHookType')
         });
         $('#node-input-timeout').typedInput({
-          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-timeoutType')
         });
       }

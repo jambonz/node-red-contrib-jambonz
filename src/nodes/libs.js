@@ -19,6 +19,7 @@ exports.appendVerb = (msg, obj) => {
   
   /**
    * resolve a value that may be either a string or a property of the msg, flow, or global context
+   * Redundant code now replaced with new_resolve, leaving for now just in case
    */
   exports.v_resolve= (val, valType, context, msg, asJson) => {
     if (!val || !valType) return val;
@@ -44,6 +45,40 @@ exports.appendVerb = (msg, obj) => {
     return mustache.render('{{' + val + '}}', data);
   }
   
+  exports.new_resolve = (RED, val, valtype, node, msg) => {
+    if (!val || !valtype) return val;
+    switch (valtype) {
+      case 'str': 
+      case 'num': 
+      case 'env':  
+      case 'msg': 
+      case 'flow': 
+      case 'global':
+      case 'jsonata':
+        return RED.util.evaluateNodeProperty(val, valtype, node, msg);
+      case 'mustache': 
+        let data = dataobject(node.context(), msg);
+        return mustache.render(val, data);
+      case 'json':
+        return JSON.parse(val);
+    }
+  }
+  function dataobject(context, msg){
+    data = msg;
+    data.global = {};
+    data.flow = {};
+    g_keys = context.global.keys();
+    f_keys = context.flow.keys();
+    for (k in g_keys){
+      data.global[g_keys[k]] = context.global.get(g_keys[k]);
+    };
+    for (k in f_keys){
+      data.flow[f_keys[k]] = context.flow.get(f_keys[k]);
+    };
+    return data
+  }
+
+
   exports.v_text_resolve = (node, val, context, msg) => {
     const flow = {};
     const glob = {};
@@ -98,3 +133,4 @@ exports.appendVerb = (msg, obj) => {
     });
     return post(`Accounts/${accountSid}/Messages`, opts);
   }
+

@@ -1,5 +1,11 @@
 <!-- Javascript -->
 <script type="text/javascript">
+var mustacheType = {
+  value: 'mustache',
+  label: 'mustache',
+  hasvalue: true,
+  icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+}
 RED.nodes.registerType('get_alerts',{
       category: 'jambonz',
       color: '#aebfb9',
@@ -21,15 +27,15 @@ RED.nodes.registerType('get_alerts',{
       oneditprepare: () => {
         var node = this;
         $('#node-input-page').typedInput({
-            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
             typeField: $('#node-input-pageType')
         });
         $('#node-input-count').typedInput({
-            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
             typeField: $('#node-input-countType')
         });
         $('#node-input-days').typedInput({
-            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
             typeField: $('#node-input-daysType')
         });
       }

@@ -1,5 +1,11 @@
 <!-- Javascript -->
 <script type="text/javascript">
+    var mustacheType = {
+      value: 'mustache',
+      label: 'mustache',
+      hasvalue: true,
+      icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+    }
     RED.nodes.registerType('dtmf',{
           category: 'jambonz',
           color: '#bbabaa',
@@ -15,12 +21,12 @@
           oneditprepare: function() {
             $('#node-input-dtmf').typedInput({
               default: $('#node-input-dtmfType').val(),
-              types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+              types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
               typeField: $('#node-input-dtmfType')
             })
             $('#node-input-duration').typedInput({
               default: $('#node-input-durationType').val(),
-              types: ['num','msg', 'flow', 'global', 'jsonata', 'env'],
+              types: ['num','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
               typeField: $('#node-input-durationType')
             })
           }

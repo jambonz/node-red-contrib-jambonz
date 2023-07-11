@@ -1,5 +1,12 @@
 <!-- Javascript -->
 <script type="text/javascript">
+  var mustacheType = {
+  value: 'mustache',
+  label: 'mustache',
+  hasvalue: true,
+  icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+  }
+
   RED.nodes.registerType('lcc',{
       category: 'jambonz',
       color: '#aebfb9',
@@ -54,27 +61,27 @@
 
         $('#node-input-callSid').typedInput({
           default: $('#node-input-callSidType').val(),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-callSidType')
         });
         $('#node-input-callHook').typedInput({
           default: $('#node-input-callHookType').val(),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-callHookType')
         });
         $('#node-input-waitHook').typedInput({
           default: $('#node-input-waitHookType').val(),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-waitHookType')
         });
         $('#node-input-siprecServerURL').typedInput({
           default: $('#node-input-siprecServerURLType').val(),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-siprecServerURLType')
         });
         $('#node-input-recordingID').typedInput({
           default: $('#node-input-recordingIDType').val(),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-recordingIDType')
         });
 

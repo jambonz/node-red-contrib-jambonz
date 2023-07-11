@@ -1,5 +1,5 @@
 const bent = require("bent");
-var { v_resolve } = require("./libs");
+var { new_resolve} = require("./libs");
 
 module.exports = function (RED) {
   function get_calls(config) {
@@ -9,15 +9,10 @@ module.exports = function (RED) {
     const { accountSid, apiToken } = server.credentials;
     node.on("input", async (msg, send, done) => {
       const data = {
-        direction: v_resolve(
-          config.direction,
-          config.directionType,
-          this.context(),
-          msg
-        ),
-        from: v_resolve(config.from, config.fromType, this.context(), msg),
-        to: v_resolve(config.to, config.toType, this.context(), msg),
-        callStatus: v_resolve(config.callStatus, config.callStatusType, this.context(), msg),
+        direction: new_resolve(RED, config.direction, config.directionType, node, msg),
+        from: new_resolve(RED, config.from, config.fromType, node, msg),
+        to: new_resolve(RED, config.to, config.toType, node, msg),
+        callStatus: new_resolve(RED, config.callStatus, config.callStatusType, node, msg),
       };
       Object.keys(data).forEach(
         (k) => data[k] == null || (data[k] == '' && delete data[k])

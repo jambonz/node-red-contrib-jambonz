@@ -1,4 +1,4 @@
-var {appendVerb} = require('./libs');
+var {appendVerb, new_resolve} = require('./libs');
 
 module.exports = function(RED) {
   /** sip:decline */
@@ -18,9 +18,9 @@ module.exports = function(RED) {
       if (typeof(config.headers == 'string')){
         config.headers=JSON.parse(config.headers)
       }
-      config.headers ? obj.headers = config.headers : null
-      config.body ? obj.body = config.body : null
-      config.actionHook ? obj.actionHook = config.actionHook : null
+      config.headers ? obj.headers = new_resolve(RED, config.headers, config.headersType, node, msg) : null
+      config.body ? obj.body = new_resolve(RED, config.body, config.bodyType, node, msg) : null
+      config.actionHook ? obj.actionHook = new_resolve(RED, config.actionHook, config.actionHookType, node, msg) : null
       appendVerb(msg, obj)
       node.send(msg);
     });

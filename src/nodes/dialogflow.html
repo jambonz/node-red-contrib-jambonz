@@ -1,5 +1,11 @@
 <!-- Javascript -->
 <script type="text/javascript">
+  var mustacheType = {
+    value: 'mustache',
+    label: 'mustache',
+    hasvalue: true,
+    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+  }
   RED.nodes.registerType('dialogflow',{
       category: 'jambonz',
       color: '#bbabaa',
@@ -50,39 +56,39 @@
         var node = this;
         $('#node-input-serviceAccountCredentials').typedInput({
           typeField: $('#node-input-serviceAccountCredentialsType'),
-          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env']
+          types: ['json', 'msg', 'flow', 'global', 'jsonata',  'env', mustacheType]
         });
         $('#node-input-project').typedInput({
           typeField: $('#node-input-projectType'),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env']
+          types: ['str','msg', 'flow', 'global', 'jsonata',  'env', mustacheType]
         });
         $('#node-input-environment').typedInput({
           typeField: $('#node-input-environmentType'),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env']
+          types: ['str','msg', 'flow', 'global', 'jsonata',  'env', mustacheType]
         });
         $('#node-input-welcomeEvent').typedInput({
           typeField: $('#node-input-welcomeEventType'),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env']
+          types: ['str','msg', 'flow', 'global', 'jsonata',  'env', mustacheType]
         });
         $('#node-input-welcomeEventParams').typedInput({
           typeField: $('#node-input-welcomeEventParamsType'),
-          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env']
+          types: ['json', 'msg', 'flow', 'global', 'jsonata',  'env', mustacheType]
         });
         $('#node-input-eventHook').typedInput({
           typeField: $('#node-input-eventHookType'),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env']
+          types: ['str','msg', 'flow', 'global', 'jsonata',  'env', mustacheType]
         });
         $('#node-input-actionHook').typedInput({
           typeField: $('#node-input-actionHookType'),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env']
+          types: ['str','msg', 'flow', 'global', 'jsonata',  'env', mustacheType]
         });
         $('#node-input-inputTimeout').typedInput({
-          typeField: $('#node-input-inputTimeout'),
-          types: ['num','msg', 'flow', 'global', 'jsonata', 'env']
+          typeField: $('#node-input-inputTimeoutType'),
+          types: ['num','msg', 'flow', 'global', 'jsonata',  'env', mustacheType]
         });
         $('#node-input-noinputEvent').typedInput({
           typeField: $('#node-input-noinputEventType'),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env']
+          types: ['str','msg', 'flow', 'global', 'jsonata',  'env', mustacheType]
         });
         var promptElem = $('#node-input-prompt');
         var ttsDiv = $('#tts-options');

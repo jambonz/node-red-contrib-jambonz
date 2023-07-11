@@ -1,4 +1,4 @@
-var {appendVerb, v_resolve} = require('./libs')
+var {appendVerb, new_resolve} = require('./libs')
 
 module.exports = function(RED) {
     /** pause */
@@ -6,8 +6,7 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     var node = this;
     node.on('input', function(msg) {
-      var val = v_resolve(config.len, config.lenType, this.context(), msg);
-      var length = /^\d+$/.test(val) ? parseInt(val) : parseFloat(val);
+      var length = new_resolve(RED, config.len, config.lenType, node, msg);
       appendVerb(msg, {
         verb: 'pause',
         length
