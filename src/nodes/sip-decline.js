@@ -1,4 +1,4 @@
-var {appendVerb, v_resolve} = require('./libs')
+var {appendVerb, new_resolve} = require('./libs')
 
 module.exports = function(RED) {
   /** sip:decline */
@@ -6,8 +6,8 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     var node = this;
     node.on('input', function(msg) {
-      var status = v_resolve(config.status, config.statusType, this.context(), msg);
-      var reason = v_resolve(config.reason, config.reasonType, this.context(), msg);
+      var status = new_resolve(RED, config.status, config.statusType, node, msg);
+      var reason = new_resolve(RED, config.reason, config.reasonType, node, msg);
       appendVerb(msg, {
         verb: 'sip:decline',
         status: parseInt(status),

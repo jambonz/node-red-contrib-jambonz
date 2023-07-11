@@ -1,4 +1,4 @@
-var {appendVerb, v_resolve} = require('./libs')
+var {appendVerb, new_resolve} = require('./libs')
 
 module.exports = function(RED) {
   /** conference */
@@ -6,14 +6,12 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     var node = this;
     node.on('input', function(msg) {
-      var val = v_resolve(config.maxParticipants, config.maxParticipantsType, this.context(), msg);
-      var maxParticipants = /^\d+$/.test(val) ? parseInt(val) : val;
-
+      var maxParticipants = new_resolve(RED, config.maxParticipants, config.maxParticipantsType, node, msg)
       appendVerb(msg, {
         verb: 'conference',
-        name:  v_resolve(config.conference, config.conferenceType, this.context(), msg),
-        enterHook: v_resolve(config.enterHook, config.enterHookType, this.context(), msg),
-        waitHook: v_resolve(config.waitHook, config.waitHookType, this.context(), msg),
+        name: new_resolve(RED, config.conference, config.conferenceType, node, msg),
+        enterHook: new_resolve(RED, config.enterHook, config.enterHookType, node, msg),
+        waitHook: new_resolve(RED, config.waitHook, config.waitHookType, node, msg),
         maxParticipants,
         beep: config.beep,
         startConferenceOnEnter: config.startConferenceOnEnter,

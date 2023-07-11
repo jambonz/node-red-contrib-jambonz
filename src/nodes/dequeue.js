@@ -1,4 +1,4 @@
-var {appendVerb, v_resolve} = require('./libs')
+var {appendVerb,  new_resolve} = require('./libs')
 
 module.exports = function(RED) {
   /** dequeue */
@@ -6,14 +6,14 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     var node = this;
     node.on('input', function(msg, send, done) {
-      const timeout = v_resolve(config.timeout, config.timeoutType, this.context(), msg);
+      const timeout = new_resolve(RED, config.timeout, config.timeoutType, node, msg);
       appendVerb(msg, {
         verb: 'dequeue',
-        name:  v_resolve(config.queue, config.queueType, this.context(), msg),
-        callSid: v_resolve(config.callSid, config.callSidType, this.context(), msg),
+        name:  new_resolve(RED, config.queue, config.queueType, node, msg),
+        callSid: new_resolve(RED, config.callSid, config.callSidType, node, msg),
         beep: config.beep,
-        actionHook: v_resolve(config.actionHook, config.actionHookType, this.context(), msg),
-        confirmHook: v_resolve(config.confirmHook, config.confirmHookType, this.context(), msg),
+        actionHook: new_resolve(RED, config.actionHook, config.actionHookType, node, msg),
+        confirmHook: new_resolve(RED, config.confirmHook, config.confirmHookType, node, msg),
         timeout: (/^\d+$/.test(timeout)) ? parseInt(timeout) : null,
       });
       node.send(msg);

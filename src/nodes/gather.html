@@ -1,11 +1,18 @@
 <!-- Javascript -->
 <script type="text/javascript">
+  var mustacheType = {
+    value: 'mustache',
+    label: 'mustache',
+    hasvalue: true,
+    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+  }
   RED.nodes.registerType('gather',{
       category: 'jambonz',
       color: '#bbabaa',
       defaults: {
         name: {value: ''},
         actionhook: {value: ''},
+        actionhooktype: {val: 'str'},
         finishonkey: {value: ''},
         dtmfinput: {value: 0},
         speechinput: {value: 1},
@@ -57,21 +64,25 @@
         var node = this;
         prepareTtsControls(node);
         prepareSttControls(node);
-
+        
+        $('#node-input-actionhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-actionhookType')
+        });
         $('#node-input-playurl').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-playurlType')
         });
         $('#node-input-transcriptionhints').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-transcriptionhintsType')
         });
         $('#node-input-recognizeraltlang').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-recognizeraltlangType')
         });
         $('#node-input-naics').typedInput({
-          types: ['num', 'msg', 'flow', 'global'],
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-naicsType')
         });
 
@@ -122,6 +133,7 @@
   <div class="form-row">
     <label for="node-input-actionhook"><i class="icon-tag"></i> Action hook</label>
     <input type="text" id="node-input-actionhook" placeholder="webhook with results of gather">
+    <input type="hidden" id="node-input-actionhookType">
   </div>
   <fieldset>
     <legend>Prompt</legend>

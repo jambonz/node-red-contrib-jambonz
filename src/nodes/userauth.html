@@ -1,5 +1,11 @@
 <!-- Javascript -->
 <script type="text/javascript">
+  var mustacheType = {
+  value: 'mustache',
+  label: 'mustache',
+  hasvalue: true,
+  icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+}
 RED.nodes.registerType('user auth',{
       category: 'jambonz',
       color:"#c1f986",
@@ -22,23 +28,23 @@ RED.nodes.registerType('user auth',{
       label: function() { return this.name || 'user auth';},
       oneditprepare: function() {
         $('#node-input-password').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-passwordType')
         });
         $('#node-input-ha1').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-ha1Type')
         });
         $('#node-input-expires').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-expiresType')
         });
         $('#node-input-callHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-callHookType')
         });
         $('#node-input-callStatusHook').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-callStatusHookType')
         });
       }

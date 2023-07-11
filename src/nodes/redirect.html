@@ -1,5 +1,11 @@
 <!-- Javascript -->
 <script type="text/javascript">
+  var mustacheType = {
+  value: 'mustache',
+  label: 'mustache',
+  hasvalue: true,
+  icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+}
   RED.nodes.registerType('redirect', {
     category: 'jambonz',
     color: '#bbabaa',
@@ -16,7 +22,7 @@
     },
     oneditprepare: function() {
       $('#node-input-hook').typedInput({
-        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
         typeField: $('#node-input-hookType')
       });
       }

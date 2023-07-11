@@ -1,5 +1,12 @@
 <!-- Javascript -->
 <script type="text/javascript">
+  var mustacheType = {
+  value: 'mustache',
+  label: 'mustache',
+  hasvalue: true,
+  icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+}
+
   RED.nodes.registerType('get_recent_calls',{
       category: 'jambonz',
       color: '#aebfb9',
@@ -24,23 +31,23 @@
       label: function() { return this.name || 'Get Recent Calls';},
       oneditprepare: () => {
         $('#node-input-page').typedInput({
-            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
             typeField: $('#node-input-pageType')
         });
         $('#node-input-count').typedInput({
-            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
             typeField: $('#node-input-countType')
         });
         $('#node-input-days').typedInput({
-            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+            types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
             typeField: $('#node-input-daysType')
         });
         $('#node-input-direction').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-directionType')
         });
         $('#node-input-trunk').typedInput({
-          types: ['str', 'msg', 'flow', 'global'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-trunkType')
         });
       }

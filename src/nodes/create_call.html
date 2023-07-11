@@ -1,5 +1,12 @@
 <!-- Javascript -->
 <script type="text/javascript">
+  var mustacheType = {
+    value: 'mustache',
+    label: 'mustache',
+    hasvalue: true,
+    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+  }
+
   RED.nodes.registerType('create-call',{
       category: 'jambonz',
       color: '#aebfb9',
@@ -59,22 +66,22 @@
 
         $('#node-input-from').typedInput({
           default: $('#node-input-fromType').val(),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-fromType')
         });
         $('#node-input-to').typedInput({
           default: $('#node-input-toType').val(),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-toType')
         });
         $('#node-input-call_hook_url').typedInput({
           default: $('#node-input-call_hook_urlType').val(),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-call_hook_urlType')
         });
         $('#node-input-call_status_url').typedInput({
           default: $('#node-input-call_status_urlType').val(),
-          types: ['str','msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-call_status_urlType')
         });
 

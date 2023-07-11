@@ -1,19 +1,14 @@
-var { appendVerb, v_resolve } = require("./libs");
+var { appendVerb,  new_resolve } = require("./libs");
 
 module.exports = function (RED) {
   function message(config) {
     RED.nodes.createNode(this, config);
     var node = this;
     node.on("input", function (msg, send, done) {
-      var from = v_resolve(config.from, config.fromType, this.context(), msg);
-      var to = v_resolve(config.to, config.toType, this.context(), msg);
-      var text = v_resolve(config.text, config.textType, this.context(), msg);
-      var provider = v_resolve(
-        config.provider,
-        config.providerType,
-        this.context(),
-        msg
-      );
+      var from = new_resolve(RED, config.from, config.fromType, node, msg);
+      var to =new_resolve(RED, config.to, config.toType, node, msg);
+      var text = new_resolve(RED, config.text, config.textType, node, msg);
+      var provider = new_resolve(RED, config.provider, config.providerType, node, msg);
       if ((!provider || 0 === provider.length) && msg.sms.provider) {
         provider = msg.sms.provider;
       }

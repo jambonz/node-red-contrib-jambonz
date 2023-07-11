@@ -1,5 +1,5 @@
 var crypto = require('crypto');
-var {v_resolve, doLCC} = require('./libs')
+var {new_resolve, doLCC} = require('./libs')
 
 module.exports = function(RED) {
 /** LCC */
@@ -13,7 +13,7 @@ function lcc(config) {
 
       const {accountSid, apiToken} = server.credentials;
       const url = server.url;
-      const callSid = v_resolve(config.callSid, config.callSidType, this.context(), msg);
+      const callSid = new_resolve(RED, config.callSid, config.callSidType, node, msg);
       if (!url || !accountSid || !apiToken || !callSid) {
         node.log(`invalid / missing credentials or callSid, skipping LCC node: ${JSON.stringify(server.credentials)}`);
         send(msg);
@@ -45,11 +45,11 @@ function lcc(config) {
           opts.listen_status = 'resume';
           break;
         case 'redirect':
-          opts.call_hook = {url: v_resolve(config.callHook, config.callHookType, this.context(), msg)};
+          opts.call_hook = {url: new_resolve(RED, config.callHook, config.callHookType, node, msg)};
           break;
         case 'hold_conf':
           opts.conf_hold_status = 'hold';
-          opts.wait_hook = {url: v_resolve(config.waitHook, config.waitHookType, this.context(), msg)};
+          opts.wait_hook = {url: new_resolve(RED, config.waitHook, config.waitHookType, node, msg)};
           break;
         case 'unhold_conf':
           opts.conf_hold_status = 'unhold';
@@ -73,8 +73,8 @@ function lcc(config) {
         case 'start_call_recording':
           opts.record = { 
             action: 'startCallRecording',
-            siprecServerURL: v_resolve(config.siprecServerURL, config.siprecServerURLType, this.context(), msg),
-            recordingID: v_resolve(config.recordingID, config.recordingIDType, this.context(), msg) || crypto.randomUUID()
+            siprecServerURL: new_resolve(RED, config.siprecServerURL, config.siprecServerURLType, node, msg),
+            recordingID: new_resolve(RED, config.recordingID, config.recordingIDType, node, msg) || crypto.randomUUID()
           };
           break;
         case 'stop_call_recording':

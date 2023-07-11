@@ -1,5 +1,5 @@
 const bent = require('bent');
-var {v_resolve} = require('./libs');
+var {new_resolve} = require('./libs');
 
 module.exports = function(RED) {
     function get_recent_calls(config) {
@@ -9,11 +9,11 @@ module.exports = function(RED) {
         const {accountSid, apiToken} = server.credentials;
         node.on('input', async(msg, send, done) => {
             const data = {
-                direction: v_resolve(config.direction, config.directionType, this.context(), msg),
-                trunk: v_resolve(config.trunk, config.trunkType, this.context(), msg),
-                page: v_resolve(config.page, config.pageType, this.context(), msg),
-                count: v_resolve(config.count, config.countType, this.context(), msg),
-                days: v_resolve(config.days, config.daysType, this.context(), msg),
+                direction: new_resolve(RED, config.direction, config.directionType, node, msg),
+                trunk: new_resolve(RED, config.trunk, config.trunkType, node, msg),
+                page: new_resolve(RED, config.page, config.pageType, node, msg),
+                count: new_resolve(RED, config.count, config.countType, node, msg),
+                days: new_resolve(RED, config.days, config.daysType, node, msg),
             }
             Object.keys(data).forEach((k) => data[k] == null || data[k] == '' && delete data[k]);
             const params = new URLSearchParams(data).toString();

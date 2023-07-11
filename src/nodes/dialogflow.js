@@ -1,26 +1,25 @@
-var {appendVerb, v_resolve} = require('./libs')
+var {appendVerb, new_resolve} = require('./libs')
 
 module.exports = function(RED) {
 function dialogflow(config) {
     RED.nodes.createNode(this, config);
     var node = this;
     node.on('input', function(msg) {
-      var val = v_resolve(config.inputTimeout, config.inputTimeoutType, this.context(), msg);
+      var val = new_resolve(RED, config.inputTimeout, config.inputTimeoutType, node, msg);
       var timeout = /^\d+$/.test(val) ? parseInt(val) : 0;
-      var eventHook = v_resolve(config.eventHook, config.eventHookType, this.context(), msg);
-      var actionHook = v_resolve(config.actionHook, config.actionHookType, this.context(), msg);
-      var welcomeEvent = v_resolve(config.welcomeEvent, config.welcomeEventType, this.context(), msg);
-      var environment = v_resolve(config.environment, config.environmentType, this.context(), msg);
+      var eventHook = new_resolve(RED, config.eventHook, config.eventHookType, node, msg);
+      var actionHook = new_resolve(RED, config.actionHook, config.actionHookType, node, msg);
+      var welcomeEvent = new_resolve(RED, config.welcomeEvent, config.welcomeEventType, node, msg);
+      var environment = new_resolve(RED, config.environment, config.environmentType, node, msg);
       var welcomeEventParams;
       if (welcomeEvent && welcomeEvent.length > 0) {
-        welcomeEventParams = v_resolve(config.welcomeEventParams, config.welcomeEventParamsType, this.context(), msg);
+        welcomeEventParams = new_resolve(RED, config.welcomeEventParams, config.welcomeEventParamsType, node, msg);
       }
-      var noInputEvent = v_resolve(config.noInputEvent, config.noInputEventType, this.context(), msg);
+      var noInputEvent = new_resolve(RED, config.noinputEvent, config.noinputEventType, node, msg);
       const obj = {
         verb: 'dialogflow',
-        credentials:  v_resolve(config.serviceAccountCredentials,
-          config.serviceAccountCredentialsType, this.context(), msg),
-        project:  v_resolve(config.project, config.projectType, this.context(), msg),
+        credentials:  new_resolve(RED, config.serviceAccountCredentials, config.serviceAccountCredentialsType, node, msg),
+        project:  new_resolve(RED, config.project, config.projectType, node, msg),
         lang:  config.recognizerlang,
         bargein: config.bargein
       };

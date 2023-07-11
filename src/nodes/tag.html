@@ -1,5 +1,11 @@
 <!-- Javascript -->
 <script type="text/javascript">
+  var mustacheType = {
+  value: 'mustache',
+  label: 'mustache',
+  hasvalue: true,
+  icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+}
   RED.nodes.registerType('tag',{
     category: 'jambonz',
     color: '#bbabaa',
@@ -15,7 +21,7 @@
     oneditprepare: function() {
       $('#node-input-data').typedInput({
         default: $('#node-input-dataType').val(),
-        types: ['json', 'msg', 'flow', 'global'],
+        types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
         typeField: $('#node-input-dataType')
       });
     }

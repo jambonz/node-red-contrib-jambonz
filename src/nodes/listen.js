@@ -1,4 +1,4 @@
-var {appendVerb, v_resolve} = require('./libs')
+var {appendVerb, new_resolve} = require('./libs')
 
 module.exports = function(RED) {
   function listen(config) {
@@ -7,8 +7,8 @@ module.exports = function(RED) {
     node.on('input', function(msg) {
       const obj = {
         verb: 'listen',
-        url: v_resolve(config.url, config.urlType, this.context(), msg),
-        actionHook: v_resolve(config.actionhook, config.actionhookType, this.context(), msg),
+        url: new_resolve(RED, config.url, config.urlType, node, msg),
+        actionHook: new_resolve(RED, config.actionhook, config.actionhookType, node, msg),
         finishOnKey: config.finishonkey,
         mixType: config.mixtype,
         playBeep: config.beep,
@@ -24,11 +24,11 @@ module.exports = function(RED) {
           diarization: config.diarization
         };
         if (recognizer.vendor === 'google') {
-          var diarizationMin = v_resolve(config.diarizationmin, config.diarizationminType, this.context(), msg);
-          var diarizationMax = v_resolve(config.diarizationmax, config.diarizationmaxType, this.context(), msg);
-          var hints = v_resolve(config.transcriptionhints, config.transcriptionhintsType, this.context(), msg);
-          var altlangs = v_resolve(config.recognizeraltlang, config.recognizeraltlangType, this.context(), msg);
-          var naics = v_resolve(config.naics, config.naicsType, this.context(), msg);
+          var diarizationMin = new_resolve(RED, config.diarizationmin, config.diarizationminType, node, msg);
+          var diarizationMax = new_resolve(RED, config.diarizationmax, config.diarizationmaxType, node, msg);
+          var hints = new_resolve(RED, config.transcriptionhints, config.transcriptionhintsType, node, msg);
+          var altlangs = new_resolve(RED, config.recognizeraltlang, config.recognizeraltlangType, node, msg);
+          var naics = new_resolve(RED, config.naics, config.naicsType, node, msg);
           Object.assign(recognizer, {
             profanityFilter: config.profanityfilter,
             hints: hints.length > 0 ?
@@ -49,8 +49,8 @@ module.exports = function(RED) {
           }
         }
         else if (recognizer.vendor === 'aws') {
-          var vocab = v_resolve(config.vocabularyname, config.vocabularynameType, this.context(), msg);
-          var vocabFilter = v_resolve(config.vocabularyfiltername, config.vocabularynameType, this.context(), msg);
+          var vocab = new_resolve(RED, config.vocabularyname, config.vocabularynameType, node, msg);
+          var vocabFilter = new_resolve(RED, config.vocabularyfiltername, config.vocabularyfilternameType, node, msg);
           Object.assign(recognizer, {
             vocabularyName: vocab,
             vocabularyFilterName: vocabFilter,
@@ -58,7 +58,7 @@ module.exports = function(RED) {
           });
         }
         obj.transcribe = {
-          transcriptionHook: v_resolve(config.transcriptionhook, config.transcriptionhookType, this.context(), msg),
+          transcriptionHook: new_resolve(RED, config.transcriptionhook, config.transcriptionhookType, node, msg),
           recognizer
         };
       }
@@ -66,7 +66,7 @@ module.exports = function(RED) {
       if (/^\d+$/.test(config.maxlength)) obj.maxLength = parseInt(config.maxLength);
       if (config.finishonkey.length) obj.finishOnKey = config.finishonkey;
 
-      var data = v_resolve(config.metadata, config.metadataType, this.context(), msg, true);
+      var data = new_resolve(RED, config.metadata, config.metadataType, node, msg);
       if (data) obj.metadata = data;
 
       appendVerb(msg, obj);

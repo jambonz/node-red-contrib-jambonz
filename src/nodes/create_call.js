@@ -1,4 +1,4 @@
-var {v_resolve, doCreateCall, } = require('./libs')
+var {doCreateCall, new_resolve } = require('./libs')
 
 module.exports = function(RED) {
   /** Create call */
@@ -19,8 +19,8 @@ module.exports = function(RED) {
         return;
       }
 
-      var from = v_resolve(config.from, config.fromType, this.context(), msg);
-      var to = v_resolve(config.to, config.toType, this.context(), msg);
+      var from = new_resolve(RED, config.from, config.fromType, node, msg)
+      var to =   new_resolve(RED, config.to, config.toType, node, msg)
 
       const opts = {
         from,
@@ -35,11 +35,11 @@ module.exports = function(RED) {
           break
         case 'url':
           opts.call_hook = {
-            url: v_resolve(config.call_hook_url, config.call_hook_urlType, this.context(), msg),
+            url:  new_resolve(RED, config.call_hook_url, config.call_hook_urlType, node, msg),
             method: config.call_hook_method
           };
           opts.call_status_hook = {
-            url: v_resolve(config.call_status_url, config.call_status_urlType, this.context(), msg),
+            url: new_resolve(RED, config.call_status_url, config.call_status_urlType, node, msg),
             method: config.call_status_method
           };
           opts.speech_synthesis_vendor = config.vendor;

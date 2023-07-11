@@ -1,11 +1,17 @@
 <!-- Javascript -->
 <script type="text/javascript">
+    var mustacheType = {
+    value: 'mustache',
+    label: 'mustache',
+    hasvalue: true,
+    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+  }
   RED.nodes.registerType('dial',{
       category: 'jambonz',
       color: '#bbabaa',
       defaults: {
         name: {value: ''},
-        targets:{value:[{type: 'phone', dest: '', user: '', pass: '', varType: 'str', trunk: '', trunkType: 'str'}]},
+        targets:{value:[{type: 'phone', dest: '', user: '', pass: '', destType: 'str', trunk: '', trunkType: 'str'}]},
         headers: {value: []},
         actionhook: {value: ''},
         actionhookType: {value: 'str'},
@@ -61,67 +67,66 @@
       oneditprepare: function() {
         var node = this;
         $('#node-input-callerid').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-calleridType')
         });
         $('#node-input-target-property-trunk').typedInput({
-          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-target-property-trunk')
         });
         $('#node-input-actionhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-actionhookType')
         });
         $('#node-input-confirmhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-confirmhookType')
         });
         $('#node-input-dialmusic').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-dialmusicType')
         });
         $('#node-input-dtmfcapture').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-dtmfcaptureType')
         });
         $('#node-input-dtmfhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-dtmfhookType')
         });
         $('#node-input-transcribeurl').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-transcribeurlType')
         });
         $('#node-input-listenurl').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-listenurlType')
         });
         $('#node-input-transcriptionhook').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-transcriptionhookType')
         });
         $('#node-input-transcriptionhints').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-transcriptionhintsType')
         });
         $('#node-input-recognizeraltlang').typedInput({
-          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-recognizeraltlangType')
         });
         $('#node-input-diarizationmin').typedInput({
-          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-diarizationminType')
         });
         $('#node-input-diarizationmax').typedInput({
-          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-diarizationmaxType')
         });
         $('#node-input-naics').typedInput({
-          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-naicsType')
         });
 
-        console.log('oneditprepare - dial');
         prepareSttControls(node);
 
         $('#node-input-target-container').css('min-height','180px').css('min-width','450px').editableList({
@@ -134,7 +139,7 @@
                 dest: '',
                 user: '',
                 pass: '',
-                varType: 'str',
+                destType: 'str',
                 trunk: '',
                 trunkType: 'str'
               };
@@ -159,7 +164,7 @@
             }
             var propertyName = $('<input/>', {class:"node-input-target-property-name", type:"text"})
               .appendTo(row1)
-              .typedInput({types: ['str', 'msg', 'flow', 'global']});
+              .typedInput({types: ['str', 'msg', 'flow', 'global','jsonata', 'env', mustacheType]});
 
             $('<label style="padding-top:8px; padding-right:20px">Auth Username:</label>')
               .appendTo(row2);
@@ -189,7 +194,7 @@
               placeholder: 'Specify the name of the trunk used for this outbound call'
             })
               .appendTo(row5)
-              .typedInput({types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env']});
+              .typedInput({types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType]});
             
             selectField.on('change', function() {
               var type = $(this).val();
