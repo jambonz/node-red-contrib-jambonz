@@ -14,10 +14,10 @@ module.exports = function(RED) {
         verb: 'sip:refer',
         referTo: new_resolve(RED, config.referTo, config.referToType, node, msg)
       }
-      if (typeof(config.headers == 'string')){
-        config.headers=JSON.parse(config.headers)
-      }
       config.headers ? obj.headers = new_resolve(RED, config.headers, config.headersType, node, msg) : null
+      if (typeof obj.headers == 'string'){
+        obj.headers = JSON.parse(obj.headers)
+      }
       config.referredBy ? obj.referredBy = new_resolve(RED, config.referredBy, config.referredByType, node, msg) : null
       config.actionHook ? obj.actionHook = new_resolve(RED, config.actionHook, config.actionHookType, node, msg) : null
       config.eventHook ? obj.eventHook = new_resolve(RED, config.eventHook, config.eventHookType, node, msg) : null
