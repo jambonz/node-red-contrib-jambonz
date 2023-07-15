@@ -9,9 +9,8 @@ module.exports = function(RED) {
       node.log(`dial config: ${JSON.stringify(config)}, msg.call: ${JSON.stringify(msg.call)}`);
       var target = config.targets.map((t) => {
         const obj = Object.assign({}, t);
-        var dest = new_resolve(RED, config.dest, config.destType, node, msg)
-        var trunk = new_resolve(RED, config.trunk, config.trunkType, node, msg)
-        node.log(`dial: dest ${t.destType}:${t.dest} resolved to ${dest}`);
+        var dest = new_resolve(RED, obj.dest, obj.destType, node, msg)
+        var trunk = new_resolve(RED, obj.trunk, obj.trunkType, node, msg)
         switch (t.type) {
           case 'phone':
             obj.number = dest;
