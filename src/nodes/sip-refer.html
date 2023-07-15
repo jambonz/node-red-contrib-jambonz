@@ -15,7 +15,7 @@
         referToType: {value: 'str'},
         referredBy: {value: ''},
         referredByType: {value: 'str'},
-        headers: {value: ''},
+        headers: {value: '{}'},
         headersType: {value: 'json'},
         eventHook: {value: ''},
         eventHookType: {value: 'str'},
@@ -27,7 +27,6 @@
       icon: "font-awesome/fa-cubes",
       label: function() { return this.name || 'sip:refer';},
       oneditprepare: function() {
-
         $('#node-input-referTo').typedInput({
           default: $('#node-input-referToType').val(),
           types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
@@ -46,7 +45,7 @@
         $('#node-input-eventHook').typedInput({
           default: $('#node-input-eventHookType').val(),
           types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
-          typeField: $('#node-input-actionHookType')
+          typeField: $('#node-input-eventHookType')
         });
         $('#node-input-headers').typedInput({
           default: $('#node-input-headersType').val(),
@@ -64,12 +63,12 @@
       <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-      <label for="node-input-referTo">referTo</label>
+      <label for="node-input-referTo">Refer To</label>
       <input type="text" id="node-input-referTo" placeholder="address">
-      <input type="hidden" id="node-input-referTobody">
+      <input type="hidden" id="node-input-referToType">
     </div>
     <div class="form-row">
-      <label for="node-input-referredBy">referredBy</label>
+      <label for="node-input-referredBy">Referred By</label>
       <input type="text" id="node-input-referredBy" placeholder="address">
       <input type="hidden" id="node-input-referredByType">
     </div>
@@ -94,11 +93,11 @@
 <script type="text/html" data-help-name="sip:refer">
     <p>The sip:refer action will send a sip REFER to the far end carrier or sip phone</p>
     <h3>Properties</h3>
-    <p><code>referTo</code> -  a sip uri or a phone number / user identifier	</p>
-    <p><code>referredBy</code> -  	a sip uri or a phone number / user identifier; if not provided it will default to the identity of the party being transferred</p>
-    <p><code>actionHook</code> -  a webhook to call when the transfer has completed	</p>
-    <p><code>eventHook</code> -  a webhook to call when NOTIFY messages of follow-on call status are received	</p>
-    <p><code>headers</code> -  additional SIP headers to include in the response	</p>
+    <p><code>Refer To</code> - a sip uri or a phone number / user identifier	</p>
+    <p><code>Referred By</code> - a sip uri or a phone number / user identifier; if not provided it will default to the identity of the party being transferred</p>
+    <p><code>Action Hook</code> - a webhook to call when the transfer has completed	</p>
+    <p><code>Event Hook</code> - a webhook to call when NOTIFY messages of follow-on call status are received	</p>
+    <p><code>Headers</code> - additional SIP headers to include in the response	</p>
     
   <h3>Outputs</h3>
   <dl class="message-properties">
