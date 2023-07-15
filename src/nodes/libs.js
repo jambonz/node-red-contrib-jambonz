@@ -64,7 +64,7 @@ exports.appendVerb = (msg, obj) => {
     }
   }
   function dataobject(context, msg){
-    data = msg;
+    let data = Object.assign({}, msg);
     data.global = {};
     data.flow = {};
     g_keys = context.global.keys();
