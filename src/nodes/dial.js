@@ -46,9 +46,11 @@ module.exports = function(RED) {
         timeLimit: config.timelimit ? parseInt(config.timelimit) : null,
         timeout: config.timeout ? parseInt(config.timeout) : null,
         callerId: new_resolve(RED, config.callerid, config.calleridType, node, msg),
+        callerName: new_resolve(RED, config.callername, config.callernameType, node, msg),
         actionHook: new_resolve(RED, config.actionhook, config.actionhookType, node, msg),
         confirmHook: new_resolve(RED, config.confirmhook, config.confirmhookType, node, msg), 
         dialMusic: new_resolve(RED, config.dialmusic, config.dialmusicType, node, msg),
+        referHook: new_resolve(RED, config.referhook, config.referhookType, node, msg),
         dtmfHook: new_resolve(RED, config.dtmfhook, config.dtmfhookType, node, msg),
       };
 
