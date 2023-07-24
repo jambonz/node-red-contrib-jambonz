@@ -45,11 +45,11 @@ module.exports = function(RED) {
         answerOnBridge: config.answeronbridge,
         timeLimit: config.timelimit ? parseInt(config.timelimit) : null,
         timeout: config.timeout ? parseInt(config.timeout) : null,
-        callerId: new_resolve(RED, config.callerId, config.callerIdType, node, msg),
-        actionHook: new_resolve(RED, config.actionHook, config.actionHookType, node, msg),
-        confirmHook: new_resolve(RED, config.confirmHook, config.confirmHookType, node, msg), 
-        dialMusic: new_resolve(RED, config.dialMusic, config.dialMusicType, node, msg),
-        dtmfHook: new_resolve(RED, config.dtmfHook, config.dtmfHookType, node, msg),
+        callerId: new_resolve(RED, config.callerid, config.calleridType, node, msg),
+        actionHook: new_resolve(RED, config.actionhook, config.actionhookType, node, msg),
+        confirmHook: new_resolve(RED, config.confirmhook, config.confirmhookType, node, msg), 
+        dialMusic: new_resolve(RED, config.dialmusic, config.dialmusicType, node, msg),
+        dtmfHook: new_resolve(RED, config.dtmfhook, config.dtmfhookType, node, msg),
       };
 
       // headers
@@ -77,10 +77,10 @@ module.exports = function(RED) {
           diarization: config.diarization
         };
         if (recognizer.vendor === 'google') {
-          var diarizationMin = new_resolve(RED, config.diarizationMin, config.diarizationMinType, node, msg);
-          var diarizationMax = new_resolve(RED, config.diarizationMax, config.diarizationMaxType, node, msg)
-          var hints = new_resolve(RED, config.hints, config.hintsType, node, msg)
-          var altlangs = new_resolve(RED, config.altlangs, config.altlangsType, node, msg)
+          var diarizationMin = new_resolve(RED, config.diarizationmin, config.diarizationminType, node, msg);
+          var diarizationMax = new_resolve(RED, config.diarizationmax, config.diarizationmaxType, node, msg)
+          var hints = new_resolve(RED, config.transcriptionhints, config.transcriptionhintsType, node, msg)
+          var altlangs = new_resolve(RED, config.recognizeraltlang, config.recognizeraltlangType, node, msg)
           var naics = new_resolve(RED, config.naics, config.naicsType, node, msg)
           Object.assign(recognizer, {
             profanityFilter: config.profanityfilter,
@@ -111,7 +111,7 @@ module.exports = function(RED) {
           });
         }
         data.transcribe = {
-          transcriptionHook: new_resolve(RED, config.transcriptionHook, config.transcriptionHookType, node, msg),
+          transcriptionHook: new_resolve(RED, config.transcriptionhook, config.transcriptionhookType, node, msg),
           recognizer
         };
       }
