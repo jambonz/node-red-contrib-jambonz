@@ -76,6 +76,16 @@ function lcc(config) {
             siprecServerURL: new_resolve(RED, config.siprecServerURL, config.siprecServerURLType, node, msg),
             recordingID: new_resolve(RED, config.recordingID, config.recordingIDType, node, msg) || crypto.randomUUID()
           };
+          // SIPREC headers
+          if (config.siprecHeaders) {
+            var headers = {};
+            config.siprecHeaders.forEach(function(h) {
+              if (h.h.length && h.v.length) headers[h.h] = h.v;
+            });
+            if (Object.keys(headers).length) {
+              Object.assign(opts.record, {headers});
+            }
+          }
           break;
         case 'stop_call_recording':
           opts.record = { action: 'stopCallRecording' };
