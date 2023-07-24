@@ -1,29 +1,33 @@
 <!-- Javascript -->
 <script type="text/javascript">
-    var mustacheType = {
+  var mustacheType = {
     value: 'mustache',
     label: 'mustache',
     hasvalue: true,
     icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
   }
-  RED.nodes.registerType('dial',{
+  RED.nodes.registerType('dial', {
       category: 'jambonz',
       color: '#bbabaa',
       defaults: {
         name: {value: ''},
-        targets:{value:[{type: 'phone', dest: '', user: '', pass: '', varType: 'str', trunk: '', trunkType: 'str'}]},
+        targets: {value:[{type: 'phone', dest: '', user: '', pass: '', varType: 'str', trunk: '', trunkType: 'str'}]},
         headers: {value: []},
         actionhook: {value: ''},
         actionhookType: {value: 'str'},
         answeronbridge: {value: false},
         callerid: {value: ''},
         calleridType: {value: ''},
+        callername: {value: ''},
+        callernameType: {value: ''},
         confirmhook: {value: ''},
         confirmhookType: {value: 'str'},
         dialmusic: {value: ''},
         dialmusicType: {value: 'str'},
         dtmfcapture: {value: ''},
         dtmfcaptureType: {value: 'str'},
+        referhook: {value: ''},
+        referhookType: {value: 'str'},
         dtmfhook: {value: ''},
         dtmfhookType: {value: 'str'},
         timelimit: {validate:RED.validators.regex(/^\d*$/) },
@@ -70,6 +74,10 @@
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-calleridType')
         });
+        $('#node-input-callername').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-callernameType')
+        });
         $('#node-input-target-property-trunk').typedInput({
           types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-target-property-trunk')
@@ -89,6 +97,10 @@
         $('#node-input-dtmfcapture').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-dtmfcaptureType')
+        });
+        $('#node-input-referhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-referhookType')
         });
         $('#node-input-dtmfhook').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
@@ -382,7 +394,7 @@
       <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row" style="margin-bottom:0;">
-      <label><i class="fa fa-list"></i><span>Dial Targets</span></label>
+      <label><i class="fa fa-list"></i> <span>Dial Targets</span></label>
     </div>
     <div class="form-row node-input-target-container-row">
         <ol id="node-input-target-container"></ol>
@@ -398,8 +410,13 @@
     </div>
     <div class="form-row">
       <label for="node-input-callerid">Caller ID</label>
-      <input type="text" id="node-input-callerid" placeholder="Caller ID to place on outbound call">
+      <input type="text" id="node-input-callerid" placeholder="caller id to place on outbound call">
       <input type="hidden" id="node-input-calleridType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-callername">Caller name</label>
+      <input type="text" id="node-input-callername" placeholder="caller name to place on outbound call">
+      <input type="hidden" id="node-input-callernameType">
     </div>
     <div class="form-row">
       <label for="node-input-confirmhook">Confirm hook</label>
@@ -415,6 +432,11 @@
       <label for="node-input-dtmfcapture">Dtmf capture</label>
       <input type="text" id="node-input-dtmfcapture" placeholder="comma-separated list of dtmf captures">
       <input type="hidden" id="node-input-dtmfcaptureType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-referhook">Refer hook</label>
+      <input type="text" id="node-input-referhook" placeholder="webhook to call when sip refer is received">
+      <input type="hidden" id="node-input-referhookType">
     </div>
     <div class="form-row">
       <label for="node-input-dtmfhook">Dtmf hook</label>
