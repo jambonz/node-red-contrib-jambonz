@@ -1,12 +1,11 @@
 <!-- Javascript -->
 <script type="text/javascript">
   var mustacheType = {
-  value: 'mustache',
-  label: 'mustache',
-  hasvalue: true,
-  icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+    value: 'mustache',
+    label: 'mustache',
+    hasvalue: true,
+    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
   }
-
   RED.nodes.registerType('lcc',{
       category: 'jambonz',
       color: '#aebfb9',
@@ -38,6 +37,7 @@
           return action !== 'start_call_recording' || v.length > 0;
         }},
         siprecServerURLType: {value: 'str'},
+        siprecHeaders: {value: []},
         recordingID: {value: ''},
         recordingIDType: {value: 'str'},
       },
@@ -166,6 +166,61 @@
         vendorElem.change(onVendorChanged);
         langElem.change(onLangChanged);
         voiceElem.change(onVoiceChanged);
+
+        $('#node-input-siprecHeaders-container').css('min-height','120px').css('min-width','450px').editableList({
+          addItem: function(container, i, opt) {
+            var header = opt;
+            if (!header.hasOwnProperty('h')) {
+                header = {h: '', v: ''};
+            }
+            container.css({
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            });
+            let fragment = document.createDocumentFragment();
+            var row1 = $('<div/>',{style:"display:flex;"}).appendTo(fragment);
+            $('<input/>', {
+              class:"node-input-header-property-name", 
+              type:"text", 
+              placeholder: 'SIP Header'
+            })
+              .appendTo(row1);
+            $('<input/>', {
+              class:"node-input-value-property-name", 
+              type:"text", 
+              placeholder: 'value'
+            })
+              .appendTo(row1);
+            row1.find('.node-input-header-property-name').val(header.h);
+            row1.find('.node-input-value-property-name').val(header.v);
+            container[0].appendChild(fragment);
+          },
+          removable: true
+        });
+        if (!this.siprecHeaders) {
+          var header = {
+            h: '',
+            v: '',
+          };
+          this.siprecHeaders = [header];
+        }
+        for (var i=0; i < this.siprecHeaders.length; i++) {
+            var header = this.siprecHeaders[i];
+            $("#node-input-siprecHeaders-container").editableList('addItem', header);
+        }
+      },
+      oneditsave: function () {
+        var node = this;
+        var headers = [];
+        $("#node-input-siprecHeaders-container").editableList('items').each(function(i) {
+          var header = $(this);
+          var h = header.find(".node-input-header-property-name").val();
+          var v = header.find(".node-input-value-property-name").val();
+          var obj = {};
+          obj[h] = v;
+          headers.push({h, v});
+        });
+        node.siprecHeaders = headers;
       }
   });
 </script>
@@ -259,6 +314,14 @@
       <input type="text" id="node-input-recordingID" placeholder="545362a9-4cb3-4a55-85b8-b33ca83a6517">
       <input type="hidden" id="node-input-recordingIDType">
     </div>  
+    <fieldset>
+      <div class="form-row" style="margin-bottom:0;">
+        <label style="width:100%"><i class="fa fa-list"></i> <span>Add custom SIPREC headers</span></label>
+      </div>
+      <div class="form-row node-input-siprecHeaders-container-row">
+          <ol id="node-input-siprecHeaders-container"></ol>
+      </div>
+    </fieldset>
   </div>
 </script>
 
