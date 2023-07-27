@@ -12,12 +12,15 @@
       defaults: {
         name: {value: ''},
         actionhook: {value: ''},
-        actionhooktype: {val: 'str'},
+        actionhookType: {val: 'str'},
         finishonkey: {value: ''},
         dtmfinput: {value: 0},
         speechinput: {value: 1},
         numdigits: {value: ''},
         timeout: {value: ''},
+        bargein: {value: true},
+        dtmfbargein: {value: true},
+        listenduringprompt: {value: true},
         prompttype: {value: 'say'},
         playurl: {value: ''},
         playurlType: {value: 'str'},
@@ -204,6 +207,10 @@
     </div>
     <div id="dtmf-input-container">
       <div class="form-row">
+        <label for="node-input-dtmfbargein">Allow DTMF bargein</label>
+        <input type="checkbox" id="node-input-dtmfbargein">
+      </div>
+      <div class="form-row">
         <label for="node-input-finishonkey"><i class="icon-tag"></i> Finish key</label>
         <input type="text" id="node-input-finishonkey" placeholder="dtmf key to signal end of input">
       </div>
@@ -225,6 +232,14 @@
     </div>
     <div id="speech-input-container">
       <div class="form-row">
+        <label for="node-input-bargein">Allow Speech bargein</label>
+        <input type="checkbox" id="node-input-bargein">
+      </div>
+      <div class="form-row">
+        <label for="node-input-listenduringprompt">Listen during prompt</label>
+        <input type="checkbox" id="node-input-listenduringprompt">
+      </div>
+      <div class="form-row">
         <label for="node-input-transcriptionvendor">Vendor</label>
         <select id="node-input-transcriptionvendor">
           <option value="default" selected>--application default--</option>
@@ -234,7 +249,6 @@
           <option value="microsoft">microsoft</option>
           <option value="ibm">ibm</option>
           <option value="nuance">nuance</option>
-
         </select>
       </div>
       <div class="form-row">
