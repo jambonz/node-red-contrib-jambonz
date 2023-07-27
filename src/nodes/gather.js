@@ -11,7 +11,7 @@ module.exports = function(RED) {
       node.log(`config: ${JSON.stringify(config)}`);
 
       var obj = {verb: 'gather', input: []};
-      if (config.actionhook) obj.actionHook = new_resolve(RED, config.actionHook, config.actionHookType, node, msg)
+      if (config.actionhook) obj.actionHook = new_resolve(RED, config.actionhook, config.actionhookType, node, msg)
 
       // input
       if (config.speechinput) {
@@ -45,12 +45,15 @@ module.exports = function(RED) {
           });
         }
         obj.recognizer = recognizer;
+        if (config.bargein) obj.bargein = config.bargein;
+        if (config.listenduringprompt) obj.listenDuringPrompt = config.listenduringprompt;
       }
       if (config.dtmfinput) {
         obj.input.push('digits');
         if (config.finishonkey && config.finishonkey.length) obj.finishOnKey = config.finishonkey;
         if (/^\d+$/.test(config.numdigits)) obj.numDigits = parseInt(config.numdigits);
         if (/^\d+$/.test(config.timeout)) obj.timeout = parseInt(config.timeout);
+        if (config.dtmfbargein) obj.dtmfBargein = config.dtmfbargein;
       }
 
       // prompt
