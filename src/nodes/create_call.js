@@ -19,8 +19,8 @@ module.exports = function(RED) {
         return;
       }
 
-      var from = new_resolve(RED, config.from, config.fromType, node, msg)
-      var to =   new_resolve(RED, config.to, config.toType, node, msg)
+      var from = new_resolve(RED, config.from, config.fromType, node, msg);
+      var to = new_resolve(RED, config.to, config.toType, node, msg);
 
       const opts = {
         from,
@@ -28,6 +28,18 @@ module.exports = function(RED) {
           type: config.dest
         },
       };
+
+      if (config.headers) {
+        var headers = {};
+        config.headers.forEach(function(h) {
+          if (h.h.length && h.v.length) headers[h.h] = h.v;
+        });
+        Object.assign(opts, {headers});
+      }
+
+      if (config.callername) {
+        opts.callerName = new_resolve(RED, config.callername, config.callernameType, node, msg);
+      }
 
       switch (config.mode) {
         case 'app':

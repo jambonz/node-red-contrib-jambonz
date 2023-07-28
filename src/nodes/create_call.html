@@ -22,6 +22,9 @@
         application: {value: ''},
         appName: {},
         mode: {value: 'app'},
+        callername: {value: ''},
+        callernameType: {value: ''},
+        headers: {value: []},
         call_hook_url : {},
         call_hook_urlType : {value: 'str'},
         call_hook_method : {value : 'GET'},
@@ -84,6 +87,10 @@
           types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-call_status_urlType')
         });
+        $('#node-input-callername').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-callernameType')
+        });
 
         var populateApplications = function() {
           var serverId = $('#node-input-server option:selected').val();
@@ -127,6 +134,60 @@
 
           }
         });
+        $('#node-input-headers-container').css('min-height','120px').css('min-width','450px').editableList({
+          addItem: function(container, i, opt) {
+            var header = opt;
+            if (!header.hasOwnProperty('h')) {
+                header = {h: '', v: ''};
+            }
+            container.css({
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            });
+            let fragment = document.createDocumentFragment();
+            var row1 = $('<div/>',{style:"display:flex;"}).appendTo(fragment);
+            $('<input/>', {
+              class:"node-input-header-property-name", 
+              type:"text", 
+              placeholder: 'SIP Header'
+            })
+              .appendTo(row1);
+            $('<input/>', {
+              class:"node-input-value-property-name", 
+              type:"text", 
+              placeholder: 'value'
+            })
+              .appendTo(row1);
+            row1.find('.node-input-header-property-name').val(header.h);
+            row1.find('.node-input-value-property-name').val(header.v);
+            container[0].appendChild(fragment);
+          },
+          removable: true
+        });
+        if (!this.headers) {
+          var header = {
+            h: '',
+            v: '',
+          };
+          this.headers = [header];
+        }
+        for (var i=0; i < this.headers.length; i++) {
+            var header = this.headers[i];
+            $("#node-input-headers-container").editableList('addItem', header);
+        }
+      },
+      oneditsave: function () {
+        var node = this;
+        var headers = [];
+        $("#node-input-headers-container").editableList('items').each(function(i) {
+          var header = $(this);
+          var h = header.find(".node-input-header-property-name").val();
+          var v = header.find(".node-input-value-property-name").val();
+          var obj = {};
+          obj[h] = v;
+          headers.push({h, v});
+        });
+        node.headers = headers;
       }
   });
 </script>
@@ -145,6 +206,11 @@
     <label for="node-input-from">From</label>
     <input type="text" id="node-input-from" placeholder="calling party number">
     <input type="hidden" id="node-input-fromType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-callername">From name</label>
+    <input type="text" id="node-input-callername" placeholder="calling party name">
+    <input type="hidden" id="node-input-callernameType">
   </div>
   <div class="form-row">
     <label for="node-input-to">To</label>
@@ -179,6 +245,15 @@
       </select>
     </div>
   </div>
+  <fieldset>
+    <legend>SIP Headers</legend>
+    <div class="form-row" style="margin-bottom:0;">
+      <label style="width:100%"><i class="fa fa-list"></i> <span>Add custom headers</span></label>
+    </div>
+    <div class="form-row node-input-headers-container-row">
+        <ol id="node-input-headers-container"></ol>
+    </div>
+  </fieldset>
   <div id="url-options">
     <fieldset>
       <legend>Webhook options</legend>
