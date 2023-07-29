@@ -112,7 +112,7 @@ exports.appendVerb = (msg, obj) => {
   
 
   exports.doLCC = (node, baseUrl, accountSid, apiToken, callSid, opts) => {
-    const post = bent(`${baseUrl}/v1/`, 'POST', 'string', 202, {
+    const post = bent(`${baseUrl}/v1/`, 'POST', 'string', [200, 202], {
       'Authorization': `Bearer ${apiToken}`
     });
     const url = `Accounts/${accountSid}/Calls/${callSid}`;

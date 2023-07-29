@@ -27,11 +27,26 @@
           return action !== 'redirect' || v.length > 0;
         }},
         callHookType: {value: 'str'},
+        childCallHook: {value: ''},
+        childCallHookType: {value: 'str'},
         waitHook: {value: '', validate: function(v) {
           const action = $('#node-input-action').val();
           return action !== 'hold_conf' || v.length > 0;
         }},
         waitHookType: {value: 'str'},
+        sipRequestMethod: {value: 'INFO'},
+        sipRequestHeaders: {value: '{}'},
+        sipRequestHeadersType: {value: 'json'},
+        sipRequestContentType: {value: '', validate: function(v) {
+          const action = $('#node-input-action').val();
+          return action !== 'sip_request' || v.length > 0;
+        }},
+        sipRequestContentTypeType: {value: 'str'},
+        sipRequestBody: {value: '', validate: function(v) {
+          const action = $('#node-input-action').val();
+          return action !== 'sip_request' || v.length > 0;
+        }},
+        sipRequestBodyType: {value: 'str'},
         siprecServerURL: {value: '', validate: function(v) {
           const action = $('#node-input-action').val();
           return action !== 'start_call_recording' || v.length > 0;
@@ -58,6 +73,7 @@
         var redirectDiv = $('#redirect-options');
         var waitHookDiv = $('#wait-options');
         var recordDiv = $('#record-options');
+        var sipRequestDiv = $('#sip-request-options');
 
         $('#node-input-callSid').typedInput({
           default: $('#node-input-callSidType').val(),
@@ -69,10 +85,30 @@
           types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-callHookType')
         });
+        $('#node-input-childCallHook').typedInput({
+          default: $('#node-input-childCallHookType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-childCallHookType')
+        });
         $('#node-input-waitHook').typedInput({
           default: $('#node-input-waitHookType').val(),
           types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-waitHookType')
+        });
+        $('#node-input-sipRequestContentType').typedInput({
+          default: $('#node-input-sipRequestContentTypeType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-sipRequestContentTypeType')
+        });
+        $('#node-input-sipRequestBody').typedInput({
+          default: $('#node-input-sipRequestBodyType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-sipRequestBodyType')
+        });
+        $('#node-input-sipRequestHeaders').typedInput({
+          default: $('#node-input-sipRequestHeadersType').val(),
+          types: ['json','msg', 'flow', 'global'],
+          typeField: $('#node-input-sipRequestHeadersType')
         });
         $('#node-input-siprecServerURL').typedInput({
           default: $('#node-input-siprecServerURLType').val(),
@@ -95,6 +131,8 @@
           else waitHookDiv.hide();
           if ('start_call_recording' === selectedAction) recordDiv.show();
           else recordDiv.hide();
+          if ('sip_request' === selectedAction) sipRequestDiv.show();
+          else sipRequestDiv.hide();
         }
 
         var onVendorChanged = function() {
@@ -254,6 +292,7 @@
       <option value="resume">resume listen audio feed</option>
       <option value="redirect">redirect call</option>
       <option value="whisper">whisper</option>
+      <option value="sip_request">sip request</option>
       <option value="start_call_recording">start call recording</option>
       <option value="stop_call_recording">stop call recording</option>
       <option value="pause_call_recording">pause call recording</option>
@@ -291,14 +330,19 @@
   </div>
   <div id="redirect-options">
     <div class="form-row">
-      <label for="node-input-callHook">Call webhook</label>
+      <label for="node-input-callHook">Call hook</label>
       <input type="text" id="node-input-callHook" placeholder="/path">
       <input type="hidden" id="node-input-callHookType">
-    </div>  
+    </div>
+    <div class="form-row">
+      <label for="node-input-childCallHook">Child call hook</label>
+      <input type="text" id="node-input-childCallHook" placeholder="/path">
+      <input type="hidden" id="node-input-childCallHookType">
+    </div>    
   </div>
   <div id="wait-options">
     <div class="form-row">
-      <label for="node-input-waitHook">Wait webhook</label>
+      <label for="node-input-waitHook">Wait hook</label>
       <input type="text" id="node-input-waitHook" placeholder="/path">
       <input type="hidden" id="node-input-waitHookType">
     </div>
@@ -322,6 +366,31 @@
           <ol id="node-input-siprecHeaders-container"></ol>
       </div>
     </fieldset>
+  </div>
+  <div id="sip-request-options">
+    <div class="form-row">
+      <label for="node-input-sipRequestMethod">Method</label>
+      <select id="node-input-sipRequestMethod">
+        <option value="INFO" selected>INFO</option>
+        <option value="MESSAGE">MESSAGE</option>
+        <option value="NOTIFY">NOTIFY</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-sipRequestContentType">Content type</label>
+      <input type="text" id="node-input-sipRequestContentType" placeholder="SIP content type">
+      <input type="hidden" id="node-input-sipRequestContentTypeType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-sipRequestBody">Body</label>
+      <input type="text" id="node-input-sipRequestBody" placeholder="SIP body">
+      <input type="hidden" id="node-input-sipRequestBodyType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-sipRequestHeaders">Headers</label>
+      <input type="text" id="node-input-sipRequestHeaders" placeholder="SIP headers">
+      <input type="hidden" id="node-input-sipRequestHeadersType">
+    </div>
   </div>
 </script>
 
