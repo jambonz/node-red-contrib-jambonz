@@ -46,6 +46,9 @@ function lcc(config) {
           break;
         case 'redirect':
           opts.call_hook = {url: new_resolve(RED, config.callHook, config.callHookType, node, msg)};
+          if (config.childCallHook) {
+            opts.child_call_hook = {url: new_resolve(RED, config.childCallHook, config.childCallHookType, node, msg)};
+          }
           break;
         case 'hold_conf':
           opts.conf_hold_status = 'hold';
@@ -69,6 +72,14 @@ function lcc(config) {
               }
             });
           }
+          break;
+        case 'sip_request':
+          opts.sip_request = { 
+            method: config.sipRequestMethod,
+            content_type: new_resolve(RED, config.sipRequestContentType, config.sipRequestContentTypeType, node, msg),
+            content: new_resolve(RED, config.sipRequestBody, config.sipRequestBodyType, node, msg),
+            headers: new_resolve(RED, config.sipRequestHeaders, config.sipRequestHeadersType, node, msg) || {}
+          };
           break;
         case 'start_call_recording':
           opts.record = { 
@@ -105,7 +116,7 @@ function lcc(config) {
 
       try {
         msg.payload = await doLCC(node, url, accountSid, apiToken, callSid, opts);
-        msg.statusCode = 202;
+        msg.statusCode = config.action === 'sip_request' ? 200 : 202;
       } catch (err) {
         if (err.statusCode) msg.statusCode = err.statusCode;
         else {
