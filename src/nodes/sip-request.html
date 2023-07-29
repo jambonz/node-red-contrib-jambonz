@@ -1,11 +1,11 @@
 <!-- Javascript -->
 <script type="text/javascript">
   var mustacheType = {
-  value: 'mustache',
-  label: 'mustache',
-  hasvalue: true,
-  icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
-}
+    value: 'mustache',
+    label: 'mustache',
+    hasvalue: true,
+    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+  }
   RED.nodes.registerType('sip:request',{
       category: 'jambonz',
       color: '#bbabaa',
@@ -18,8 +18,8 @@
         bodyType: {value: 'str'},
         actionHook: {value: ''},
         actionHookType: {value: 'str'}      },
-      inputs:1,
-      outputs:1,
+      inputs: 1,
+      outputs: 1,
       icon: "font-awesome/fa-cubes",
       label: function() { return this.name || 'sip:request';},
       oneditprepare: function() {
@@ -64,7 +64,7 @@
     <div class="form-row">
       <label for="node-input-body">SIP Body</label>
       <input type="text" id="node-input-body" placeholder="SIP body">
-      <input type="hidden" id="node-input-reasonbody">
+      <input type="hidden" id="node-input-bodyType">
     </div>
     <div class="form-row">
       <label for="node-input-actionHook">Action Hook</label>
@@ -75,12 +75,12 @@
 
 <!-- Help Text -->
 <script type="text/html" data-help-name="sip:request">
-    <p>send a SIP INFO, NOTIFY, or MESSAGE request on an established call leg</p>
+    <p>Send a SIP INFO, NOTIFY, or MESSAGE request on an established call leg.</p>
     <h3>Properties</h3>
-    <p><code>method</code> -  SIP method, should be one of INFO, MESSAGE, or NOTIFY		</p>
-    <p><code>headers</code> -  additional SIP headers to include in the response	</p>
-    <p><code>body</code> - the body of the SIP request, if any		</p>
-    <p><code>actionHook</code> -  a webhook to call when the sip request has completed		</p>
+    <p><code>Method</code> - SIP method, should be one of INFO, MESSAGE or NOTIFY		</p>
+    <p><code>Headers</code> - additional SIP headers to include in the response	</p>
+    <p><code>SIP Body</code> - the body of the SIP request, if any		</p>
+    <p><code>Action Hook</code> - a webhook to call when the sip request has completed		</p>
   
   <h3>Outputs</h3>
   <dl class="message-properties">

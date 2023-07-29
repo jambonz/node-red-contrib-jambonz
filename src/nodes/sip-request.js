@@ -15,10 +15,10 @@ module.exports = function(RED) {
           config[key] = false
         };
       });
-      if (typeof(config.headers == 'string')){
-        config.headers=JSON.parse(config.headers)
-      }
       config.headers ? obj.headers = new_resolve(RED, config.headers, config.headersType, node, msg) : null
+      if (typeof obj.headers == 'string'){
+        obj.headers = JSON.parse(obj.headers)
+      }
       config.body ? obj.body = new_resolve(RED, config.body, config.bodyType, node, msg) : null
       config.actionHook ? obj.actionHook = new_resolve(RED, config.actionHook, config.actionHookType, node, msg) : null
       appendVerb(msg, obj)
