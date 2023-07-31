@@ -1,0 +1,57 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  var mustacheType = {
+    value: 'mustache',
+    label: 'mustache',
+    hasvalue: true,
+    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+  }
+  RED.nodes.registerType('get_call', {
+      category: 'jambonz',
+      color: '#aebfb9',
+      defaults: {
+        name: {value: ''},
+        server: {value: '', required: true, type: 'jambonz_auth'},
+        callSid: {value: '', validate: function(v) {
+          return v.length > 0;
+        }},
+        callSidType:{value: 'str'},
+      },
+      inputs: 1,
+      outputs: 1,
+      icon: "font-awesome/fa-cubes",
+      paletteLabel: "Get - Call",
+      label: function() { return this.name || 'Get Call';},
+      oneditprepare: () => {
+        $('#node-input-callSid').typedInput({
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-callSidType')
+        });
+      }
+  });
+</script>
+
+<!-- HTML -->
+<script type="text/html" data-template-name="get_call">
+        <div class="form-row">
+          <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+          <input type="text" id="node-input-name" placeholder="Name">
+        </div>
+        <div class="form-row">
+          <label for="node-input-server">Server</label>
+          <input type="text" id="node-input-server">
+        </div> 
+        <div class="form-row">
+          <label for="node-input-callSid">CallSid</label>
+          <input type="text" id="node-input-callSid">
+          <input type="hidden" id="node-input-callSidType">
+        </div>
+</script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="get_call">
+      <p>Get call</p>
+
+      <h3>Details</h3>
+      Retrieve info for a single call under an account.
+</script>
