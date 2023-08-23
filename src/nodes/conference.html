@@ -1,6 +1,6 @@
 <!-- Javascript -->
 <script type="text/javascript">
-    var mustacheType = {
+  var mustacheType = {
     value: 'mustache',
     label: 'mustache',
     hasvalue: true,
@@ -16,13 +16,17 @@
       conferenceType: {value: 'str'},
       beep: {value: false},
       endConferenceOnExit: {value: false},
-      startConferenceOnEnter: {value: false},
+      startConferenceOnEnter: {value: true},
       maxParticipants: {},
       maxParticipantsType: {value: 'num'},
       enterHook: {},
       enterHookType: {value: 'str'},
       waitHook: {},
       waitHookType: {value: 'str'},
+      actionHook: {},
+      actionHookType: {value: 'str'},
+      statusHook: {},
+      statusHookType: {value: 'str'},
       joinMuted : {value: false}
     },
     inputs:1,
@@ -47,6 +51,14 @@
       $('#node-input-maxParticipants').typedInput({
         types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
         typeField: $('#node-input-maxParticipantsType')
+      });
+      $('#node-input-actionHook').typedInput({
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+        typeField: $('#node-input-actionHookType')
+      });
+      $('#node-input-statusHook').typedInput({
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+        typeField: $('#node-input-statusHookType')
       });
     }
   });
@@ -74,6 +86,16 @@
       <input type="hidden" id="node-input-waitHookType">
     </div>
     <div class="form-row">
+      <label for="node-input-actionHook">Action hook</label>
+      <input type="text" id="node-input-actionHook" placeholder="webhook url">
+      <input type="hidden" id="node-input-actionHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-statusHook">Status hook</label>
+      <input type="text" id="node-input-statusHook" placeholder="webhook url">
+      <input type="hidden" id="node-input-statusHookType">
+    </div>
+    <div class="form-row">
       <label for="node-input-beep">Beep on entry</label>
       <input type="checkbox" id="node-input-beep">
     </div>
@@ -86,7 +108,7 @@
       <input type="checkbox" id="node-input-endConferenceOnExit">
     </div>
     <div class="form-row">
-      <label for="node-input-joinMuted">Join Muted</label>
+      <label for="node-input-joinMuted">Join muted</label>
       <input type="checkbox" id="node-input-joinMuted">
     </div>
     <div class="form-row">
@@ -94,30 +116,31 @@
       <input type="text" id="node-input-maxParticipants">
       <input type="hidden" id="node-input-maxParticipantsType">
     </div>
-  </script>
+</script>
 
 <!-- Help Text -->
 <script type="text/html" data-help-name="conference">
-    <p>places a caller in a conference.</p>
-    <h3>Properties</h3>
-      <p><code>Conference Name </code> - The name of the conference to join the caller to.</p>
-      <p><code>Enter hook </code> - A webhook to retrieve something to play or say to the caller just before they are put into a conference after waiting for it to start</p>
-      <p><code>Wait hook </code> - A webhook to retrieve commands to play or say while the caller is waiting for the conference to start</p>
-      <p><code>Beep on entry</code> - if checked, play a beep tone to the conference when caller enters </p>
-      <p><code>Start on entry</code> - if checked, start the conference only when this caller enters</p>
-      <p><code>End on exit</code> - if checked, end the conference when this caller hangs up</p>
-      <p><code>Max participants</code> - maximum number of participants that will be allowed in the conference</p>
-    <h3>Outputs</h3>
-<dl class="message-properties">
-  <dt>jambonz<span class="property-type">object</span></dt>
-  <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>conference</code> action appended  </dd>
-</dl>
-
-<h3>Details</h3>
-The conference verb places a call into a conference.
-<h3>References</h3>
+  <p>Places a caller in a conference.</p>
+  <h3>Properties</h3>
+  <p><code>Conference Name</code> - The name of the conference to join the caller to.</p>
+  <p><code>Enter hook</code> - A webhook to retrieve something to play or say to the caller just before they are put into a conference after waiting for it to start</p>
+  <p><code>Wait hook</code> - A webhook to retrieve commands to play or say while the caller is waiting for the conference to start</p>
+  <p><code>Action hook</code> - A webhook to call when the conference ends</p>
+  <p><code>Status hook</code> - A webhook to call with conference status events</p>
+  <p><code>Beep on entry</code> - If checked, play a beep tone to the conference when caller enters </p>
+  <p><code>Start on entry</code> - If checked, start the conference only when this caller enters</p>
+  <p><code>End on exit</code> - If checked, end the conference when this caller hangs up</p>
+  <p><code>Max participants</code> - Maximum number of participants that will be allowed in the conference</p>
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>conference</code> action appended  </dd>
+  </dl>
+  <h3>Details</h3>
+  The conference verb places a call into a conference.
+  <h3>References</h3>
   <ul>
-      <li><a href="https://www.jambonz.org/docs/webhooks/conference/">Jambonz conference reference</a></li>
+    <li><a href="https://www.jambonz.org/docs/webhooks/conference/">Jambonz conference reference</a></li>
   </ul>
 </script>
 
