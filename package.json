@@ -1,6 +1,6 @@
 {
   "name": "@jambonz/node-red-contrib-jambonz",
-  "version": "2.4.13",
+  "version": "2.4.14",
   "description": "Node-RED nodes for jambonz platform",
   "keywords": [
     "node-red"
