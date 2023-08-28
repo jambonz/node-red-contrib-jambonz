@@ -18,7 +18,9 @@
         to: {value: '', required: true},
         toType: {value: ''},
         dest: {value: 'phone', required: true},
-        timeout: {},
+        timeout: {validate: RED.validators.regex(/^\d*$/) },
+        tag: {required: true},
+        tagType: {value: 'json'},
         application: {value: ''},
         appName: {},
         mode: {value: 'app'},
@@ -90,6 +92,11 @@
         $('#node-input-callername').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-callernameType')
+        });
+        $('#node-input-tag').typedInput({
+          default: $('#node-input-tagType').val(),
+          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-tagType')
         });
 
         var populateApplications = function() {
@@ -229,7 +236,11 @@
   <div class="form-row">
     <label for="node-input-timeout">Ring timeout</label>
     <input type="text" id="node-input-timeout" placeholder="ring no answer timeout in secs (default: 60)">
-    <input type="hidden" id="node-input-timeoutType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-tag">Tag data</label>
+    <input type="text" id="node-input-tag" placeholder="tag object">
+    <input type="hidden" id="node-input-tagType">
   </div>
   <div class="form-row">
     <label for="node-input-application">Connect to</label>
@@ -342,8 +353,10 @@
   <h3>Properties</h3>
     <p><code>Server</code> - Jambonz server to connect to</p>
     <p><code>From</code> - Calling party phone number</p>
+    <p><code>From name</code> - Calling party name</p>
     <p><code>To</code> - Called party phone number, or other identifier</p>
     <p><code>Call type</code> - Type of destination: phone number, registered user, sip endpoint, or microsoft teams</p>
+    <p><code>Tag data</code> - Initial set of customer-supplied metadata to associate with the call</p>
     <p><code>Application</code> - Application to execute when call is answered</p>
     <p><code>Webhooks</code> - Webhooks to execute when call is answered</p>
 

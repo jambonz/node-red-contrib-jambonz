@@ -21,12 +21,14 @@ module.exports = function(RED) {
 
       var from = new_resolve(RED, config.from, config.fromType, node, msg);
       var to = new_resolve(RED, config.to, config.toType, node, msg);
+      var tag = new_resolve(RED, config.tag, config.tagType, node, msg);
 
       const opts = {
         from,
         to: {
           type: config.dest
         },
+        tag
       };
 
       if (config.headers) {
@@ -66,6 +68,7 @@ module.exports = function(RED) {
         const timeout = parseInt(config.timeout);
         if (timeout > 0) opts.timeout = timeout;
       }
+
       switch (config.dest) {
         case 'phone':
           opts.to.number = to;
