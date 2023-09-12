@@ -26,6 +26,8 @@ RED.nodes.registerType('listen',{
         metadataType: {value: 'json'},
         mixtype: {value: 'mono'},
         beep: {value: false},
+        passDtmf: {value: false},
+        disableBidirectionalAudio: {value: false},
         samplerate: {value: 8000},
         timeout: {},
         transcriptionhook: {},
@@ -76,9 +78,9 @@ RED.nodes.registerType('listen',{
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-authuserType')
         });
-        $('#node-input-authpassword').typedInput({
+        $('#node-input-authpass').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
-          typeField: $('#node-input-authpasswordType')
+          typeField: $('#node-input-authpassType')
         });
         $('#node-input-metadata').typedInput({
           types: ['json', 'msg', 'flow', 'global'],
@@ -131,9 +133,9 @@ RED.nodes.registerType('listen',{
       <input type="hidden" id="node-input-authuserType">
     </div>
     <div class="form-row">
-      <label for="node-input-authpassword">Password</label>
-      <input type="text" id="node-input-authpassword" placeholder="basic auth password">
-      <input type="hidden" id="node-input-authpasswordType">
+      <label for="node-input-authpass">Password</label>
+      <input type="text" id="node-input-authpass" placeholder="basic auth password">
+      <input type="hidden" id="node-input-authpassType">
     </div>
     <div class="form-row">
       <label for="node-input-actionhook">Action hook</label>
@@ -156,6 +158,14 @@ RED.nodes.registerType('listen',{
     <div class="form-row">
       <label for="node-input-beep">Beep</label>
       <input type="checkbox" id="node-input-beep">
+    </div>
+    <div class="form-row">
+      <label for="node-input-passDtmf">Pass Dtmf</label>
+      <input type="checkbox" id="node-input-passDtmf">
+    </div>
+    <div class="form-row">
+      <label for="node-input-disableBidirectionalAudio">Disable Bi-Audio</label>
+      <input type="checkbox" id="node-input-disableBidirectionalAudio">
     </div>
     <div class="form-row">
       <label for="node-input-mixtype">Mix type</label>
@@ -252,7 +262,7 @@ RED.nodes.registerType('listen',{
           <label for="node-input-interactiontype">Type of Interaction</label>
           <select id="node-input-interactiontype">
             <option value="unspecified" selected>Unspecified</option>
-            <option value="discussion">Discusssion</option>
+            <option value="discussion">Discussion</option>
             <option value="presentation">Presentation</option>
             <option value="phone_call">Phone call</option>
             <option value="voicemail">Voicemail</option>
@@ -302,37 +312,40 @@ RED.nodes.registerType('listen',{
 
 <!-- Help Text -->
 <script type="text/html" data-help-name="listen">
-    <p>send live audio for the call to an over a websocket connection</p>
+    <p>Send live audio for the call to an over a websocket connection</p>
     <h3>Properties</h3>
-      <p><code>ws url</code> - 
-       url of remote server to connect to	</p>
+      <p><code>Url</code> - 
+       WebSocket URL of remote server to connect to</p>
       <p><code>User</code> - 
        Username for HTTP Basic Auth</p>
       <p><code>Password</code> - 
        Password for HTTP Basic Auth</p>
       <p><code>Action hook</code> - 
-       webhook to invoke when listen operation ends</p>
+       Webhook to invoke when listen operation ends</p>
       <p><code>Metadata</code> - 
-       arbitrary data to add to the JSON payload sent to the remote server when websocket connection is first connected</p>
+       Arbitrary data to add to the JSON payload sent to the remote server when websocket connection is first connected</p>
       <p><code>Max duration</code> - 
-       the maximum length of the listened audio stream, in secs</p>
+       The maximum length of the listened audio stream, in secs</p>
       <p><code>End key</code> - 
        The set of digits that can end the listen action</p>
       <p><code>Beep</code> - 
-       if checked, play a beep at the start of the listen operation</p>
-      <p><code>Mix type</code> - 
-       whether to record a mono or stereo stream</p>
+       If checked, play a beep at the start of the listen operation</p>
+       <p><code>Pass Dtmf</code> - 
+       If true, any dtmf digits detected from the caller will be passed over the websocket as text frames in JSON format</p>
+       <p><code>Disable Bi-Audio</code> - 
+       If true, bidirectional audio will be disabled</p>
+       <p><code>Mix type</code> - 
+       Whether to record a mono or stereo stream</p>
       <p><code>Sample rate</code> - 
        Sample rate of audio to stream</p>
       <p><code>Transcription hook</code> - 
-       webhook to call when a transcription is received</p>
+       Webhook to call when a transcription is received</p>
       <p><code>Language</code> - 
        Language to use for transcription</p>
       <p><code>Send interim transcriptions</code> - 
-       if checked, send interim transcriptions</p>
+       If checked, send interim transcriptions</p>
       <p><code>Profanity filter</code> - 
-       if checked, enable profanity filtering</p>
-       
+       If checked, enable profanity filtering</p>
   <h3>Outputs</h3>
   <dl class="message-properties">
      <dt>jambonz<span class="property-type">object</span></dt>

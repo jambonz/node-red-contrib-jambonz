@@ -12,8 +12,19 @@ module.exports = function(RED) {
         finishOnKey: config.finishonkey,
         mixType: config.mixtype,
         playBeep: config.beep,
+        passDtmf: config.passDtmf,
+        disableBidirectionalAudio: config.disableBidirectionalAudio,
         sampleRate: config.sampleRate,
       };
+
+      const authUser = new_resolve(RED, config.authuser, config.authuserType, node, msg);
+      const authPass = new_resolve(RED, config.authpass, config.authpassType, node, msg);
+      if (authUser && authPass) {
+        obj.wsAuth = {
+          username: authUser,
+          password: authPass
+        };
+      }
 
       if (config.transcriptionhook) {
         const recognizer = {
