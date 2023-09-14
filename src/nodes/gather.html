@@ -13,10 +13,15 @@
         name: {value: ''},
         actionhook: {value: ''},
         actionhookType: {val: 'str'},
+        partialresulthook: {value: ''},
+        partialresulthookType: {val: 'str'},
         finishonkey: {value: ''},
         dtmfinput: {value: 0},
         speechinput: {value: 1},
         numdigits: {value: ''},
+        mindigits: {value: ''},
+        maxdigits: {value: ''},
+        interdigittimeout: {value: ''},
         timeout: {value: ''},
         bargein: {value: true},
         dtmfbargein: {value: true},
@@ -71,6 +76,10 @@
         $('#node-input-actionhook').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-actionhookType')
+        });
+        $('#node-input-partialresulthook').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-partialresulthookType')
         });
         $('#node-input-playurl').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
@@ -137,6 +146,11 @@
     <label for="node-input-actionhook"><i class="icon-tag"></i> Action hook</label>
     <input type="text" id="node-input-actionhook" placeholder="webhook with results of gather">
     <input type="hidden" id="node-input-actionhookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-partialresulthook"><i class="icon-tag"></i> Partial result hook</label>
+    <input type="text" id="node-input-partialresulthook" placeholder="webhook with interim transcription results of gather">
+    <input type="hidden" id="node-input-partialresulthookType">
   </div>
   <fieldset>
     <legend>Prompt</legend>
@@ -217,6 +231,18 @@
       <div class="form-row">
         <label for="node-input-numdigits"><i class="icon-tag"></i> Num. digits</label>
         <input type="text" id="node-input-numdigits" placeholder="number of digits to collect">
+      </div>
+      <div class="form-row">
+        <label for="node-input-mindigits"><i class="icon-tag"></i> Min. digits</label>
+        <input type="text" id="node-input-mindigits" placeholder="Minimum number of dtmf digits expected to gather">
+      </div>
+      <div class="form-row">
+        <label for="node-input-maxdigits"><i class="icon-tag"></i> Max. digits</label>
+        <input type="text" id="node-input-maxdigits" placeholder="Maximum number of dtmf digits expected to gather">
+      </div>
+      <div class="form-row">
+        <label for="node-input-interdigittimeout"><i class="icon-tag"></i> Inter digit timeout</label>
+        <input type="text" id="node-input-interdigittimeout" placeholder="Amount of time to wait between digits after minDigits have been entered">
       </div>
       <div class="form-row">
         <label for="node-input-numtimeout"><i class="icon-tag"></i> Timeout</label>
