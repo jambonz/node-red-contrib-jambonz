@@ -12,6 +12,7 @@ module.exports = function(RED) {
 
       var obj = {verb: 'gather', input: []};
       if (config.actionhook) obj.actionHook = new_resolve(RED, config.actionhook, config.actionhookType, node, msg)
+      if (config.partialresulthook) obj.partialResultHook = new_resolve(RED, config.partialresulthook, config.partialresulthookType, node, msg)
 
       // input
       if (config.speechinput) {
@@ -53,6 +54,10 @@ module.exports = function(RED) {
         if (config.finishonkey && config.finishonkey.length) obj.finishOnKey = config.finishonkey;
         if (/^\d+$/.test(config.numdigits)) obj.numDigits = parseInt(config.numdigits);
         if (/^\d+$/.test(config.timeout)) obj.timeout = parseInt(config.timeout);
+        if (/^\d+$/.test(config.mindigits)) obj.minDigits = parseInt(config.mindigits);
+        if (/^\d+$/.test(config.maxdigits)) obj.maxDigits = parseInt(config.maxdigits);
+        if (/^\d+$/.test(config.interdigittimeout)) obj.interDigitTimeout = parseInt(config.interdigittimeout);
+
         if (config.dtmfbargein) obj.dtmfBargein = config.dtmfbargein;
       }
 
