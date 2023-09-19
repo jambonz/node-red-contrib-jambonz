@@ -44,6 +44,12 @@ function lcc(config) {
         case 'resume':
           opts.listen_status = 'resume';
           break;
+        case 'pause_transcribe':
+          opts.transcribe_status = 'pause';
+          break;
+        case 'resume_transcribe':
+          opts.transcribe_status = 'resume';
+          break;
         case 'redirect':
           opts.call_hook = {url: new_resolve(RED, config.callHook, config.callHookType, node, msg)};
           if (config.childCallHook) {
