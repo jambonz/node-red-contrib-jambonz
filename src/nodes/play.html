@@ -1,12 +1,11 @@
 <!-- Javascript -->
 <script type="text/javascript">
-  
-  var mustacheType = {
-    value: 'mustache',
-    label: 'mustache',
-    hasvalue: true,
-    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
-  }
+var mustacheType = {
+  value: 'mustache',
+  label: 'mustache',
+  hasvalue: true,
+  icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+}
 
 RED.nodes.registerType('play',{
       category: 'jambonz',
@@ -17,6 +16,12 @@ RED.nodes.registerType('play',{
         urlType: {value: 'str'},
         early: {value: false},
         loop: {value: 1, required: true,  validate: RED.validators.number()},
+        timeout: {value: ''},
+        timeoutType: {value: 'num'},
+        offset: {value: ''},
+        offsetType: {value: 'num'},
+        hook: {value: ''},
+        hookType: {value: 'str'}
       },
       inputs:1,
       outputs:1,
@@ -28,8 +33,20 @@ RED.nodes.registerType('play',{
           types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-urlType')
         });
+        $('#node-input-timeout').typedInput({
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-timeoutType')
+        });
+        $('#node-input-offset').typedInput({
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-offsetType')
+        });
+        $('#node-input-hook').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-hookType')
+        });
       }
-  });
+});
 </script>
 
 <!-- HTML -->
@@ -50,20 +67,41 @@ RED.nodes.registerType('play',{
     <div class="form-row">
       <label for="node-input-loop"><i class="icon-tag"></i>Loop</label>
       <input type="input" id="node-input-loop" placeholder="number of times to repeat"> 
-    </div>  
+    </div> 
+    <div class="form-row">
+      <label for="node-input-timeout">Timeout</label>
+      <input type="text" id="node-input-timeout" placeholder="timeout in secs">
+      <input type="hidden" id="node-input-timeoutType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-offset">Seek Offset</label>
+      <input type="text" id="node-input-offset" placeholder="samples to seek">
+      <input type="hidden" id="node-input-offsetType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-hook">Action hook</label>
+      <input type="text" id="node-input-hook" placeholder="url">
+      <input type="hidden" id="node-input-hookType">
+    </div> 
   </script>
 
 <!-- Help Text -->
 <script type="text/html" data-help-name="play">
-    <p>Play a wav or mp3 file</p>
+    <p>Play recorded audio to a call</p>
     <h3>Properties</h3>
     <p><code>Url</code> - 
-      a single url or array of urls (will play in sequence) to a wav or mp3 file</p>
+      A single url to a wav or mp3 file</p>
     <p><code>Early media</code> - 
-      if checked, play the url over an early media connection</p>
+      If checked, play the url over an early media connection</p>
     <p><code>Loop</code> - 
-      number of times to play the url</p>
-  
+      The Number of times to play the url</p>
+    <p><code>Timeout</code> - 
+      The number of seconds to play the url</p>
+    <p><code>Seek Offset</code> - 
+      How many samples to seek into the url</p>
+    <p><code>Action hook</code> - 
+      Webhook that is called when the play verb completes</p>
+
   <h3>Outputs</h3>
   <dl class="message-properties">
     <dt>jambonz<span class="property-type">object</span></dt>

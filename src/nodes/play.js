@@ -9,7 +9,10 @@ module.exports = function(RED) {
         verb: 'play',
         url: new_resolve(RED, config.url, config.urlType, node, msg),
         earlyMedia: config.early,
-        loop: config.loop
+        loop: config.loop,
+        timeoutSecs: config.timeout ? new_resolve(RED, config.timeout, config.timeoutType, node, msg) : null,
+        seekOffset: config.offset ? new_resolve(RED, config.offset, config.offsetType, node, msg) : null,
+        actionHook: config.hook ? new_resolve(RED, config.hook, config.hookType, node, msg) : null
       });
       node.send(msg);
     });
