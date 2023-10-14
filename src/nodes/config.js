@@ -62,6 +62,30 @@ module.exports = function(RED) {
             config.record_siprecServerURL != '' ? obj.record.siprecServerURL = new_resolve(RED, config.record_siprecServerURL, config.record_siprecServerURLType, node, msg) : null
             config.record_recordingID != '' ? obj.record.recordingID = new_resolve(RED, config.record_recordingID, config.record_recordingIDType, node, msg) : null
           }
+
+          if (config.listenRequest) {
+            obj.listen = {}
+            const authUser = new_resolve(RED, config.listenAuthUser, config.listenAuthUserType, node, msg);
+            const authPass = new_resolve(RED, config.listenAuthPass, config.listenAuthPassType, node, msg);
+            if (authUser && authPass) {
+              obj.listen.wsAuth = {
+                username: authUser,
+                password: authPass
+              };
+            }
+            obj.listen.enable = config.listenEnabled;
+            obj.listen.sampleRate = +config.listenSampleRate;
+            obj.listen.mixType = config.listenMixType;
+            config.url != '' ? obj.listen.url = new_resolve(RED, config.listenUrl, config.listenUrlType, node, msg) : null;
+            config.listenMetadata != '' ? obj.listen.metadata = new_resolve(RED, config.listenMetadata, config.listenMetadataType, node, msg) : null;
+            if (!Object.keys(obj.listen.metadata).length) {
+              delete obj.listen.metadata;
+            }
+          }
+
+          if (config.sipRequest) {
+            config.sipRequestWithinDialogHook != '' ? obj.sipRequestWithinDialogHook = new_resolve(RED, config.sipRequestWithinDialogHook, config.sipRequestWithinDialogHookType, node, msg) : null;
+          }
           appendVerb(msg,  obj);
           node.send(msg);
         });
