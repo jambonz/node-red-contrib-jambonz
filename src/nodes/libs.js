@@ -1,4 +1,4 @@
-const bent = require('bent');
+const {fetch} = require('undici');
 var mustache = require('mustache');
 mustache.escape = function(text) {return text;};
 
@@ -110,27 +110,61 @@ exports.appendVerb = (msg, obj) => {
     return mustache.render(newString, data);
   }
   
-
-  exports.doLCC = (node, baseUrl, accountSid, apiToken, callSid, opts) => {
-    const post = bent(`${baseUrl}/v1/`, 'POST', 'string', [200, 202], {
-      'Authorization': `Bearer ${apiToken}`
+  exports.doLCC = async (node, baseUrl, accountSid, apiToken, callSid, opts) => {
+    const url = `${baseUrl}/v1/Accounts/${accountSid}/Calls/${callSid}`;
+    node.log(`invoking LCC with payload ${JSON.stringify(opts)} at ${url}`);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiToken}`
+      },
+      body: JSON.stringify(opts)
     });
-    const url = `Accounts/${accountSid}/Calls/${callSid}`;
-    node.log(`invoking LCC with payload ${JSON.stringify(opts)} at ${baseUrl}/v1/${url}`);
-    return post(url, opts);
+    if (!response.ok) {
+      const error = new Error('Bad response');
+      error.statusCode = response.status;
+      error.statusText = response.statusText;
+      throw error;
+    }
+    return response.json();
   }
 
-  exports.doCreateCall = (baseUrl, accountSid, apiToken, opts) => {
-    const post = bent(`${baseUrl}/v1/`, 'POST', 'json', 201, {
-      'Authorization': `Bearer ${apiToken}`
+  exports.doCreateCall = async (node, baseUrl, accountSid, apiToken, opts) => {
+    node.log(`invoking create call with payload ${JSON.stringify(opts)}`);
+    const response = await fetch(`${baseUrl}/v1/Accounts/${accountSid}/Calls`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiToken}`
+      },
+      body: JSON.stringify(opts)
     });
-    return post(`Accounts/${accountSid}/Calls`, opts);
+    if (!response.ok) {
+      const error = new Error('Bad response');
+      error.statusCode = response.status;
+      error.statusText = response.statusText;
+      throw error;
+    }
+    return response.json();
   }
 
-  exports.doCreateMessage = (baseUrl, accountSid, apiToken, opts) => {
-    const post = bent(`${baseUrl}/v1/`, 'POST', 'json', 201, {
-      'Authorization': `Bearer ${apiToken}`
+  exports.doCreateMessage = async (node, baseUrl, accountSid, apiToken, opts) => {
+    node.log(`invoking create message with payload ${JSON.stringify(opts)}`);
+    const response = await fetch(`${baseUrl}/v1/Accounts/${accountSid}/Messages`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiToken}`
+      },
+      body: JSON.stringify(opts)
     });
-    return post(`Accounts/${accountSid}/Messages`, opts);
+    if (!response.ok) {
+      const error = new Error('Bad response');
+      error.statusCode = response.status;
+      error.statusText = response.statusText;
+      throw error;
+    }
+    return response.json();
   }
 

@@ -31,26 +31,20 @@ function create_sms(config) {
         provider
       };
       try {
-        node.log(`sending create message ${JSON.stringify(opts)}`);
-        const res = await doCreateMessage(url, accountSid, apiToken, opts);
+        const response = await doCreateMessage(node, url, accountSid, apiToken, opts);
         msg.statusCode = 201;
-        msg.messageSid = res.sid;
-        msg.providerResponse = res.providerResponse;
+        msg.messageSid = response.sid;
+        msg.providerResponse = response.providerResponse;
       } catch (err) {
         if (err.statusCode) {
-          node.log(JSON.stringify(err));
-          try {
-            const responseBody = await err.json();
-            node.error(`create_sms failed with ${err.statusCode}. Response ${JSON.stringify(responseBody)}`);
-          } catch (e) {
-            node.error(`create_sms failed with ${err.statusCode}`);
-          }
+          node.error(`create_sms failed with ${err.statusCode}`);
           msg.statusCode = err.statusCode;
-        }
-        else {
-          node.log(`Error sending create message ${JSON.stringify(err)}`);
-          if (done) done(err);
-          else node.error(err, msg);
+          msg.errorMessage = err.statusText;
+        } else {
+          const errorMessage = `Error sending create message ${err.message}`;
+          if (done) done(errorMessage);
+          else node.error(errorMessage, msg);
+          msg.errorMessage = errorMessage;
           send(msg);
           return;
         }
