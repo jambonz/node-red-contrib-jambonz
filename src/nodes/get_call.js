@@ -1,4 +1,4 @@
-const bent = require("bent");
+const {fetch} = require('undici');
 var { new_resolve} = require("./libs");
 
 module.exports = function (RED) {
@@ -14,25 +14,31 @@ module.exports = function (RED) {
           else node.error(new Error('CallSid empty'), msg);
         return;
       }
-      const req = bent(
-        `${server.url}/v1/Accounts/${accountSid}/Calls/${callSid}`,
-        'GET',
-        'json',
-        {
-          Authorization: `Bearer ${apiToken}`,
-        }
-      );
       try {
-        const res = await req();
+        const response = await fetch(`${server.url}/v1/Accounts/${accountSid}/Calls/${callSid}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${apiToken}`
+          }
+        });
+        if (!response.ok) {
+          const error = new Error('Bad response');
+          error.statusCode = response.status;
+          error.statusText = response.statusText;
+          throw error;
+        }
+        const res = await response.json();
         msg.payload = res;
       } catch (err) {
         if (err.statusCode) {
           node.error(`GetCall failed with ${err.statusCode}`);
           msg.statusCode = err.statusCode;
+          msg.errorMessage = err.statusText;
         } else {
-          node.error(`Error getting call info ${JSON.stringify(err)}`);
-          if (done) done(err);
-          else node.error(err, msg);
+          const errorMessage = `Error getting call info ${err.message}`;
+          if (done) done(errorMessage);
+          else node.error(errorMessage, msg);
+          msg.errorMessage = errorMessage;
           send(msg);
           return;
         }

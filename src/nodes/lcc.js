@@ -124,11 +124,14 @@ function lcc(config) {
         msg.payload = await doLCC(node, url, accountSid, apiToken, callSid, opts);
         msg.statusCode = config.action === 'sip_request' ? 200 : 202;
       } catch (err) {
-        if (err.statusCode) msg.statusCode = err.statusCode;
-        else {
-          node.error(`Error sending LCC ${JSON.stringify(err)}`);
-          if (done) done(err);
-          else node.error(err, msg);
+        if (err.statusCode) {
+          msg.statusCode = err.statusCode;
+          msg.errorMessage = err.statusText;
+        } else {
+          const errorMessage = `Error sending LCC ${err.message}`;
+          if (done) done(errorMessage);
+          else node.error(errorMessage, msg);
+          msg.errorMessage = errorMessage;
           send(msg);
           return;
         }

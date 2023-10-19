@@ -89,26 +89,20 @@ module.exports = function(RED) {
           return;
       }
       try {
-        node.log(`sending create call ${JSON.stringify(opts)}`);
-        const res = await doCreateCall(url, accountSid, apiToken, opts);
+        const response = await doCreateCall(node, url, accountSid, apiToken, opts);
         msg.statusCode = 201;
-        msg.callSid = res.sid;
-        msg.callId = res.callId;
+        msg.callSid = response.sid;
+        msg.callId = response.callId;
       } catch (err) {
         if (err.statusCode) {
-          node.log(JSON.stringify(err));
-          try {
-            const responseBody = await err.json();
-            node.error(`create-call failed with ${err.statusCode}. Response ${JSON.stringify(responseBody)}`);
-          } catch (e) {
-            node.error(`create-call failed with ${err.statusCode}`);
-          }
+          node.error(`create-call failed with ${err.statusCode}`);
           msg.statusCode = err.statusCode;
-        }
-        else {
-          node.error(`Error sending create call ${JSON.stringify(err)}`);
-          if (done) done(err);
-          else node.error(err, msg);
+          msg.errorMessage = err.statusText;
+        } else {
+          const errorMessage = `Error sending create call ${err.message}`;
+          if (done) done(errorMessage);
+          else node.error(errorMessage, msg);
+          msg.errorMessage = errorMessage;
           send(msg);
           return;
         }
