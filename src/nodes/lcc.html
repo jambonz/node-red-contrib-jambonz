@@ -55,6 +55,15 @@
         siprecHeaders: {value: []},
         recordingID: {value: ''},
         recordingIDType: {value: 'str'},
+        dtmfDigit: {value: '', validate: function(v) {
+          const action = $('#node-input-action').val();
+          return action !== 'send_dtmf' || v.length > 0;
+        }},
+        dtmfDigitType: {value: 'str'},
+        dtmfDuration: {value: ''},
+        dtmfDurationType: {value: 'str'},
+        tag: {value: ''},
+        tagType: {value: 'str'},
       },
       inputs:1,
       outputs:1,
@@ -74,6 +83,8 @@
         var waitHookDiv = $('#wait-options');
         var recordDiv = $('#record-options');
         var sipRequestDiv = $('#sip-request-options');
+        var dtmfDiv = $('#dtmf-options');
+        var tagDiv = $('#tag-options');
 
         $('#node-input-callSid').typedInput({
           default: $('#node-input-callSidType').val(),
@@ -120,6 +131,21 @@
           types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-recordingIDType')
         });
+        $('#node-input-dtmfDigit').typedInput({
+          default: $('#node-input-dtmfDigitType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-dtmfDigitType')
+        });
+        $('#node-input-dtmfDuration').typedInput({
+          default: $('#node-input-dtmfDurationType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-dtmfDurationType')
+        });
+        $('#node-input-tag').typedInput({
+          default: $('#node-input-tagType').val(),
+          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-tagType')
+        });
 
         var onActionChanged = function () {
           var selectedAction = actionElem.find(':selected').val();
@@ -133,6 +159,10 @@
           else recordDiv.hide();
           if ('sip_request' === selectedAction) sipRequestDiv.show();
           else sipRequestDiv.hide();
+          if ('send_dtmf' === selectedAction) dtmfDiv.show();
+          else dtmfDiv.hide();
+          if ('tag' === selectedAction) tagDiv.show();
+          else tagDiv.hide();
         }
 
         var onVendorChanged = function() {
@@ -299,6 +329,8 @@
       <option value="stop_call_recording">stop call recording</option>
       <option value="pause_call_recording">pause call recording</option>
       <option value="resume_call_recording">resume call recording</option>
+      <option value="send_dtmf">send RFC 2833 DTMF</option>
+      <option value="tag">tag call</option>
     </select>
   </div>
   <div id="say-options">
@@ -392,6 +424,25 @@
       <label for="node-input-sipRequestHeaders">Headers</label>
       <input type="text" id="node-input-sipRequestHeaders" placeholder="SIP headers">
       <input type="hidden" id="node-input-sipRequestHeadersType">
+    </div>
+  </div>
+  <div id="dtmf-options">
+    <div class="form-row">
+      <label for="node-input-dtmfDigit">DTMF digit</label>
+      <input type="text" id="node-input-dtmfDigit">
+      <input type="hidden" id="node-input-dtmfDigitType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-dtmfDuration">DTMF duration</label>
+      <input type="text" id="node-input-dtmfDuration" placeholder="250">
+      <input type="hidden" id="node-input-dtmfDurationType">
+    </div>  
+  </div>
+  <div id="tag-options">
+    <div class="form-row">
+      <label for="node-input-tag">Data</label>
+      <input type="text" id="node-input-tag" placeholder="data object">
+      <input type="hidden" id="node-input-tagType">
     </div>
   </div>
 </script>

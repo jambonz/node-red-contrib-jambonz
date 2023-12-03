@@ -113,6 +113,15 @@ function lcc(config) {
         case 'resume_call_recording':
           opts.record = { action: 'resumeCallRecording' };
           break;
+        case 'send_dtmf':
+          opts.dtmf = { 
+            digit: new_resolve(RED, config.dtmfDigit, config.dtmfDigitType, node, msg),
+            duration: new_resolve(RED, config.dtmfDuration, config.dtmfDurationType, node, msg) || '250'
+          };
+          break;
+        case 'tag':
+            opts.tag = new_resolve(RED, config.tag, config.tagType, node, msg);
+            break;
         default:
           node.log(`invalid action: ${config.action}`);
           send(msg);
