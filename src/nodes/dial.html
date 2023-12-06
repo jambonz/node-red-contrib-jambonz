@@ -16,6 +16,7 @@
         actionhook: {value: ''},
         actionhookType: {value: 'str'},
         answeronbridge: {value: false},
+        anchormedia: {value: false},
         callerid: {value: ''},
         calleridType: {value: ''},
         callername: {value: ''},
@@ -30,6 +31,8 @@
         referhookType: {value: 'str'},
         dtmfhook: {value: ''},
         dtmfhookType: {value: 'str'},
+        onholdhook: {value: ''},
+        onholdhookType: {value: 'str'},
         timelimit: {validate:RED.validators.regex(/^\d*$/) },
         timeout: {validate:RED.validators.regex(/^\d*$/) },
         listenurl: {value: ''},
@@ -105,6 +108,10 @@
         $('#node-input-dtmfhook').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-dtmfhookType')
+        });
+        $('#node-input-onholdhook').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-onholdhookType')
         });
         $('#node-input-transcribeurl').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
@@ -409,6 +416,10 @@
       <input type="checkbox" id="node-input-answeronbridge">
     </div>
     <div class="form-row">
+      <label for="node-input-anchormedia">Anchor media</label>
+      <input type="checkbox" id="node-input-anchormedia">
+    </div>
+    <div class="form-row">
       <label for="node-input-callerid">Caller ID</label>
       <input type="text" id="node-input-callerid" placeholder="caller id to place on outbound call">
       <input type="hidden" id="node-input-calleridType">
@@ -442,6 +453,11 @@
       <label for="node-input-dtmfhook">Dtmf hook</label>
       <input type="text" id="node-input-dtmfhook" placeholder="webhook to call when dtmf is captured">
       <input type="hidden" id="node-input-dtmfhookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-onholdhook">Onhold hook</label>
+      <input type="text" id="node-input-onholdhook" placeholder="webhook to call when call is on hold">
+      <input type="hidden" id="node-input-onholdhookType">
     </div>
     <div class="form-row">
       <label for="node-input-timelimit">Time limit</label>

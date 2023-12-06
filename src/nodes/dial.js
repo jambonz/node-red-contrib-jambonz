@@ -54,6 +54,14 @@ module.exports = function(RED) {
         dtmfHook: new_resolve(RED, config.dtmfhook, config.dtmfhookType, node, msg),
       };
 
+      if (config.hasOwnProperty('anchormedia')) {
+        data.anchorMedia = config.anchormedia;
+      }
+
+      if (config.onholdhook) {
+        data.onHoldHook = new_resolve(RED, config.onholdhook, config.onholdhookType, node, msg);
+      }
+
       // headers
       var headers = {};
       config.headers.forEach(function(h) {
