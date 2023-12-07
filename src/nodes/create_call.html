@@ -17,6 +17,8 @@
         fromType: {value: ''},
         to: {value: '', required: true},
         toType: {value: ''},
+        trunk: {value: ''},
+        trunkType: {value: 'str'},
         dest: {value: 'phone', required: true},
         timeout: {validate: RED.validators.regex(/^\d*$/) },
         tag: {required: true},
@@ -66,8 +68,17 @@
         var destElem = $('#node-input-dest');
         var serverElem = $('#node-input-server');
         var applicationElem = $('#node-input-application');
+        var trunkDiv = $('#trunk');
         prepareTtsControls(node);
         prepareSttControls(node);
+
+        destElem.change(onDestChanged);
+
+        var onDestChanged = function () {
+          var selectedDest = destElem.find(':selected').val();
+          if ('phone' === selectedDest) trunkDiv.show();
+          else trunkDiv.hide();
+        }
 
         $('#node-input-from').typedInput({
           default: $('#node-input-fromType').val(),
@@ -98,7 +109,11 @@
           types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-tagType')
         });
-
+        $('#node-input-trunk').typedInput({
+          default: $('#node-input-trunkType').val(),
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-trunkType')
+        });
         var populateApplications = function() {
           var serverId = $('#node-input-server option:selected').val();
             $.ajax({
@@ -223,6 +238,11 @@
     <label for="node-input-to">To</label>
     <input type="text" id="node-input-to" placeholder="called party info">
     <input type="hidden" id="node-input-toType">
+  </div>
+  <div class="form-row" id ="trunk">
+    <label for="node-input-trunk">Trunk</label>
+    <input type="text" id="node-input-trunk" placeholder="Specify the name of the trunk used for this outbound call">
+    <input type="hidden" id="node-input-trunkType">
   </div>
   <div class="form-row">
     <label for="node-input-dest">Call type</label>

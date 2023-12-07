@@ -71,6 +71,10 @@ module.exports = function(RED) {
 
       switch (config.dest) {
         case 'phone':
+          if (config.trunk) {
+            var trunk = new_resolve(RED, config.trunk, config.trunkType, node, msg);
+            opts.to.trunk = trunk;
+          }
           opts.to.number = to;
           break;
         case 'user':
