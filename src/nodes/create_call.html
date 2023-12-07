@@ -72,13 +72,13 @@
         prepareTtsControls(node);
         prepareSttControls(node);
 
-        destElem.change(onDestChanged);
-
         var onDestChanged = function () {
           var selectedDest = destElem.find(':selected').val();
           if ('phone' === selectedDest) trunkDiv.show();
           else trunkDiv.hide();
         }
+        
+        destElem.change(onDestChanged);
 
         $('#node-input-from').typedInput({
           default: $('#node-input-fromType').val(),
@@ -111,7 +111,7 @@
         });
         $('#node-input-trunk').typedInput({
           default: $('#node-input-trunkType').val(),
-          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-trunkType')
         });
         var populateApplications = function() {
