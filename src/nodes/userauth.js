@@ -7,8 +7,6 @@ module.exports = function(RED) {
       RED.nodes.createNode(this, config);
       var node = this;
       node.on('input', function(msg) {
-        console.log(config.directUser)
-        console.log(config.directUserType)
         var attemptedAuthentication = false;
         var auth = msg.authRequest;
         var authResponse = {};
@@ -62,7 +60,6 @@ module.exports = function(RED) {
             const directUser = new_resolve(RED, config.directUser, config.directUserType, node, msg);
             const directApp = new_resolve(RED, config.directApp, config.directAppType, node, msg);
             const directQueue = new_resolve(RED, config.directQueue, config.directQueueType, node, msg);
-            console.log(directUser)
             Object.assign(authResponse, {
               status: 'ok',
               expires: grantedExpires != null ? grantedExpires : null,
