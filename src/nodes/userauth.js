@@ -7,6 +7,8 @@ module.exports = function(RED) {
       RED.nodes.createNode(this, config);
       var node = this;
       node.on('input', function(msg) {
+        console.log(config.directUser)
+        console.log(config.directUserType)
         var attemptedAuthentication = false;
         var auth = msg.authRequest;
         var authResponse = {};
@@ -56,13 +58,18 @@ module.exports = function(RED) {
                 grantedExpires = Math.min(auth.expires, expires);
               }
             }
-            const callHook = new_resolve(RED, config.callHook, config.callHookType, node, msg);
-            const callStatusHook = new_resolve(RED, config.callStatusHook, config.callStatusHookType, node, msg);
+            const application = new_resolve(RED, config.application, config.applicationType, node, msg);
+            const directUser = new_resolve(RED, config.directUser, config.directUserType, node, msg);
+            const directApp = new_resolve(RED, config.directApp, config.directAppType, node, msg);
+            const directQueue = new_resolve(RED, config.directQueue, config.directQueueType, node, msg);
+            console.log(directUser)
             Object.assign(authResponse, {
               status: 'ok',
               expires: grantedExpires != null ? grantedExpires : null,
-              call_hook: callHook || null,
-              call_status_hook: callStatusHook || null,
+              application_sid: application || null,
+              allow_direct_user_calling: directUser,
+              allow_direct_app_calling: directApp,
+              allow_direct_queue_calling: directQueue,
             });
             Object.keys(authResponse).forEach((k) => authResponse[k] == null && delete authResponse[k]);
           }
