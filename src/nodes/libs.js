@@ -49,6 +49,7 @@ exports.appendVerb = (msg, obj) => {
     if (!val || !valtype) return val;
     switch (valtype) {
       case 'str': 
+      case 'bool':
       case 'num': 
       case 'env':  
       case 'msg': 
