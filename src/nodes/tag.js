@@ -6,6 +6,9 @@ module.exports = function(RED) {
     var node = this;
     node.on('input', function(msg) {
       var data = new_resolve(RED, config.data, config.dataType, node, msg);
+      if (typeof(data) != 'object'){
+        data = JSON.parse(data)
+      }
       appendVerb(msg, {
         verb: 'tag',
         data
