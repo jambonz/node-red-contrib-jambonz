@@ -1,0 +1,135 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  var mustacheType = {
+    value: 'mustache',
+    label: 'mustache',
+    hasvalue: true,
+    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+  }
+  RED.nodes.registerType("dub", {
+    category: "jambonz",
+    color: "#bbabaa",
+    defaults: {
+      name: { value: "" },
+      action: { value: "addTrack" },
+      track: { value: "" },
+      trackType: { value: "str" },
+      play: { value: "" },
+      playType: { value: "str" },
+      say: { value: "" },
+      sayType: { value: "str" },
+      loop: { value: false },
+      gain: {
+        value: "",
+        validate: function (v) {
+          if (v.length) {
+            return v.match(/([+-]?\d+(\.\d+)?)\s*db/i) !== null;
+          }
+          return true;
+        },
+      },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-cubes",
+    label: function () {
+      return this.name || "dub";
+    },
+    oneditprepare: function () {
+      var node = this;
+      $("#node-input-track").typedInput({
+        types: ["str", "msg", "flow", "global", "jsonata", "env", mustacheType],
+        typeField: $("#node-input-trackType"),
+      });
+      $("#node-input-play").typedInput({
+        types: ["str", "msg", "flow", "global", "jsonata", "env", mustacheType],
+        typeField: $("#node-input-playType"),
+      });
+      $("#node-input-say").typedInput({
+        types: ["str", "msg", "flow", "global", "jsonata", "env", mustacheType],
+        typeField: $("#node-input-sayType"),
+      });
+    },
+  });
+</script>
+
+<!-- HTML -->
+<script type="text/html" data-template-name="dub">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-action">Action</label>
+    <select id="node-input-action">
+      <option value="addTrack">addTrack</option>
+      <option value="removeTrack">removeTrack</option>
+      <option value="silenceTrack">silenceTrack</option>
+      <option value="playOnTrack">playOnTrack</option>
+      <option value="sayOnTrack">sayOnTrack</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-track">Track</label>
+    <input type="text" id="node-input-track" placeholder="The label for the track">
+    <input type="hidden" id="node-input-trackType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-play">Play</label>
+    <input type="text" id="node-input-play" placeholder="The http(s) url to an mp3 file">
+    <input type="hidden" id="node-input-playType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-say">Say</label>
+    <input type="text" id="node-input-say" placeholder="The label for the play">
+    <input type="hidden" id="node-input-sayType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-loop">Loop</label>
+    <input type="checkbox" id="node-input-loop" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-gain">Gain</label>
+    <input
+      type="text"
+      id="node-input-gain"
+      placeholder="The value must be between +- 50 dB"
+    />
+  </div>
+</script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="dub">
+  <p>Adds one or more additional audio tracks</p>
+  <h3>Inputs</h3>
+  <h3>Properties</h3>
+  <p>
+    <code>Action</code> - One of 'addTrack', 'removeTrack', 'silenceTrack',
+    'playOnTrack', or 'sayOnTrack'.
+  </p>
+  <p><code>Track</code> - Label for the track</p>
+  <p>
+    <code>Play</code> - An http(s) url to an mp3 file to play into the track
+  </p>
+  <p><code>Loop</code> - Loop the mp3</p>
+  <p>
+    <code>Gain</code> - Decibels to boost or reduce the strength of the audio
+    signal
+  </p>
+
+  <h3>Details</h3>
+  The dub verb adds one or more additional audio tracks into the conversation
+  (currently, a max of two additional audio tracks may be added). Audio can then
+  be inserted into these tracks and it will be blended with the play or say
+  content being sent to the caller/called party. The source of the audio content
+  can be either text to speech or mp3 audio accessible via http(s).
+
+  <h3>References</h3>
+  <ul>
+    <li>
+      <a href="https://www.jambonz.org/docs/webhooks/dub/"
+        >Jambonz dub reference</a
+      >
+    </li>
+  </ul>
+</script>
