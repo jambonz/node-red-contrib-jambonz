@@ -86,6 +86,14 @@ module.exports = function(RED) {
           if (config.sipRequest) {
             config.sipRequestWithinDialogHook != '' ? obj.sipRequestWithinDialogHook = new_resolve(RED, config.sipRequestWithinDialogHook, config.sipRequestWithinDialogHookType, node, msg) : null;
           }
+
+          if (config.onHold) {
+            config.onHoldMusic != '' ? obj.onHoldMusic = new_resolve(RED, config.onHoldMusic, config.onHoldMusicType, node, msg) : null;
+          }
+
+          if (config.boostAudioSignal) {
+            config.boostAudioSignal != '' ? obj.boostAudioSignal = new_resolve(RED, config.boostAudioSignalLevel, config.boostAudioSignalLevelType, node, msg) : null;
+          }
           appendVerb(msg,  obj);
           node.send(msg);
         });

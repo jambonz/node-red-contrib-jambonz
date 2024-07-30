@@ -83,6 +83,14 @@
       sipRequest: { value: false },
       sipRequestWithinDialogHook: { value: "" },
       sipRequestWithinDialogHookType: { value: "str" },
+
+      onHold: { value: false },
+      onHoldMusic: { value: "" },
+      onHoldMusicType: { value: "str" },
+
+      boostAudioSignal: { value: false },
+      boostAudioSignalLevel: { value: "" },
+      boostAudioSignalLevelType: { value: "str" },
     },
     inputs: 1,
     outputs: 1,
@@ -260,6 +268,32 @@
           $("#sipRequest-options").show();
         } else {
           $("#sipRequest-options").hide();
+        }
+      });
+
+      $("#node-input-onHoldMusic").typedInput({
+        types: ["str", "msg", "flow", "global", "jsonata", "env", mustacheType],
+        typeField: $("#node-input-onHoldMusicType"),
+      });
+      $("#node-input-onHold").change(function () {
+        const doSipRequest = $("#node-input-onHold:checked").val();
+        if (doSipRequest) {
+          $("#onHold-options").show();
+        } else {
+          $("#onHold-options").hide();
+        }
+      });
+
+      $("#node-input-boostAudioSignalLevel").typedInput({
+        types: ["str", "msg", "flow", "global", "jsonata", "env", mustacheType],
+        typeField: $("#node-input-boostAudioSignalLevelType"),
+      });
+      $("#node-input-boostAudioSignal").change(function () {
+        const doSipRequest = $("#node-input-boostAudioSignal:checked").val();
+        if (doSipRequest) {
+          $("#boostAudioSignal-options").show();
+        } else {
+          $("#boostAudioSignal-options").hide();
         }
       });
 
@@ -567,6 +601,32 @@
       <label for="node-input-sipRequestWithinDialogHook">Dialog Hook</label>
         <input type="text" id="node-input-sipRequestWithinDialogHook">
         <input type="hidden" id="node-input-sipRequestWithinDialogHookType">
+    </div>
+  </div>
+
+  <legend>On Hold Music</legend>
+  <div class="form-row">
+    <label for="node-input-onHold">Modify On Hold Music</label>
+    <input type="checkbox" id="node-input-onHold">
+  </div>
+  <div id="onHold-options">
+    <div class="form-row">
+      <label for="node-input-onHoldMusic">Url</label>
+        <input type="text" id="node-input-onHoldMusic">
+        <input type="hidden" id="node-input-onHoldMusicType">
+    </div>
+  </div>
+
+  <legend>Boost Audio Signal</legend>
+  <div class="form-row">
+    <label for="node-input-boostAudioSignal">Boost Audio</label>
+    <input type="checkbox" id="node-input-boostAudioSignal">
+  </div>
+  <div id="boostAudioSignal-options">
+    <div class="form-row">
+      <label for="node-input-boostAudioSignalLevel">Level</label>
+        <input type="text" id="node-input-boostAudioSignalLevel">
+        <input type="hidden" id="node-input-boostAudioSignalLevelType">
     </div>
   </div>
   </fieldset>

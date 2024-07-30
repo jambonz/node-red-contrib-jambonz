@@ -1,0 +1,35 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  RED.nodes.registerType('answer',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+      },
+      inputs: 1,
+      outputs: 1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { return this.name || 'answer';},
+  });
+</script>
+
+<!-- HTML -->
+<script type="text/html" data-template-name="answer">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+</script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="answer">
+  <p>Answer the call</p>
+
+  <h3>Details</h3>
+  This is rarely used, as the call is typically answered automatically when required by the app,
+    but it can be useful to force an answer before a pause in some cases.
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://www.jambonz.org/docs/webhooks/answer/">Jambonz answer reference</a></li>
+    </ul>
+</script>
