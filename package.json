@@ -56,19 +56,19 @@
   "author": "Dave Horton",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.1405.0",
+    "aws-sdk": "^2.1665.0",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "hash-sum": "^2.0.0",
     "is-utf8": "^0.2.1",
     "media-typer": "^1.1.0",
-    "multer": "^1.4.4",
+    "multer": "^1.4.5-lts.1",
     "mustache": "^4.2.0",
     "on-headers": "^1.0.2",
     "raw-body": "^2.5.2",
     "s3-upload-stream": "^1.0.7",
-    "undici": "^5.26.4",
-    "ws": "^8.13.0"
+    "undici": "^5.28.4",
+    "ws": "^8.18.0"
   }
 }
