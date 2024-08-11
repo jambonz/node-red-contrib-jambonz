@@ -62,6 +62,7 @@ function lcc(config) {
           break;
         case 'unhold_conf':
           opts.conf_hold_status = 'unhold';
+          break;
         case 'whisper':
           Object.assign(opts, {
             whisper: {
