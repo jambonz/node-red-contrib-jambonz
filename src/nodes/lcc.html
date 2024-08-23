@@ -60,10 +60,16 @@
           return action !== 'send_dtmf' || v.length > 0;
         }},
         dtmfDigitType: {value: 'str'},
-        dtmfDuration: {value: ''},
+        dtmfDuration: {value: '', validate: function(v) {
+          const action = $('#node-input-action').val();
+          return action !== 'send_dtmf' || v.length > 0;
+        }},
         dtmfDurationType: {value: 'str'},
-        tag: {value: ''},
-        tagType: {value: 'str'},
+        tag: {value: '{}', validate: function(v) {
+          const action = $('#node-input-action').val();
+          return action !== 'tag' || v.length > 0;
+        }},
+        tagType: {value: 'json'},
       },
       inputs:1,
       outputs:1,
@@ -118,7 +124,7 @@
         });
         $('#node-input-sipRequestHeaders').typedInput({
           default: $('#node-input-sipRequestHeadersType').val(),
-          types: ['json','msg', 'flow', 'global'],
+          types: ['msg', 'flow', 'global', 'json', 'jsonata'],
           typeField: $('#node-input-sipRequestHeadersType')
         });
         $('#node-input-siprecServerURL').typedInput({
@@ -143,7 +149,7 @@
         });
         $('#node-input-tag').typedInput({
           default: $('#node-input-tagType').val(),
-          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          types: ['msg', 'flow', 'global', 'json', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-tagType')
         });
 
