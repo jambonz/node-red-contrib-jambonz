@@ -6,27 +6,27 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     var node = this;
     const awsCreds = RED.nodes.getNode(config.aws);
-    node.on('input', function(msg) {
+    node.on('input', async function(msg) {
       let accessKey, secretAccessKey;
       if (awsCreds && awsCreds.credentials) {
         accessKey = awsCreds.credentials.accessKey;
         secretAccessKey = awsCreds.credentials.secretAccessKey;
       }
-      var eventHook = new_resolve(RED, config.eventHook, config.eventHookType, node, msg);
-      var actionHook = new_resolve(RED, config.actionHook, config.actionHookType, node, msg);
-      var botId = new_resolve(RED, config.bot, config.botType, node, msg);
-      var botAlias = new_resolve(RED, config.alias, config.aliasType, node, msg);
-      var locale = new_resolve(RED, config.locale, config.localeType, node, msg) || 'en_US';  
-      var val = new_resolve(RED, config.inputTimeout, config.inputTimeoutType, node, msg);
+      var eventHook = await new_resolve(RED, config.eventHook, config.eventHookType, node, msg);
+      var actionHook = await new_resolve(RED, config.actionHook, config.actionHookType, node, msg);
+      var botId = await new_resolve(RED, config.bot, config.botType, node, msg);
+      var botAlias = await new_resolve(RED, config.alias, config.aliasType, node, msg);
+      var locale = await new_resolve(RED, config.locale, config.localeType, node, msg) || 'en_US';  
+      var val = await new_resolve(RED, config.inputTimeout, config.inputTimeoutType, node, msg);
       var timeout = /^\d+$/.test(val) ? parseInt(val) : 0;
       var slots, intentName;
       if (config.specifyIntent) {
-        intentName =  new_resolve(RED, config.intent, config.intentType, node, msg);
+        intentName =  await new_resolve(RED, config.intent, config.intentType, node, msg);
         if (intentName) {
-          slots =  new_resolve(RED, config.slots, config.slotsType, node, msg);
+          slots =  await new_resolve(RED, config.slots, config.slotsType, node, msg);
         }
       }
-      var metadata =  new_resolve(RED, config.metadata, config.metadataType, node, msg);
+      var metadata =  await new_resolve(RED, config.metadata, config.metadataType, node, msg);
 
       const obj = {
         verb: 'lex',

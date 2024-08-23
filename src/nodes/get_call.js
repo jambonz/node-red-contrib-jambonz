@@ -8,7 +8,7 @@ module.exports = function (RED) {
     const server = RED.nodes.getNode(config.server);
     const { accountSid, apiToken } = server.credentials;
     node.on("input", async (msg, send, done) => {
-      const callSid = new_resolve(RED, config.callSid, config.callSidType, node, msg);
+      const callSid = await new_resolve(RED, config.callSid, config.callSidType, node, msg);
       if (!callSid) {
         if (done) done(new Error('CallSid empty'));
           else node.error(new Error('CallSid empty'), msg);

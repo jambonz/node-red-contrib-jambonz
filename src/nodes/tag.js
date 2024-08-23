@@ -4,8 +4,8 @@ module.exports = function(RED) {
   function tag(config) {
     RED.nodes.createNode(this, config);
     var node = this;
-    node.on('input', function(msg) {
-      var data = new_resolve(RED, config.data, config.dataType, node, msg);
+    node.on('input', async function(msg) {
+      var data = await new_resolve(RED, config.data, config.dataType, node, msg);
       if (typeof(data) != 'object'){
         data = JSON.parse(data)
       }

@@ -7,7 +7,7 @@ module.exports = function(RED) {
     var node = this;
     const server = RED.nodes.getNode(config.server);
 
-    node.on('input', async(msg, send, done) => {
+    node.on('input', async (msg, send, done) => {
       send = send || function() { node.send.apply(node, arguments);};
 
       const {accountSid, apiToken} = server.credentials;
@@ -19,9 +19,9 @@ module.exports = function(RED) {
         return;
       }
 
-      var from = new_resolve(RED, config.from, config.fromType, node, msg);
-      var to = new_resolve(RED, config.to, config.toType, node, msg);
-      var tag = new_resolve(RED, config.tag, config.tagType, node, msg);
+      var from = await new_resolve(RED, config.from, config.fromType, node, msg);
+      var to = await new_resolve(RED, config.to, config.toType, node, msg);
+      var tag = await new_resolve(RED, config.tag, config.tagType, node, msg);
 
       const opts = {
         from,
@@ -40,7 +40,7 @@ module.exports = function(RED) {
       }
 
       if (config.callername) {
-        opts.callerName = new_resolve(RED, config.callername, config.callernameType, node, msg);
+        opts.callerName = await new_resolve(RED, config.callername, config.callernameType, node, msg);
       }
 
       switch (config.mode) {
@@ -49,11 +49,11 @@ module.exports = function(RED) {
           break
         case 'url':
           opts.call_hook = {
-            url:  new_resolve(RED, config.call_hook_url, config.call_hook_urlType, node, msg),
+            url:  await new_resolve(RED, config.call_hook_url, config.call_hook_urlType, node, msg),
             method: config.call_hook_method
           };
           opts.call_status_hook = {
-            url: new_resolve(RED, config.call_status_url, config.call_status_urlType, node, msg),
+            url: await new_resolve(RED, config.call_status_url, config.call_status_urlType, node, msg),
             method: config.call_status_method
           };
           opts.speech_synthesis_vendor = config.vendor;
@@ -72,7 +72,7 @@ module.exports = function(RED) {
       switch (config.dest) {
         case 'phone':
           if (config.trunk) {
-            var trunk = new_resolve(RED, config.trunk, config.trunkType, node, msg);
+            var trunk = await new_resolve(RED, config.trunk, config.trunkType, node, msg);
             opts.to.trunk = trunk;
           }
           opts.to.number = to;

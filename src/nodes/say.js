@@ -9,8 +9,8 @@ module.exports = function(RED) {
     this.loop = config.loop;
     var node = this;
 
-    node.on('input', function(msg) {
-      const text = new_resolve(RED, config.text, 'mustache', node, msg);
+    node.on('input', async function(msg) {
+      const text = await new_resolve(RED, config.text, 'mustache', node, msg);
       var obj = {
         verb: 'say',
         text,

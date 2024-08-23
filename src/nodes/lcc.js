@@ -8,12 +8,12 @@ function lcc(config) {
     var node = this;
     const server = RED.nodes.getNode(config.server);
 
-    node.on('input', async(msg, send, done) => {
+    node.on('input', async (msg, send, done) => {
       send = send || function() { node.send.apply(node, arguments);};
 
       const {accountSid, apiToken} = server.credentials;
       const url = server.url;
-      const callSid = new_resolve(RED, config.callSid, config.callSidType, node, msg);
+      const callSid = await new_resolve(RED, config.callSid, config.callSidType, node, msg);
       if (!url || !accountSid || !apiToken || !callSid) {
         node.log(`invalid / missing credentials or callSid, skipping LCC node: ${JSON.stringify(server.credentials)}`);
         send(msg);
@@ -51,14 +51,14 @@ function lcc(config) {
           opts.transcribe_status = 'resume';
           break;
         case 'redirect':
-          opts.call_hook = {url: new_resolve(RED, config.callHook, config.callHookType, node, msg)};
+          opts.call_hook = {url: await new_resolve(RED, config.callHook, config.callHookType, node, msg)};
           if (config.childCallHook) {
-            opts.child_call_hook = {url: new_resolve(RED, config.childCallHook, config.childCallHookType, node, msg)};
+            opts.child_call_hook = {url: await new_resolve(RED, config.childCallHook, config.childCallHookType, node, msg)};
           }
           break;
         case 'hold_conf':
           opts.conf_hold_status = 'hold';
-          opts.wait_hook = {url: new_resolve(RED, config.waitHook, config.waitHookType, node, msg)};
+          opts.wait_hook = {url: await new_resolve(RED, config.waitHook, config.waitHookType, node, msg)};
           break;
         case 'unhold_conf':
           opts.conf_hold_status = 'unhold';
@@ -82,16 +82,16 @@ function lcc(config) {
         case 'sip_request':
           opts.sip_request = { 
             method: config.sipRequestMethod,
-            content_type: new_resolve(RED, config.sipRequestContentType, config.sipRequestContentTypeType, node, msg),
-            content: new_resolve(RED, config.sipRequestBody, config.sipRequestBodyType, node, msg),
-            headers: new_resolve(RED, config.sipRequestHeaders, config.sipRequestHeadersType, node, msg) || {}
+            content_type: await new_resolve(RED, config.sipRequestContentType, config.sipRequestContentTypeType, node, msg),
+            content: await new_resolve(RED, config.sipRequestBody, config.sipRequestBodyType, node, msg),
+            headers: await new_resolve(RED, config.sipRequestHeaders, config.sipRequestHeadersType, node, msg) || {}
           };
           break;
         case 'start_call_recording':
           opts.record = { 
             action: 'startCallRecording',
-            siprecServerURL: new_resolve(RED, config.siprecServerURL, config.siprecServerURLType, node, msg),
-            recordingID: new_resolve(RED, config.recordingID, config.recordingIDType, node, msg) || crypto.randomUUID()
+            siprecServerURL: await new_resolve(RED, config.siprecServerURL, config.siprecServerURLType, node, msg),
+            recordingID: await new_resolve(RED, config.recordingID, config.recordingIDType, node, msg) || crypto.randomUUID()
           };
           // SIPREC headers
           if (config.siprecHeaders) {
@@ -115,12 +115,12 @@ function lcc(config) {
           break;
         case 'send_dtmf':
           opts.dtmf = { 
-            digit: new_resolve(RED, config.dtmfDigit, config.dtmfDigitType, node, msg),
-            duration: new_resolve(RED, config.dtmfDuration, config.dtmfDurationType, node, msg) || '250'
+            digit: await new_resolve(RED, config.dtmfDigit, config.dtmfDigitType, node, msg),
+            duration: await new_resolve(RED, config.dtmfDuration, config.dtmfDurationType, node, msg) || '250'
           };
           break;
         case 'tag':
-            opts.tag = new_resolve(RED, config.tag, config.tagType, node, msg);
+            opts.tag = await new_resolve(RED, config.tag, config.tagType, node, msg);
             break;
         default:
           node.log(`invalid action: ${config.action}`);

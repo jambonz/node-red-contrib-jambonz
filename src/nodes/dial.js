@@ -5,12 +5,12 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     var node = this;
 
-    node.on('input', function(msg) {
+    node.on('input', async function(msg) {
       node.log(`dial config: ${JSON.stringify(config)}, msg.call: ${JSON.stringify(msg.call)}`);
-      var target = config.targets.map((t) => {
+      var target = await Promise.all(config.targets.map(async (t) => {
         const obj = Object.assign({}, t);
-        var dest = new_resolve(RED, obj.dest, obj.varType, node, msg)
-        var trunk = new_resolve(RED, obj.trunk, obj.trunkType, node, msg)
+        var dest = await new_resolve(RED, obj.dest, obj.varType, node, msg);
+        var trunk = await new_resolve(RED, obj.trunk, obj.trunkType, node, msg);
         switch (t.type) {
           case 'phone':
             obj.number = dest;
@@ -38,20 +38,20 @@ module.exports = function(RED) {
         delete obj.trunkType;
         delete obj.dest;
         return obj;
-      });
+      }));
       var data = {
         verb: 'dial',
         target,
         answerOnBridge: config.answeronbridge,
         timeLimit: config.timelimit ? parseInt(config.timelimit) : null,
         timeout: config.timeout ? parseInt(config.timeout) : null,
-        callerId: new_resolve(RED, config.callerid, config.calleridType, node, msg),
-        callerName: new_resolve(RED, config.callername, config.callernameType, node, msg),
-        actionHook: new_resolve(RED, config.actionhook, config.actionhookType, node, msg),
-        confirmHook: new_resolve(RED, config.confirmhook, config.confirmhookType, node, msg), 
-        dialMusic: new_resolve(RED, config.dialmusic, config.dialmusicType, node, msg),
-        referHook: new_resolve(RED, config.referhook, config.referhookType, node, msg),
-        dtmfHook: new_resolve(RED, config.dtmfhook, config.dtmfhookType, node, msg),
+        callerId: await new_resolve(RED, config.callerid, config.calleridType, node, msg),
+        callerName: await new_resolve(RED, config.callername, config.callernameType, node, msg),
+        actionHook: await new_resolve(RED, config.actionhook, config.actionhookType, node, msg),
+        confirmHook: await new_resolve(RED, config.confirmhook, config.confirmhookType, node, msg), 
+        dialMusic: await new_resolve(RED, config.dialmusic, config.dialmusicType, node, msg),
+        referHook: await new_resolve(RED, config.referhook, config.referhookType, node, msg),
+        dtmfHook: await new_resolve(RED, config.dtmfhook, config.dtmfhookType, node, msg),
       };
 
       if (config.hasOwnProperty('anchormedia')) {
@@ -59,7 +59,7 @@ module.exports = function(RED) {
       }
 
       if (config.onholdhook) {
-        data.onHoldHook = new_resolve(RED, config.onholdhook, config.onholdhookType, node, msg);
+        data.onHoldHook = await new_resolve(RED, config.onholdhook, config.onholdhookType, node, msg);
       }
 
       // headers
@@ -72,7 +72,7 @@ module.exports = function(RED) {
       // nested listen
       if (config.listenurl && config.listenurl.length > 0) {
         data.listen = {
-          url: new_resolve(RED, config.listenurl, config.listenurlType, node, msg),
+          url: await new_resolve(RED, config.listenurl, config.listenurlType, node, msg),
           mixType: 'stereo'
         };
       }
@@ -87,11 +87,11 @@ module.exports = function(RED) {
           diarization: config.diarization
         };
         if (recognizer.vendor === 'google') {
-          var diarizationMin = new_resolve(RED, config.diarizationmin, config.diarizationminType, node, msg);
-          var diarizationMax = new_resolve(RED, config.diarizationmax, config.diarizationmaxType, node, msg)
-          var hints = new_resolve(RED, config.transcriptionhints, config.transcriptionhintsType, node, msg)
-          var altlangs = new_resolve(RED, config.recognizeraltlang, config.recognizeraltlangType, node, msg)
-          var naics = new_resolve(RED, config.naics, config.naicsType, node, msg)
+          var diarizationMin = await new_resolve(RED, config.diarizationmin, config.diarizationminType, node, msg);
+          var diarizationMax = await new_resolve(RED, config.diarizationmax, config.diarizationmaxType, node, msg)
+          var hints = await new_resolve(RED, config.transcriptionhints, config.transcriptionhintsType, node, msg)
+          var altlangs = await new_resolve(RED, config.recognizeraltlang, config.recognizeraltlangType, node, msg)
+          var naics = await new_resolve(RED, config.naics, config.naicsType, node, msg)
           Object.assign(recognizer, {
             profanityFilter: config.profanityfilter,
             hints: hints.length > 0 ?
@@ -112,8 +112,8 @@ module.exports = function(RED) {
           }
         }
         else if (recognizer.vendor === 'aws') {
-          var vocab = new_resolve(RED, config.vocabularyname, config.vocabularynameType, node, msg);
-          var vocabFilter = new_resolve(RED, config.vocabularyfiltername, config.vocabularyfilternameType, node, msg);
+          var vocab = await new_resolve(RED, config.vocabularyname, config.vocabularynameType, node, msg);
+          var vocabFilter = await new_resolve(RED, config.vocabularyfiltername, config.vocabularyfilternameType, node, msg);
           Object.assign(recognizer, {
             vocabularyName: vocab,
             vocabularyFilterName: vocabFilter,
@@ -121,12 +121,12 @@ module.exports = function(RED) {
           });
         }
         data.transcribe = {
-          transcriptionHook: new_resolve(RED, config.transcriptionhook, config.transcriptionhookType, node, msg),
+          transcriptionHook: await new_resolve(RED, config.transcriptionhook, config.transcriptionhookType, node, msg),
           recognizer
         };
       }
       // dtmf capture
-      const dtmfCapture = new_resolve(RED, config.dtmfcapture, config.dtmfcaptureType, node, msg);
+      const dtmfCapture = await new_resolve(RED, config.dtmfcapture, config.dtmfcaptureType, node, msg);
       if (dtmfCapture && dtmfCapture.length) {
         data.dtmfCapture = dtmfCapture.split(',').map((i) => i.trim());
       }

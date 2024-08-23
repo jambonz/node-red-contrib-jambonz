@@ -9,10 +9,10 @@ module.exports = function (RED) {
     const { accountSid, apiToken } = server.credentials;
     node.on("input", async (msg, send, done) => {
       const data = {
-        direction: new_resolve(RED, config.direction, config.directionType, node, msg),
-        from: new_resolve(RED, config.from, config.fromType, node, msg),
-        to: new_resolve(RED, config.to, config.toType, node, msg),
-        callStatus: new_resolve(RED, config.callStatus, config.callStatusType, node, msg),
+        direction: await new_resolve(RED, config.direction, config.directionType, node, msg),
+        from: await new_resolve(RED, config.from, config.fromType, node, msg),
+        to: await new_resolve(RED, config.to, config.toType, node, msg),
+        callStatus: await new_resolve(RED, config.callStatus, config.callStatusType, node, msg),
       };
       Object.keys(data).forEach(
         (k) => data[k] == null || (data[k] == '' && delete data[k])
