@@ -45,7 +45,7 @@ exports.appendVerb = (msg, obj) => {
     return mustache.render('{{' + val + '}}', data);
   }
   
-  exports.new_resolve = (RED, val, valtype, node, msg) => {
+  exports.new_resolve = async (RED, val, valtype, node, msg) => {
     if (!val || !valtype) return val;
     switch (valtype) {
       case 'str': 
@@ -56,7 +56,12 @@ exports.appendVerb = (msg, obj) => {
       case 'flow': 
       case 'global':
       case 'jsonata':
-        return RED.util.evaluateNodeProperty(val, valtype, node, msg);
+        try {
+          return await asyncEvaluateNodeProperty(RED, val, valtype, node, msg);
+        } catch (e) { 
+          node.error(`Error evaluating ${valtype} property: ${e.message}`);
+          return null;
+        }
       case 'mustache': 
         let data = dataobject(node.context(), msg);
         return mustache.render(val, data);
@@ -64,6 +69,19 @@ exports.appendVerb = (msg, obj) => {
         return JSON.parse(val);
     }
   }
+
+  function asyncEvaluateNodeProperty(RED, value, type, node, msg) {
+    return new Promise(function (resolve, reject) {
+      RED.util.evaluateNodeProperty(value, type, node, msg, function (e, r) {
+        if (e) {
+          reject(e);
+        } else {
+          resolve(r);
+        }
+      });
+    });
+  }
+
   function dataobject(context, msg){
     let data = Object.assign({}, msg);
     data.global = {};

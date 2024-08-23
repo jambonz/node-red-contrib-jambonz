@@ -6,13 +6,13 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
     var node = this;
 
-    node.on('input', function(msg) {
+    node.on('input', async function(msg) {
       var obj = {
         verb: 'dub',
         action: config.action,
-        track: new_resolve(RED, config.track, config.trackType, node, msg),
-        play: new_resolve(RED, config.play, config.playType, node, msg),
-        say: new_resolve(RED, config.say, config.sayType, node, msg),
+        track: await new_resolve(RED, config.track, config.trackType, node, msg),
+        play: await new_resolve(RED, config.play, config.playType, node, msg),
+        say: await new_resolve(RED, config.say, config.sayType, node, msg),
         loop: config.loop,
         gain: config.gain
       };

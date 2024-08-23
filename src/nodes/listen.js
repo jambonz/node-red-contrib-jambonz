@@ -4,11 +4,11 @@ module.exports = function(RED) {
   function listen(config) {
     RED.nodes.createNode(this, config);
     var node = this;
-    node.on('input', function(msg) {
+    node.on('input', async function(msg) {
       const obj = {
         verb: 'listen',
-        url: new_resolve(RED, config.url, config.urlType, node, msg),
-        actionHook: new_resolve(RED, config.actionhook, config.actionhookType, node, msg),
+        url: await new_resolve(RED, config.url, config.urlType, node, msg),
+        actionHook: await new_resolve(RED, config.actionhook, config.actionhookType, node, msg),
         finishOnKey: config.finishonkey,
         mixType: config.mixtype,
         playBeep: config.beep,
@@ -17,8 +17,8 @@ module.exports = function(RED) {
         sampleRate: config.sampleRate,
       };
 
-      const authUser = new_resolve(RED, config.authuser, config.authuserType, node, msg);
-      const authPass = new_resolve(RED, config.authpass, config.authpassType, node, msg);
+      const authUser = await new_resolve(RED, config.authuser, config.authuserType, node, msg);
+      const authPass = await new_resolve(RED, config.authpass, config.authpassType, node, msg);
       if (authUser && authPass) {
         obj.wsAuth = {
           username: authUser,
@@ -35,11 +35,11 @@ module.exports = function(RED) {
           diarization: config.diarization
         };
         if (recognizer.vendor === 'google') {
-          var diarizationMin = new_resolve(RED, config.diarizationmin, config.diarizationminType, node, msg);
-          var diarizationMax = new_resolve(RED, config.diarizationmax, config.diarizationmaxType, node, msg);
-          var hints = new_resolve(RED, config.transcriptionhints, config.transcriptionhintsType, node, msg);
-          var altlangs = new_resolve(RED, config.recognizeraltlang, config.recognizeraltlangType, node, msg);
-          var naics = new_resolve(RED, config.naics, config.naicsType, node, msg);
+          var diarizationMin = await new_resolve(RED, config.diarizationmin, config.diarizationminType, node, msg);
+          var diarizationMax = await new_resolve(RED, config.diarizationmax, config.diarizationmaxType, node, msg);
+          var hints = await new_resolve(RED, config.transcriptionhints, config.transcriptionhintsType, node, msg);
+          var altlangs = await new_resolve(RED, config.recognizeraltlang, config.recognizeraltlangType, node, msg);
+          var naics = await new_resolve(RED, config.naics, config.naicsType, node, msg);
           Object.assign(recognizer, {
             profanityFilter: config.profanityfilter,
             hints: hints.length > 0 ?
@@ -60,8 +60,8 @@ module.exports = function(RED) {
           }
         }
         else if (recognizer.vendor === 'aws') {
-          var vocab = new_resolve(RED, config.vocabularyname, config.vocabularynameType, node, msg);
-          var vocabFilter = new_resolve(RED, config.vocabularyfiltername, config.vocabularyfilternameType, node, msg);
+          var vocab = await new_resolve(RED, config.vocabularyname, config.vocabularynameType, node, msg);
+          var vocabFilter = await new_resolve(RED, config.vocabularyfiltername, config.vocabularyfilternameType, node, msg);
           Object.assign(recognizer, {
             vocabularyName: vocab,
             vocabularyFilterName: vocabFilter,
@@ -69,7 +69,7 @@ module.exports = function(RED) {
           });
         }
         obj.transcribe = {
-          transcriptionHook: new_resolve(RED, config.transcriptionhook, config.transcriptionhookType, node, msg),
+          transcriptionHook: await new_resolve(RED, config.transcriptionhook, config.transcriptionhookType, node, msg),
           recognizer
         };
       }
@@ -77,7 +77,7 @@ module.exports = function(RED) {
       if (/^\d+$/.test(config.maxlength)) obj.maxLength = parseInt(config.maxLength);
       if (config.finishonkey.length) obj.finishOnKey = config.finishonkey;
 
-      var data = new_resolve(RED, config.metadata, config.metadataType, node, msg);
+      var data = await new_resolve(RED, config.metadata, config.metadataType, node, msg);
       if (data) obj.metadata = data;
 
       appendVerb(msg, obj);

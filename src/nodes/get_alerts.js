@@ -7,11 +7,11 @@ module.exports = function(RED) {
         var node = this;
         const server = RED.nodes.getNode(config.server);
         const {accountSid, apiToken} = server.credentials;
-        node.on('input', async(msg, send, done) => {
+        node.on('input', async (msg, send, done) => {
             const data = {
-                page: new_resolve(RED, config.page, config.pageType, node, msg),
-                count: new_resolve(RED, config.count, config.countType, node, msg),
-                days: new_resolve(RED, config.days, config.daysType, node, msg),
+                page: await new_resolve(RED, config.page, config.pageType, node, msg),
+                count: await new_resolve(RED, config.count, config.countType, node, msg),
+                days: await new_resolve(RED, config.days, config.daysType, node, msg),
             }
             Object.keys(data).forEach((k) => data[k] == null || data[k] == '' && delete data[k]);
             const params = new URLSearchParams(data).toString()           

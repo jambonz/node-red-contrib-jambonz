@@ -7,7 +7,7 @@ function create_sms(config) {
     var node = this;
     const server = RED.nodes.getNode(config.server);
 
-    node.on('input', async(msg, send, done) => {
+    node.on('input', async (msg, send, done) => {
       send = send || function() { node.send.apply(node, arguments);};
 
       const {accountSid, apiToken} = server.credentials;
@@ -19,10 +19,10 @@ function create_sms(config) {
         return;
       }
 
-      var from = new_resolve(RED, config.from, config.fromType, node, msg)
-      var to = new_resolve(RED, config.to, config.toType, node, msg)
-      var text = new_resolve(RED, config.text, config.textType, node, msg);
-      var provider = new_resolve(RED, config.provider, config.providerType, node, msg)
+      var from = await new_resolve(RED, config.from, config.fromType, node, msg)
+      var to = await new_resolve(RED, config.to, config.toType, node, msg)
+      var text = await new_resolve(RED, config.text, config.textType, node, msg);
+      var provider = await new_resolve(RED, config.provider, config.providerType, node, msg)
 
       const opts = {
         from,

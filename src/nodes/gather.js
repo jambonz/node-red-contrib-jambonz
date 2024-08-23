@@ -5,14 +5,14 @@ module.exports = function(RED) {
   function gather(config) {
     RED.nodes.createNode(this, config);
     var node = this;
-    node.on('input', function(msg) {
+    node.on('input', async function(msg) {
 
       // simple properties
       node.log(`config: ${JSON.stringify(config)}`);
 
       var obj = {verb: 'gather', input: []};
-      if (config.actionhook) obj.actionHook = new_resolve(RED, config.actionhook, config.actionhookType, node, msg)
-      if (config.partialresulthook) obj.partialResultHook = new_resolve(RED, config.partialresulthook, config.partialresulthookType, node, msg)
+      if (config.actionhook) obj.actionHook = await new_resolve(RED, config.actionhook, config.actionhookType, node, msg)
+      if (config.partialresulthook) obj.partialResultHook = await new_resolve(RED, config.partialresulthook, config.partialresulthookType, node, msg)
 
       // input
       if (config.speechinput) {
@@ -22,9 +22,9 @@ module.exports = function(RED) {
           language: config.recognizerlang
         };
         if (recognizer.vendor === 'google') {
-          var hints = new_resolve(RED, config.transcriptionhints, config.transcriptionhintsType, node, msg);
-          var altlangs = new_resolve(RED, config.recognizeraltlang, config.recognizeraltlangType, node, msg);
-          var naics = new_resolve(RED, config.naics, config.naicsType, node, msg);
+          var hints = await new_resolve(RED, config.transcriptionhints, config.transcriptionhintsType, node, msg);
+          var altlangs = await new_resolve(RED, config.recognizeraltlang, config.recognizeraltlangType, node, msg);
+          var naics = await new_resolve(RED, config.naics, config.naicsType, node, msg);
           Object.assign(recognizer, {
             profanityFilter: config.profanityfilter,
             hints: hints.length > 0 ?
@@ -37,8 +37,8 @@ module.exports = function(RED) {
           }
         }
         else if (recognizer.vendor === 'aws') {
-          var vocab = new_resolve(RED, config.vocabularyname, config.vocabularynameType, node, msg);
-          var vocabFilter = new_resolve(RED, config.vocabularyfiltername, config.vocabularyfilternameType, node, msg);
+          var vocab = await new_resolve(RED, config.vocabularyname, config.vocabularynameType, node, msg);
+          var vocabFilter = await new_resolve(RED, config.vocabularyfiltername, config.vocabularyfilternameType, node, msg);
           Object.assign(recognizer, {
             vocabularyName: vocab,
             vocabularyFilterName: vocabFilter,
@@ -74,7 +74,7 @@ module.exports = function(RED) {
           });
         }
       }
-      else obj.play = {url: new_resolve(RED, config.playurl, config.playurlType, node, msg)};
+      else obj.play = {url: await new_resolve(RED, config.playurl, config.playurlType, node, msg)};
 
       node.log(`gather: ${JSON.stringify(obj)}`);
 

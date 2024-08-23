@@ -5,8 +5,8 @@ module.exports = function(RED) {
   function pause(config) {
     RED.nodes.createNode(this, config);
     var node = this;
-    node.on('input', function(msg) {
-      var length = new_resolve(RED, config.len, config.lenType, node, msg);
+    node.on('input', async function(msg) {
+      var length = await new_resolve(RED, config.len, config.lenType, node, msg);
       appendVerb(msg, {
         verb: 'pause',
         length
