@@ -74,7 +74,7 @@ module.exports = function(RED) {
         };
       }
       if (/^\d+$/.test(config.timeout)) obj.timeout = parseInt(config.timeout);
-      if (/^\d+$/.test(config.maxlength)) obj.maxLength = parseInt(config.maxLength);
+      if (/^\d+$/.test(config.maxlength)) obj.maxLength = parseInt(config.maxlength);
       if (config.finishonkey.length) obj.finishOnKey = config.finishonkey;
 
       var data = await new_resolve(RED, config.metadata, config.metadataType, node, msg);
