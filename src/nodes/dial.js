@@ -3,14 +3,15 @@ var {appendVerb, new_resolve} = require('./libs')
 module.exports = function(RED) {
   function dial(config) {
     RED.nodes.createNode(this, config);
-    var node = this;
+    const node = this;
 
     node.on('input', async function(msg) {
       node.log(`dial config: ${JSON.stringify(config)}, msg.call: ${JSON.stringify(msg.call)}`);
-      var target = await Promise.all(config.targets.map(async (t) => {
-        const obj = Object.assign({}, t);
-        var dest = await new_resolve(RED, obj.dest, obj.varType, node, msg);
-        var trunk = await new_resolve(RED, obj.trunk, obj.trunkType, node, msg);
+      const target = await Promise.all(config.targets.map(async (t) => {
+        const obj = {};
+        const dest = await new_resolve(RED, t.dest, t.varType, node, msg);
+        const trunk = await new_resolve(RED, t.trunk, t.trunkType, node, msg);
+        const tenant = t.tenant ? await new_resolve(RED, t.tenant, t.tenantType, node, msg) : '';
         switch (t.type) {
           case 'phone':
             obj.number = dest;
@@ -27,19 +28,16 @@ module.exports = function(RED) {
                 password: t.pass
               };
             }
-            delete obj.user;
-            delete obj.pass;
             break;
           case 'teams':
             obj.number = dest;
+            if (tenant) obj.tenant = tenant;
+            if (t.vmail) obj.vmail = t.vmail;
             break;
         }
-        delete obj.varType;
-        delete obj.trunkType;
-        delete obj.dest;
         return obj;
       }));
-      var data = {
+      const data = {
         verb: 'dial',
         target,
         answerOnBridge: config.answeronbridge,
@@ -63,7 +61,7 @@ module.exports = function(RED) {
       }
 
       // headers
-      var headers = {};
+      const headers = {};
       config.headers.forEach(function(h) {
         if (h.h.length && h.v.length) headers[h.h] = h.v;
       });
