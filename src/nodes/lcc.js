@@ -67,7 +67,7 @@ function lcc(config) {
           Object.assign(opts, {
             whisper: {
               verb: 'say',
-              text: config.text
+              text: await new_resolve(RED, config.text, 'mustache', node, msg),
             }
           });
           if (['aws', 'google'].includes(config.vendor)) {

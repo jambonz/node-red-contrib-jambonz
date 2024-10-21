@@ -11,7 +11,7 @@
       color: '#bbabaa',
       defaults: {
         name: {value: ''},
-        targets: {value:[{type: 'phone', dest: '', user: '', pass: '', varType: 'str', trunk: '', trunkType: 'str'}]},
+        targets: { value: [{ type: 'phone', dest: '', user: '', pass: '', varType: 'str', trunk: '', trunkType: 'str', tenant: '', tenantType: 'str', vmail: false }] },
         headers: {value: []},
         actionhook: {value: ''},
         actionhookType: {value: 'str'},
@@ -160,7 +160,10 @@
                 pass: '',
                 varType: 'str',
                 trunk: '',
-                trunkType: 'str'
+                trunkType: 'str',
+                tenant: '',
+                tenantType: 'str',
+                vmail: false
               };
             }
 
@@ -174,14 +177,16 @@
             var row3 = $('<div/>',{style:"margin-top:8px;"}).appendTo(fragment);
             var row4 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
             var row5 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
+            var row6 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
+            var row7 = $('<div/>',{style:"display:flex;margin-top:8px;"}).appendTo(fragment);
 
             var selectField = $('<select/>',{class:"node-input-target-type",style:"width:110px; margin-right:10px;"})
               .appendTo(row1);
-            var selectOptions = ['phone', 'user', 'sip', 'teams'];
+            const selectOptions = ['phone', 'user', 'sip', 'teams'];
             for (var i = 0; i < 4; i++) {
                 selectField.append($("<option></option>").val(selectOptions[i]).text(selectOptions[i]));
             }
-            var propertyName = $('<input/>', {class:"node-input-target-property-name", type:"text"})
+            const propertyName = $('<input/>', {class:"node-input-target-property-name", type:"text"})
               .appendTo(row1)
               .typedInput({types: ['str', 'msg', 'flow', 'global','jsonata', 'env', mustacheType]});
 
@@ -207,14 +212,33 @@
             $('<label style="padding-top:8px; padding-right:20px">Trunk:</label>')
               .appendTo(row5);
 
-              var trunkName = $('<input/>',{
-              class:"node-input-target-property-trunk",
-              type:"text",
+            $('<input/>',{
+              class: "node-input-target-property-trunk",
+              type: "text",
               placeholder: 'Specify the name of the trunk used for this outbound call'
             })
               .appendTo(row5)
               .typedInput({types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType]});
             
+            $('<label style="padding-top:8px; padding-right:20px">Tenant:</label>')
+              .appendTo(row6);
+            
+            $('<input/>',{
+              class: "node-input-target-property-tenant",
+              type: "text",
+              placeholder: 'Specify the name of the tenant used for this outbound call'
+            })
+              .appendTo(row6)
+              .typedInput({types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType]});
+
+            $('<label style="padding-top:8px; padding-right:20px">Voicemail:</label>')
+              .appendTo(row7);
+            $('<input/>',{
+              class: "node-input-target-property-vmail",
+              type: "checkbox",
+              style: 'height: fit-content;'
+            })
+              .appendTo(row7);
             selectField.on('change', function() {
               var type = $(this).val();
               console.log(`type changed to ${type}`);
@@ -243,10 +267,17 @@
                 row3.show();
               }
 
-              if(type !== 'phone') {
+              if (type !== 'phone') {
                 row5.hide();
               } else {
                 row5.show();
+              }
+              if (type !== 'teams') {
+                row6.hide();
+                row7.hide();
+              } else {
+                row6.show();
+                row7.show();
               }
             });
             selectField.val(target.type);
@@ -257,7 +288,8 @@
             var userfield = row2.find('.node-input-target-property-authuser');
             var passfield = row3.find('.node-input-target-property-authpassword');
             var trunkfield = row5.find('.node-input-target-property-trunk');
-
+            var tenantfield = row6.find('.node-input-target-property-tenant');
+            var vmailfield = row7.find('.node-input-target-property-vmail');
             datafield.typedInput('type', target.varType);
 
             switch (target.type) {
@@ -267,6 +299,10 @@
               case 'sip': 
                 userfield.val(target.user);
                 passfield.val(target.pass);
+              case 'teams':
+                tenantfield.typedInput('type', target.tenantType);
+                tenantfield.typedInput('value', target.tenant);
+                vmailfield.prop('checked', target.vmail);
               default:
                 datafield.typedInput('value', target.dest);
                 break;
@@ -285,7 +321,10 @@
             user: '',
             pass: '',
             trunk: '',
-            varType: 'str'
+            varType: 'str',
+            tenant: '',
+            tenantType: 'str',
+            vmail: false
           }
           this.targets = [target];
         }
@@ -350,11 +389,14 @@
           var target = $(this);
           var type = target.find('.node-input-target-type').val();
           var varType = target.find('.node-input-target-property-name').typedInput('type');
-          var dest    = target.find('.node-input-target-property-name').typedInput('value');
+          var dest = target.find('.node-input-target-property-name').typedInput('value');
           var user = target.find('.node-input-target-property-authuser').val();
           var pass = target.find('.node-input-target-property-authpassword').val();
           var trunk = target.find('.node-input-target-property-trunk').typedInput('value');
           var trunkType = target.find('.node-input-target-property-trunk').typedInput('type');
+          var tenant = target.find('.node-input-target-property-tenant').typedInput('value');
+          var tenantType = target.find('.node-input-target-property-tenant').typedInput('type');
+          var vmail = target.find('.node-input-target-property-vmail').prop("checked");
           if (!['phone', 'user', 'sip', 'teams'].includes(type) || 0 === dest.length) return;
 
           var t = {
@@ -362,6 +404,9 @@
             varType,
             dest
           };
+          if ('teams' === type && (tenant || vmail)) {
+            Object.assign(t, {tenant, tenantType, vmail});
+          }
           if ('sip' === type && user.length > 0 && pass.length > 0) {
             Object.assign(t, {user, pass});
           }
