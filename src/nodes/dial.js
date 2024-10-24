@@ -8,7 +8,7 @@ module.exports = function(RED) {
     node.on('input', async function(msg) {
       node.log(`dial config: ${JSON.stringify(config)}, msg.call: ${JSON.stringify(msg.call)}`);
       const target = await Promise.all(config.targets.map(async (t) => {
-        const obj = {};
+        const obj = { type: t.type };  // Initialize with type property
         const dest = await new_resolve(RED, t.dest, t.varType, node, msg);
         const trunk = await new_resolve(RED, t.trunk, t.trunkType, node, msg);
         const tenant = t.tenant ? await new_resolve(RED, t.tenant, t.tenantType, node, msg) : '';
