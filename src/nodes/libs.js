@@ -133,7 +133,7 @@ exports.appendVerb = (msg, obj) => {
     const url = `${baseUrl}/v1/Accounts/${accountSid}/Calls/${callSid}`;
     node.log(`invoking LCC with payload ${JSON.stringify(opts)} at ${url}`);
     const response = await fetch(url, {
-      method: 'POST',
+      method: 'POST', // TODO Should move this to PUT in next major update but will need regression testing
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiToken}`

@@ -122,7 +122,39 @@ function lcc(config) {
           break;
         case 'tag':
             opts.tag = await new_resolve(RED, config.tag, config.tagType, node, msg);
-            break;
+          opts.tag = await new_resolve(RED, config.tag, config.tagType, node, msg);
+          break;
+        case 'dubAdd':
+          opts.dub = { action: 'addTrack' };
+          opts.dub.track = await new_resolve(RED, config.dubTrack, config.dubTrackType, node, msg);
+          opts.dub.say = await new_resolve(RED, config.dubSay, config.dubSayType, node, msg) || undefined
+          opts.dub.play = await new_resolve(RED, config.dubPlay, config.dubPlayType, node, msg) || undefined
+          opts.dub.loop = await new_resolve(RED, config.dubLoop, config.dubLoopType, node, msg) 
+          opts.dub.gain = await new_resolve(RED, config.dubGain, config.dubGainType, node, msg);
+          break
+        case 'dubRemove':
+          opts.dub = { action: 'removeTrack' };
+          opts.dub.track = await new_resolve(RED, config.dubTrack, config.dubTrackType, node, msg);
+          break
+        case 'dubPlay':
+          console.log(config)
+          opts.dub = { action: 'playOnTrack' };
+          opts.dub.track = await new_resolve(RED, config.dubTrack, config.dubTrackType, node, msg);
+          opts.dub.play = await new_resolve(RED, config.dubPlay, config.dubPlayType, node, msg);
+          opts.dub.loop = await new_resolve(RED, config.dubLoop, config.dubLoopType, node, msg);
+          opts.dub.gain = await new_resolve(RED, config.dubGain, config.dubGainType, node, msg);
+          break
+        case 'dubSay':
+          opts.dub = { action : 'sayOnTrack' };
+          opts.dub.track = await new_resolve(RED, config.dubTrack, config.dubTrackType, node, msg);
+          opts.dub.say = await new_resolve(RED, config.dubSay, config.dubSayType, node, msg);
+          opts.dub.loop = await new_resolve(RED, config.dubLoop, config.dubLoopType, node, msg);
+          opts.dub.gain = await new_resolve(RED, config.dubGain, config.dubGainType, node, msg);
+          break
+        case 'dubSilence':
+          opts.dub = { action: 'silenceTrack' };
+          opts.dub.track = await new_resolve(RED, config.dubTrack, config.dubTrackType, node, msg);
+          break          
         default:
           node.log(`invalid action: ${config.action}`);
           send(msg);
