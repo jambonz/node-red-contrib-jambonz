@@ -70,6 +70,16 @@
           return action !== 'tag' || v.length > 0;
         }},
         tagType: {value: 'json'},
+        dubTrack: {value: ''},
+        dubTrackType: {value: 'str'},
+        dubPlay: {},
+        dubPlayType: {value: 'str'},
+        dubSay: {},
+        dubSayType: {value: 'str'},
+        dubLoop: {value: false},
+        dubLoopType: {value: 'bool'},
+        dubGain: {value: 0},
+        dubGainType: {value: 'num'},
       },
       inputs:1,
       outputs:1,
@@ -91,6 +101,7 @@
         var sipRequestDiv = $('#sip-request-options');
         var dtmfDiv = $('#dtmf-options');
         var tagDiv = $('#tag-options');
+        var dubDiv = $('#dub-options');
 
         $('#node-input-callSid').typedInput({
           default: $('#node-input-callSidType').val(),
@@ -152,6 +163,31 @@
           types: ['msg', 'flow', 'global', 'json', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-tagType')
         });
+        $('#node-input-dubTrack').typedInput({
+          default: $('#node-input-dubTrackType').val(),
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-dubTrackType')
+        });
+        $('#node-input-dubPlay').typedInput({
+          default: $('#node-input-dubPlayType').val(),
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-dubPlayType')
+        });
+        $('#node-input-dubSay').typedInput({
+          default: $('#node-input-dubSayType').val(),
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-dubSayType')
+        });
+        $('#node-input-dubLoop').typedInput({
+          default: $('#node-input-dubLoopType').val(),
+          types: ['bool', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-dubLoopType')
+        });
+        $('#node-input-dubGain').typedInput({
+          default: $('#node-input-dubFainType').val(),
+          types: ['num', 'flow', 'global', 'json', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-dubGainType')
+        });
 
         var onActionChanged = function () {
           var selectedAction = actionElem.find(':selected').val();
@@ -169,6 +205,8 @@
           else dtmfDiv.hide();
           if ('tag' === selectedAction) tagDiv.show();
           else tagDiv.hide();
+          if ('dub' === selectedAction.substring(0,3)) dubDiv.show();
+          else dubDiv.hide();
         }
 
         var onVendorChanged = function() {
@@ -337,6 +375,11 @@
       <option value="resume_call_recording">resume call recording</option>
       <option value="send_dtmf">send RFC 2833 DTMF</option>
       <option value="tag">tag call</option>
+      <option value="dubAdd">Dub - addTrack</option>
+      <option value="dubRemove">Dub - removeTrack</option>
+      <option value="dubPlay">Dub - playOnTrack</option>
+      <option value="dubSay">Dub - sayOnTrack</option>
+      <option value="dubSilence">Dub - SilenceTrack</option>
     </select>
   </div>
   <div id="say-options">
@@ -449,6 +492,33 @@
       <label for="node-input-tag">Data</label>
       <input type="text" id="node-input-tag" placeholder="data object">
       <input type="hidden" id="node-input-tagType">
+    </div>
+  </div>
+  <div id="dub-options">
+    <div class="form-row">
+      <label for="node-input-dubTrack">Track</label>
+      <input type="text" id="node-input-dubTrack">
+      <input type="hidden" id="node-input-dubTrackType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-dubPlay">Play URL</label>
+      <input type="text" id="node-input-dubPlay" placeholder="https://example.com/file.mp3">
+      <input type="hidden" id="node-input-dubPlayType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-dubSay">Say Text</label>
+      <input type="text" id="node-input-dubSay" placeholder="Text">
+      <input type="hidden" id="node-input-tagType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-dubLoop">Loop</label>
+      <input type="text" id="node-input-dubLoop">
+      <input type="hidden" id="node-input-dubLoopType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-dubGain">Gain</label>
+      <input type="text" id="node-input-dubGain">
+      <input type="hidden" id="node-input-dubGainType">
     </div>
   </div>
 </script>
