@@ -121,7 +121,6 @@ function lcc(config) {
           };
           break;
         case 'tag':
-            opts.tag = await new_resolve(RED, config.tag, config.tagType, node, msg);
           opts.tag = await new_resolve(RED, config.tag, config.tagType, node, msg);
           break;
         case 'dubAdd':
