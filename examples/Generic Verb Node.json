@@ -1,0 +1,124 @@
+[
+    {
+        "id": "5d9a3f1fa6551a9f",
+        "type": "webhook in",
+        "z": "1b97c147228e3829",
+        "name": "",
+        "url": "/call",
+        "method": "post",
+        "x": 100,
+        "y": 220,
+        "wires": [
+            [
+                "e627c4f20ede7606"
+            ]
+        ]
+    },
+    {
+        "id": "1d33431d324d0453",
+        "type": "webhook out",
+        "z": "1b97c147228e3829",
+        "name": "",
+        "x": 1270,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "9bf6ecad5a81a2bf",
+        "type": "debug",
+        "z": "1b97c147228e3829",
+        "name": "debug 18",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "jambonz",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1260,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "73e79d1cc5ac62d0",
+        "type": "generic",
+        "z": "1b97c147228e3829",
+        "name": "generic - say",
+        "verb": "say",
+        "data": "{\"text\":\"goodbye\"}",
+        "dataType": "json",
+        "x": 1030,
+        "y": 220,
+        "wires": [
+            [
+                "9bf6ecad5a81a2bf",
+                "1d33431d324d0453"
+            ]
+        ]
+    },
+    {
+        "id": "e627c4f20ede7606",
+        "type": "generic",
+        "z": "1b97c147228e3829",
+        "name": "generic - answer",
+        "verb": "answer",
+        "data": "{}",
+        "dataType": "json",
+        "x": 290,
+        "y": 220,
+        "wires": [
+            [
+                "453b7fb4d62ef93e"
+            ]
+        ]
+    },
+    {
+        "id": "453b7fb4d62ef93e",
+        "type": "generic",
+        "z": "1b97c147228e3829",
+        "name": "generic - pause",
+        "verb": "pause",
+        "data": "{\"length\":1}",
+        "dataType": "json",
+        "x": 480,
+        "y": 220,
+        "wires": [
+            [
+                "da2ac5d1cd9ab0a5"
+            ]
+        ]
+    },
+    {
+        "id": "da2ac5d1cd9ab0a5",
+        "type": "generic",
+        "z": "1b97c147228e3829",
+        "name": "generic -say",
+        "verb": "say",
+        "data": "{\"text\":\"Please hold\",\"loop\":1,\"earlyMedia\":false}",
+        "dataType": "json",
+        "x": 670,
+        "y": 220,
+        "wires": [
+            [
+                "b7225263b1115bde"
+            ]
+        ]
+    },
+    {
+        "id": "b7225263b1115bde",
+        "type": "generic",
+        "z": "1b97c147228e3829",
+        "name": "generic - pause",
+        "verb": "pause",
+        "data": "{\"length\":5}",
+        "dataType": "json",
+        "x": 840,
+        "y": 220,
+        "wires": [
+            [
+                "73e79d1cc5ac62d0"
+            ]
+        ]
+    }
+]

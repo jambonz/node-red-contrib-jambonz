@@ -50,7 +50,8 @@
       "get_calls": "src/nodes/get_calls.js",
       "get_recent_calls": "src/nodes/get_recent_calls.js",
       "answer": "src/nodes/answer.js",
-      "dub": "src/nodes/dub.js"
+      "dub": "src/nodes/dub.js",
+      "generic": "src/nodes/generic-verb.js"
     }
   },
   "author": "Dave Horton",
