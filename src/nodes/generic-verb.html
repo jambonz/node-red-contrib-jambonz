@@ -1,0 +1,60 @@
+<!-- Javascript -->
+<script type="text/javascript">
+ 
+
+  RED.nodes.registerType('generic',{
+      category: 'jambonz',
+      color: '#bbabaa',
+      defaults: {
+        name: {value: ''},
+        verb: {required: true},
+        data: {value: '{}'},
+        dataType: {value: 'json'},
+      },
+      inputs:1,
+      outputs:1,
+      icon: "font-awesome/fa-cubes",
+      label: function() { return this.name || 'generic';},
+      oneditprepare: function() {
+        $('#node-input-data').typedInput({
+          default: $('#node-input-dataType').val(),
+          types: ['json','msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-dataType')
+        });
+      }
+  });
+</script>
+
+<!-- HTML -->
+<script type="text/html" data-template-name="generic">
+    <div class="form-row">
+      <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+      <label for="node-input-verb">Verb</label>
+      <input type="text" id="node-input-verb" placeholder="verb">
+    </div>
+    <div class="form-row">
+      <label for="node-input-data">Duration</label>
+      <input type="text" id="node-input-data">
+      <input type="hidden" id="node-input-dataType">
+    </div>
+</script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="generic">
+  <p>A generic node to set any verb</p>
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>pause</code> action appended  </dd>
+  </dl>
+  
+  <h3>Details</h3>
+  Allows use of complex or new verbs in Jambonz that may not have nodes, set the verb name and then pass any additional parameters as a JSON object in the data field.
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://www.jambonz.org/docs/webhooks/">Jambonz Verb reference</a></li>
+    </ul>
+</script>
