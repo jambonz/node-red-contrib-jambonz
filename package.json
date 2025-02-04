@@ -57,7 +57,7 @@
   "author": "Dave Horton",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.1665.0",
+    "aws-sdk": "^2.1692.0",
     "body-parser": "^1.20.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
