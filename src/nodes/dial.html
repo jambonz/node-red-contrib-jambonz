@@ -65,7 +65,16 @@
         vocabularynameType: {value: 'str'},
         vocabularyfiltername: {},
         vocabularyfilternameType: {value: 'str'},
-        vocabularyfiltermethod: {}
+        vocabularyfiltermethod: {},
+        amd_actionHook : {},
+        amd_actionHookType: {value: 'str'},
+        amd_recognizer_vendor: {value: 'default'},
+        amd_recognizer_lang: {value: 'default'},
+        amd_thresholdWordCount: {},
+        amd_timers_decisionTimeoutMs: {},
+        amd_timers_greetingCompletionTimeoutMs:{},
+        amd_timers_noSpeechTimeoutMs: {},
+        amd_timers_toneTimeoutMs: {}
       },
       inputs:1,
       outputs:1,
@@ -147,6 +156,7 @@
         });
 
         prepareSttControls(node);
+        prepareSttControls(node, '#node-input-amd_recognizer_vendor', '#node-input-amd_recognizer_lang');
 
         $('#node-input-target-container').css('min-height','180px').css('min-width','450px').editableList({
           addItem: function(container, i, opt) {
@@ -650,6 +660,51 @@
       </div>
       <div class="form-row node-input-headers-container-row">
           <ol id="node-input-headers-container"></ol>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Answering Machine Detection</legend>
+      <div class="form-row">
+        <label for="node-input-amd_actionHook">actionHook</label>
+        <input type="text" id="node-input-amd_actionHook">
+        <input type="hidden" id="node-input-amd_actionHookType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-amd_recognizer_vendor">Vendor</label>
+        <select id="node-input-amd_recognizer_vendor">
+          <option value="default" selected>--application default--</option>
+          <option value="google">Google</option>
+          <option value="aws">AWS</option>
+          <option value="deepgram">deepgram</option>
+          <option value="microsoft">microsoft</option>
+          <option value="ibm">ibm</option>
+          <option value="nuance">nuance</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="node-input-amd_recognizer_lang">Language</label>
+        <select id="node-input-amd_recognizer_lang">
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="node-input-amd_thresholdWordCount">Threshold Word Count</label>
+        <input type="text" id="node-input-amd_thresholdWordCount">
+      </div>
+      <div class="form-row">
+        <label for="node-input-amd_timers_decisionTimeoutMs">Decision Timeout</label>
+        <input type="text" id="node-input-amd_timers_decisionTimeoutMs">
+      </div>
+      <div class="form-row">
+        <label for="node-input-amd_timers_greetingCompletionTimeoutMs">Greeting Completion Timeout</label>
+        <input type="text" id="node-input-amd_timers_greetingCompletionTimeoutMs">
+      </div>
+      <div class="form-row">
+        <label for="node-input-amd_timers_noSpeechTimeoutMs">No-Speech Timeout</label>
+        <input type="text" id="node-input-amd_timers_noSpeechTimeoutMs">
+      </div>
+      <div class="form-row">
+        <label for="node-input-amd_timers_toneTimeoutMs">Tone Timeout</label>
+        <input type="text" id="node-input-amd_timers_toneTimeoutMs">
       </div>
     </fieldset>
   </div>

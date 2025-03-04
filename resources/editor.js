@@ -156,10 +156,10 @@
     }
   }
 
-  function prepareSttControls(node) {
-    var vendorElem = $('#node-input-transcriptionvendor');
-    var languageElem = $('#node-input-recognizerlang');
-    var mixtypeElem = $('#node-input-mixtype');
+  function prepareSttControls(node, vendor='#node-input-transcriptionvendor', lang='#node-input-recognizerlang', mixType='#node-input-mixtype') {
+    var vendorElem = $(vendor);
+    var languageElem = $(lang);
+    var mixtypeElem = $(mixType);
 
     console.log('entering prepareSttControls');
     

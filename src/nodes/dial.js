@@ -49,7 +49,7 @@ module.exports = function(RED) {
         confirmHook: await new_resolve(RED, config.confirmhook, config.confirmhookType, node, msg), 
         dialMusic: await new_resolve(RED, config.dialmusic, config.dialmusicType, node, msg),
         referHook: await new_resolve(RED, config.referhook, config.referhookType, node, msg),
-        dtmfHook: await new_resolve(RED, config.dtmfhook, config.dtmfhookType, node, msg),
+        dtmfHook: await new_resolve(RED, config.dtmfhook, config.dtmfhookType, node, msg)
       };
 
       if (config.hasOwnProperty('anchormedia')) {
@@ -130,6 +130,31 @@ module.exports = function(RED) {
       }
       else {
         delete data.dtmfHook;
+      }
+
+      // AMD
+      const _amd_actionHook =  await new_resolve(RED, config.amd_actionHook, config.amd_actionHookType, node, msg)
+      if (_amd_actionHook){
+        data.amd = {}
+        data.amd.actionHook = _amd_actionHook;
+        config.amd_thresholdWordCount && (data.amd.thresholdWordCount = Number(config.amd_thresholdWordCount))
+        data.amd.timers = {
+          ...(config.amd_timers_decisionTimeoutMs && {decisionTimeoutMs: Number(config.amd_timers_decisionTimeoutMs)}),
+          ...(config.amd_timers_greetingCompletionTimeoutMs && {greetingCompletionTimeoutMs: Number(config.amd_timers_greetingCompletionTimeoutMs)}),
+          ...(config.amd_timers_noSpeechTimeoutMs && {noSpeechTimeoutMs: Number(config.amd_timers_noSpeechTimeoutMs)}),
+          ...(config.amd_timers_toneTimeoutMs && {toneTimeoutMs: Number(config.amd_timers_toneTimeoutMs)}),
+        }
+        //If none of the timer values are set remove the object
+        if (Object.keys(data.amd.timers).length == 0){
+          delete(data.amd.timers)
+        }
+        //If custom recogniser is used
+        if (config.amd_recognizer_vendor != 'default'){
+          data.amd.recognizer = {
+            ...(config.amd_recognizer_vendor && {vendor : config.amd_recognizer_vendor}),
+            ...(config.amd_recognizer_lang && {language : config.amd_recognizer_lang})
+          }
+        }
       }
 
       node.log(`dial verb: ${JSON.stringify(data)}`);
