@@ -138,6 +138,7 @@ module.exports = function(RED) {
         data.amd = {}
         data.amd.actionHook = _amd_actionHook;
         config.amd_thresholdWordCount && (data.amd.thresholdWordCount = Number(config.amd_thresholdWordCount))
+        config.amd_digitCount && (data.amd.digitCount = Number(config.amd_digitCount))
         data.amd.timers = {
           ...(config.amd_timers_decisionTimeoutMs && {decisionTimeoutMs: Number(config.amd_timers_decisionTimeoutMs)}),
           ...(config.amd_timers_greetingCompletionTimeoutMs && {greetingCompletionTimeoutMs: Number(config.amd_timers_greetingCompletionTimeoutMs)}),
