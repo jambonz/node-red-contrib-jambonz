@@ -1,6 +1,14 @@
 <!-- Javascript -->
 <script type="text/javascript">
- 
+  
+  function formatjson(e) {
+    e.preventDefault();
+    e = s.getValue() || "";
+    try {
+      e = JSON.stringify(JSON.parse(e), null, 4)
+    } catch (e) {}
+    s.getSession().setValue(e || "", -1)
+  }
 
   RED.nodes.registerType('generic',{
       category: 'jambonz',
@@ -8,20 +16,32 @@
       defaults: {
         name: {value: ''},
         verb: {required: true},
-        data: {value: '{}'},
-        dataType: {value: 'json'},
+        data: { value: '',
+                validate: function(v) {
+                  return (typeof(JSON.parse(v)) == 'object')
+                }
+        },
       },
       inputs:1,
       outputs:1,
       icon: "font-awesome/fa-cubes",
       label: function() { return this.name || 'generic';},
       oneditprepare: function() {
-        $('#node-input-data').typedInput({
-          default: $('#node-input-dataType').val(),
-          types: ['json','msg', 'flow', 'global', 'jsonata', 'env'],
-          typeField: $('#node-input-dataType')
-        });
-      }
+            this.editor = RED.editor.createEditor({
+                id: 'node-input-data-editor',
+                mode: 'ace/mode/json',
+                value: this.data
+            });
+        },
+        oneditsave: function() {
+            this.data = this.editor.getValue();
+            this.editor.destroy();
+            delete this.editor;
+        },
+        oneditcancel: function() {
+            this.editor.destroy();
+            delete this.editor;
+        }
   });
 </script>
 
@@ -35,11 +55,12 @@
       <label for="node-input-verb">Verb</label>
       <input type="text" id="node-input-verb" placeholder="verb">
     </div>
-    <div class="form-row">
-      <label for="node-input-data">Attributes</label>
-      <input type="text" id="node-input-data">
-      <input type="hidden" id="node-input-dataType">
-    </div>
+    <div class="form-row" style="position: relative; height: 250px;">
+      <label for="node-input-data"><i class="fa fa-code"></i> Attributes</label>
+      <div style="position: absolute; right: 0; bottom: 0; top: 0; left: 100px;">
+          <div id="node-input-data-editor" style="width: 100%; height: 100%;"></div>
+      </div>
+  </div>
 </script>
 
 <!-- Help Text -->
