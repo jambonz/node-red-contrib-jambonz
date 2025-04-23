@@ -26,6 +26,9 @@ function lcc(config) {
         case 'hangup':
           opts.call_status = 'completed';
           break;
+        case 'cancel':
+          opts.call_status = 'no-answer';
+          break;
         case 'mute':
           opts.mute_status = 'mute';
           break;
