@@ -56,8 +56,20 @@ module.exports = function(RED) {
         data.anchorMedia = config.anchormedia;
       }
 
+      if (config.hasOwnProperty('exitmediapath')) {
+        data.exitMediaPath = config.exitmediapath;
+      }
+
       if (config.onholdhook) {
         data.onHoldHook = await new_resolve(RED, config.onholdhook, config.onholdhookType, node, msg);
+      }
+
+      if (config.tag) {
+        data.tag = await new_resolve(RED, config.tag, config.tagType, node, msg);
+      }
+
+      if (config.boostaudiosignal) {
+        data.boostAudioSignal = await new_resolve(RED, config.boostaudiosignal, config.boostaudiosignalType, node, msg)
       }
 
       // headers

@@ -17,6 +17,7 @@
         actionhookType: {value: 'str'},
         answeronbridge: {value: false},
         anchormedia: {value: false},
+        exitmediapath: {value: false},
         callerid: {value: ''},
         calleridType: {value: ''},
         callername: {value: ''},
@@ -35,6 +36,10 @@
         onholdhookType: {value: 'str'},
         timelimit: {validate:RED.validators.regex(/^\d*$/) },
         timeout: {validate:RED.validators.regex(/^\d*$/) },
+        boostaudiosignal: { value: "" },
+        boostaudiosignalType: { value: "str" },
+        tag: {value: '{}'},
+        tagType: {value: 'json'},
         listenurl: {value: ''},
         listenurlType: {value: 'str'},
         transcriptionhook: {},
@@ -122,6 +127,15 @@
         $('#node-input-onholdhook').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-onholdhookType')
+        });
+        $('#node-input-boostaudiosignal').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-boostaudiosignalType')
+        });
+        $('#node-input-tag').typedInput({
+          default: $('#node-input-tagType').val(),
+          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-tagType')
         });
         $('#node-input-transcribeurl').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
@@ -476,6 +490,10 @@
       <input type="checkbox" id="node-input-anchormedia">
     </div>
     <div class="form-row">
+      <label for="node-input-exitmediapath">Exit media path</label>
+      <input type="checkbox" id="node-input-exitmediapath">
+    </div>
+    <div class="form-row">
       <label for="node-input-callerid">Caller ID</label>
       <input type="text" id="node-input-callerid" placeholder="caller id to place on outbound call">
       <input type="hidden" id="node-input-calleridType">
@@ -522,6 +540,16 @@
     <div class="form-row">
       <label for="node-input-timeout"><i class="icon-tag"></i> Timeout</label>
       <input type="text" id="node-input-timeout" placeholder="ring no answer timeout in secs (default: 60)">
+    </div>
+    <div class="form-row">
+      <label for="node-input-boostaudiosignal">Boost audio signal</label>
+        <input type="text" id="node-input-boostaudiosignal" placeholder="boost audio volume in decibels">
+        <input type="hidden" id="node-input-boostaudiosignalType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-tag">Tag data</label>
+      <input type="text" id="node-input-tag" placeholder="tag object">
+      <input type="hidden" id="node-input-tagType">
     </div>
     <fieldset>
       <legend>Live audio</legend>
