@@ -64,7 +64,7 @@
     "hash-sum": "^2.0.0",
     "is-utf8": "^0.2.1",
     "media-typer": "^1.1.0",
-    "multer": "^1.4.5-lts.1",
+    "multer": "^2.0.1",
     "mustache": "^4.2.0",
     "on-headers": "^1.0.2",
     "raw-body": "^2.5.2",
