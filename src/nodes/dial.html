@@ -34,8 +34,10 @@
         dtmfhookType: {value: 'str'},
         onholdhook: {value: ''},
         onholdhookType: {value: 'str'},
-        timelimit: {validate:RED.validators.regex(/^\d*$/) },
-        timeout: {validate:RED.validators.regex(/^\d*$/) },
+        timelimit: {},
+        timelimitType: {value: 'num'},
+        timeout: {},
+        timeoutType: {value: 'num'},
         boostaudiosignal: { value: "" },
         boostaudiosignalType: { value: "str" },
         tag: {value: '{}'},
@@ -168,6 +170,14 @@
         $('#node-input-naics').typedInput({
           types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-naicsType')
+        });
+        $('#node-input-timeout').typedInput({
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-timeoutType')
+        });
+        $('#node-input-timelimit').typedInput({
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-timelimitType')
         });
 
         prepareSttControls(node);
@@ -536,10 +546,12 @@
     <div class="form-row">
       <label for="node-input-timelimit">Time limit</label>
       <input type="text" id="node-input-timelimit" placeholder="max duration of call in secs">
+      <input type="hidden" id="node-input-timelimitType">
     </div>
     <div class="form-row">
       <label for="node-input-timeout"><i class="icon-tag"></i> Timeout</label>
       <input type="text" id="node-input-timeout" placeholder="ring no answer timeout in secs (default: 60)">
+      <input type="hidden" id="node-input-timeoutType">
     </div>
     <div class="form-row">
       <label for="node-input-boostaudiosignal">Boost audio signal</label>

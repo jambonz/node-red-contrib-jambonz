@@ -20,8 +20,9 @@
         trunk: {value: ''},
         trunkType: {value: 'str'},
         dest: {value: 'phone', required: true},
-        timeout: {validate: RED.validators.regex(/^\d*$/) },
-        tag: {required: true},
+        timeout: {value: '' },
+        timeoutType: {value: 'num'},
+        tag: {value: '{}'},
         tagType: {value: 'json'},
         application: {value: ''},
         appName: {},
@@ -113,6 +114,11 @@
           default: $('#node-input-trunkType').val(),
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-trunkType')
+        });
+         $('#node-input-timeout').typedInput({
+          default: $('#node-input-timeoutType').val(),
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-timeoutType')
         });
         var populateApplications = function() {
           var serverId = $('#node-input-server option:selected').val();
@@ -256,6 +262,7 @@
   <div class="form-row">
     <label for="node-input-timeout">Ring timeout</label>
     <input type="text" id="node-input-timeout" placeholder="ring no answer timeout in secs (default: 60)">
+    <input type="hidden" id="node-input-timeoutType">
   </div>
   <div class="form-row">
     <label for="node-input-tag">Tag data</label>
