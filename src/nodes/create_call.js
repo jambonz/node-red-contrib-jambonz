@@ -22,6 +22,7 @@ module.exports = function(RED) {
       var from = await new_resolve(RED, config.from, config.fromType, node, msg);
       var to = await new_resolve(RED, config.to, config.toType, node, msg);
       var tag = await new_resolve(RED, config.tag, config.tagType, node, msg);
+      var timeout = await new_resolve(RED, config.timeout, config.timeoutType, node, msg);
 
       const opts = {
         from,
@@ -64,8 +65,8 @@ module.exports = function(RED) {
           break;
       }
 
-      if (config.timeout) {
-        const timeout = parseInt(config.timeout);
+      if (timeout) {
+        timeout = parseInt(timeout);
         if (timeout > 0) opts.timeout = timeout;
       }
 
