@@ -93,6 +93,33 @@ module.exports = function(RED) {
           send(msg);
           return;
       }
+
+      // AMD
+      const _amd_actionHook =  await new_resolve(RED, config.amd_actionHook, config.amd_actionHookType, node, msg)
+      if (_amd_actionHook){
+        opts.amd = {}
+        opts.amd.actionHook = _amd_actionHook;
+        config.amd_thresholdWordCount && (opts.amd.thresholdWordCount = Number(config.amd_thresholdWordCount))
+        config.amd_digitCount && (opts.amd.digitCount = Number(config.amd_digitCount))
+        opts.amd.timers = {
+          ...(config.amd_timers_decisionTimeoutMs && {decisionTimeoutMs: Number(config.amd_timers_decisionTimeoutMs)}),
+          ...(config.amd_timers_greetingCompletionTimeoutMs && {greetingCompletionTimeoutMs: Number(config.amd_timers_greetingCompletionTimeoutMs)}),
+          ...(config.amd_timers_noSpeechTimeoutMs && {noSpeechTimeoutMs: Number(config.amd_timers_noSpeechTimeoutMs)}),
+          ...(config.amd_timers_toneTimeoutMs && {toneTimeoutMs: Number(config.amd_timers_toneTimeoutMs)}),
+        }
+        //If none of the timer values are set remove the object
+        if (Object.keys(opts.amd.timers).length == 0){
+          delete(opts.amd.timers)
+        }
+        //If custom recogniser is used
+        if (config.amd_recognizer_vendor != 'default'){
+          opts.amd.recognizer = {
+            ...(config.amd_recognizer_vendor && {vendor : config.amd_recognizer_vendor}),
+            ...(config.amd_recognizer_lang && {language : config.amd_recognizer_lang})
+          }
+        }
+      }
+
       try {
         const response = await doCreateCall(node, url, accountSid, apiToken, opts);
         msg.statusCode = 201;
