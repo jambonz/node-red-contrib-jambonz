@@ -24,6 +24,8 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, n);
     var node = this;
 
+    node.warn("This node has been deprecated. See https://github.com/jambonz/node-red-contrib-jambonz/issues/53");
+
     // Get AWS Creds
     const awsCreds = RED.nodes.getNode(n.aws);
     if (awsCreds && awsCreds.credentials) {
