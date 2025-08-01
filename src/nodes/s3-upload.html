@@ -16,6 +16,10 @@
 </script>
 
 <script type="text/html" data-template-name="audio in">
+  <div class="form-row ui-state-error">
+    <strong>Attention:</strong> 
+      This node has been deprecated. <a href="https://github.com/jambonz/node-red-contrib-jambonz/issues/53" target="_blank">See issue #53<i class="fa fa-external-link external-link"></i></a> for more details.
+  </div>
   <div class="form-row">
     <label for="node-input-name"><i class="icon-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
@@ -35,6 +39,10 @@
 </script>
 
 <script type="text/html" data-help-name="audio in">
+  <div class="ui-state-error">
+    <strong>Attention:</strong> 
+      This node has been deprecated.
+  </div>
   <p>Receives audio from jambonz and uploads to S3</p>
   <h3>Outputs</h3>
           <dl class="message-properties">
