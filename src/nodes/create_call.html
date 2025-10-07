@@ -19,6 +19,12 @@
         toType: {value: ''},
         trunk: {value: ''},
         trunkType: {value: 'str'},
+        sipauth_user: {value: ''},
+        sipauth_userType: {value: 'str'},
+        sipauth_password: {value: ''},
+        sipauth_passwordType: {value: 'str'},
+        sip_proxy: {value: ''},
+        sip_proxyType: {value: 'str'},
         dest: {value: 'phone', required: true},
         timeout: {value: '' },
         timeoutType: {value: 'num'},
@@ -80,6 +86,7 @@
         var serverElem = $('#node-input-server');
         var applicationElem = $('#node-input-application');
         var trunkDiv = $('#trunk');
+        var sipDiv = $('#sip');
         prepareTtsControls(node);
         prepareSttControls(node);
 
@@ -87,6 +94,8 @@
           var selectedDest = destElem.find(':selected').val();
           if ('phone' === selectedDest) trunkDiv.show();
           else trunkDiv.hide();
+          if ('sip' === selectedDest) sipDiv.show();
+          else sipDiv.hide();
         }
         
         destElem.change(onDestChanged);
@@ -135,14 +144,29 @@
           types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-amd_actionHookType')
         });
+        $('#node-input-sipauth_user').typedInput({
+          default: $('#node-input-sipauth_userType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-sipauth_userType')
+        });
+        $('#node-input-sipauth_password').typedInput({
+          default: $('#node-input-sipauth_passwordType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-sipauth_passwordType')
+        });
+        $('#node-input-sip_proxy').typedInput({
+          default: $('#node-input-sip_proxyType').val(),
+          types: ['str','msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-sip_proxyType')
+        });
         var populateApplications = function() {
           var serverId = $('#node-input-server option:selected').val();
             $.ajax({
               url: `_jambonz/applications/${serverId}`,
               dataType: 'json',
-              timeout: 500,
+              timeout: 5000,
               error: (err) => {
-                console.log(err);
+                console.error(`Unable to get application list ${err.statusText}`);
               },
               success: (res) => {
                 applicationElem.find('option').remove();
@@ -256,17 +280,7 @@
     <input type="hidden" id="node-input-callernameType">
   </div>
   <div class="form-row">
-    <label for="node-input-to">To</label>
-    <input type="text" id="node-input-to" placeholder="called party info">
-    <input type="hidden" id="node-input-toType">
-  </div>
-  <div class="form-row" id ="trunk">
-    <label for="node-input-trunk">Trunk</label>
-    <input type="text" id="node-input-trunk" placeholder="Specify the name of the trunk used for this outbound call">
-    <input type="hidden" id="node-input-trunkType">
-  </div>
-  <div class="form-row">
-    <label for="node-input-dest">Call type</label>
+    <label for="node-input-dest">Dest Type</label>
     <select id="node-input-dest">
       <option value="phone">phone number</option>
       <option value="user">registered sip device/user</option>
@@ -274,6 +288,34 @@
       <option value="ms-teams">Microsoft teams</option>
     </select>
   </div>
+  <div class="form-row">
+    <label for="node-input-to">To</label>
+    <input type="text" id="node-input-to" placeholder="destination">
+    <input type="hidden" id="node-input-toType">
+  </div>
+  <div class="form-row" id ="trunk">
+    <label for="node-input-trunk">Trunk</label>
+    <input type="text" id="node-input-trunk" placeholder="Specify the name of the trunk used for this outbound call">
+    <input type="hidden" id="node-input-trunkType">
+  </div>
+  <div id="sip">
+  <div class="form-row">
+    <label for="node-input-sipauth_user">SIP Auth Username</label>
+    <input type="text" id="node-input-sipauth_user" placeholder="Username for SIP Authentication">
+    <input type="hidden" id="node-input-sipauth_userType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-sipauth_password">SIP Auth Password</label>
+    <input type="text" id="node-input-sipauth_password" placeholder="Passwrd for SIP Authentication">
+    <input type="hidden" id="node-input-sipauth_passwordType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-sip_proxy">SIP Proxy</label>
+    <input type="text" id="node-input-sip_proxy" placeholder="SIP Proxy">
+    <input type="hidden" id="node-input-sip_proxyType">
+  </div>
+  </div>
+  
   <div class="form-row">
     <label for="node-input-timeout">Ring timeout</label>
     <input type="text" id="node-input-timeout" placeholder="ring no answer timeout in secs (default: 60)">

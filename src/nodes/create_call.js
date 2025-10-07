@@ -82,7 +82,12 @@ module.exports = function(RED) {
           opts.to.name = to;
           break;
         case 'sip':
+          var sipauth_user = await new_resolve(RED, config.sipauth_user, config.sipauth_userType, node, msg);
+          var sipauth_password = await new_resolve(RED, config.sipauth_password, config.sipauth_passwordType, node, msg);
+          var sip_proxy = await new_resolve(RED, config.sip_proxy, config.sip_proxyType, node, msg);
           opts.to.sipUri = to;
+          sip_proxy ? opts.to.proxy = sip_proxy : null
+          sipauth_user ? opts.to.auth = { username :sipauth_user, password: sipauth_password} : null
           break;
         case 'ms-teams':
           opts.to.user = to;
