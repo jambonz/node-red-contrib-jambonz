@@ -10,8 +10,10 @@ module.exports = function(RED) {
     node.on('input', async (msg, send, done) => {
       send = send || function() { node.send.apply(node, arguments);};
 
-      const {accountSid, apiToken} = server.credentials;
-      const url = server.url
+      const url = await new_resolve(RED, server.url, server.urlType, node, msg);
+      const accountSid = await new_resolve(RED, server.credentials.accountSid, server.credentials.accountSidType, node, msg);
+      const apiToken = await new_resolve(RED, server.credentials.apiToken, server.credentials.apiTokenType, node, msg);
+
       if (!url || !accountSid || !apiToken) {
         node.error(`invalid / missing credentials, skipping create-call node: ${JSON.stringify(server.credentials)}`);
         send(msg);
