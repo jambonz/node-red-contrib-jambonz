@@ -5,7 +5,9 @@
     defaults: {
       name: {},
       urlType: {},
-      url: {type: 'text'}
+      url: {type: 'text'},
+      accountSidType: {value: 'str'},
+      apiTokenType: {value: 'str'}
     },
     credentials: {
       accountSid: {type: 'text'},
@@ -15,9 +17,16 @@
     oneditprepare: function() {
       $('#btn-test-credentials').on('click', testCredentials);
       $('#node-config-input-url').typedInput({
-          types: ['str', 
-                  {value: 'https://api.jambonz.cloud', label : 'jambonz.cloud', hasValue: false}],
+          types: ['str', 'env', 'msg', 'flow', 'global', {value: 'https://api.jambonz.cloud', label : 'jambonz.cloud', hasValue: false}],
           typeField: $('#node-config-input-urlType')
+      });
+      $('#node-config-input-accountSid').typedInput({
+          types: ['str', 'env', 'msg', 'flow', 'global'],
+          typeField: $('#node-config-input-accountSidType')
+      });
+      $('#node-config-input-apiToken').typedInput({
+          types: ['str', 'env', 'msg', 'flow', 'global'],
+          typeField: $('#node-config-input-apiTokenType')
       });
     },
     oneditsave: function() {
@@ -72,10 +81,13 @@
 <div class="form-row">
   <label for="node-config-input-accountSid">Account SID</label>
   <input type="text" id="node-config-input-accountSid">
+  <input type="hidden" id="node-config-input-accountSidType">
 </div>
 <div class="form-row">
   <label for="node-config-input-apiToken">API token</label>
   <input type="text" id="node-config-input-apiToken">
+  <input type="hidden" id="node-config-input-apiTokenType">
+
 </div>
 <div class="form-row">
   <button id="btn-test-credentials"><i class="fa fa-lock"></i> Test Credentials</button>

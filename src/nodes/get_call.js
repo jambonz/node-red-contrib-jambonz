@@ -6,8 +6,19 @@ module.exports = function (RED) {
     RED.nodes.createNode(this, config);
     var node = this;
     const server = RED.nodes.getNode(config.server);
-    const { accountSid, apiToken } = server.credentials;
+
     node.on("input", async (msg, send, done) => {
+      const url = await new_resolve(RED, server.url, server.urlType, node, msg);
+      const accountSid = await new_resolve(RED, server.credentials.accountSid, server.accountSidType, node, msg);
+      const apiToken = await new_resolve(RED, server.credentials.apiToken, server.apiTokenType, node, msg);
+
+      if (!url || !accountSid || !apiToken) {
+          node.error(`invalid / missing credentials ${JSON.stringify(server.credentials)}`);
+          send(msg);
+          if (done) done();
+          return;
+      }
+      
       const callSid = await new_resolve(RED, config.callSid, config.callSidType, node, msg);
       if (!callSid) {
         if (done) done(new Error('CallSid empty'));
@@ -15,7 +26,7 @@ module.exports = function (RED) {
         return;
       }
       try {
-        const response = await fetch(`${server.url}/v1/Accounts/${accountSid}/Calls/${callSid}`, {
+        const response = await fetch(`${url}/v1/Accounts/${accountSid}/Calls/${callSid}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${apiToken}`

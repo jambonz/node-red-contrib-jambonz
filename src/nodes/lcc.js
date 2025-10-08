@@ -11,9 +11,11 @@ function lcc(config) {
     node.on('input', async (msg, send, done) => {
       send = send || function() { node.send.apply(node, arguments);};
 
-      const {accountSid, apiToken} = server.credentials;
-      const url = server.url;
+      const url = await new_resolve(RED, server.url, server.urlType, node, msg);
+      const accountSid = await new_resolve(RED, server.credentials.accountSid, server.accountSidType, node, msg);
+      const apiToken = await new_resolve(RED, server.credentials.apiToken, server.apiTokenType, node, msg);
       const callSid = await new_resolve(RED, config.callSid, config.callSidType, node, msg);
+      
       if (!url || !accountSid || !apiToken || !callSid) {
         node.log(`invalid / missing credentials or callSid, skipping LCC node: ${JSON.stringify(server.credentials)}`);
         send(msg);
