@@ -12,8 +12,8 @@ function lcc(config) {
       send = send || function() { node.send.apply(node, arguments);};
 
       const url = await new_resolve(RED, server.url, server.urlType, node, msg);
-      const accountSid = await new_resolve(RED, server.credentials.accountSid, server.credentials.accountSidType, node, msg);
-      const apiToken = await new_resolve(RED, server.credentials.apiToken, server.credentials.apiTokenType, node, msg);
+      const accountSid = await new_resolve(RED, server.credentials.accountSid, server.accountSidType, node, msg);
+      const apiToken = await new_resolve(RED, server.credentials.apiToken, server.apiTokenType, node, msg);
       const callSid = await new_resolve(RED, config.callSid, config.callSidType, node, msg);
       
       if (!url || !accountSid || !apiToken || !callSid) {
