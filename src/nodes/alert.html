@@ -1,0 +1,75 @@
+<!-- Javascript -->
+<script type="text/javascript">
+    var mustacheType = {
+        value: "mustache",
+        label: "mustache",
+        hasvalue: true,
+        icon: "resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg",
+    };
+    RED.nodes.registerType("alert", {
+        category: "jambonz",
+        color: "#bbabaa",
+        defaults: {
+            name: { value: "" },
+            message: { value: "" },
+            messageType: { value: "str" },
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "font-awesome/fa-cubes",
+        label: function () {
+            return this.name || "alert";
+        },
+        oneditprepare: function () {
+            $("#node-input-message").typedInput({
+                default: $("#node-input-messageType").val(),
+                types: ["str", "msg", "flow", "global", mustacheType],
+                typeField: $("#node-input-messageType"),
+            });
+        },
+    });
+</script>
+
+<!-- HTML -->
+<script type="text/html" data-template-name="alert">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-message">Message</label>
+        <input
+            type="text"
+            id="node-input-message"
+            placeholder="Alert message"
+        />
+        <input type="hidden" id="node-input-messageType" />
+    </div>
+</script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="alert">
+    <p>Raise an alert in the jambonz platform.</p>
+    <h3>Properties</h3>
+    <p><code>Message</code> - an alert message</p>
+
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>jambonz<span class="property-type">object</span></dt>
+        <dd>
+            <code>msg.jambonz</code> will contain any previous actions provided
+            to the input with the new <code>alert</code> action appended
+        </dd>
+    </dl>
+
+    <h3>Details</h3>
+    The alert verb raises an alert in the jambonz platform
+    <h3>References</h3>
+    <ul>
+        <li>
+            <a href="https://docs.jambonz.org/verbs/verbs/alert"
+                >Jambonz alert reference</a
+            >
+        </li>
+    </ul>
+</script>
