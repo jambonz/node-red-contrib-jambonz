@@ -5,13 +5,13 @@
     defaults: {
       name: {},
       urlType: {},
-      url: {type: 'text'}
+      url: {type: 'text'},
+      accountSidType: {value: 'str'},
+      apiTokenType: {value: 'str'}
     },
     credentials: {
       accountSid: {type: 'text'},
-      accountSidType: {},
-      apiToken: {type: 'text'},
-      apiTokenType: {}
+      apiToken: {type: 'text'}
     },
     label: function() { return this.name || 'auth';},
     oneditprepare: function() {
