@@ -123,9 +123,14 @@
 
   function testCredentials() {
     let baseUrl
+
     const accountSid =  $("#node-config-input-accountSid").val();
     const token =  $("#node-config-input-apiToken").val();
     const status = $("#node-config-test-status");
+    if (!['str', 'https://api.jambonz.cloud'].includes($("#node-config-input-urlType").val()) || ($("#node-config-input-apiTokenType").val() != 'str') || ($("#node-config-input-accountSidType").val() != 'str')){
+      status.text('Cannot test credentials using TypedInputs');
+      return;
+    }
     status.text('');
     if ($("#node-config-input-urlType").val() == 'str'){
       baseUrl = $("#node-config-input-url").val();
