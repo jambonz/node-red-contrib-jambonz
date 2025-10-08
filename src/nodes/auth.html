@@ -17,16 +17,15 @@
     oneditprepare: function() {
       $('#btn-test-credentials').on('click', testCredentials);
       $('#node-config-input-url').typedInput({
-          types: ['str', 'env', 'msg', 'flow', 'global',
-                  {value: 'https://api.jambonz.cloud', label : 'jambonz.cloud', hasValue: false}],
+          types: ['str', 'env', 'msg', 'flow', 'global', {value: 'https://api.jambonz.cloud', label : 'jambonz.cloud', hasValue: false}],
           typeField: $('#node-config-input-urlType')
       });
       $('#node-config-input-accountSid').typedInput({
-          types: [['str', 'env', 'msg', 'flow', 'global'],
+          types: ['str', 'env', 'msg', 'flow', 'global'],
           typeField: $('#node-config-input-accountSidType')
       });
       $('#node-config-input-apiToken').typedInput({
-          types: [['str', 'env', 'msg', 'flow', 'global'],
+          types: ['str', 'env', 'msg', 'flow', 'global'],
           typeField: $('#node-config-input-apiTokenType')
       });
     },
