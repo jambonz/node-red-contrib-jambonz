@@ -55,8 +55,9 @@ module.exports = function(RED) {
   RED.httpAdmin.get('/_jambonz/applications/:serverId', (req, res) => {
     const conn = RED.nodes.getNode(req.params.serverId);
     if (conn && conn.credentials && conn.credentials.apiToken) {
-      const { apiToken } = conn.credentials;
-      const { url } = conn;
+      const url =  RED.util.evaluateNodeProperty( conn.url, conn.urlType, conn, {});
+      const apiToken =  RED.util.evaluateNodeProperty(conn.credentials.apiToken, conn.apiTokenType, conn, {});
+
       fetch(`${url}/v1/Applications`, {
         method: 'GET',
         headers: {
