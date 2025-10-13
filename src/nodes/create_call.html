@@ -165,12 +165,14 @@
               url: `_jambonz/applications/${serverId}`,
               dataType: 'json',
               timeout: 5000,
-              error: (err) => {
-                console.error(`Unable to get application list ${err.statusText}`);
+                error: (err) => {
+                applicationElem.find('option').remove();
+                applicationElem.append('<option value="msg.application_sid">--msg.application_sid--</option>');
+                console.log(`Unable to get application list ${err.statusText} ${err}`);
               },
               success: (res) => {
                 applicationElem.find('option').remove();
-                var options = '';
+                var options = '<option value="msg.application_sid">--msg.application_sid--</option>';
                 res.forEach((app) => {
                   if (node.application === app.application_sid) {
                     options += `<option value="${app.application_sid}" selected>${app.name}</option>`;

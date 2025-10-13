@@ -48,7 +48,11 @@ module.exports = function(RED) {
 
       switch (config.mode) {
         case 'app':
-          opts.application_sid = config.application;
+          if (config.application == 'msg.application_sid'){
+            opts.application_sid = msg.application_sid
+          } else{
+            opts.application_sid = config.application;
+          }
           break
         case 'url':
           opts.call_hook = {
