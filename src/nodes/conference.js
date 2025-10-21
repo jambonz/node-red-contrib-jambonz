@@ -19,7 +19,8 @@ module.exports = function(RED) {
         beep: config.beep,
         startConferenceOnEnter: config.startConferenceOnEnter,
         endConferenceOnExit: config.endConferenceOnExit,
-        joinMuted: config.joinMuted
+        joinMuted: config.joinMuted,
+        ...(config.distributeDtmf && {'distributeDtmf': true})
       });
       node.send(msg);
     });
