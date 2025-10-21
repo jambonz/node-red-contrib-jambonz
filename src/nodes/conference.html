@@ -27,7 +27,8 @@
       actionHookType: {value: 'str'},
       statusHook: {},
       statusHookType: {value: 'str'},
-      joinMuted : {value: false}
+      joinMuted : {value: false},
+      distributeDtmf: {value: false}
     },
     inputs:1,
     outputs:1,
@@ -110,6 +111,10 @@
     <div class="form-row">
       <label for="node-input-joinMuted">Join muted</label>
       <input type="checkbox" id="node-input-joinMuted">
+    </div>
+      <div class="form-row">
+      <label for="node-input-distributeDtmf">Distribute DTMF</label>
+      <input type="checkbox" id="node-input-distributeDtmf">
     </div>
     <div class="form-row">
       <label for="node-input-maxParticipants">Max participants</label>
