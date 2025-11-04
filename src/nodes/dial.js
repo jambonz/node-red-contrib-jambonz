@@ -74,9 +74,12 @@ module.exports = function(RED) {
 
       // headers
       const headers = {};
-      config.headers.forEach(function(h) {
-        if (h.h.length && h.v.length) headers[h.h] = h.v;
-      });
+      for (const h of config.headers) {
+        if (h.h.length && h.v.length) {
+          const resolvedValue = await new_resolve(RED, h.v, h.vType || 'str', node, msg);
+          if (resolvedValue) headers[h.h] = resolvedValue;
+        }
+      }
       Object.assign(data, {headers});
 
       // nested listen
