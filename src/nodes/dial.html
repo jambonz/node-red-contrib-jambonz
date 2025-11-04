@@ -373,7 +373,7 @@
           addItem: function(container, i, opt) {
             var header = opt;
             if (!header.hasOwnProperty('h')) {
-                header = {h: '', v: ''};
+                header = {h: '', v: '', vType: 'str'};
             }
             container.css({
               overflow: 'hidden',
@@ -382,20 +382,23 @@
             let fragment = document.createDocumentFragment();
             var row1 = $('<div/>',{style:"display:flex;"}).appendTo(fragment);
             $('<input/>', {
-              class:"node-input-header-property-name", 
-              type:"text", 
+              class:"node-input-header-property-name",
+              type:"text",
               placeholder: 'SIP Header'
             })
               .appendTo(row1);
             $('<input/>', {
-              class:"node-input-value-property-name", 
-              type:"text", 
+              class:"node-input-value-property-name",
+              type:"text",
               placeholder: 'value'
             })
-              .appendTo(row1);
+              .appendTo(row1)
+              .typedInput({types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType]});
 
             row1.find('.node-input-header-property-name').val(header.h);
-            row1.find('.node-input-value-property-name').val(header.v);
+            var valueField = row1.find('.node-input-value-property-name');
+            valueField.typedInput('type', header.vType || 'str');
+            valueField.typedInput('value', header.v);
 
             container[0].appendChild(fragment);
           },
@@ -406,6 +409,7 @@
           var header = {
             h: '',
             v: '',
+            vType: 'str'
           };
           this.headers = [header];
         }
@@ -457,11 +461,13 @@
           var header = $(this);
           console.log(`header: ${JSON.stringify(header)}`);
           var h = header.find(".node-input-header-property-name").val();
-          var v = header.find(".node-input-value-property-name").val();
-          console.log(`added ${h}: ${v}`);
+          var vField = header.find(".node-input-value-property-name");
+          var v = vField.typedInput('value');
+          var vType = vField.typedInput('type');
+          console.log(`added ${h}: ${v} (type: ${vType})`);
           var obj = {};
           obj[h] = v;
-          headers.push({h, v});
+          headers.push({h, v, vType});
         });
         node.headers = headers;
         console.log(`saved headers ${JSON.stringify(node.headers)}`);
