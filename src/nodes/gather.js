@@ -57,8 +57,7 @@ module.exports = function(RED) {
         if (/^\d+$/.test(config.mindigits)) obj.minDigits = parseInt(config.mindigits);
         if (/^\d+$/.test(config.maxdigits)) obj.maxDigits = parseInt(config.maxdigits);
         if (/^\d+$/.test(config.interdigittimeout)) obj.interDigitTimeout = parseInt(config.interdigittimeout);
-
-        if (config.dtmfbargein) obj.dtmfBargein = config.dtmfbargein;
+        if (config.dtmfbargein !== undefined) obj.dtmfBargein = config.dtmfbargein;
       }
 
       // prompt
