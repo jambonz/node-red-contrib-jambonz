@@ -60,6 +60,7 @@ module.exports = function(RED) {
         data.exitMediaPath = config.exitmediapath;
       }
 
+
       if (config.onholdhook) {
         data.onHoldHook = await new_resolve(RED, config.onholdhook, config.onholdhookType, node, msg);
       }
@@ -72,6 +73,9 @@ module.exports = function(RED) {
         data.boostAudioSignal = await new_resolve(RED, config.boostaudiosignal, config.boostaudiosignalType, node, msg)
       }
 
+      if (config.forwardPAI != 'default') {
+        data.forwardPAI = JSON.parse(config.forwardPAI);
+      }
       // headers
       const headers = {};
       for (const h of config.headers) {
