@@ -83,6 +83,7 @@
         amd_timers_noSpeechTimeoutMs: {},
         amd_timers_toneTimeoutMs: {},
         amd_digitCount: {},
+        forwardPAI: {value: 'default'},
       },
       inputs:1,
       outputs:1,
@@ -569,6 +570,14 @@
       <input type="text" id="node-input-tag" placeholder="tag object">
       <input type="hidden" id="node-input-tagType">
     </div>
+     <div class="form-row">
+        <label for="node-input-forwardPAI">forwardPAI</label>
+        <select id="node-input-forwardPAI">
+          <option value="default" selected>default</option>
+          <option value=true>true</option>
+          <option value=false>false</option>
+        </select>
+      </div>
     <fieldset>
       <legend>Live audio</legend>
       <div class="form-row">
