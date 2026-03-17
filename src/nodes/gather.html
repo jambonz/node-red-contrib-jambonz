@@ -1,4 +1,5 @@
 <!-- Javascript -->
+<script src="resources/@jambonz/node-red-contrib-jambonz/editor.js"></script>
 <script type="text/javascript">
   var mustacheType = {
     value: 'mustache',
@@ -99,12 +100,10 @@
         });
 
         var enableSpeech = function(enabled) {
-          console.log(`enable speech: ${enabled}`);
           if (enabled) $('#speech-input-container').show();
           else $('#speech-input-container').hide();
         }
         var enableDtmf = function(enabled) {
-          console.log(`enable dtmf: ${enabled}`);
           if (enabled) $('#dtmf-input-container').show();
           else $('#dtmf-input-container').hide();          
         }
@@ -368,6 +367,6 @@
     <code>The payload is {{msg.payload}}</code>
     <h3>References</h3>
       <ul>
-          <li><a href="https://www.jambonz.org/docs/webhooks/gather/">Jambonz gather reference</a></li>
+          <li><a href="https://docs.jambonz.org/verbs/verbs/gather">Jambonz gather reference</a></li>
       </ul>
 </script>

@@ -10,17 +10,15 @@
     "url": "git://github.com/jambonz/node-red-contrib-jambonz.git"
   },
   "engines": {
-    "node": ">=14.x"
+    "node": ">=20.x"
   },
   "node-red": {
     "version": ">=2.0.0",
     "nodes": {
       "helpers": "src/utils/http-helpers.js",
       "webhook": "src/nodes/webhooks.js",
-      "s3:upload": "src/nodes/s3-upload.js",
       "auth": "src/nodes/auth.js",
       "enqueue": "src/nodes/enqueue.js",
-      "lex": "src/nodes/lex.js",
       "say": "src/nodes/say.js",
       "dtmf": "src/nodes/dtmf.js",
       "config": "src/nodes/config.js",
@@ -58,19 +56,16 @@
   "author": "Dave Horton",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.1665.0",
-    "body-parser": "^1.20.3",
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
+    "body-parser": "^1.20.4",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
     "hash-sum": "^2.0.0",
     "is-utf8": "^0.2.1",
     "media-typer": "^1.1.0",
     "multer": "^2.0.2",
     "mustache": "^4.2.0",
     "on-headers": "^1.1.0",
-    "raw-body": "^2.5.2",
-    "s3-upload-stream": "^1.0.7",
-    "undici": "^5.28.5",
-    "ws": "^8.18.0"
+    "raw-body": "^2.5.3",
+    "undici": "^5.29.0"
   }
 }

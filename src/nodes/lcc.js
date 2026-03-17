@@ -141,7 +141,6 @@ function lcc(config) {
           opts.dub.track = await new_resolve(RED, config.dubTrack, config.dubTrackType, node, msg);
           break
         case 'dubPlay':
-          console.log(config)
           opts.dub = { action: 'playOnTrack' };
           opts.dub.track = await new_resolve(RED, config.dubTrack, config.dubTrackType, node, msg);
           opts.dub.play = await new_resolve(RED, config.dubPlay, config.dubPlayType, node, msg);

@@ -1,4 +1,5 @@
 <!-- Javascript -->
+<script src="resources/@jambonz/node-red-contrib-jambonz/editor.js"></script>
 <script type="text/javascript">
   RED.nodes.registerType('jambonz_auth',{
     category: 'config',
@@ -36,36 +37,9 @@
       }
     }
   });
-
-  RED.nodes.registerType('aws_auth',{
-    category: 'config',
-    credentials: {
-      accessKey: {type: 'text'},
-      secretAccessKey: {type: 'text'}
-    },
-    label: function() { 
-      if (!this.credentials) return null;
-      const akey = this.credentials.accessKey;
-      let mask = '';
-      for (let i = 4; i < akey.length; i++) mask += '*';
-      return akey.substr(0, 4) + mask;
-    }
-  });
 </script>
 
 <!-- HTML -->
-
-<!-- aws auth  -->
-<script type="text/html" data-template-name="aws_auth">
-  <div class="form-row">
-    <label for="node-config-input-accessKey">AWS Access Key ID</label>
-    <input type="text" id="node-config-input-accessKey">
-  </div>
-  <div class="form-row">
-    <label for="node-config-input-secretAccessKey">AWS Secret Access Key</label>
-    <input type="text" id="node-config-input-secretAccessKey">
-  </div>
-</script>
 
 <!-- jambonz auth -->
 <script type="text/html" data-template-name="jambonz_auth">
@@ -96,13 +70,6 @@
 </script>
 
 <!-- Help Text -->
-
-<!-- AWS auth-->
-  <script type="text/x-red" data-help-name="aws_auth">
-    <p>AWS access key and secret access key to use for Lex</p>
-    <h3>Properties</h3>
-    <p>Enter the AWS access key and secret access key</p>
-  </script>
 
 <!-- jambonz auth -->
 <script type="text/x-red" data-help-name="jambonz_auth">

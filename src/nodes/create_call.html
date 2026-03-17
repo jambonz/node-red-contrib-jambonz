@@ -1,4 +1,5 @@
 <!-- Javascript -->
+<script src="resources/@jambonz/node-red-contrib-jambonz/editor.js"></script>
 <script type="text/javascript">
   var mustacheType = {
     value: 'mustache',
@@ -43,7 +44,6 @@
         call_status_urlType : {value: 'str'},
         call_status_method :  {value : 'GET'},
         vendor: {value: 'default', validate : function (v) {
-          console.log(v)
           if ( v == null &&  $('#node-input-mode').val() == 'url'){
             return(false)
           } else {
@@ -55,7 +55,6 @@
         voice: {value: 'default'},
         xvoice: {},
         transcriptionvendor: {value: 'default', validate : function (v) {
-          console.log(v)
           if ( v == null &&  $('#node-input-mode').val() == 'url'){
             return(false)
           } else {
@@ -88,7 +87,7 @@
         var trunkDiv = $('#trunk');
         var sipDiv = $('#sip');
         prepareTtsControls(node);
-        prepareSttControls(node);
+        prepareSttControls(node, '#node-input-amd_recognizer_vendor', '#node-input-amd_recognizer_lang');
 
         var onDestChanged = function () {
           var selectedDest = destElem.find(':selected').val();
@@ -161,6 +160,12 @@
         });
         var populateApplications = function() {
           var serverId = $('#node-input-server option:selected').val();
+          if (serverId === '_ADD_') {
+            // do not get application list if server is empty
+            applicationElem.find('option').remove();
+            applicationElem.append('<option value="msg.application_sid">--msg.application_sid--</option>');
+            return;
+          }
             $.ajax({
               url: `_jambonz/applications/${serverId}`,
               dataType: 'json',
@@ -354,7 +359,7 @@
   <fieldset>
       <legend>Answering Machine Detection</legend>
       <div class="form-row">
-        <label for="node-input-amd_actionHook">actionHook</label>
+        <label for="node-input-amd_actionHook">Action Hook</label>
         <input type="text" id="node-input-amd_actionHook">
         <input type="hidden" id="node-input-amd_actionHookType">
       </div>
