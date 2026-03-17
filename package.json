@@ -62,10 +62,10 @@
     "hash-sum": "^2.0.0",
     "is-utf8": "^0.2.1",
     "media-typer": "^1.1.0",
-    "multer": "^2.0.2",
+    "multer": "^2.1.1",
     "mustache": "^4.2.0",
     "on-headers": "^1.1.0",
     "raw-body": "^2.5.3",
-    "undici": "^5.29.0"
+    "undici": "^6.24.0"
   }
 }
