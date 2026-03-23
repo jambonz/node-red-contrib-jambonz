@@ -73,8 +73,12 @@ module.exports = function(RED) {
         data.boostAudioSignal = await new_resolve(RED, config.boostaudiosignal, config.boostaudiosignalType, node, msg)
       }
 
-      if (config.forwardPAI != 'default') {
-        data.forwardPAI = JSON.parse(config.forwardPAI);
+      if (config.forwardPAI !== undefined && config.forwardPAI !== 'default') {
+        if (config.forwardPAI === 'true' || config.forwardPAI === 'false') {
+          data.forwardPAI = config.forwardPAI === 'true';
+        } else {
+          node.warn(`Invalid forwardPAI value: ${config.forwardPAI}`);
+        }
       }
       // headers
       const headers = {};
