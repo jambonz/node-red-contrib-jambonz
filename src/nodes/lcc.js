@@ -172,6 +172,7 @@ function lcc(config) {
         if (err.statusCode) {
           msg.statusCode = err.statusCode;
           msg.errorMessage = err.statusText;
+          msg.payload = err.body;
         } else {
           const errorMessage = `Error sending LCC ${err.message}`;
           if (done) done(errorMessage);
