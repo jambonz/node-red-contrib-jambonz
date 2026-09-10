@@ -1,0 +1,199 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  var mustacheType = {
+    value: 'mustache',
+    label: 'mustache',
+    hasvalue: true,
+    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+  };
+  RED.nodes.registerType('transfer', {
+    category: 'jambonz',
+    color: '#bbabaa',
+    defaults: {
+      name: {value: ''},
+      mode: {value: 'blind', required: true},
+      target: {value: '', required: true},
+      targetType: {value: 'json'},
+      callerId: {value: ''},
+      callerIdType: {value: 'str'},
+      callerName: {value: ''},
+      callerNameType: {value: 'str'},
+      referredBy: {value: ''},
+      referredByType: {value: 'str'},
+      blindMethod: {value: 'default'},
+      timeout: {value: ''},
+      timeoutType: {value: 'num'},
+      headers: {value: ''},
+      headersType: {value: 'json'},
+      amd: {value: ''},
+      amdType: {value: 'json'},
+      confirm: {value: ''},
+      confirmType: {value: 'json'},
+      onHoldHook: {value: ''},
+      onHoldHookType: {value: 'str'},
+      actionHook: {value: ''},
+      actionHookType: {value: 'str'},
+      eventHook: {value: ''},
+      eventHookType: {value: 'str'},
+      briefText: {value: ''},
+      briefTextType: {value: 'str'},
+      anchorMedia: {value: false},
+      callerPresent: {value: false},
+      disposition: {value: false}
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-exchange",
+    paletteLabel: "transfer",
+    label: function() { return this.name || 'transfer'; },
+    oneditprepare: function() {
+      var hookTypes = ['str', 'msg', 'flow', 'global', 'jsonata', 'env'];
+      var jsonTypes = ['json', 'msg', 'flow', 'global', 'jsonata', 'env'];
+      $('#node-input-target').typedInput({types: jsonTypes, typeField: $('#node-input-targetType')});
+      $('#node-input-callerId').typedInput({types: hookTypes, typeField: $('#node-input-callerIdType')});
+      $('#node-input-callerName').typedInput({types: hookTypes, typeField: $('#node-input-callerNameType')});
+      $('#node-input-referredBy').typedInput({types: hookTypes, typeField: $('#node-input-referredByType')});
+      $('#node-input-timeout').typedInput({types: ['num', 'msg', 'flow', 'global', 'env'], typeField: $('#node-input-timeoutType')});
+      $('#node-input-headers').typedInput({types: jsonTypes, typeField: $('#node-input-headersType')});
+      $('#node-input-amd').typedInput({types: jsonTypes, typeField: $('#node-input-amdType')});
+      $('#node-input-confirm').typedInput({types: jsonTypes, typeField: $('#node-input-confirmType')});
+      $('#node-input-onHoldHook').typedInput({types: hookTypes, typeField: $('#node-input-onHoldHookType')});
+      $('#node-input-actionHook').typedInput({types: hookTypes, typeField: $('#node-input-actionHookType')});
+      $('#node-input-eventHook').typedInput({types: hookTypes, typeField: $('#node-input-eventHookType')});
+      $('#node-input-briefText').typedInput({types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType], typeField: $('#node-input-briefTextType')});
+    }
+  });
+</script>
+
+<!-- HTML -->
+<script type="text/html" data-template-name="transfer">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-mode">Mode</label>
+    <select id="node-input-mode">
+      <option value="blind">blind</option>
+      <option value="warm">warm</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-target">Target</label>
+    <input type="text" id="node-input-target" placeholder='[{"type":"phone","number":"+1..."}]'>
+    <input type="hidden" id="node-input-targetType">
+  </div>
+  <fieldset>
+    <legend>Caller identity</legend>
+    <div class="form-row">
+      <label for="node-input-callerId">Caller ID</label>
+      <input type="text" id="node-input-callerId" placeholder="number presented to the target">
+      <input type="hidden" id="node-input-callerIdType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-callerName">Caller name</label>
+      <input type="text" id="node-input-callerName" placeholder="display name">
+      <input type="hidden" id="node-input-callerNameType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-referredBy">Referred by</label>
+      <input type="text" id="node-input-referredBy" placeholder="Referred-By value">
+      <input type="hidden" id="node-input-referredByType">
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Warm transfer</legend>
+    <div class="form-row">
+      <label for="node-input-briefText">Brief</label>
+      <input type="text" id="node-input-briefText" placeholder="text spoken to the target before bridging">
+      <input type="hidden" id="node-input-briefTextType">
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Advanced</legend>
+    <div class="form-row">
+      <label for="node-input-blindMethod">Blind method</label>
+      <select id="node-input-blindMethod">
+        <option value="default">--default--</option>
+        <option value="refer">refer</option>
+        <option value="invite">invite</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-timeout">Timeout (s)</label>
+      <input type="text" id="node-input-timeout" placeholder="ring seconds">
+      <input type="hidden" id="node-input-timeoutType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-headers">Headers</label>
+      <input type="text" id="node-input-headers" placeholder='custom SIP headers object'>
+      <input type="hidden" id="node-input-headersType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-amd">AMD</label>
+      <input type="text" id="node-input-amd" placeholder='answering-machine detection object'>
+      <input type="hidden" id="node-input-amdType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-confirm">Confirm</label>
+      <input type="text" id="node-input-confirm" placeholder='confirm object'>
+      <input type="hidden" id="node-input-confirmType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-onHoldHook">On-hold hook</label>
+      <input type="text" id="node-input-onHoldHook" placeholder="url">
+      <input type="hidden" id="node-input-onHoldHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-actionHook">Action hook</label>
+      <input type="text" id="node-input-actionHook" placeholder="url">
+      <input type="hidden" id="node-input-actionHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-eventHook">Event hook</label>
+      <input type="text" id="node-input-eventHook" placeholder="url">
+      <input type="hidden" id="node-input-eventHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-anchorMedia" style="width:auto">Anchor media</label>
+      <input type="checkbox" id="node-input-anchorMedia" style="display:inline-block; width:auto; vertical-align:top;">
+    </div>
+    <div class="form-row">
+      <label for="node-input-callerPresent" style="width:auto">Caller present</label>
+      <input type="checkbox" id="node-input-callerPresent" style="display:inline-block; width:auto; vertical-align:top;">
+    </div>
+    <div class="form-row">
+      <label for="node-input-disposition" style="width:auto">Disposition</label>
+      <input type="checkbox" id="node-input-disposition" style="display:inline-block; width:auto; vertical-align:top;">
+    </div>
+  </fieldset>
+</script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="transfer">
+  <p>Perform a packaged blind or warm transfer of the call, with built-in failure handling.</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>Mode<span class="property-type">string</span></dt>
+    <dd>required. <code>blind</code> (immediate) or <code>warm</code> (parked / three-way with a brief).</dd>
+    <dt>Target<span class="property-type">json</span></dt>
+    <dd>required. Array of target objects, e.g. <code>[{"type":"phone","number":"+1..."}]</code> (same shape as the dial verb).</dd>
+    <dt>Caller ID / Caller name / Referred by<span class="property-type">string</span></dt>
+    <dd>identity presented to the transfer target.</dd>
+    <dt>Brief<span class="property-type">string</span></dt>
+    <dd>warm transfer only: text spoken to the target before bridging.</dd>
+  </dl>
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd><code>msg.jambonz</code> will contain any previous actions with the new <code>transfer</code> action appended.</dd>
+  </dl>
+  <h3>Details</h3>
+  The transfer verb packages the choreography of transferring a call — including warm (attended) transfer
+  with a spoken brief — that would otherwise require hand-rolled <code>dial</code> logic. Requires jambonz
+  10.3.0 or later.
+  <h3>References</h3>
+  <ul>
+    <li><a href="https://docs.jambonz.org/verbs/verbs/transfer">Jambonz transfer reference</a></li>
+  </ul>
+</script>

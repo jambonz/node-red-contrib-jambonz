@@ -1,4 +1,4 @@
-var {appendVerb, new_resolve} = require('./libs')
+var {appendVerb, new_resolve, resolveSpeechObject} = require('./libs')
 
 module.exports = function(RED) {
   function listen(config) {
@@ -14,8 +14,15 @@ module.exports = function(RED) {
         playBeep: config.beep,
         passDtmf: config.passDtmf,
         disableBidirectionalAudio: config.disableBidirectionalAudio,
-        sampleRate: config.sampleRate,
+        sampleRate: parseInt(config.samplerate),
       };
+
+      if (config.biDirEnabled) {
+        obj.bidirectionalAudio = {enabled: true};
+        if (config.biDirStreaming) obj.bidirectionalAudio.streaming = true;
+        if (config.biDirSampleRate) obj.bidirectionalAudio.sampleRate = parseInt(config.biDirSampleRate);
+      }
+      if (config.channel && config.channel !== 'default') obj.channel = parseInt(config.channel);
 
       const authUser = await new_resolve(RED, config.authuser, config.authuserType, node, msg);
       const authPass = await new_resolve(RED, config.authpass, config.authpassType, node, msg);
@@ -27,7 +34,10 @@ module.exports = function(RED) {
       }
 
       if (config.transcriptionhook) {
-        const recognizer = {
+        // recognizer from the reusable speech component, with the legacy field build as fallback
+        let recognizer = await resolveSpeechObject(RED, config.recognizer, node, msg);
+        if (!recognizer) {
+        recognizer = {
           vendor: config.transcriptionvendor,
           language: config.recognizerlang,
           interim: config.interim,
@@ -67,6 +77,7 @@ module.exports = function(RED) {
             vocabularyFilterName: vocabFilter,
             filterMethod: config.vocabularyfiltermethod
           });
+        }
         }
         obj.transcribe = {
           transcriptionHook: await new_resolve(RED, config.transcriptionhook, config.transcriptionhookType, node, msg),

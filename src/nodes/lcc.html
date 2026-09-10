@@ -1,4 +1,6 @@
 <!-- Javascript -->
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-schema.js"></script>
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-component.js"></script>
 <script type="text/javascript">
   var mustacheType = {
     value: 'mustache',
@@ -80,13 +82,31 @@
         dubLoopType: {value: 'bool'},
         dubGain: {value: 0},
         dubGainType: {value: 'num'},
+        whisperSynth: {value: ''},
+        speechServer: {value: '', type: 'jambonz_auth', required: false},
+        speechMigrated: {value: ''},
+        mediaPath: {value: 'full-media'},
+        boostLevel: {value: ''},
+        boostLevelType: {value: 'str'},
+        noiseIsolationVendor: {value: ''},
+        noiseIsolationLevel: {value: ''},
+        noiseIsolationLevelType: {value: 'num'},
+        noiseIsolationModel: {value: ''},
+        noiseIsolationModelType: {value: 'str'},
+        confParticipantAction: {value: 'mute'},
+        confParticipantTag: {value: ''},
+        confParticipantTagType: {value: 'str'},
+        transferData: {value: '{}'},
+        transferDataType: {value: 'json'},
+        pipelineUpdate: {value: '{}'},
+        pipelineUpdateType: {value: 'json'},
       },
       inputs:1,
       outputs:1,
-      icon: "font-awesome/fa-cubes",
-      paletteLabel: "Live Call Control",
-      label: function() { 
-        return this.name || (this.action ? `LCC - ${this.action}` : 'LCC');
+      icon: "font-awesome/fa-sliders",
+      paletteLabel: "Update Call",
+      label: function() {
+        return this.name || (this.action ? `Update Call - ${this.action}` : 'Update Call');
       },
       oneditprepare: function() {
         var node = this;
@@ -95,6 +115,18 @@
         var langElem = $('#node-input-lang');
         var voiceElem = $('#node-input-voice');
         var sayDiv = $('#say-options');
+
+        // whisper synthesizer editor component (with legacy migration)
+        var whisperVal = {};
+        try { if (node.whisperSynth) whisperVal = JSON.parse(node.whisperSynth) || {}; } catch (e) { whisperVal = {}; }
+        if ((!whisperVal || !whisperVal.vendor) && node.speechMigrated !== '1' && node.vendor && node.vendor !== 'default') {
+          whisperVal = { vendor: node.vendor };
+          if (node.lang && node.lang !== 'default') whisperVal.language = node.lang;
+          if (node.voice && node.voice !== 'default') whisperVal.voice = node.voice;
+        }
+        node._whisperHandle = JambonzSpeech.mountSynthesizer(
+          document.getElementById('node-input-whisper-mount'), { value: whisperVal, serverId: node.speechServer });
+
         var redirectDiv = $('#redirect-options');
         var waitHookDiv = $('#wait-options');
         var recordDiv = $('#record-options');
@@ -102,6 +134,12 @@
         var dtmfDiv = $('#dtmf-options');
         var tagDiv = $('#tag-options');
         var dubDiv = $('#dub-options');
+        var mediaPathDiv = $('#media-path-options');
+        var boostDiv = $('#boost-options');
+        var noiseDiv = $('#noise-options');
+        var confPartDiv = $('#confpart-options');
+        var transferDiv = $('#transfer-options');
+        var pipelineDiv = $('#pipeline-options');
 
         $('#node-input-callSid').typedInput({
           default: $('#node-input-callSidType').val(),
@@ -188,6 +226,30 @@
           types: ['num', 'flow', 'global', 'json', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-dubGainType')
         });
+        $('#node-input-boostLevel').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-boostLevelType')
+        });
+        $('#node-input-noiseIsolationLevel').typedInput({
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-noiseIsolationLevelType')
+        });
+        $('#node-input-noiseIsolationModel').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-noiseIsolationModelType')
+        });
+        $('#node-input-confParticipantTag').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-confParticipantTagType')
+        });
+        $('#node-input-transferData').typedInput({
+          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-transferDataType')
+        });
+        $('#node-input-pipelineUpdate').typedInput({
+          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-pipelineUpdateType')
+        });
 
         var onActionChanged = function () {
           var selectedAction = actionElem.find(':selected').val();
@@ -207,77 +269,21 @@
           else tagDiv.hide();
           if ('dub' === selectedAction.substring(0,3)) dubDiv.show();
           else dubDiv.hide();
-        }
-
-        var onVendorChanged = function() {
-          node.vendor = vendorElem.find(':selected').val();
-          console.log(`say vendor changed to ${node.vendor}`);
-          setLanguage(node.vendor);
-        }
-
-        var onLangChanged = function() {
-          node.lang = langElem.find(':selected').val();
-          console.log(`language changed to ${node.lang}`);
-          setVoice(node.vendor, node.lang)
-        }
-      
-        var onVoiceChanged = function() {
-          node.voice = voiceElem.find(':selected').val();
-          console.log(`voice changed to ${node.voice}`);
-        }
-
-        var setLanguage = function(v) {
-          langElem.find('option').remove();
-          voiceElem.find('option').remove();
-
-          switch (v) {
-            case 'default': 
-              langElem.append('<option value="default" selected>--application default--</option>');
-              voiceElem.append('<option value="default" selected>--application default--</option>');
-              node.lang = 'default';
-              node.voice = 'default';
-              break;
-
-            case 'google':
-              langElem.append(googleLanguageOptions);
-              break;
-
-            case 'aws':
-              langElem.append(awsLanguageOptions);
-              break;
-          }
-          langElem.val(node.lang);
-        }
-
-        var setVoice = function(vendor, lang) {
-          console.log(`say set voice for language ${lang} vendor ${vendor}`);
-          voiceElem.find('option').remove();
-
-          switch (vendor) {
-            case 'default':
-              voiceElem.append('<option value="default" selected>--application default--</option>');
-              break;
-
-            case 'google':
-            case 'aws':
-              var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
-              if (obj) {
-                var options = '';
-                for (var i = 0; i < obj.voices.length; i++) {
-                  if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-                  else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-                }
-                voiceElem.append(options);
-              }
-              break;
-          }
-          voiceElem.val(node.voice);
+          if ('media_path' === selectedAction) mediaPathDiv.show();
+          else mediaPathDiv.hide();
+          if ('boost_audio' === selectedAction) boostDiv.show();
+          else boostDiv.hide();
+          if ('noise_isolation_enable' === selectedAction) noiseDiv.show();
+          else noiseDiv.hide();
+          if ('conf_participant' === selectedAction) confPartDiv.show();
+          else confPartDiv.hide();
+          if ('transfer' === selectedAction) transferDiv.show();
+          else transferDiv.hide();
+          if ('pipeline_update' === selectedAction) pipelineDiv.show();
+          else pipelineDiv.hide();
         }
 
         actionElem.change(onActionChanged);
-        vendorElem.change(onVendorChanged);
-        langElem.change(onLangChanged);
-        voiceElem.change(onVoiceChanged);
 
         $('#node-input-siprecHeaders-container').css('min-height','120px').css('min-width','450px').editableList({
           addItem: function(container, i, opt) {
@@ -323,6 +329,9 @@
       },
       oneditsave: function () {
         var node = this;
+        var wsynth = this._whisperHandle ? this._whisperHandle.collect() : undefined;
+        $('#node-input-whisperSynth').val(wsynth ? JSON.stringify(wsynth) : '');
+        $('#node-input-speechMigrated').val('1');
         var headers = [];
         $("#node-input-siprecHeaders-container").editableList('items').each(function(i) {
           var header = $(this);
@@ -365,6 +374,10 @@
       <option value="unhold_conf">unhold conference participant</option>
       <option value="pause">pause listen audio feed</option>
       <option value="resume">resume listen audio feed</option>
+      <option value="silence">silence listen audio feed</option>
+      <option value="stream_pause">pause stream</option>
+      <option value="stream_resume">resume stream</option>
+      <option value="stream_silence">silence stream</option>
       <option value="redirect">redirect call</option>
       <option value="whisper">whisper</option>
       <option value="pause_transcribe">pause transcribe</option>
@@ -381,6 +394,13 @@
       <option value="dubPlay">Dub - playOnTrack</option>
       <option value="dubSay">Dub - sayOnTrack</option>
       <option value="dubSilence">Dub - SilenceTrack</option>
+      <option value="media_path">change media path</option>
+      <option value="boost_audio">boost audio signal</option>
+      <option value="noise_isolation_enable">enable noise isolation</option>
+      <option value="noise_isolation_disable">disable noise isolation</option>
+      <option value="conf_participant">conference participant action</option>
+      <option value="transfer">transfer</option>
+      <option value="pipeline_update">pipeline update (llm/agent)</option>
     </select>
   </div>
   <div id="say-options">
@@ -389,29 +409,17 @@
       <textarea id="node-input-text" rows="4" placeholder="Text or SSML to whisper" style="width:70%"></textarea>
     </div>
     <fieldset>
-      <legend>Speech synthesis options</legend>
+      <legend>Synthesizer</legend>
       <div class="form-row">
-        <label for="node-input-vendor">Vendor</label>
-        <select id="node-input-vendor">
-          <option value="default" selected>--application default--</option>
-          <option value="google">google</option>
-          <option value="aws">aws/polly</option>
-        </select>
+        <label for="node-input-speechServer">Speech data</label>
+        <input type="text" id="node-input-speechServer">
+        <small style="display:block;margin-left:160px;color:#888;">optional override &mdash; jambonz server for live language/voice lists (auto-detected; falls back to bundled data)</small>
       </div>
-      <div class="form-row">
-        <label for="node-input-lang">Language</label>
-        <select id="node-input-lang">
-          <option value="default" selected>--application default--</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label for="node-input-voice">Voice</label>
-        <select id="node-input-voice">
-          <option value="default" selected>--application default--</option>
-        </select>
-      </div>
+      <div id="node-input-whisper-mount"></div>
     </fieldset>
   </div>
+  <input type="hidden" id="node-input-whisperSynth">
+  <input type="hidden" id="node-input-speechMigrated">
   <div id="redirect-options">
     <div class="form-row">
       <label for="node-input-callHook">Call hook</label>
@@ -520,6 +528,77 @@
       <label for="node-input-dubGain">Gain</label>
       <input type="text" id="node-input-dubGain">
       <input type="hidden" id="node-input-dubGainType">
+    </div>
+  </div>
+  <div id="media-path-options">
+    <div class="form-row">
+      <label for="node-input-mediaPath">Media path</label>
+      <select id="node-input-mediaPath">
+        <option value="full-media">full-media</option>
+        <option value="partial-media">partial-media</option>
+        <option value="no-media">no-media</option>
+      </select>
+    </div>
+  </div>
+  <div id="boost-options">
+    <div class="form-row">
+      <label for="node-input-boostLevel">Boost level</label>
+      <input type="text" id="node-input-boostLevel" placeholder="e.g. 6 or 6dB">
+      <input type="hidden" id="node-input-boostLevelType">
+    </div>
+  </div>
+  <div id="noise-options">
+    <div class="form-row">
+      <label for="node-input-noiseIsolationVendor">Vendor</label>
+      <select id="node-input-noiseIsolationVendor">
+        <option value="">--default--</option>
+        <option value="krisp">krisp</option>
+        <option value="rnnoise">rnnoise</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-noiseIsolationLevel">Level</label>
+      <input type="text" id="node-input-noiseIsolationLevel" placeholder="0-100">
+      <input type="hidden" id="node-input-noiseIsolationLevelType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-noiseIsolationModel">Model</label>
+      <input type="text" id="node-input-noiseIsolationModel">
+      <input type="hidden" id="node-input-noiseIsolationModelType">
+    </div>
+  </div>
+  <div id="confpart-options">
+    <div class="form-row">
+      <label for="node-input-confParticipantAction">Participant action</label>
+      <select id="node-input-confParticipantAction">
+        <option value="mute">mute</option>
+        <option value="unmute">unmute</option>
+        <option value="hold">hold</option>
+        <option value="unhold">unhold</option>
+        <option value="tag">tag</option>
+        <option value="untag">untag</option>
+        <option value="coach">coach</option>
+        <option value="uncoach">uncoach</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-confParticipantTag">Tag</label>
+      <input type="text" id="node-input-confParticipantTag" placeholder="required for tag / coach">
+      <input type="hidden" id="node-input-confParticipantTagType">
+    </div>
+  </div>
+  <div id="transfer-options">
+    <div class="form-row">
+      <label for="node-input-transferData">Transfer</label>
+      <input type="text" id="node-input-transferData" placeholder='{"mode":"blind","target":[...]}'>
+      <input type="hidden" id="node-input-transferDataType">
+    </div>
+  </div>
+  <div id="pipeline-options">
+    <div class="form-row">
+      <label for="node-input-pipelineUpdate">Pipeline update</label>
+      <input type="text" id="node-input-pipelineUpdate" placeholder='{"type":"update_instructions","instructions":"..."}'>
+      <input type="hidden" id="node-input-pipelineUpdateType">
     </div>
   </div>
 </script>

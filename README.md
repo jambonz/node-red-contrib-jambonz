@@ -9,6 +9,9 @@ https://docs.jambonz.org/verbs/verbs/overview
 
 ## Implemented nodes
 
+### agent
+The [agent](https://docs.jambonz.org/verbs/verbs/agent) verb runs a jambonz-native LLM voice agent, composing STT, an LLM and TTS with barge-in, turn detection, tool calling, MCP and handoff.
+
 ### alert
 The [alert](https://docs.jambonz.org/verbs/verbs/alert) verb raises an alert in the jambonz platform.
 
@@ -18,14 +21,14 @@ The [answer](https://docs.jambonz.org/verbs/verbs/answer) verb answers the call.
 ### conference
 The [conference](https://docs.jambonz.org/verbs/verbs/conference) verb connects a call into a conference.
 
+### conference listen
+Starts or stops a conference-level audio fork, streaming the conference audio to a websocket server.
+
 ### config
 The [config](https://docs.jambonz.org/verbs/verbs/config) verb updates default session settings (speech, barge-in, recording, etc.) for subsequent verbs.
 
 ### create call
 Creates an outbound call via the jambonz REST API.
-
-### create sms
-Creates an outbound SMS message via the jambonz REST API.
 
 ### dequeue
 The [dequeue](https://docs.jambonz.org/verbs/verbs/dequeue) verb removes a call from the front of a specified queue and bridges that call to the current caller.
@@ -57,11 +60,23 @@ Retrieves alert records for an account.
 ### get call
 Retrieves info for a single call.
 
+### get call count
+Retrieves the current number of active inbound and outbound calls on the account.
+
 ### get calls
 Retrieves info for a group of calls.
 
+### get conferences
+Lists the active conferences on the account, optionally expanded to include their participants.
+
+### get queues
+Lists the active queues on the account and the number of calls waiting in each.
+
 ### get recent calls
 Retrieves recent call detail records (CDRs) with paging.
+
+### get registrations
+Lists the SIP users currently registered on the account's SIP realm.
 
 ### hangup
 The [hangup](https://docs.jambonz.org/verbs/verbs/hangup) command terminates the call and ends the application.
@@ -74,6 +89,9 @@ The [leave](https://docs.jambonz.org/verbs/verbs/leave) verb transfers a call ou
 
 ### listen
 The [listen](https://docs.jambonz.org/verbs/verbs/listen) verb sends a real-time audio stream for a call to a websocket server.
+
+### llm
+The [llm](https://docs.jambonz.org/verbs/verbs/llm) verb connects the call directly to a real-time speech-to-speech LLM engine (e.g. OpenAI Realtime, Ultravox, ElevenLabs, Deepgram Voice Agent), selected by vendor.
 
 ### message
 Sends an SMS message using the `message` verb.
@@ -104,6 +122,12 @@ The [sip:request](https://docs.jambonz.org/verbs/verbs/sip-request) verb sends a
 
 ### tag
 The [tag](https://docs.jambonz.org/verbs/verbs/tag) verb is used to add properties to the standard call attributes that jambonz includes on every action or call status HTTP POST request.
+
+### transcribe
+The [transcribe](https://docs.jambonz.org/verbs/verbs/transcribe) verb transcribes the call in real time and POSTs the results to a webhook, without otherwise affecting the call.
+
+### transfer
+The [transfer](https://docs.jambonz.org/verbs/verbs/transfer) verb performs a packaged blind or warm transfer of the call, with built-in failure handling (requires jambonz 10.3.0 or later).
 
 ### user auth
 This node is used to validate a sip user authentication challenge. The incoming webhook that is used for sip user authentication includes the components of the SIP Authorization header in `msg.authRequest`. The `user auth` node allows the user to specify either the associated plaintext or hashed password and performs digest authentication to determine whether the user is authenticated. The determination is recorded in `msg.authResponse` which can subsequently be sent back to the jambonz platform via a `webhook out` node.

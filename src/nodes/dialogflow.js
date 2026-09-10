@@ -1,4 +1,4 @@
-var {appendVerb, new_resolve} = require('./libs')
+var {appendVerb, new_resolve, resolveSpeechObject} = require('./libs')
 
 module.exports = function(RED) {
 function dialogflow(config) {
@@ -32,12 +32,44 @@ function dialogflow(config) {
       if (actionHook && actionHook.length > 0) obj.actionHook = actionHook;
       if (timeout) obj.noInputTimeout = timeout;
       if (timeout && noInputEvent) obj.noInputEvent = noInputEvent;
+
+      // model / agent / region (Dialogflow CX & CES)
+      if (config.model && config.model !== 'default') obj.model = config.model;
+      config.agent ? obj.agent = await new_resolve(RED, config.agent, config.agentType, node, msg) : null;
+      config.region ? obj.region = await new_resolve(RED, config.region, config.regionType, node, msg) : null;
+      config.thinkingMusic ? obj.thinkingMusic = await new_resolve(RED, config.thinkingMusic, config.thinkingMusicType, node, msg) : null;
+      if (config.passDtmf) obj.passDtmfAsTextInput = true;
+      if (config.queryInput) {
+        const qi = await new_resolve(RED, config.queryInput, config.queryInputType, node, msg);
+        if (qi && typeof qi === 'object') obj.queryInput = qi;
+      }
+
+      // events to deliver via the eventHook
+      if (obj.eventHook) {
+        const allEvents = ['intent', 'transcription', 'interim-transcription', 'end-utterance',
+          'start-play', 'stop-play', 'session-output', 'interruption', 'end-session', 'go-away', 'tool-calls'];
+        let events = [];
+        if (config.evtAll) {
+          events = allEvents.slice();
+        } else {
+          if (config.evtIntent) events.push('intent');
+          if (config.evtTranscript) events.push('transcription');
+          if (config.evtInterimTranscript) events.push('interim-transcription');
+          if (config.evtEndUtterance) events.push('end-utterance');
+          if (config.evtStartPlay) events.push('start-play');
+          if (config.evtEndPlay) events.push('stop-play');
+        }
+        if (events.length) obj.events = events;
+      }
+
       if (config.prompt === 'tts') {
-        obj.tts = {
-          vendor: config.vendor,
-          language: config.lang,
-          voice: config.voice
-        };
+        let tts = await resolveSpeechObject(RED, config.ttsSynth, node, msg);
+        if (!tts && config.vendor && config.vendor !== 'default') {
+          tts = {vendor: config.vendor};
+          if (config.lang && config.lang !== 'default') tts.language = config.lang;
+          if (config.voice && config.voice !== 'default') tts.voice = config.voice;
+        }
+        if (tts) obj.tts = tts;
       }
       appendVerb(msg, obj);
       node.send(msg);

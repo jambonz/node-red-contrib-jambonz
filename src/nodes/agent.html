@@ -1,0 +1,215 @@
+<!-- Javascript -->
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-schema.js"></script>
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-component.js"></script>
+<script type="text/javascript">
+  RED.nodes.registerType('agent', {
+    category: 'jambonz',
+    color: '#bbabaa',
+    defaults: {
+      name: {value: ''},
+      llm: {value: '', required: true},
+      llmType: {value: 'json'},
+      stt: {value: ''},
+      tts: {value: ''},
+      speechServer: {value: '', type: 'jambonz_auth', required: false},
+      bargeIn: {value: ''},
+      bargeInType: {value: 'json'},
+      turnDetection: {value: ''},
+      turnDetectionType: {value: 'json'},
+      noiseIsolation: {value: ''},
+      noiseIsolationType: {value: 'json'},
+      handoff: {value: ''},
+      handoffType: {value: 'json'},
+      mcpServers: {value: ''},
+      mcpServersType: {value: 'json'},
+      languageConfig: {value: ''},
+      languageConfigType: {value: 'json'},
+      actionHook: {value: ''},
+      actionHookType: {value: 'str'},
+      eventHook: {value: ''},
+      eventHookType: {value: 'str'},
+      toolHook: {value: ''},
+      toolHookType: {value: 'str'},
+      autoLockLanguage: {value: 'default'},
+      noResponseTimeout: {value: ''},
+      noResponseTimeoutType: {value: 'num'},
+      greeting: {value: false},
+      earlyGeneration: {value: false},
+      toolFiller: {value: false}
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-android",
+    paletteLabel: "agent",
+    label: function() { return this.name || 'agent'; },
+    oneditprepare: function() {
+      var hookTypes = ['str', 'msg', 'flow', 'global', 'jsonata', 'env'];
+      var jsonTypes = ['json', 'msg', 'flow', 'global', 'jsonata', 'env'];
+      $('#node-input-llm').typedInput({types: jsonTypes, typeField: $('#node-input-llmType')});
+      $('#node-input-bargeIn').typedInput({types: jsonTypes, typeField: $('#node-input-bargeInType')});
+      $('#node-input-turnDetection').typedInput({types: jsonTypes, typeField: $('#node-input-turnDetectionType')});
+      $('#node-input-noiseIsolation').typedInput({types: jsonTypes, typeField: $('#node-input-noiseIsolationType')});
+      $('#node-input-handoff').typedInput({types: jsonTypes, typeField: $('#node-input-handoffType')});
+      $('#node-input-mcpServers').typedInput({types: jsonTypes, typeField: $('#node-input-mcpServersType')});
+      $('#node-input-languageConfig').typedInput({types: jsonTypes, typeField: $('#node-input-languageConfigType')});
+      $('#node-input-actionHook').typedInput({types: hookTypes, typeField: $('#node-input-actionHookType')});
+      $('#node-input-eventHook').typedInput({types: hookTypes, typeField: $('#node-input-eventHookType')});
+      $('#node-input-toolHook').typedInput({types: hookTypes, typeField: $('#node-input-toolHookType')});
+      $('#node-input-noResponseTimeout').typedInput({types: ['num', 'msg', 'flow', 'global', 'env'], typeField: $('#node-input-noResponseTimeoutType')});
+
+      // Two instance-scoped speech controls coexisting in one dialog (stt + tts).
+      var node = this;
+      var sttVal = {}; try { if (node.stt) sttVal = JSON.parse(node.stt) || {}; } catch (e) { sttVal = {}; }
+      var ttsVal = {}; try { if (node.tts) ttsVal = JSON.parse(node.tts) || {}; } catch (e) { ttsVal = {}; }
+      node._sttHandle = JambonzSpeech.mountRecognizer(document.getElementById('node-input-stt-mount'), { value: sttVal, serverId: node.speechServer });
+      node._ttsHandle = JambonzSpeech.mountSynthesizer(document.getElementById('node-input-tts-mount'), { value: ttsVal, serverId: node.speechServer });
+    },
+    oneditsave: function() {
+      var stt = this._sttHandle ? this._sttHandle.collect() : undefined;
+      var tts = this._ttsHandle ? this._ttsHandle.collect() : undefined;
+      $('#node-input-stt').val(stt ? JSON.stringify(stt) : '');
+      $('#node-input-tts').val(tts ? JSON.stringify(tts) : '');
+    }
+  });
+</script>
+
+<!-- HTML -->
+<script type="text/html" data-template-name="agent">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-llm">LLM</label>
+    <input type="text" id="node-input-llm" placeholder='{"vendor":"openai","model":"gpt-4o","llmOptions":{...}}'>
+    <input type="hidden" id="node-input-llmType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-speechServer">Speech data</label>
+    <input type="text" id="node-input-speechServer">
+    <small style="display:block;margin-left:160px;color:#888;">optional override &mdash; jambonz server for live language/voice lists (auto-detected from your config; falls back to bundled data)</small>
+  </div>
+  <fieldset>
+    <legend>STT (recognizer)</legend>
+    <div id="node-input-stt-mount"></div>
+  </fieldset>
+  <fieldset>
+    <legend>TTS (synthesizer)</legend>
+    <div id="node-input-tts-mount"></div>
+  </fieldset>
+  <input type="hidden" id="node-input-stt">
+  <input type="hidden" id="node-input-tts">
+  <fieldset>
+    <legend>Turn-taking &amp; noise</legend>
+    <div class="form-row">
+      <label for="node-input-bargeIn">Barge-in</label>
+      <input type="text" id="node-input-bargeIn" placeholder='{"enable":true,"strategy":"vad"}'>
+      <input type="hidden" id="node-input-bargeInType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-turnDetection">Turn detection</label>
+      <input type="text" id="node-input-turnDetection" placeholder='{"mode":"...","threshold":0.5}'>
+      <input type="hidden" id="node-input-turnDetectionType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-noiseIsolation">Noise isolation</label>
+      <input type="text" id="node-input-noiseIsolation" placeholder='"krisp" or {"mode":"...","level":100}'>
+      <input type="hidden" id="node-input-noiseIsolationType">
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Tools &amp; handoff</legend>
+    <div class="form-row">
+      <label for="node-input-mcpServers">MCP servers</label>
+      <input type="text" id="node-input-mcpServers" placeholder='array of MCP server objects'>
+      <input type="hidden" id="node-input-mcpServersType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-handoff">Handoff</label>
+      <input type="text" id="node-input-handoff" placeholder='{"toolName":"...","toolDescription":"..."}'>
+      <input type="hidden" id="node-input-handoffType">
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Hooks</legend>
+    <div class="form-row">
+      <label for="node-input-actionHook">Action hook</label>
+      <input type="text" id="node-input-actionHook" placeholder="url">
+      <input type="hidden" id="node-input-actionHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-eventHook">Event hook</label>
+      <input type="text" id="node-input-eventHook" placeholder="url">
+      <input type="hidden" id="node-input-eventHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-toolHook">Tool hook</label>
+      <input type="text" id="node-input-toolHook" placeholder="url">
+      <input type="hidden" id="node-input-toolHookType">
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Advanced</legend>
+    <div class="form-row">
+      <label for="node-input-autoLockLanguage">Auto-lock language</label>
+      <select id="node-input-autoLockLanguage">
+        <option value="default">--off--</option>
+        <option value="true">on (lock after first turn)</option>
+        <option value="always">always</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-languageConfig">Language config</label>
+      <input type="text" id="node-input-languageConfig" placeholder='language configuration object'>
+      <input type="hidden" id="node-input-languageConfigType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-noResponseTimeout">No-response timeout (s)</label>
+      <input type="text" id="node-input-noResponseTimeout" placeholder="seconds">
+      <input type="hidden" id="node-input-noResponseTimeoutType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-greeting" style="width:auto">Auto greeting</label>
+      <input type="checkbox" id="node-input-greeting" style="display:inline-block; width:auto; vertical-align:top;">
+    </div>
+    <div class="form-row">
+      <label for="node-input-earlyGeneration" style="width:auto">Early generation</label>
+      <input type="checkbox" id="node-input-earlyGeneration" style="display:inline-block; width:auto; vertical-align:top;">
+    </div>
+    <div class="form-row">
+      <label for="node-input-toolFiller" style="width:auto">Tool filler</label>
+      <input type="checkbox" id="node-input-toolFiller" style="display:inline-block; width:auto; vertical-align:top;">
+    </div>
+  </fieldset>
+</script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="agent">
+  <p>Run a jambonz-native LLM voice agent: STT &rarr; LLM &rarr; TTS, with barge-in, turn detection, tool calling, MCP and handoff.</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>LLM<span class="property-type">json</span></dt>
+    <dd>required. The LLM configuration object: <code>{vendor, model, label, auth, connectOptions, llmOptions{tools}}</code>.</dd>
+    <dt>Auto greeting<span class="property-type">boolean</span></dt>
+    <dd>if enabled, the agent generates and speaks an opening greeting when it starts.</dd>
+    <dt>STT / TTS<span class="property-type">json</span></dt>
+    <dd>recognizer and synthesizer objects (same shape as the gather/say verbs).</dd>
+    <dt>Barge-in / Turn detection / Noise isolation<span class="property-type">json</span></dt>
+    <dd>turn-taking and audio-cleanup configuration objects.</dd>
+    <dt>MCP servers / Handoff / Hangup tool<span class="property-type">json</span></dt>
+    <dd>tool-calling configuration.</dd>
+  </dl>
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd><code>msg.jambonz</code> will contain any previous actions with the new <code>agent</code> action appended.</dd>
+  </dl>
+  <h3>Details</h3>
+  The agent verb is jambonz's native voice-agent orchestrator. Unlike the <code>llm</code> verb (which connects
+  to a single speech-to-speech engine), the agent composes a separate STT, LLM and TTS with jambonz-managed
+  barge-in, turn detection and tool calling. The nested objects are vendor-shaped, so they are entered as JSON.
+  <h3>References</h3>
+  <ul>
+    <li><a href="https://docs.jambonz.org/verbs/verbs/agent">Jambonz agent reference</a></li>
+  </ul>
+</script>

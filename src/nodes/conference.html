@@ -28,11 +28,24 @@
       statusHook: {},
       statusHookType: {value: 'str'},
       joinMuted : {value: false},
-      distributeDtmf: {value: false}
+      distributeDtmf: {value: false},
+      statusEvents: {value: ''},
+      statusEventsType: {value: 'str'},
+      memberTag: {value: ''},
+      memberTagType: {value: 'str'},
+      speakOnlyTo: {value: ''},
+      speakOnlyToType: {value: 'str'},
+      endConferenceDuration: {value: ''},
+      record: {value: ''},
+      recordType: {value: 'json'},
+      listen: {value: ''},
+      listenType: {value: 'json'},
+      stream: {value: ''},
+      streamType: {value: 'json'}
     },
     inputs:1,
     outputs:1,
-    icon: "font-awesome/fa-cubes",
+    icon: "font-awesome/fa-users",
     label: function() { 
       return this.name || 'conference';
     },
@@ -60,6 +73,30 @@
       $('#node-input-statusHook').typedInput({
         types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
         typeField: $('#node-input-statusHookType')
+      });
+      $('#node-input-statusEvents').typedInput({
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+        typeField: $('#node-input-statusEventsType')
+      });
+      $('#node-input-memberTag').typedInput({
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+        typeField: $('#node-input-memberTagType')
+      });
+      $('#node-input-speakOnlyTo').typedInput({
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+        typeField: $('#node-input-speakOnlyToType')
+      });
+      $('#node-input-record').typedInput({
+        types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env'],
+        typeField: $('#node-input-recordType')
+      });
+      $('#node-input-listen').typedInput({
+        types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env'],
+        typeField: $('#node-input-listenType')
+      });
+      $('#node-input-stream').typedInput({
+        types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env'],
+        typeField: $('#node-input-streamType')
       });
     }
   });
@@ -121,6 +158,43 @@
       <input type="text" id="node-input-maxParticipants">
       <input type="hidden" id="node-input-maxParticipantsType">
     </div>
+    <div class="form-row">
+      <label for="node-input-endConferenceDuration">End after (s)</label>
+      <input type="text" id="node-input-endConferenceDuration" placeholder="seconds after conference ends">
+    </div>
+    <div class="form-row">
+      <label for="node-input-statusEvents">Status events</label>
+      <input type="text" id="node-input-statusEvents" placeholder="comma-separated, e.g. start,end,join,leave,start-talking">
+      <input type="hidden" id="node-input-statusEventsType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-memberTag">Member tag</label>
+      <input type="text" id="node-input-memberTag" placeholder="tag for this participant">
+      <input type="hidden" id="node-input-memberTagType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-speakOnlyTo">Speak only to</label>
+      <input type="text" id="node-input-speakOnlyTo" placeholder="member tag to speak privately to">
+      <input type="hidden" id="node-input-speakOnlyToType">
+    </div>
+    <fieldset>
+      <legend>Conference media (optional)</legend>
+      <div class="form-row">
+        <label for="node-input-record">Record</label>
+        <input type="text" id="node-input-record" placeholder='record object'>
+        <input type="hidden" id="node-input-recordType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-listen">Listen</label>
+        <input type="text" id="node-input-listen" placeholder='listen (audio fork) object'>
+        <input type="hidden" id="node-input-listenType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-stream">Stream</label>
+        <input type="text" id="node-input-stream" placeholder='stream object'>
+        <input type="hidden" id="node-input-streamType">
+      </div>
+    </fieldset>
 </script>
 
 <!-- Help Text -->

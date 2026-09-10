@@ -1,4 +1,4 @@
-var {appendVerb, new_resolve} = require('./libs')
+var {appendVerb, new_resolve, resolveSpeechObject} = require('./libs')
 
 module.exports = function(RED) {
     function cfg(config) {
@@ -7,36 +7,35 @@ module.exports = function(RED) {
         node.on('input', async function(msg) {
           obj = { verb: 'config' }
           if (config.tts){
-            Object.assign(obj, {
-              synthesizer: {
-                vendor: config.vendor,
-                language: config.lang,
-                voice: config.voice
-              }
-            });
+            let synth = await resolveSpeechObject(RED, config.synthesizer, node, msg);
+            if (!synth) {
+              synth = {vendor: config.vendor, language: config.lang, voice: config.voice};
+            }
+            obj.synthesizer = synth;
           }
           if (config.speechinput){
-            Object.assign(obj, {
-              recognizer: {
-                vendor: config.transcriptionvendor,
-                language: config.recognizerlang
+            let recog = await resolveSpeechObject(RED, config.recognizer, node, msg);
+            if (!recog) {
+              recog = {vendor: config.transcriptionvendor, language: config.recognizerlang};
+              if (config.transcriptionvendor == 'google'){
+                recog.hints = await new_resolve(RED, config.transcriptionhints, config.transcriptionhintsType, node, msg)
+                recog.altLanguages = [await new_resolve(RED, config.altLanguages, config.altLanguagesType, node, msg)]
+                recog.naicsCode = await new_resolve(RED, config.naics, config.naicsType, node, msg)
               }
-            })
-            if (config.transcriptionvendor == 'google'){
-              obj.recognizer.hints = await new_resolve(RED, config.transcriptionhints, config.transcriptionhintsType, node, msg)
-              obj.recognizer.altLanguages = [await new_resolve(RED, config.altLanguages, config.altLanguagesType, node, msg)]
-              obj.recognizer.naicsCode = await new_resolve(RED, config.naics, config.naicsType, node, msg)
+              if (config.transcriptionvendor == 'aws'){
+                recog.vocabularyName = config.vocabularyname
+                recog.vocabularyFilterName = config.vocabularyfiltername
+                recog.filterMethod = config.filtermethod
+                recog.identifyChannels = config.identifyChannels
+              }
             }
-            if (config.transcriptionvendor == 'aws'){
-              obj.recognizer.vocabularyName = config.vocabularyname
-              obj.recognizer.vocabularyFilterName = config.vocabularyfiltername
-              obj.recognizer.filterMethod = config.filtermethod
-              obj.recognizer.identifyChannels = config.identifyChannels
-            }
+            obj.recognizer = recog;
           }
           if (config.bargeIn){
             obj.bargeIn = {}
-            config.bargeIn_enable != '' ? obj.bargeIn.enable = config.bargeIn_enable : null
+            config.bargeIn_enable != '' ? obj.bargeIn.enable = (config.bargeIn_enable === true || config.bargeIn_enable === 'true') : null
+            config.bargeIn_sticky ? obj.bargeIn.sticky = true : null
+            config.bargeIn_minBargeinWordCount != '' ? obj.bargeIn.minBargeinWordCount = await new_resolve(RED, config.bargeIn_minBargeinWordCount, config.bargeIn_minBargeinWordCountType, node, msg) : null
             config.bargeIn_actionHook != '' ? obj.bargeIn.actionHook = await new_resolve(RED, config.bargeIn_actionHook, config.bargeIn_actionHookType, node, msg) : null
             config.bargeIn_input != '' ? obj.bargeIn.input = config.bargeIn_input.split(',') : null
             config.bargeIn_finishOnKey != '' ? obj.bargeIn.finishOnKey = await new_resolve(RED, config.bargeIn_finishOnKey, config.bargeIn_finishOnKeyType, node, msg) : null
@@ -54,6 +53,8 @@ module.exports = function(RED) {
             config.amd_timers_decisionTimeoutMs != '' ? obj.amd.timers.decisionTimeoutMs = await new_resolve(RED, config.amd_timers_decisionTimeoutMs, config.amd_timers_decisionTimeoutMsType, node, msg) : null
             config.amd_timers_toneTimeoutMs != '' ?	 obj.amd.timers.toneTimeoutMs = await new_resolve(RED, config.amd_timers_toneTimeoutMs, config.amd_timers_toneTimeoutMsType, node, msg) : null
             config.amd_timers_greetingCompletionTimeoutMs != '' ? obj.amd.timers.greetingCompletionTimeoutMs = await new_resolve(RED, config.amd_timers_greetingCompletionTimeoutMs, config.amd_timers_greetingCompletionTimeoutMsType, node, msg) : null
+            const amdRecog = await resolveSpeechObject(RED, config.amdRecognizer, node, msg);
+            if (amdRecog) obj.amd.recognizer = amdRecog;
           }
 
           if (config.record){
@@ -94,6 +95,63 @@ module.exports = function(RED) {
           if (config.boostAudioSignal) {
             config.boostAudioSignal != '' ? obj.boostAudioSignal = await new_resolve(RED, config.boostAudioSignalLevel, config.boostAudioSignalLevelType, node, msg) : null;
           }
+
+          if (config.noiseIsolation) {
+            obj.noiseIsolation = {enable: !!config.noiseIsolation_enable};
+            config.noiseIsolation_vendor ? obj.noiseIsolation.vendor = config.noiseIsolation_vendor : null;
+            config.noiseIsolation_level != '' ? obj.noiseIsolation.level = parseInt(await new_resolve(RED, config.noiseIsolation_level, config.noiseIsolation_levelType, node, msg)) : null;
+            config.noiseIsolation_model ? obj.noiseIsolation.model = await new_resolve(RED, config.noiseIsolation_model, config.noiseIsolation_modelType, node, msg) : null;
+          }
+
+          if (config.turnTaking) {
+            obj.turnTaking = {enable: !!config.turnTaking_enable};
+            config.turnTaking_vendor ? obj.turnTaking.vendor = config.turnTaking_vendor : null;
+            config.turnTaking_threshold != '' ? obj.turnTaking.threshold = parseFloat(await new_resolve(RED, config.turnTaking_threshold, config.turnTaking_thresholdType, node, msg)) : null;
+            config.turnTaking_model ? obj.turnTaking.model = await new_resolve(RED, config.turnTaking_model, config.turnTaking_modelType, node, msg) : null;
+          }
+
+          if (config.ttsStream) {
+            obj.ttsStream = {enable: !!config.ttsStream_enable};
+            if (config.ttsStream_synthesizer) {
+              const synth = await new_resolve(RED, config.ttsStream_synthesizer, config.ttsStream_synthesizerType, node, msg);
+              if (synth && typeof synth === 'object') obj.ttsStream.synthesizer = synth;
+            }
+          }
+
+          if (config.fillerNoise) {
+            obj.fillerNoise = {enable: !!config.fillerNoise_enable};
+            config.fillerNoise_url ? obj.fillerNoise.url = await new_resolve(RED, config.fillerNoise_url, config.fillerNoise_urlType, node, msg) : null;
+            config.fillerNoise_startDelaySecs != '' ? obj.fillerNoise.startDelaySecs = parseFloat(await new_resolve(RED, config.fillerNoise_startDelaySecs, config.fillerNoise_startDelaySecsType, node, msg)) : null;
+          }
+
+          if (config.vad) {
+            const vad = await new_resolve(RED, config.vadOptions, config.vadOptionsType, node, msg);
+            if (vad && typeof vad === 'object') obj.vad = vad;
+          }
+
+          if (config.actionHookDelayAction) {
+            const ahda = await new_resolve(RED, config.actionHookDelayActionOptions, config.actionHookDelayActionOptionsType, node, msg);
+            if (ahda && typeof ahda === 'object') obj.actionHookDelayAction = ahda;
+          }
+
+          config.referHook ? obj.referHook = await new_resolve(RED, config.referHookValue, config.referHookValueType, node, msg) : null;
+
+          if (config.reset) {
+            const resetVal = await new_resolve(RED, config.resetValue, config.resetValueType, node, msg);
+            if (typeof resetVal === 'string' && resetVal.includes(',')) {
+              obj.reset = resetVal.split(',').map((s) => s.trim()).filter((s) => s.length);
+            } else if (resetVal) {
+              obj.reset = resetVal;
+            }
+          }
+
+          if (config.notifyEvents) obj.notifyEvents = true;
+          if (config.notifySttLatency) obj.notifySttLatency = true;
+          if (config.earlyMedia) obj.earlyMedia = true;
+          if (config.autoStreamTts) obj.autoStreamTts = true;
+          if (config.disableTtsCache) obj.disableTtsCache = true;
+          if (config.trackTtsPlayout) obj.trackTtsPlayout = true;
+
           appendVerb(msg,  obj);
           node.send(msg);
         });

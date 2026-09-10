@@ -1,0 +1,133 @@
+<!-- Javascript -->
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-schema.js"></script>
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-component.js"></script>
+<script type="text/javascript">
+  RED.nodes.registerType('transcribe', {
+    category: 'jambonz',
+    color: '#bbabaa',
+    defaults: {
+      name: {value: ''},
+      transcriptionHook: {value: '', required: true},
+      transcriptionHookType: {value: 'str'},
+      translationHook: {value: ''},
+      translationHookType: {value: 'str'},
+      recognizer: {value: ''},
+      speechServer: {value: '', type: 'jambonz_auth', required: false},
+      // legacy fields kept (hidden) so pre-component flows migrate on open
+      vendor: {value: 'default'},
+      language: {value: 'default'},
+      recognizerOptions: {value: ''},
+      recognizerOptionsType: {value: 'json'},
+      channel: {value: 'default'},
+      earlyMedia: {value: false}
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-file-text-o",
+    paletteLabel: "transcribe",
+    label: function() { return this.name || 'transcribe'; },
+    oneditprepare: function() {
+      var node = this;
+      var hookTypes = ['str', 'msg', 'flow', 'global', 'jsonata', 'env'];
+      $('#node-input-transcriptionHook').typedInput({types: hookTypes, typeField: $('#node-input-transcriptionHookType')});
+      $('#node-input-translationHook').typedInput({types: hookTypes, typeField: $('#node-input-translationHookType')});
+
+      // build initial recognizer value: stored canonical object, or migrate from legacy fields
+      var value = {};
+      try { if (node.recognizer) value = JSON.parse(node.recognizer) || {}; } catch (e) { value = {}; }
+      if (!value || !value.vendor) {
+        value = {};
+        if (node.vendor && node.vendor !== 'default') value.vendor = node.vendor;
+        if (node.language && node.language !== 'default') value.language = node.language;
+        try {
+          if (node.recognizerOptions) {
+            var opts = JSON.parse(node.recognizerOptions);
+            if (opts && typeof opts === 'object') Object.assign(value, opts);
+          }
+        } catch (e) { /* ignore */ }
+      }
+      node._recHandle = JambonzSpeech.mountRecognizer(
+        document.getElementById('node-input-rec-mount'), { value: value, serverId: node.speechServer });
+    },
+    oneditsave: function() {
+      var obj = this._recHandle ? this._recHandle.collect() : undefined;
+      $('#node-input-recognizer').val(obj ? JSON.stringify(obj) : '');
+      ['vendor', 'language', 'recognizerOptions'].forEach(function(k) {
+        var el = $('#node-input-' + k);
+        if (el.length) el.val('');
+      });
+    }
+  });
+</script>
+
+<!-- HTML -->
+<script type="text/html" data-template-name="transcribe">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-transcriptionHook">Transcription hook</label>
+    <input type="text" id="node-input-transcriptionHook" placeholder="url">
+    <input type="hidden" id="node-input-transcriptionHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-translationHook">Translation hook</label>
+    <input type="text" id="node-input-translationHook" placeholder="url (optional)">
+    <input type="hidden" id="node-input-translationHookType">
+  </div>
+  <fieldset>
+    <legend>Recognizer</legend>
+    <div class="form-row">
+      <label for="node-input-speechServer">Speech data</label>
+      <input type="text" id="node-input-speechServer">
+      <small style="display:block;margin-left:160px;color:#888;">optional override &mdash; jambonz server for live language lists (auto-detected from your config; falls back to bundled data)</small>
+    </div>
+    <div id="node-input-rec-mount"></div>
+  </fieldset>
+  <fieldset>
+    <legend>Advanced</legend>
+    <div class="form-row">
+      <label for="node-input-channel">Channel</label>
+      <select id="node-input-channel">
+        <option value="default">--both / default--</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-earlyMedia" style="width:auto">Early media</label>
+      <input type="checkbox" id="node-input-earlyMedia" style="display:inline-block; width:auto; vertical-align:top;">
+    </div>
+  </fieldset>
+  <input type="hidden" id="node-input-recognizer">
+  <input type="hidden" id="node-input-vendor">
+  <input type="hidden" id="node-input-language">
+  <input type="hidden" id="node-input-recognizerOptions">
+</script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="transcribe">
+  <p>Transcribe the call in real time and POST results to a webhook, without otherwise affecting the call.</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>Transcription hook<span class="property-type">string</span></dt>
+    <dd>required. URL that receives transcription results.</dd>
+    <dt>Translation hook<span class="property-type">string</span></dt>
+    <dd>optional URL that receives translated transcripts.</dd>
+    <dt>Recognizer<span class="property-type">object</span></dt>
+    <dd>the STT <code>recognizer</code> configuration (vendor, language, and common + vendor-specific
+      options), rendered from the jambonz schema.</dd>
+    <dt>Channel<span class="property-type">number</span></dt>
+    <dd>restrict transcription to one channel of a stereo call.</dd>
+  </dl>
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd><code>msg.jambonz</code> will contain any previous actions with the new <code>transcribe</code> action appended.</dd>
+  </dl>
+  <h3>References</h3>
+  <ul>
+    <li><a href="https://docs.jambonz.org/verbs/verbs/transcribe">Jambonz transcribe reference</a></li>
+  </ul>
+</script>

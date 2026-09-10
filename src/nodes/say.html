@@ -1,5 +1,6 @@
 <!-- Javascript -->
-<script src="resources/@jambonz/node-red-contrib-jambonz/editor.js"></script>
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-schema.js"></script>
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-component.js"></script>
 <script type="text/javascript">
   RED.nodes.registerType('say',{
       category: 'jambonz',
@@ -7,21 +8,63 @@
       defaults: {
         name: {value: ''},
         text: {required: true},
+        instructions: {value: ''},
+        instructionsType: {value: 'str'},
         early: {value: false},
+        stream: {value: false},
+        disableTtsCache: {value: false},
+        closeStreamOnEmpty: {value: false},
         loop: {value: 1},
+        synthesizer: {value: ''},
+        speechServer: {value: '', type: 'jambonz_auth', required: false},
+        // legacy fields kept (hidden) so pre-component flows migrate on open
         vendor: {value: 'default'},
         lang: {value: 'default'},
         xlang: {},
         voice: {value: 'default'},
-        xvoice: {}
+        xvoice: {},
+        fallbackVendor: {value: 'default'},
+        fallbackLang: {value: ''},
+        fallbackVoice: {value: ''}
       },
       inputs:1,
       outputs:1,
-      icon: "font-awesome/fa-cubes",
+      icon: "font-awesome/fa-volume-up",
       label: function() { return this.name || 'say';},
-      oneditprepare: () => {
+      oneditprepare: function() {
         var node = this;
-        prepareTtsControls(node);
+        $('#node-input-instructions').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-instructionsType')
+        });
+
+        // build initial synthesizer value: stored canonical object, or migrate from legacy fields
+        var value = {};
+        try { if (node.synthesizer) value = JSON.parse(node.synthesizer) || {}; } catch (e) { value = {}; }
+        if (!value || !value.vendor) {
+          value = {};
+          if (node.vendor && node.vendor !== 'default') {
+            value.vendor = node.vendor;
+            if (node.lang && node.lang !== 'default') value.language = node.lang;
+            if (node.voice && node.voice !== 'default') value.voice = node.voice;
+            if (node.fallbackVendor && node.fallbackVendor !== 'default') {
+              value.fallbackVendor = node.fallbackVendor;
+              if (node.fallbackLang) value.fallbackLanguage = node.fallbackLang;
+              if (node.fallbackVoice) value.fallbackVoice = node.fallbackVoice;
+            }
+          }
+        }
+        node._synthHandle = JambonzSpeech.mountSynthesizer(
+          document.getElementById('node-input-synth-mount'), { value: value, serverId: node.speechServer });
+      },
+      oneditsave: function() {
+        var obj = this._synthHandle ? this._synthHandle.collect() : undefined;
+        $('#node-input-synthesizer').val(obj ? JSON.stringify(obj) : '');
+        // clear legacy fields so they no longer shadow the canonical object
+        ['vendor', 'lang', 'voice', 'fallbackVendor', 'fallbackLang', 'fallbackVoice'].forEach(function(k) {
+          var el = $('#node-input-' + k);
+          if (el.length) el.val('');
+        });
       }
   });
 </script>
@@ -37,47 +80,46 @@
     <textarea id="node-input-text" rows="4" placeholder="Text or SSML to speak" style="width:70%"></textarea>
   </div>
   <div class="form-row">
+    <label for="node-input-instructions"><i class="icon-tag"></i> Instructions</label>
+    <input type="text" id="node-input-instructions" placeholder="TTS instructions (e.g. for openai)">
+    <input type="hidden" id="node-input-instructionsType">
+  </div>
+  <div class="form-row">
     <label for="node-input-early"><i class="icon-tag"></i>Early media</label>
     <input type="checkbox" id="node-input-early">
   </div>
   <div class="form-row">
+    <label for="node-input-stream"><i class="icon-tag"></i>Stream TTS</label>
+    <input type="checkbox" id="node-input-stream">
+  </div>
+  <div class="form-row">
+    <label for="node-input-closeStreamOnEmpty"><i class="icon-tag"></i>Close stream on empty</label>
+    <input type="checkbox" id="node-input-closeStreamOnEmpty">
+  </div>
+  <div class="form-row">
+    <label for="node-input-disableTtsCache"><i class="icon-tag"></i>Disable TTS cache</label>
+    <input type="checkbox" id="node-input-disableTtsCache">
+  </div>
+  <div class="form-row">
     <label for="node-input-loop"><i class="icon-tag"></i>Loop</label>
-    <input type="input" id="node-input-loop" placeholder="number of times to repeat"> 
+    <input type="input" id="node-input-loop" placeholder="number of times to repeat, or 'forever'">
   </div>
   <fieldset>
-    <legend>Speech synthesis options</legend>
+    <legend>Synthesizer</legend>
     <div class="form-row">
-      <label for="node-input-vendor">Vendor</label>
-      <select id="node-input-vendor">
-        <option value="default" selected>--application default--</option>
-        <option value="google">google</option>
-        <option value="aws">aws/polly</option>
-        <option value="microsoft">microsoft</option>
-        <option value="ibm">ibm</option>
-        <option value="nuance">nuance</option>
-      </select>
+      <label for="node-input-speechServer">Speech data</label>
+      <input type="text" id="node-input-speechServer">
+      <small style="display:block;margin-left:160px;color:#888;">optional override &mdash; jambonz server for live language/voice lists (auto-detected from your config; falls back to bundled data)</small>
     </div>
-    <div class="form-row" style="display: none;">
-      <label for="node-input-lang"> Lang</label>
-      <input type="text" id="node-input-lang">
-    </div>
-    <div class="form-row">
-      <label for="node-input-xlang">Language</label>
-      <select id="node-input-xlang">
-        <option value="default" selected>--application default--</option>
-      </select>
-    </div>
-    <div class="form-row" style="display: none;">
-      <label for="node-input-voice"> Voice</label>
-      <input type="text" id="node-input-voice">
-    </div>
-    <div class="form-row">
-      <label for="node-input-xvoice">Voice</label>
-      <select id="node-input-xvoice">
-        <option value="default" selected>--application default--</option>
-      </select>
-    </div>
+    <div id="node-input-synth-mount"></div>
   </fieldset>
+  <input type="hidden" id="node-input-synthesizer">
+  <input type="hidden" id="node-input-vendor">
+  <input type="hidden" id="node-input-lang">
+  <input type="hidden" id="node-input-voice">
+  <input type="hidden" id="node-input-fallbackVendor">
+  <input type="hidden" id="node-input-fallbackLang">
+  <input type="hidden" id="node-input-fallbackVoice">
 </script>
 
 <!-- Help Text -->
@@ -90,25 +132,22 @@
       <dt>Early media<span class="property-type">boolean</span></dt>
       <dd>if checked, play the prompt over an early media connection</dd>
       <dt>Loop<span class="property-type">number</span></dt>
-      <dd>number of times to play the prompt</dd>
-      <dt>Vendor<span class="property-type">string</span></dt>
-      <dd>TTS vendor</dd>
-      <dt>Language<span class="property-type">string</span></dt>
-      <dd>TTS language</dd>
-      <dt>Voice<span class="property-type">string</span></dt>
-      <dd>TTS voice</dd>
+      <dd>number of times to play the prompt (or 'forever')</dd>
+      <dt>Synthesizer<span class="property-type">object</span></dt>
+      <dd>the TTS <code>synthesizer</code> configuration (vendor, language, voice, fallback, engine,
+        gender, vendor options), rendered from the jambonz schema.</dd>
     </dl>
-  
+
   <h3>Outputs</h3>
   <dl class="message-properties">
     <dt>jambonz<span class="property-type">object</span></dt>
     <dd> <code>msg.jambonz</code> will contain any previous actions provided to the input with the new <code>say</code> action appended  </dd>
   </dl>
-  
+
   <h3>Details</h3>
-  The say command is used to send synthesized speech to the remote party. 
+  The say command is used to send synthesized speech to the remote party.
   The text provided may be either plain text or may use SSML tags.
-  
+
   Within the text field you can use mustache syntax to insert properties of the msg, flow or global objects.
   For example if you wanted to insert the value of msg.payload into the text you could put
   <code>The payload is {{msg.payload}}</code>

@@ -1,0 +1,181 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  RED.nodes.registerType('llm', {
+    category: 'jambonz',
+    color: '#bbabaa',
+    defaults: {
+      name: {value: ''},
+      vendor: {value: 'openai', required: true},
+      model: {value: ''},
+      modelType: {value: 'str'},
+      auth: {value: ''},
+      authType: {value: 'json'},
+      connectOptions: {value: ''},
+      connectOptionsType: {value: 'json'},
+      llmOptions: {value: '', required: true},
+      llmOptionsType: {value: 'json'},
+      mcpServers: {value: ''},
+      mcpServersType: {value: 'json'},
+      actionHook: {value: ''},
+      actionHookType: {value: 'str'},
+      eventHook: {value: ''},
+      eventHookType: {value: 'str'},
+      toolHook: {value: ''},
+      toolHookType: {value: 'str'},
+      handoff: {value: ''},
+      handoffType: {value: 'json'},
+      events: {value: ''},
+      responseTimeoutMs: {value: ''},
+      responseTimeoutMsType: {value: 'num'},
+      cancelOnResponseTimeout: {value: false},
+      cancelOnBargeIn: {value: false}
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-comments",
+    paletteLabel: "llm",
+    label: function() { return this.name || 'llm'; },
+    oneditprepare: function() {
+      var hookTypes = ['str', 'msg', 'flow', 'global', 'jsonata', 'env'];
+      var jsonTypes = ['json', 'msg', 'flow', 'global', 'jsonata', 'env'];
+      $('#node-input-model').typedInput({types: hookTypes, typeField: $('#node-input-modelType')});
+      $('#node-input-auth').typedInput({types: jsonTypes, typeField: $('#node-input-authType')});
+      $('#node-input-connectOptions').typedInput({types: jsonTypes, typeField: $('#node-input-connectOptionsType')});
+      $('#node-input-llmOptions').typedInput({types: jsonTypes, typeField: $('#node-input-llmOptionsType')});
+      $('#node-input-mcpServers').typedInput({types: jsonTypes, typeField: $('#node-input-mcpServersType')});
+      $('#node-input-handoff').typedInput({types: jsonTypes, typeField: $('#node-input-handoffType')});
+      $('#node-input-actionHook').typedInput({types: hookTypes, typeField: $('#node-input-actionHookType')});
+      $('#node-input-eventHook').typedInput({types: hookTypes, typeField: $('#node-input-eventHookType')});
+      $('#node-input-toolHook').typedInput({types: hookTypes, typeField: $('#node-input-toolHookType')});
+      $('#node-input-responseTimeoutMs').typedInput({types: ['num', 'msg', 'flow', 'global', 'env'], typeField: $('#node-input-responseTimeoutMsType')});
+    }
+  });
+</script>
+
+<!-- HTML -->
+<script type="text/html" data-template-name="llm">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-vendor">Vendor</label>
+    <select id="node-input-vendor">
+      <option value="openai">openai (Realtime)</option>
+      <option value="microsoft">microsoft (Azure OpenAI Realtime)</option>
+      <option value="google">google</option>
+      <option value="elevenlabs">elevenlabs</option>
+      <option value="ultravox">ultravox</option>
+      <option value="deepgram">deepgram (Voice Agent)</option>
+      <option value="voiceagent">voiceagent</option>
+      <option value="assemblyai">assemblyai</option>
+      <option value="xai">xai</option>
+      <option value="gptlive">gptlive</option>
+      <option value="qwen">qwen</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-model">Model</label>
+    <input type="text" id="node-input-model" placeholder="e.g. gpt-4o-realtime-preview">
+    <input type="hidden" id="node-input-modelType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-auth">Auth</label>
+    <input type="text" id="node-input-auth" placeholder='{"apiKey":"..."}'>
+    <input type="hidden" id="node-input-authType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-llmOptions">LLM options</label>
+    <input type="text" id="node-input-llmOptions" placeholder='vendor-specific session config object'>
+    <input type="hidden" id="node-input-llmOptionsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-connectOptions">Connect options</label>
+    <input type="text" id="node-input-connectOptions" placeholder='connection options object'>
+    <input type="hidden" id="node-input-connectOptionsType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-mcpServers">MCP servers</label>
+    <input type="text" id="node-input-mcpServers" placeholder='array of MCP server objects'>
+    <input type="hidden" id="node-input-mcpServersType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-handoff">Handoff</label>
+    <input type="text" id="node-input-handoff" placeholder='handoff tool object'>
+    <input type="hidden" id="node-input-handoffType">
+  </div>
+  <fieldset>
+    <legend>Hooks</legend>
+    <div class="form-row">
+      <label for="node-input-actionHook">Action hook</label>
+      <input type="text" id="node-input-actionHook" placeholder="url">
+      <input type="hidden" id="node-input-actionHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-eventHook">Event hook</label>
+      <input type="text" id="node-input-eventHook" placeholder="url">
+      <input type="hidden" id="node-input-eventHookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-toolHook">Tool hook</label>
+      <input type="text" id="node-input-toolHook" placeholder="url">
+      <input type="hidden" id="node-input-toolHookType">
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Advanced</legend>
+    <div class="form-row">
+      <label for="node-input-events">Events</label>
+      <input type="text" id="node-input-events" placeholder="comma-separated event names">
+    </div>
+    <div class="form-row">
+      <label for="node-input-responseTimeoutMs">Response timeout (ms)</label>
+      <input type="text" id="node-input-responseTimeoutMs" placeholder="ms">
+      <input type="hidden" id="node-input-responseTimeoutMsType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-cancelOnResponseTimeout" style="width:auto">Cancel on response timeout</label>
+      <input type="checkbox" id="node-input-cancelOnResponseTimeout" style="display:inline-block; width:auto; vertical-align:top;">
+    </div>
+    <div class="form-row">
+      <label for="node-input-cancelOnBargeIn" style="width:auto">Cancel on barge-in</label>
+      <input type="checkbox" id="node-input-cancelOnBargeIn" style="display:inline-block; width:auto; vertical-align:top;">
+    </div>
+  </fieldset>
+</script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="llm">
+  <p>Connect the call directly to a real-time speech-to-speech (S2S) LLM engine.</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>Vendor<span class="property-type">string</span></dt>
+    <dd>the S2S engine: openai, microsoft, google, elevenlabs, ultravox, deepgram/voiceagent, assemblyai, xai, gptlive, qwen.</dd>
+    <dt>Model<span class="property-type">string</span></dt>
+    <dd>the model to use (vendor-specific).</dd>
+    <dt>Auth<span class="property-type">json</span></dt>
+    <dd>credentials object for the vendor (e.g. <code>{"apiKey":"..."}</code>).</dd>
+    <dt>LLM options<span class="property-type">json</span></dt>
+    <dd>vendor-shaped session configuration passed to the engine (instructions, voice, tools, etc.).</dd>
+    <dt>Connect options<span class="property-type">json</span></dt>
+    <dd>connection-level options for the engine.</dd>
+    <dt>MCP servers<span class="property-type">json</span></dt>
+    <dd>array of MCP server definitions the model may call tools on.</dd>
+    <dt>Handoff<span class="property-type">json</span></dt>
+    <dd>handoff tool definition, used to transfer control back to the jambonz application.</dd>
+  </dl>
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>jambonz<span class="property-type">object</span></dt>
+    <dd><code>msg.jambonz</code> will contain any previous actions with the new <code>llm</code> action appended.</dd>
+  </dl>
+  <h3>Details</h3>
+  The llm verb connects the caller to a realtime speech-to-speech LLM. The <code>vendor</code> selects the
+  engine implementation; <code>llmOptions</code> and <code>connectOptions</code> are passed through to that
+  engine, so keep them as JSON objects. Use the tool hook and MCP servers to enable function/tool calling, and
+  the handoff object to hand control back to your application.
+  <h3>References</h3>
+  <ul>
+    <li><a href="https://docs.jambonz.org/verbs/verbs/llm">Jambonz llm reference</a></li>
+  </ul>
+</script>

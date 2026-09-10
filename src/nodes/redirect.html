@@ -12,11 +12,13 @@
     defaults: {
       name: {value: ''},
       hook: {required: true},
-      hookType: {value: 'str'}
+      hookType: {value: 'str'},
+      statusHook: {value: ''},
+      statusHookType: {value: 'str'}
     },
     inputs:1,
     outputs:1,
-    icon: "font-awesome/fa-cubes",
+    icon: "font-awesome/fa-share",
     label: function() { 
       return this.name || 'redirect';
     },
@@ -24,6 +26,10 @@
       $('#node-input-hook').typedInput({
         types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
         typeField: $('#node-input-hookType')
+      });
+      $('#node-input-statusHook').typedInput({
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+        typeField: $('#node-input-statusHookType')
       });
       }
   });
@@ -39,6 +45,11 @@
       <label for="node-input-hook">Action hook</label>
       <input type="text" id="node-input-hook" placeholder="url">
       <input type="hidden" id="node-input-hookType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-statusHook">Status hook</label>
+      <input type="text" id="node-input-statusHook" placeholder="url (optional)">
+      <input type="hidden" id="node-input-statusHookType">
     </div>
 </script>
 

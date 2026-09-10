@@ -1,4 +1,4 @@
-var {appendVerb, new_resolve} = require('./libs')
+var {appendVerb, new_resolve, resolveSpeechObject} = require('./libs')
 
 module.exports = function(RED) {
   function dial(config) {
@@ -73,6 +73,22 @@ module.exports = function(RED) {
         data.boostAudioSignal = await new_resolve(RED, config.boostaudiosignal, config.boostaudiosignalType, node, msg)
       }
 
+      if (config.proxy) {
+        data.proxy = await new_resolve(RED, config.proxy, config.proxyType, node, msg);
+      }
+
+      // nested dub tracks (array)
+      if (config.dub) {
+        const dub = await new_resolve(RED, config.dub, config.dubType, node, msg);
+        if (Array.isArray(dub) && dub.length) data.dub = dub;
+      }
+
+      // nested stream (listen synonym)
+      if (config.stream) {
+        const stream = await new_resolve(RED, config.stream, config.streamType, node, msg);
+        if (stream && typeof stream === 'object') data.stream = stream;
+      }
+
       if (config.forwardPAI !== undefined && config.forwardPAI !== 'default') {
         if (config.forwardPAI === 'true' || config.forwardPAI === 'false') {
           data.forwardPAI = config.forwardPAI === 'true';
@@ -100,11 +116,13 @@ module.exports = function(RED) {
 
       // nested transcribe
       if (config.transcriptionhook) {
-        const recognizer = {
+        let recognizer = await resolveSpeechObject(RED, config.recognizer, node, msg);
+        if (!recognizer) {
+        recognizer = {
           vendor: config.transcriptionvendor,
           language: config.recognizerlang,
           interim: config.interim,
-          separateRecognitionPerChannel: config.mixtype === 'stereo' && config.separaterecog,
+          separateRecognitionPerChannel: config.separaterecog,
           diarization: config.diarization
         };
         if (recognizer.vendor === 'google') {
@@ -141,6 +159,7 @@ module.exports = function(RED) {
             filterMethod: config.vocabularyfiltermethod
           });
         }
+        }
         data.transcribe = {
           transcriptionHook: await new_resolve(RED, config.transcriptionhook, config.transcriptionhookType, node, msg),
           recognizer
@@ -173,11 +192,12 @@ module.exports = function(RED) {
           delete(data.amd.timers)
         }
         //If custom recogniser is used
-        if (config.amd_recognizer_vendor != 'default'){
-          data.amd.recognizer = {
-            ...(config.amd_recognizer_vendor && {vendor : config.amd_recognizer_vendor}),
-            ...(config.amd_recognizer_lang && {language : config.amd_recognizer_lang})
-          }
+        const amdRecog = await resolveSpeechObject(RED, config.amdRecognizer, node, msg);
+        if (amdRecog) {
+          data.amd.recognizer = amdRecog;
+        } else if (config.amd_recognizer_vendor && config.amd_recognizer_vendor != 'default') {
+          data.amd.recognizer = {vendor: config.amd_recognizer_vendor};
+          if (config.amd_recognizer_lang && config.amd_recognizer_lang !== 'default') data.amd.recognizer.language = config.amd_recognizer_lang;
         }
       }
 

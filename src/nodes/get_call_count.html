@@ -1,0 +1,38 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  RED.nodes.registerType('get_call_count', {
+    category: 'jambonz',
+    color: '#aebfb9',
+    defaults: {
+      name: {value: ''},
+      server: {value: '', required: true, type: 'jambonz_auth'}
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-tachometer",
+    paletteLabel: "Get - Call Count",
+    label: function() { return this.name || 'Get Call Count'; }
+  });
+</script>
+
+<!-- HTML -->
+<script type="text/html" data-template-name="get_call_count">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-server">Server</label>
+    <input type="text" id="node-input-server">
+  </div>
+</script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="get_call_count">
+  <p>Retrieve the current number of active inbound and outbound calls on the account.</p>
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload<span class="property-type">object</span></dt>
+    <dd><code>msg.payload</code> will contain <code>{inbound, outbound}</code> call counts.</dd>
+  </dl>
+</script>
