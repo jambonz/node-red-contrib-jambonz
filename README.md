@@ -9,6 +9,9 @@ https://docs.jambonz.org/verbs/verbs/overview
 
 ## Implemented nodes
 
+### agent
+The [agent](https://docs.jambonz.org/verbs/verbs/agent) verb runs a jambonz-native LLM voice agent, composing STT, an LLM and TTS with barge-in, turn detection, tool calling, MCP and handoff.
+
 ### alert
 The [alert](https://docs.jambonz.org/verbs/verbs/alert) verb raises an alert in the jambonz platform.
 
@@ -75,6 +78,9 @@ The [leave](https://docs.jambonz.org/verbs/verbs/leave) verb transfers a call ou
 ### listen
 The [listen](https://docs.jambonz.org/verbs/verbs/listen) verb sends a real-time audio stream for a call to a websocket server.
 
+### llm
+The [llm](https://docs.jambonz.org/verbs/verbs/llm) verb connects the call directly to a real-time speech-to-speech LLM engine (e.g. OpenAI Realtime, Ultravox, ElevenLabs, Deepgram Voice Agent), selected by vendor.
+
 ### message
 Sends an SMS message using the `message` verb.
 
@@ -104,6 +110,12 @@ The [sip:request](https://docs.jambonz.org/verbs/verbs/sip-request) verb sends a
 
 ### tag
 The [tag](https://docs.jambonz.org/verbs/verbs/tag) verb is used to add properties to the standard call attributes that jambonz includes on every action or call status HTTP POST request.
+
+### transcribe
+The [transcribe](https://docs.jambonz.org/verbs/verbs/transcribe) verb transcribes the call in real time and POSTs the results to a webhook, without otherwise affecting the call.
+
+### transfer
+The [transfer](https://docs.jambonz.org/verbs/verbs/transfer) verb performs a packaged blind or warm transfer of the call, with built-in failure handling (requires jambonz 10.3.0 or later).
 
 ### user auth
 This node is used to validate a sip user authentication challenge. The incoming webhook that is used for sip user authentication includes the components of the SIP Authorization header in `msg.authRequest`. The `user auth` node allows the user to specify either the associated plaintext or hashed password and performs digest authentication to determine whether the user is authenticated. The determination is recorded in `msg.authResponse` which can subsequently be sent back to the jambonz platform via a `webhook out` node.
