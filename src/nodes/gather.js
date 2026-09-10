@@ -19,7 +19,10 @@ module.exports = function(RED) {
         obj.input.push('speech');
         const recognizer = {
           vendor: config.transcriptionvendor,
-          language: config.recognizerlang
+          language: config.recognizerlang,
+          interim: config.interim,
+          separateRecognitionPerChannel: config.separaterecog,
+          diarization: config.diarization
         };
         if (recognizer.vendor === 'google') {
           var hints = await new_resolve(RED, config.transcriptionhints, config.transcriptionhintsType, node, msg);
@@ -29,8 +32,18 @@ module.exports = function(RED) {
             profanityFilter: config.profanityfilter,
             hints: hints.length > 0 ?
               hints.split(',').map((w) => w.trim()) :
-              []
+              [],
+            punctuation: config.punctuation,
+            enhancedModel: config.useenhanced,
+            words: config.words,
+            interactionType: config.interactiontype
           });
+          if (recognizer.diarization) {
+            var diarizationMin = await new_resolve(RED, config.diarizationmin, config.diarizationminType, node, msg);
+            var diarizationMax = await new_resolve(RED, config.diarizationmax, config.diarizationmaxType, node, msg);
+            if (diarizationMin) recognizer.diarizationMinSpeakers = parseInt(diarizationMin) || 0;
+            if (diarizationMax) recognizer.diarizationMaxSpeakers = parseInt(diarizationMax) || 0;
+          }
           if (naics) recognizer.naicsCode = parseInt(naics) || 0;
           if (altlangs) {
             recognizer.altLanguages = altlangs.split(',').map((e) => e.trim());
@@ -44,10 +57,17 @@ module.exports = function(RED) {
             vocabularyFilterName: vocabFilter,
             filterMethod: config.vocabularyfiltermethod
           });
+          if (config.identifychannels) recognizer.identifyChannels = true;
         }
+        // recognizer scalar options (all vendors)
+        if (/^\d+$/.test(config.asrTimeout)) recognizer.asrTimeout = parseInt(config.asrTimeout);
+        if (/^\d+$/.test(config.fastRecognitionTimeout)) recognizer.fastRecognitionTimeout = parseInt(config.fastRecognitionTimeout);
+        if (config.asrDtmfTerminationDigit) recognizer.asrDtmfTerminationDigit = config.asrDtmfTerminationDigit;
         obj.recognizer = recognizer;
         if (config.bargein) obj.bargein = config.bargein;
         if (config.listenduringprompt) obj.listenDuringPrompt = config.listenduringprompt;
+        if (/^\d+$/.test(config.speechTimeout)) obj.speechTimeout = parseInt(config.speechTimeout);
+        if (/^\d+$/.test(config.minBargeinWordCount)) obj.minBargeinWordCount = parseInt(config.minBargeinWordCount);
       }
       if (config.dtmfinput) {
         obj.input.push('digits');
@@ -74,6 +94,20 @@ module.exports = function(RED) {
         }
       }
       else obj.play = {url: await new_resolve(RED, config.playurl, config.playurlType, node, msg)};
+
+      // optional nested feature objects (JSON)
+      if (config.fillerNoise) {
+        const fn = await new_resolve(RED, config.fillerNoise, config.fillerNoiseType, node, msg);
+        if (fn && typeof fn === 'object') obj.fillerNoise = fn;
+      }
+      if (config.vad) {
+        const vad = await new_resolve(RED, config.vad, config.vadType, node, msg);
+        if (vad && typeof vad === 'object') obj.vad = vad;
+      }
+      if (config.actionHookDelayAction) {
+        const ahda = await new_resolve(RED, config.actionHookDelayAction, config.actionHookDelayActionType, node, msg);
+        if (ahda && typeof ahda === 'object') obj.actionHookDelayAction = ahda;
+      }
 
       node.log(`gather: ${JSON.stringify(obj)}`);
 

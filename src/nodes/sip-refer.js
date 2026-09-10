@@ -19,6 +19,7 @@ module.exports = function(RED) {
         obj.headers = JSON.parse(obj.headers)
       }
       config.referredBy ? obj.referredBy = await new_resolve(RED, config.referredBy, config.referredByType, node, msg) : null
+      config.referredByDisplayName ? obj.referredByDisplayName = await new_resolve(RED, config.referredByDisplayName, config.referredByDisplayNameType, node, msg) : null
       config.actionHook ? obj.actionHook = await new_resolve(RED, config.actionHook, config.actionHookType, node, msg) : null
       config.eventHook ? obj.eventHook = await new_resolve(RED, config.eventHook, config.eventHookType, node, msg) : null
       appendVerb(msg, obj)

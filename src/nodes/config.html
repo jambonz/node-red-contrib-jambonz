@@ -45,6 +45,9 @@
       bargeIn_maxDigitsType: { value: "num" },
       bargeIn_interDigitTimeout: {},
       bargeIn_interDigitTimeoutType: { value: "num" },
+      bargeIn_sticky: { value: false },
+      bargeIn_minBargeinWordCount: {},
+      bargeIn_minBargeinWordCountType: { value: "num" },
 
       amd: { value: 0 },
       amd_actionHook: {},
@@ -92,6 +95,57 @@
       boostAudioSignal: { value: false },
       boostAudioSignalLevel: { value: "" },
       boostAudioSignalLevelType: { value: "str" },
+
+      noiseIsolation: { value: false },
+      noiseIsolation_enable: { value: false },
+      noiseIsolation_vendor: { value: "" },
+      noiseIsolation_level: { value: "" },
+      noiseIsolation_levelType: { value: "num" },
+      noiseIsolation_model: { value: "" },
+      noiseIsolation_modelType: { value: "str" },
+
+      turnTaking: { value: false },
+      turnTaking_enable: { value: false },
+      turnTaking_vendor: { value: "" },
+      turnTaking_threshold: { value: "" },
+      turnTaking_thresholdType: { value: "num" },
+      turnTaking_model: { value: "" },
+      turnTaking_modelType: { value: "str" },
+
+      ttsStream: { value: false },
+      ttsStream_enable: { value: false },
+      ttsStream_synthesizer: { value: "" },
+      ttsStream_synthesizerType: { value: "json" },
+
+      fillerNoise: { value: false },
+      fillerNoise_enable: { value: false },
+      fillerNoise_url: { value: "" },
+      fillerNoise_urlType: { value: "str" },
+      fillerNoise_startDelaySecs: { value: "" },
+      fillerNoise_startDelaySecsType: { value: "num" },
+
+      vad: { value: false },
+      vadOptions: { value: "" },
+      vadOptionsType: { value: "json" },
+
+      actionHookDelayAction: { value: false },
+      actionHookDelayActionOptions: { value: "" },
+      actionHookDelayActionOptionsType: { value: "json" },
+
+      referHook: { value: false },
+      referHookValue: { value: "" },
+      referHookValueType: { value: "str" },
+
+      reset: { value: false },
+      resetValue: { value: "" },
+      resetValueType: { value: "str" },
+
+      notifyEvents: { value: false },
+      notifySttLatency: { value: false },
+      earlyMedia: { value: false },
+      autoStreamTts: { value: false },
+      disableTtsCache: { value: false },
+      trackTtsPlayout: { value: false },
     },
     inputs: 1,
     outputs: 1,
@@ -322,6 +376,67 @@
         types: ["json", "msg", "flow", "global", "jsonata"],
         typeField: $("#node-input-listenMetadataType"),
       });
+
+      // barge-in additions
+      $("#node-input-bargeIn_minBargeinWordCount").typedInput({
+        types: ["num", "msg", "flow", "global", "jsonata", "env", mustacheType],
+        typeField: $("#node-input-bargeIn_minBargeinWordCountType"),
+      });
+
+      // 10.x session feature typedInputs
+      $("#node-input-noiseIsolation_level").typedInput({
+        types: ["num", "msg", "flow", "global", "jsonata", "env"],
+        typeField: $("#node-input-noiseIsolation_levelType"),
+      });
+      $("#node-input-noiseIsolation_model").typedInput({
+        types: ["str", "msg", "flow", "global", "jsonata", "env"],
+        typeField: $("#node-input-noiseIsolation_modelType"),
+      });
+      $("#node-input-turnTaking_threshold").typedInput({
+        types: ["num", "msg", "flow", "global", "jsonata", "env"],
+        typeField: $("#node-input-turnTaking_thresholdType"),
+      });
+      $("#node-input-turnTaking_model").typedInput({
+        types: ["str", "msg", "flow", "global", "jsonata", "env"],
+        typeField: $("#node-input-turnTaking_modelType"),
+      });
+      $("#node-input-ttsStream_synthesizer").typedInput({
+        types: ["json", "msg", "flow", "global", "jsonata", "env"],
+        typeField: $("#node-input-ttsStream_synthesizerType"),
+      });
+      $("#node-input-fillerNoise_url").typedInput({
+        types: ["str", "msg", "flow", "global", "jsonata", "env", mustacheType],
+        typeField: $("#node-input-fillerNoise_urlType"),
+      });
+      $("#node-input-fillerNoise_startDelaySecs").typedInput({
+        types: ["num", "msg", "flow", "global", "jsonata", "env"],
+        typeField: $("#node-input-fillerNoise_startDelaySecsType"),
+      });
+      $("#node-input-vadOptions").typedInput({
+        types: ["json", "msg", "flow", "global", "jsonata", "env"],
+        typeField: $("#node-input-vadOptionsType"),
+      });
+      $("#node-input-actionHookDelayActionOptions").typedInput({
+        types: ["json", "msg", "flow", "global", "jsonata", "env"],
+        typeField: $("#node-input-actionHookDelayActionOptionsType"),
+      });
+      $("#node-input-referHookValue").typedInput({
+        types: ["str", "msg", "flow", "global", "jsonata", "env", mustacheType],
+        typeField: $("#node-input-referHookValueType"),
+      });
+      $("#node-input-resetValue").typedInput({
+        types: ["str", "msg", "flow", "global", "jsonata", "env"],
+        typeField: $("#node-input-resetValueType"),
+      });
+
+      // gate checkboxes -> show/hide their option blocks
+      ["noiseIsolation", "turnTaking", "ttsStream", "fillerNoise", "vad", "actionHookDelayAction", "referHook", "reset"].forEach(function (g) {
+        var opts = $("#" + g + "-options");
+        opts.toggle($("#node-input-" + g).is(":checked"));
+        $("#node-input-" + g).change(function () {
+          opts.toggle($(this).is(":checked"));
+        });
+      });
     },
   });
 </script>
@@ -481,6 +596,15 @@
         <input type="text" id="node-input-bargeIn_interDigitTimeout" placeholder="PLACEHOLDER">
         <input type="hidden" id="node-input-bargeIn_interDigitTimeoutType">
     </div>
+    <div class="form-row">
+      <label for="node-input-bargeIn_minBargeinWordCount">Min Barge-In Word Count</label>
+        <input type="text" id="node-input-bargeIn_minBargeinWordCount">
+        <input type="hidden" id="node-input-bargeIn_minBargeinWordCountType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-bargeIn_sticky">Sticky</label>
+        <input type="checkbox" id="node-input-bargeIn_sticky">
+    </div>
     </div>
     <legend>Answer Machine Detection</legend>
     <div class="form-row">
@@ -629,6 +753,182 @@
         <input type="text" id="node-input-boostAudioSignalLevel">
         <input type="hidden" id="node-input-boostAudioSignalLevelType">
     </div>
+  </div>
+
+  <legend>Noise Isolation</legend>
+  <div class="form-row">
+    <label for="node-input-noiseIsolation">Modify Noise Isolation</label>
+    <input type="checkbox" id="node-input-noiseIsolation">
+  </div>
+  <div id="noiseIsolation-options">
+    <div class="form-row">
+      <label for="node-input-noiseIsolation_enable">Enable</label>
+      <input type="checkbox" id="node-input-noiseIsolation_enable">
+    </div>
+    <div class="form-row">
+      <label for="node-input-noiseIsolation_vendor">Vendor</label>
+      <select id="node-input-noiseIsolation_vendor">
+        <option value="">--default--</option>
+        <option value="krisp">krisp</option>
+        <option value="rnnoise">rnnoise</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-noiseIsolation_level">Level</label>
+      <input type="text" id="node-input-noiseIsolation_level" placeholder="0-100">
+      <input type="hidden" id="node-input-noiseIsolation_levelType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-noiseIsolation_model">Model</label>
+      <input type="text" id="node-input-noiseIsolation_model">
+      <input type="hidden" id="node-input-noiseIsolation_modelType">
+    </div>
+  </div>
+
+  <legend>Turn Taking</legend>
+  <div class="form-row">
+    <label for="node-input-turnTaking">Modify Turn Taking</label>
+    <input type="checkbox" id="node-input-turnTaking">
+  </div>
+  <div id="turnTaking-options">
+    <div class="form-row">
+      <label for="node-input-turnTaking_enable">Enable</label>
+      <input type="checkbox" id="node-input-turnTaking_enable">
+    </div>
+    <div class="form-row">
+      <label for="node-input-turnTaking_vendor">Vendor</label>
+      <select id="node-input-turnTaking_vendor">
+        <option value="">--default--</option>
+        <option value="krisp">krisp</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-turnTaking_threshold">Threshold</label>
+      <input type="text" id="node-input-turnTaking_threshold" placeholder="0-1">
+      <input type="hidden" id="node-input-turnTaking_thresholdType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-turnTaking_model">Model</label>
+      <input type="text" id="node-input-turnTaking_model">
+      <input type="hidden" id="node-input-turnTaking_modelType">
+    </div>
+  </div>
+
+  <legend>Streaming TTS</legend>
+  <div class="form-row">
+    <label for="node-input-ttsStream">Modify TTS Stream</label>
+    <input type="checkbox" id="node-input-ttsStream">
+  </div>
+  <div id="ttsStream-options">
+    <div class="form-row">
+      <label for="node-input-ttsStream_enable">Enable</label>
+      <input type="checkbox" id="node-input-ttsStream_enable">
+    </div>
+    <div class="form-row">
+      <label for="node-input-ttsStream_synthesizer">Synthesizer</label>
+      <input type="text" id="node-input-ttsStream_synthesizer" placeholder='{"vendor":"..."}'>
+      <input type="hidden" id="node-input-ttsStream_synthesizerType">
+    </div>
+  </div>
+
+  <legend>Filler Noise</legend>
+  <div class="form-row">
+    <label for="node-input-fillerNoise">Modify Filler Noise</label>
+    <input type="checkbox" id="node-input-fillerNoise">
+  </div>
+  <div id="fillerNoise-options">
+    <div class="form-row">
+      <label for="node-input-fillerNoise_enable">Enable</label>
+      <input type="checkbox" id="node-input-fillerNoise_enable">
+    </div>
+    <div class="form-row">
+      <label for="node-input-fillerNoise_url">Url</label>
+      <input type="text" id="node-input-fillerNoise_url" placeholder="audio url">
+      <input type="hidden" id="node-input-fillerNoise_urlType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-fillerNoise_startDelaySecs">Start delay (s)</label>
+      <input type="text" id="node-input-fillerNoise_startDelaySecs">
+      <input type="hidden" id="node-input-fillerNoise_startDelaySecsType">
+    </div>
+  </div>
+
+  <legend>Voice Activity Detection</legend>
+  <div class="form-row">
+    <label for="node-input-vad">Modify VAD</label>
+    <input type="checkbox" id="node-input-vad">
+  </div>
+  <div id="vad-options">
+    <div class="form-row">
+      <label for="node-input-vadOptions">Options</label>
+      <input type="text" id="node-input-vadOptions" placeholder='{"enable":true,"voiceMs":...}'>
+      <input type="hidden" id="node-input-vadOptionsType">
+    </div>
+  </div>
+
+  <legend>Action Hook Delay</legend>
+  <div class="form-row">
+    <label for="node-input-actionHookDelayAction">Modify Delay Action</label>
+    <input type="checkbox" id="node-input-actionHookDelayAction">
+  </div>
+  <div id="actionHookDelayAction-options">
+    <div class="form-row">
+      <label for="node-input-actionHookDelayActionOptions">Options</label>
+      <input type="text" id="node-input-actionHookDelayActionOptions" placeholder='{"enabled":true,"actions":[...]}'>
+      <input type="hidden" id="node-input-actionHookDelayActionOptionsType">
+    </div>
+  </div>
+
+  <legend>Refer Hook</legend>
+  <div class="form-row">
+    <label for="node-input-referHook">Modify Refer Hook</label>
+    <input type="checkbox" id="node-input-referHook">
+  </div>
+  <div id="referHook-options">
+    <div class="form-row">
+      <label for="node-input-referHookValue">Url</label>
+      <input type="text" id="node-input-referHookValue" placeholder="refer webhook">
+      <input type="hidden" id="node-input-referHookValueType">
+    </div>
+  </div>
+
+  <legend>Reset</legend>
+  <div class="form-row">
+    <label for="node-input-reset">Reset settings</label>
+    <input type="checkbox" id="node-input-reset">
+  </div>
+  <div id="reset-options">
+    <div class="form-row">
+      <label for="node-input-resetValue">Reset</label>
+      <input type="text" id="node-input-resetValue" placeholder="e.g. bargeIn or comma-separated list">
+      <input type="hidden" id="node-input-resetValueType">
+    </div>
+  </div>
+
+  <legend>Session Flags</legend>
+  <div class="form-row">
+    <label for="node-input-notifyEvents">Notify Events</label>
+    <input type="checkbox" id="node-input-notifyEvents">
+  </div>
+  <div class="form-row">
+    <label for="node-input-notifySttLatency">Notify STT Latency</label>
+    <input type="checkbox" id="node-input-notifySttLatency">
+  </div>
+  <div class="form-row">
+    <label for="node-input-earlyMedia">Early Media</label>
+    <input type="checkbox" id="node-input-earlyMedia">
+  </div>
+  <div class="form-row">
+    <label for="node-input-autoStreamTts">Auto Stream TTS</label>
+    <input type="checkbox" id="node-input-autoStreamTts">
+  </div>
+  <div class="form-row">
+    <label for="node-input-disableTtsCache">Disable TTS Cache</label>
+    <input type="checkbox" id="node-input-disableTtsCache">
+  </div>
+  <div class="form-row">
+    <label for="node-input-trackTtsPlayout">Track TTS Playout</label>
+    <input type="checkbox" id="node-input-trackTtsPlayout">
   </div>
   </fieldset>
 </script>

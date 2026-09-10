@@ -7,13 +7,21 @@
       defaults: {
         name: {value: ''},
         text: {required: true},
+        instructions: {value: ''},
+        instructionsType: {value: 'str'},
         early: {value: false},
+        stream: {value: false},
+        disableTtsCache: {value: false},
+        closeStreamOnEmpty: {value: false},
         loop: {value: 1},
         vendor: {value: 'default'},
         lang: {value: 'default'},
         xlang: {},
         voice: {value: 'default'},
-        xvoice: {}
+        xvoice: {},
+        fallbackVendor: {value: 'default'},
+        fallbackLang: {value: ''},
+        fallbackVoice: {value: ''}
       },
       inputs:1,
       outputs:1,
@@ -22,6 +30,10 @@
       oneditprepare: () => {
         var node = this;
         prepareTtsControls(node);
+        $('#node-input-instructions').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-instructionsType')
+        });
       }
   });
 </script>
@@ -37,12 +49,29 @@
     <textarea id="node-input-text" rows="4" placeholder="Text or SSML to speak" style="width:70%"></textarea>
   </div>
   <div class="form-row">
+    <label for="node-input-instructions"><i class="icon-tag"></i> Instructions</label>
+    <input type="text" id="node-input-instructions" placeholder="TTS instructions (e.g. for openai)">
+    <input type="hidden" id="node-input-instructionsType">
+  </div>
+  <div class="form-row">
     <label for="node-input-early"><i class="icon-tag"></i>Early media</label>
     <input type="checkbox" id="node-input-early">
   </div>
   <div class="form-row">
+    <label for="node-input-stream"><i class="icon-tag"></i>Stream TTS</label>
+    <input type="checkbox" id="node-input-stream">
+  </div>
+  <div class="form-row">
+    <label for="node-input-closeStreamOnEmpty"><i class="icon-tag"></i>Close stream on empty</label>
+    <input type="checkbox" id="node-input-closeStreamOnEmpty">
+  </div>
+  <div class="form-row">
+    <label for="node-input-disableTtsCache"><i class="icon-tag"></i>Disable TTS cache</label>
+    <input type="checkbox" id="node-input-disableTtsCache">
+  </div>
+  <div class="form-row">
     <label for="node-input-loop"><i class="icon-tag"></i>Loop</label>
-    <input type="input" id="node-input-loop" placeholder="number of times to repeat"> 
+    <input type="input" id="node-input-loop" placeholder="number of times to repeat, or 'forever'">
   </div>
   <fieldset>
     <legend>Speech synthesis options</legend>
@@ -76,6 +105,28 @@
       <select id="node-input-xvoice">
         <option value="default" selected>--application default--</option>
       </select>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Fallback synthesizer</legend>
+    <div class="form-row">
+      <label for="node-input-fallbackVendor">Vendor</label>
+      <select id="node-input-fallbackVendor">
+        <option value="default" selected>--none--</option>
+        <option value="google">google</option>
+        <option value="aws">aws/polly</option>
+        <option value="microsoft">microsoft</option>
+        <option value="ibm">ibm</option>
+        <option value="nuance">nuance</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-fallbackLang">Language</label>
+      <input type="text" id="node-input-fallbackLang" placeholder="e.g. en-US">
+    </div>
+    <div class="form-row">
+      <label for="node-input-fallbackVoice">Voice</label>
+      <input type="text" id="node-input-fallbackVoice" placeholder="fallback voice">
     </div>
   </fieldset>
 </script>

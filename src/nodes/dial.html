@@ -40,6 +40,12 @@
         timeoutType: {value: 'num'},
         boostaudiosignal: { value: "" },
         boostaudiosignalType: { value: "str" },
+        proxy: { value: "" },
+        proxyType: { value: "str" },
+        dub: { value: "" },
+        dubType: { value: "json" },
+        stream: { value: "" },
+        streamType: { value: "json" },
         tag: {value: '{}'},
         tagType: {value: 'json'},
         listenurl: {value: ''},
@@ -139,6 +145,18 @@
           default: $('#node-input-tagType').val(),
           types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-tagType')
+        });
+        $('#node-input-proxy').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-proxyType')
+        });
+        $('#node-input-dub').typedInput({
+          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-dubType')
+        });
+        $('#node-input-stream').typedInput({
+          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-streamType')
         });
         $('#node-input-transcribeurl').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
@@ -569,6 +587,21 @@
       <label for="node-input-tag">Tag data</label>
       <input type="text" id="node-input-tag" placeholder="tag object">
       <input type="hidden" id="node-input-tagType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-proxy">Proxy</label>
+      <input type="text" id="node-input-proxy" placeholder="sip proxy for sip targets">
+      <input type="hidden" id="node-input-proxyType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-dub">Dub tracks</label>
+      <input type="text" id="node-input-dub" placeholder='array of dub objects'>
+      <input type="hidden" id="node-input-dubType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-stream">Stream</label>
+      <input type="text" id="node-input-stream" placeholder='stream (listen) object'>
+      <input type="hidden" id="node-input-streamType">
     </div>
     <div class="form-row">
       <label for="node-input-forwardPAI">Forward  PAI</label>

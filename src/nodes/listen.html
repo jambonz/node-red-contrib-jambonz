@@ -29,6 +29,10 @@ RED.nodes.registerType('listen',{
         passDtmf: {value: false},
         disableBidirectionalAudio: {value: false},
         samplerate: {value: 8000},
+        biDirEnabled: {value: false},
+        biDirStreaming: {value: false},
+        biDirSampleRate: {value: ''},
+        channel: {value: 'default'},
         timeout: {},
         transcriptionhook: {},
         transcriptionhookType: {value: 'str'},
@@ -185,6 +189,29 @@ RED.nodes.registerType('listen',{
         <option>64000</option>
       </select>
     </div>
+    <div class="form-row">
+      <label for="node-input-channel">Channel</label>
+      <select id="node-input-channel">
+        <option value="default">--both / default--</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </select>
+    </div>
+    <fieldset>
+      <legend>Bidirectional audio (optional)</legend>
+      <div class="form-row">
+        <label for="node-input-biDirEnabled">Enabled</label>
+        <input type="checkbox" id="node-input-biDirEnabled">
+      </div>
+      <div class="form-row">
+        <label for="node-input-biDirStreaming">Streaming</label>
+        <input type="checkbox" id="node-input-biDirStreaming">
+      </div>
+      <div class="form-row">
+        <label for="node-input-biDirSampleRate">Sample rate</label>
+        <input type="text" id="node-input-biDirSampleRate" placeholder="e.g. 8000">
+      </div>
+    </fieldset>
     <fieldset>
       <legend>Transcription (optional)</legend>
       <div class="form-row">

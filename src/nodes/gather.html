@@ -63,7 +63,18 @@
         vocabularynameType: {value: 'str'},
         vocabularyfiltername: {},
         vocabularyfilternameType: {value: 'str'},
-        vocabularyfiltermethod: {}
+        vocabularyfiltermethod: {},
+        speechTimeout: {value: ''},
+        minBargeinWordCount: {value: ''},
+        asrTimeout: {value: ''},
+        fastRecognitionTimeout: {value: ''},
+        asrDtmfTerminationDigit: {value: ''},
+        fillerNoise: {value: ''},
+        fillerNoiseType: {value: 'json'},
+        vad: {value: ''},
+        vadType: {value: 'json'},
+        actionHookDelayAction: {value: ''},
+        actionHookDelayActionType: {value: 'json'}
       },
       inputs:1,
       outputs:1,
@@ -97,6 +108,18 @@
         $('#node-input-naics').typedInput({
           types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-naicsType')
+        });
+        $('#node-input-fillerNoise').typedInput({
+          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-fillerNoiseType')
+        });
+        $('#node-input-vad').typedInput({
+          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-vadType')
+        });
+        $('#node-input-actionHookDelayAction').typedInput({
+          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-actionHookDelayActionType')
         });
 
         var enableSpeech = function(enabled) {
@@ -281,6 +304,72 @@
         <select id="node-input-recognizerlang">
         </select>
       </div>
+      <div class="form-row">
+        <label for="node-input-speechTimeout">Speech timeout (s)</label>
+        <input type="text" id="node-input-speechTimeout" placeholder="secs">
+      </div>
+      <div class="form-row">
+        <label for="node-input-minBargeinWordCount">Min bargein words</label>
+        <input type="text" id="node-input-minBargeinWordCount">
+      </div>
+      <div class="form-row">
+        <label for="node-input-interim">Interim results</label>
+        <input type="checkbox" id="node-input-interim">
+      </div>
+      <div class="form-row">
+        <label for="node-input-profanityfilter">Profanity filter</label>
+        <input type="checkbox" id="node-input-profanityfilter">
+      </div>
+      <div class="form-row">
+        <label for="node-input-punctuation">Punctuation</label>
+        <input type="checkbox" id="node-input-punctuation">
+      </div>
+      <div class="form-row">
+        <label for="node-input-useenhanced">Enhanced model</label>
+        <input type="checkbox" id="node-input-useenhanced">
+      </div>
+      <div class="form-row">
+        <label for="node-input-words">Word offsets</label>
+        <input type="checkbox" id="node-input-words">
+      </div>
+      <div class="form-row">
+        <label for="node-input-separaterecog">Separate recognition per channel</label>
+        <input type="checkbox" id="node-input-separaterecog">
+      </div>
+      <div class="form-row">
+        <label for="node-input-identifychannels">Identify channels</label>
+        <input type="checkbox" id="node-input-identifychannels">
+      </div>
+      <div class="form-row">
+        <label for="node-input-diarization">Diarization</label>
+        <input type="checkbox" id="node-input-diarization">
+      </div>
+      <div class="form-row">
+        <label for="node-input-diarizationmin">Diarization min speakers</label>
+        <input type="text" id="node-input-diarizationmin">
+        <input type="hidden" id="node-input-diarizationminType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-diarizationmax">Diarization max speakers</label>
+        <input type="text" id="node-input-diarizationmax">
+        <input type="hidden" id="node-input-diarizationmaxType">
+      </div>
+      <div class="form-row">
+        <label for="node-input-interactiontype">Interaction type</label>
+        <input type="text" id="node-input-interactiontype" placeholder="e.g. voice_command">
+      </div>
+      <div class="form-row">
+        <label for="node-input-asrTimeout">ASR timeout (s)</label>
+        <input type="text" id="node-input-asrTimeout">
+      </div>
+      <div class="form-row">
+        <label for="node-input-fastRecognitionTimeout">Fast recognition timeout</label>
+        <input type="text" id="node-input-fastRecognitionTimeout">
+      </div>
+      <div class="form-row">
+        <label for="node-input-asrDtmfTerminationDigit">ASR DTMF termination digit</label>
+        <input type="text" id="node-input-asrDtmfTerminationDigit">
+      </div>
       <div id="google-stt-options">
         <legend>Google Transcription Options</legend>
         <div class="form-row">
@@ -320,6 +409,24 @@
           </select>
         </div>
       </div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Advanced</legend>
+    <div class="form-row">
+      <label for="node-input-fillerNoise">Filler noise</label>
+      <input type="text" id="node-input-fillerNoise" placeholder='{"enable":true,"url":"..."}'>
+      <input type="hidden" id="node-input-fillerNoiseType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-vad">VAD</label>
+      <input type="text" id="node-input-vad" placeholder='{"enable":true}'>
+      <input type="hidden" id="node-input-vadType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-actionHookDelayAction">Action hook delay</label>
+      <input type="text" id="node-input-actionHookDelayAction" placeholder='{"enabled":true,"actions":[...]}'>
+      <input type="hidden" id="node-input-actionHookDelayActionType">
     </div>
   </fieldset>
 </script>

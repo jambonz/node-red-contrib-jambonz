@@ -73,6 +73,22 @@ module.exports = function(RED) {
         data.boostAudioSignal = await new_resolve(RED, config.boostaudiosignal, config.boostaudiosignalType, node, msg)
       }
 
+      if (config.proxy) {
+        data.proxy = await new_resolve(RED, config.proxy, config.proxyType, node, msg);
+      }
+
+      // nested dub tracks (array)
+      if (config.dub) {
+        const dub = await new_resolve(RED, config.dub, config.dubType, node, msg);
+        if (Array.isArray(dub) && dub.length) data.dub = dub;
+      }
+
+      // nested stream (listen synonym)
+      if (config.stream) {
+        const stream = await new_resolve(RED, config.stream, config.streamType, node, msg);
+        if (stream && typeof stream === 'object') data.stream = stream;
+      }
+
       if (config.forwardPAI !== undefined && config.forwardPAI !== 'default') {
         if (config.forwardPAI === 'true' || config.forwardPAI === 'false') {
           data.forwardPAI = config.forwardPAI === 'true';
@@ -104,7 +120,7 @@ module.exports = function(RED) {
           vendor: config.transcriptionvendor,
           language: config.recognizerlang,
           interim: config.interim,
-          separateRecognitionPerChannel: config.mixtype === 'stereo' && config.separaterecog,
+          separateRecognitionPerChannel: config.separaterecog,
           diarization: config.diarization
         };
         if (recognizer.vendor === 'google') {

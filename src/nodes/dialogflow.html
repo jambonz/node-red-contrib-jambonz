@@ -17,6 +17,15 @@
         serviceAccountCredentialsType: {value: 'msg'},
         project: {required: true, value: ''},
         projectType: {value: 'str'},
+        model: {value: 'default'},
+        agent: {value: ''},
+        agentType: {value: 'str'},
+        region: {value: ''},
+        regionType: {value: 'str'},
+        thinkingMusic: {value: ''},
+        thinkingMusicType: {value: 'str'},
+        queryInput: {value: ''},
+        queryInputType: {value: 'json'},
         environment: {value: ''},
         environmentType: {value: 'str'},
         welcomeEvent: {},
@@ -66,6 +75,22 @@
         $('#node-input-environment').typedInput({
           typeField: $('#node-input-environmentType'),
           types: ['str','msg', 'flow', 'global', 'jsonata',  'env', mustacheType]
+        });
+        $('#node-input-agent').typedInput({
+          typeField: $('#node-input-agentType'),
+          types: ['str','msg', 'flow', 'global', 'jsonata',  'env', mustacheType]
+        });
+        $('#node-input-region').typedInput({
+          typeField: $('#node-input-regionType'),
+          types: ['str','msg', 'flow', 'global', 'jsonata',  'env', mustacheType]
+        });
+        $('#node-input-thinkingMusic').typedInput({
+          typeField: $('#node-input-thinkingMusicType'),
+          types: ['str','msg', 'flow', 'global', 'jsonata',  'env', mustacheType]
+        });
+        $('#node-input-queryInput').typedInput({
+          typeField: $('#node-input-queryInputType'),
+          types: ['json', 'msg', 'flow', 'global', 'jsonata',  'env']
         });
         $('#node-input-welcomeEvent').typedInput({
           typeField: $('#node-input-welcomeEventType'),
@@ -131,6 +156,35 @@
       <label for="node-input-project">Environment</label>
       <input type="text" id="node-input-environment">
       <input type="hidden" id="node-input-enviromentType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-model">Model</label>
+      <select id="node-input-model">
+        <option value="default">--default (ES)--</option>
+        <option value="es">es</option>
+        <option value="cx">cx</option>
+        <option value="ces">ces</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-agent">Agent</label>
+      <input type="text" id="node-input-agent" placeholder="CX/CES agent id">
+      <input type="hidden" id="node-input-agentType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-region">Region</label>
+      <input type="text" id="node-input-region" placeholder="e.g. us-central1">
+      <input type="hidden" id="node-input-regionType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-thinkingMusic">Thinking music</label>
+      <input type="text" id="node-input-thinkingMusic" placeholder="url played while waiting">
+      <input type="hidden" id="node-input-thinkingMusicType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-queryInput">Query input</label>
+      <input type="text" id="node-input-queryInput" placeholder='{"event":"..."} initial query'>
+      <input type="hidden" id="node-input-queryInputType">
     </div>
     <div class="form-row">
       <label for="node-input-recognizerlang">Speaker language</label>
