@@ -1,5 +1,6 @@
 <!-- Javascript -->
-<script src="resources/@jambonz/node-red-contrib-jambonz/editor.js"></script>
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-schema.js"></script>
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-component.js"></script>
 <script type="text/javascript">
   var mustacheType = {
     value: 'mustache',
@@ -12,6 +13,10 @@
       color: '#bbabaa',
       defaults: {
         name: {value: ''},
+        saySynth: {value: ''},
+        recognizer: {value: ''},
+        speechServer: {value: '', type: 'jambonz_auth', required: false},
+        speechMigrated: {value: ''},
         actionhook: {value: ''},
         actionhookType: {val: 'str'},
         partialresulthook: {value: ''},
@@ -78,13 +83,31 @@
       },
       inputs:1,
       outputs:1,
-      icon: "font-awesome/fa-cubes",
+      icon: "font-awesome/fa-microphone",
       label: function() { return this.name || 'gather';},
       oneditprepare: function() {
         var node = this;
-        prepareTtsControls(node);
-        prepareSttControls(node);
-        
+
+        // synthesizer (say prompt) + recognizer editor components (with legacy migration)
+        var synthVal = {};
+        try { if (node.saySynth) synthVal = JSON.parse(node.saySynth) || {}; } catch (e) { synthVal = {}; }
+        if ((!synthVal || !synthVal.vendor) && node.speechMigrated !== '1' && node.vendor && node.vendor !== 'default') {
+          synthVal = { vendor: node.vendor };
+          if (node.lang && node.lang !== 'default') synthVal.language = node.lang;
+          if (node.voice && node.voice !== 'default') synthVal.voice = node.voice;
+        }
+        node._synthHandle = JambonzSpeech.mountSynthesizer(
+          document.getElementById('node-input-synth-mount'), { value: synthVal, serverId: node.speechServer });
+
+        var recVal = {};
+        try { if (node.recognizer) recVal = JSON.parse(node.recognizer) || {}; } catch (e) { recVal = {}; }
+        if ((!recVal || !recVal.vendor) && node.speechMigrated !== '1' && node.transcriptionvendor && node.transcriptionvendor !== 'default') {
+          recVal = { vendor: node.transcriptionvendor };
+          if (node.recognizerlang && node.recognizerlang !== 'default') recVal.language = node.recognizerlang;
+        }
+        node._recHandle = JambonzSpeech.mountRecognizer(
+          document.getElementById('node-input-rec-mount'), { value: recVal, serverId: node.speechServer });
+
         $('#node-input-actionhook').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-actionhookType')
@@ -154,6 +177,13 @@
         }
         
         $('#node-input-prompttype').change(onSayPlayChanged);
+      },
+      oneditsave: function() {
+        var s = this._synthHandle ? this._synthHandle.collect() : undefined;
+        var r = this._recHandle ? this._recHandle.collect() : undefined;
+        $('#node-input-saySynth').val(s ? JSON.stringify(s) : '');
+        $('#node-input-recognizer').val(r ? JSON.stringify(r) : '');
+        $('#node-input-speechMigrated').val('1');
       }
   });
 </script>
@@ -190,37 +220,12 @@
         <textarea id="node-input-text" rows="4" placeholder="Text or SSML to speak" style="width:70%"></textarea>
       </div>
       <div class="form-row">
-        <label for="node-input-vendor"> Vendor</label>
-        <select id="node-input-vendor">
-          <option value="default" selected>--application default--</option>
-          <option value="google">google</option>
-          <option value="aws">aws/polly</option>
-          <option value="microsoft">microsoft</option>
-          <option value="ibm">ibm</option>
-          <option value="nuance">nuance</option>
-
-        </select>
+        <label for="node-input-speechServer">Speech data</label>
+        <input type="text" id="node-input-speechServer">
+        <small style="display:block;margin-left:160px;color:#888;">optional override &mdash; jambonz server for live language/voice lists (auto-detected; falls back to bundled data)</small>
       </div>
-      <div class="form-row" style="display: none;">
-        <label for="node-input-lang"> Lang</label>
-        <input type="text" id="node-input-lang">
-      </div>
-      <div class="form-row">
-        <label for="node-input-xlang">Language</label>
-        <select id="node-input-xlang">
-          <option value="default" selected>--application default--</option>
-        </select>
-      </div>
-      <div class="form-row" style="display: none;">
-        <label for="node-input-voice"> Voice</label>
-        <input type="text" id="node-input-voice">
-      </div>
-      <div class="form-row">
-        <label for="node-input-xvoice">Voice</label>
-        <select id="node-input-xvoice">
-          <option value="default" selected>--application default--</option>
-        </select>
-      </div>
+      <div id="node-input-synth-mount"></div>
+      <input type="hidden" id="node-input-saySynth">
     </div>
   
     <div id="play-container">
@@ -287,128 +292,9 @@
         <label for="node-input-listenduringprompt">Listen during prompt</label>
         <input type="checkbox" id="node-input-listenduringprompt">
       </div>
-      <div class="form-row">
-        <label for="node-input-transcriptionvendor">Vendor</label>
-        <select id="node-input-transcriptionvendor">
-          <option value="default" selected>--application default--</option>
-          <option value="google">Google</option>
-          <option value="aws">AWS</option>
-          <option value="deepgram">deepgram</option>
-          <option value="microsoft">microsoft</option>
-          <option value="ibm">ibm</option>
-          <option value="nuance">nuance</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label for="node-input-recognizerlang"><i class="icon-tag"></i> Language</label>
-        <select id="node-input-recognizerlang">
-        </select>
-      </div>
-      <div class="form-row">
-        <label for="node-input-speechTimeout">Speech timeout (s)</label>
-        <input type="text" id="node-input-speechTimeout" placeholder="secs">
-      </div>
-      <div class="form-row">
-        <label for="node-input-minBargeinWordCount">Min bargein words</label>
-        <input type="text" id="node-input-minBargeinWordCount">
-      </div>
-      <div class="form-row">
-        <label for="node-input-interim">Interim results</label>
-        <input type="checkbox" id="node-input-interim">
-      </div>
-      <div class="form-row">
-        <label for="node-input-profanityfilter">Profanity filter</label>
-        <input type="checkbox" id="node-input-profanityfilter">
-      </div>
-      <div class="form-row">
-        <label for="node-input-punctuation">Punctuation</label>
-        <input type="checkbox" id="node-input-punctuation">
-      </div>
-      <div class="form-row">
-        <label for="node-input-useenhanced">Enhanced model</label>
-        <input type="checkbox" id="node-input-useenhanced">
-      </div>
-      <div class="form-row">
-        <label for="node-input-words">Word offsets</label>
-        <input type="checkbox" id="node-input-words">
-      </div>
-      <div class="form-row">
-        <label for="node-input-separaterecog">Separate recognition per channel</label>
-        <input type="checkbox" id="node-input-separaterecog">
-      </div>
-      <div class="form-row">
-        <label for="node-input-identifychannels">Identify channels</label>
-        <input type="checkbox" id="node-input-identifychannels">
-      </div>
-      <div class="form-row">
-        <label for="node-input-diarization">Diarization</label>
-        <input type="checkbox" id="node-input-diarization">
-      </div>
-      <div class="form-row">
-        <label for="node-input-diarizationmin">Diarization min speakers</label>
-        <input type="text" id="node-input-diarizationmin">
-        <input type="hidden" id="node-input-diarizationminType">
-      </div>
-      <div class="form-row">
-        <label for="node-input-diarizationmax">Diarization max speakers</label>
-        <input type="text" id="node-input-diarizationmax">
-        <input type="hidden" id="node-input-diarizationmaxType">
-      </div>
-      <div class="form-row">
-        <label for="node-input-interactiontype">Interaction type</label>
-        <input type="text" id="node-input-interactiontype" placeholder="e.g. voice_command">
-      </div>
-      <div class="form-row">
-        <label for="node-input-asrTimeout">ASR timeout (s)</label>
-        <input type="text" id="node-input-asrTimeout">
-      </div>
-      <div class="form-row">
-        <label for="node-input-fastRecognitionTimeout">Fast recognition timeout</label>
-        <input type="text" id="node-input-fastRecognitionTimeout">
-      </div>
-      <div class="form-row">
-        <label for="node-input-asrDtmfTerminationDigit">ASR DTMF termination digit</label>
-        <input type="text" id="node-input-asrDtmfTerminationDigit">
-      </div>
-      <div id="google-stt-options">
-        <legend>Google Transcription Options</legend>
-        <div class="form-row">
-          <label for="node-input-transcriptionhints">Hints</label>
-          <input type="text" id="node-input-transcriptionhints" placeholder="comma-separated list of phrases">
-          <input type="hidden" id="node-input-transcriptionhintsType">
-        </div>
-        <div class="form-row">
-          <label for="node-input-recognizeraltlang">Alternative languages</label>
-          <input type="text" id="node-input-recognizeraltlang" placeholder="comma-separated list of add'l lang codes">
-          <input type="hidden" id="node-input-recognizeraltlangType">
-        </div>
-        <div class="form-row">
-          <label for="node-input-naics">Industry NAICS code</label>
-          <input type="text" id="node-input-naics">
-          <input type="hidden" id="node-input-naicsType">
-        </div>
-      </div>
-      <div id="aws-stt-options">
-        <legend>AWS Transcription Options</legend>
-        <div class="form-row">
-          <label for="node-input-vocabularyname">Vocabulary name</label>
-          <input type="text" id="node-input-vocabularyname">
-          <input type="hidden" id="node-input-vocabularynameType">
-        </div>
-        <div class="form-row">
-          <label for="node-input-vocabularyfiltername">Vocabulary filter name</label>
-          <input type="text" id="node-input-vocabularyfiltername">
-          <input type="hidden" id="node-input-vocabularyfilternameType">
-        </div>
-        <div class="form-row">
-          <label for="node-input-vocabularyfiltermethod">Filter method</label>
-          <select id="node-input-vocabularyfiltermethod">
-            <option value="remove" selected>Remove</option>
-            <option value="mask" selected>Mask</option>
-            <option value="tag" selected>Tag</option>
-          </select>
-        </div>
-      </div>
+      <div id="node-input-rec-mount"></div>
+      <input type="hidden" id="node-input-recognizer">
+      <input type="hidden" id="node-input-speechMigrated">
     </div>
   </fieldset>
   <fieldset>

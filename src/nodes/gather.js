@@ -1,4 +1,4 @@
-var {appendVerb,  v_text_resolve, new_resolve} = require('./libs')
+var {appendVerb,  v_text_resolve, new_resolve, resolveSpeechObject} = require('./libs')
 
 module.exports = function(RED) {
   /** gather */
@@ -17,7 +17,9 @@ module.exports = function(RED) {
       // input
       if (config.speechinput) {
         obj.input.push('speech');
-        const recognizer = {
+        let recognizer = await resolveSpeechObject(RED, config.recognizer, node, msg);
+        if (!recognizer) {
+        recognizer = {
           vendor: config.transcriptionvendor,
           language: config.recognizerlang,
           interim: config.interim,
@@ -63,6 +65,7 @@ module.exports = function(RED) {
         if (/^\d+$/.test(config.asrTimeout)) recognizer.asrTimeout = parseInt(config.asrTimeout);
         if (/^\d+$/.test(config.fastRecognitionTimeout)) recognizer.fastRecognitionTimeout = parseInt(config.fastRecognitionTimeout);
         if (config.asrDtmfTerminationDigit) recognizer.asrDtmfTerminationDigit = config.asrDtmfTerminationDigit;
+        }
         obj.recognizer = recognizer;
         if (config.bargein) obj.bargein = config.bargein;
         if (config.listenduringprompt) obj.listenDuringPrompt = config.listenduringprompt;
@@ -83,15 +86,11 @@ module.exports = function(RED) {
       // prompt
       if (config.prompttype === 'say') {
         obj.say = {text: v_text_resolve(node, config.text, this.context(), msg)};
-        if (['aws', 'google'].includes(config.vendor)) {
-          Object.assign(obj.say, {
-            synthesizer: {
-              vendor: config.vendor,
-              language: config.lang,
-              voice: config.voice
-            }
-          });
+        let synth = await resolveSpeechObject(RED, config.saySynth, node, msg);
+        if (!synth && ['aws', 'google'].includes(config.vendor)) {
+          synth = {vendor: config.vendor, language: config.lang, voice: config.voice};
         }
+        if (synth) obj.say.synthesizer = synth;
       }
       else obj.play = {url: await new_resolve(RED, config.playurl, config.playurlType, node, msg)};
 

@@ -1,4 +1,4 @@
-var {appendVerb, new_resolve} = require('./libs')
+var {appendVerb, new_resolve, resolveSpeechObject} = require('./libs')
 
 module.exports = function(RED) {
 function dialogflow(config) {
@@ -63,11 +63,13 @@ function dialogflow(config) {
       }
 
       if (config.prompt === 'tts') {
-        obj.tts = {
-          vendor: config.vendor,
-          language: config.lang,
-          voice: config.voice
-        };
+        let tts = await resolveSpeechObject(RED, config.ttsSynth, node, msg);
+        if (!tts && config.vendor && config.vendor !== 'default') {
+          tts = {vendor: config.vendor};
+          if (config.lang && config.lang !== 'default') tts.language = config.lang;
+          if (config.voice && config.voice !== 'default') tts.voice = config.voice;
+        }
+        if (tts) obj.tts = tts;
       }
       appendVerb(msg, obj);
       node.send(msg);

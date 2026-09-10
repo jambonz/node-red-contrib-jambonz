@@ -1,4 +1,4 @@
-var {appendVerb, new_resolve} = require('./libs')
+var {appendVerb, new_resolve, resolveSpeechObject} = require('./libs')
 
 module.exports = function(RED) {
   function dial(config) {
@@ -116,7 +116,9 @@ module.exports = function(RED) {
 
       // nested transcribe
       if (config.transcriptionhook) {
-        const recognizer = {
+        let recognizer = await resolveSpeechObject(RED, config.recognizer, node, msg);
+        if (!recognizer) {
+        recognizer = {
           vendor: config.transcriptionvendor,
           language: config.recognizerlang,
           interim: config.interim,
@@ -157,6 +159,7 @@ module.exports = function(RED) {
             filterMethod: config.vocabularyfiltermethod
           });
         }
+        }
         data.transcribe = {
           transcriptionHook: await new_resolve(RED, config.transcriptionhook, config.transcriptionhookType, node, msg),
           recognizer
@@ -189,11 +192,12 @@ module.exports = function(RED) {
           delete(data.amd.timers)
         }
         //If custom recogniser is used
-        if (config.amd_recognizer_vendor != 'default'){
-          data.amd.recognizer = {
-            ...(config.amd_recognizer_vendor && {vendor : config.amd_recognizer_vendor}),
-            ...(config.amd_recognizer_lang && {language : config.amd_recognizer_lang})
-          }
+        const amdRecog = await resolveSpeechObject(RED, config.amdRecognizer, node, msg);
+        if (amdRecog) {
+          data.amd.recognizer = amdRecog;
+        } else if (config.amd_recognizer_vendor && config.amd_recognizer_vendor != 'default') {
+          data.amd.recognizer = {vendor: config.amd_recognizer_vendor};
+          if (config.amd_recognizer_lang && config.amd_recognizer_lang !== 'default') data.amd.recognizer.language = config.amd_recognizer_lang;
         }
       }
 

@@ -1,4 +1,4 @@
-var {doCreateCall, new_resolve } = require('./libs')
+var {doCreateCall, new_resolve, resolveSpeechObject } = require('./libs')
 
 module.exports = function(RED) {
   /** Create call */
@@ -73,11 +73,24 @@ module.exports = function(RED) {
             url: await new_resolve(RED, config.call_status_url, config.call_status_urlType, node, msg),
             method: config.call_status_method
           };
-          opts.speech_synthesis_vendor = config.vendor;
-          opts.speech_synthesis_language = config.lang;
-          opts.speech_synthesis_voice = config.voice;
-          opts.speech_recognizer_vendor = config.transcriptionvendor;
-          opts.speech_recognizer_language = config.recognizerlang;
+          const synth = await resolveSpeechObject(RED, config.synthesizer, node, msg);
+          if (synth && synth.vendor) {
+            opts.speech_synthesis_vendor = synth.vendor;
+            if (synth.language) opts.speech_synthesis_language = synth.language;
+            if (typeof synth.voice === 'string') opts.speech_synthesis_voice = synth.voice;
+          } else {
+            opts.speech_synthesis_vendor = config.vendor;
+            opts.speech_synthesis_language = config.lang;
+            opts.speech_synthesis_voice = config.voice;
+          }
+          const recog = await resolveSpeechObject(RED, config.recognizer, node, msg);
+          if (recog && recog.vendor) {
+            opts.speech_recognizer_vendor = recog.vendor;
+            if (recog.language) opts.speech_recognizer_language = recog.language;
+          } else {
+            opts.speech_recognizer_vendor = config.transcriptionvendor;
+            opts.speech_recognizer_language = config.recognizerlang;
+          }
           break;
       }
 
@@ -133,11 +146,12 @@ module.exports = function(RED) {
           delete(opts.amd.timers)
         }
         //If custom recogniser is used
-        if (config.amd_recognizer_vendor != 'default'){
-          opts.amd.recognizer = {
-            ...(config.amd_recognizer_vendor && {vendor : config.amd_recognizer_vendor}),
-            ...(config.amd_recognizer_lang && {language : config.amd_recognizer_lang})
-          }
+        const amdRecog = await resolveSpeechObject(RED, config.amdRecognizer, node, msg);
+        if (amdRecog) {
+          opts.amd.recognizer = amdRecog;
+        } else if (config.amd_recognizer_vendor && config.amd_recognizer_vendor != 'default') {
+          opts.amd.recognizer = {vendor: config.amd_recognizer_vendor};
+          if (config.amd_recognizer_lang && config.amd_recognizer_lang !== 'default') opts.amd.recognizer.language = config.amd_recognizer_lang;
         }
       }
 

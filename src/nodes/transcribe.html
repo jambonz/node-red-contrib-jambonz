@@ -1,4 +1,6 @@
 <!-- Javascript -->
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-schema.js"></script>
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-component.js"></script>
 <script type="text/javascript">
   RED.nodes.registerType('transcribe', {
     category: 'jambonz',
@@ -9,6 +11,9 @@
       transcriptionHookType: {value: 'str'},
       translationHook: {value: ''},
       translationHookType: {value: 'str'},
+      recognizer: {value: ''},
+      speechServer: {value: '', type: 'jambonz_auth', required: false},
+      // legacy fields kept (hidden) so pre-component flows migrate on open
       vendor: {value: 'default'},
       language: {value: 'default'},
       recognizerOptions: {value: ''},
@@ -22,10 +27,35 @@
     paletteLabel: "transcribe",
     label: function() { return this.name || 'transcribe'; },
     oneditprepare: function() {
+      var node = this;
       var hookTypes = ['str', 'msg', 'flow', 'global', 'jsonata', 'env'];
       $('#node-input-transcriptionHook').typedInput({types: hookTypes, typeField: $('#node-input-transcriptionHookType')});
       $('#node-input-translationHook').typedInput({types: hookTypes, typeField: $('#node-input-translationHookType')});
-      $('#node-input-recognizerOptions').typedInput({types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env'], typeField: $('#node-input-recognizerOptionsType')});
+
+      // build initial recognizer value: stored canonical object, or migrate from legacy fields
+      var value = {};
+      try { if (node.recognizer) value = JSON.parse(node.recognizer) || {}; } catch (e) { value = {}; }
+      if (!value || !value.vendor) {
+        value = {};
+        if (node.vendor && node.vendor !== 'default') value.vendor = node.vendor;
+        if (node.language && node.language !== 'default') value.language = node.language;
+        try {
+          if (node.recognizerOptions) {
+            var opts = JSON.parse(node.recognizerOptions);
+            if (opts && typeof opts === 'object') Object.assign(value, opts);
+          }
+        } catch (e) { /* ignore */ }
+      }
+      node._recHandle = JambonzSpeech.mountRecognizer(
+        document.getElementById('node-input-rec-mount'), { value: value, serverId: node.speechServer });
+    },
+    oneditsave: function() {
+      var obj = this._recHandle ? this._recHandle.collect() : undefined;
+      $('#node-input-recognizer').val(obj ? JSON.stringify(obj) : '');
+      ['vendor', 'language', 'recognizerOptions'].forEach(function(k) {
+        var el = $('#node-input-' + k);
+        if (el.length) el.val('');
+      });
     }
   });
 </script>
@@ -49,31 +79,11 @@
   <fieldset>
     <legend>Recognizer</legend>
     <div class="form-row">
-      <label for="node-input-vendor">Vendor</label>
-      <select id="node-input-vendor">
-        <option value="default">--application default--</option>
-        <option value="google">google</option>
-        <option value="aws">aws</option>
-        <option value="deepgram">deepgram</option>
-        <option value="microsoft">microsoft</option>
-        <option value="ibm">ibm</option>
-        <option value="nuance">nuance</option>
-        <option value="soniox">soniox</option>
-        <option value="assemblyai">assemblyai</option>
-        <option value="speechmatics">speechmatics</option>
-        <option value="gladia">gladia</option>
-        <option value="nvidia">nvidia</option>
-      </select>
+      <label for="node-input-speechServer">Speech data</label>
+      <input type="text" id="node-input-speechServer">
+      <small style="display:block;margin-left:160px;color:#888;">optional override &mdash; jambonz server for live language lists (auto-detected from your config; falls back to bundled data)</small>
     </div>
-    <div class="form-row">
-      <label for="node-input-language">Language</label>
-      <input type="text" id="node-input-language" placeholder="e.g. en-US (or leave as default)">
-    </div>
-    <div class="form-row">
-      <label for="node-input-recognizerOptions">Options</label>
-      <input type="text" id="node-input-recognizerOptions" placeholder='advanced recognizer options object'>
-      <input type="hidden" id="node-input-recognizerOptionsType">
-    </div>
+    <div id="node-input-rec-mount"></div>
   </fieldset>
   <fieldset>
     <legend>Advanced</legend>
@@ -90,6 +100,10 @@
       <input type="checkbox" id="node-input-earlyMedia" style="display:inline-block; width:auto; vertical-align:top;">
     </div>
   </fieldset>
+  <input type="hidden" id="node-input-recognizer">
+  <input type="hidden" id="node-input-vendor">
+  <input type="hidden" id="node-input-language">
+  <input type="hidden" id="node-input-recognizerOptions">
 </script>
 
 <!-- Help Text -->
@@ -101,10 +115,9 @@
     <dd>required. URL that receives transcription results.</dd>
     <dt>Translation hook<span class="property-type">string</span></dt>
     <dd>optional URL that receives translated transcripts.</dd>
-    <dt>Vendor / Language<span class="property-type">string</span></dt>
-    <dd>speech recognizer vendor and language. Leave as default to use the application/session recognizer.</dd>
-    <dt>Options<span class="property-type">json</span></dt>
-    <dd>advanced recognizer options (hints, per-vendor option blocks, diarization, etc.) merged into the recognizer.</dd>
+    <dt>Recognizer<span class="property-type">object</span></dt>
+    <dd>the STT <code>recognizer</code> configuration (vendor, language, and common + vendor-specific
+      options), rendered from the jambonz schema.</dd>
     <dt>Channel<span class="property-type">number</span></dt>
     <dd>restrict transcription to one channel of a stereo call.</dd>
   </dl>
@@ -113,10 +126,6 @@
     <dt>jambonz<span class="property-type">object</span></dt>
     <dd><code>msg.jambonz</code> will contain any previous actions with the new <code>transcribe</code> action appended.</dd>
   </dl>
-  <h3>Details</h3>
-  The transcribe verb starts real-time transcription that runs alongside the call. It differs from
-  <code>gather</code> (which collects a single caller response) and from a <code>listen</code> fork (which
-  streams audio to a websocket): transcribe simply delivers transcripts to your hook.
   <h3>References</h3>
   <ul>
     <li><a href="https://docs.jambonz.org/verbs/verbs/transcribe">Jambonz transcribe reference</a></li>

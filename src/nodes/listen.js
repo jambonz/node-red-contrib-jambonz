@@ -1,4 +1,4 @@
-var {appendVerb, new_resolve} = require('./libs')
+var {appendVerb, new_resolve, resolveSpeechObject} = require('./libs')
 
 module.exports = function(RED) {
   function listen(config) {
@@ -34,7 +34,10 @@ module.exports = function(RED) {
       }
 
       if (config.transcriptionhook) {
-        const recognizer = {
+        // recognizer from the reusable speech component, with the legacy field build as fallback
+        let recognizer = await resolveSpeechObject(RED, config.recognizer, node, msg);
+        if (!recognizer) {
+        recognizer = {
           vendor: config.transcriptionvendor,
           language: config.recognizerlang,
           interim: config.interim,
@@ -74,6 +77,7 @@ module.exports = function(RED) {
             vocabularyFilterName: vocabFilter,
             filterMethod: config.vocabularyfiltermethod
           });
+        }
         }
         obj.transcribe = {
           transcriptionHook: await new_resolve(RED, config.transcriptionhook, config.transcriptionhookType, node, msg),

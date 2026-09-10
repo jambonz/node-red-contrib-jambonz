@@ -1,4 +1,6 @@
 <!-- Javascript -->
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-schema.js"></script>
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-component.js"></script>
 <script type="text/javascript">
   var mustacheType = {
     value: 'mustache',
@@ -80,6 +82,9 @@
         dubLoopType: {value: 'bool'},
         dubGain: {value: 0},
         dubGainType: {value: 'num'},
+        whisperSynth: {value: ''},
+        speechServer: {value: '', type: 'jambonz_auth', required: false},
+        speechMigrated: {value: ''},
         mediaPath: {value: 'full-media'},
         boostLevel: {value: ''},
         boostLevelType: {value: 'str'},
@@ -98,7 +103,7 @@
       },
       inputs:1,
       outputs:1,
-      icon: "font-awesome/fa-cubes",
+      icon: "font-awesome/fa-sliders",
       paletteLabel: "Live Call Control",
       label: function() { 
         return this.name || (this.action ? `LCC - ${this.action}` : 'LCC');
@@ -110,6 +115,18 @@
         var langElem = $('#node-input-lang');
         var voiceElem = $('#node-input-voice');
         var sayDiv = $('#say-options');
+
+        // whisper synthesizer editor component (with legacy migration)
+        var whisperVal = {};
+        try { if (node.whisperSynth) whisperVal = JSON.parse(node.whisperSynth) || {}; } catch (e) { whisperVal = {}; }
+        if ((!whisperVal || !whisperVal.vendor) && node.speechMigrated !== '1' && node.vendor && node.vendor !== 'default') {
+          whisperVal = { vendor: node.vendor };
+          if (node.lang && node.lang !== 'default') whisperVal.language = node.lang;
+          if (node.voice && node.voice !== 'default') whisperVal.voice = node.voice;
+        }
+        node._whisperHandle = JambonzSpeech.mountSynthesizer(
+          document.getElementById('node-input-whisper-mount'), { value: whisperVal, serverId: node.speechServer });
+
         var redirectDiv = $('#redirect-options');
         var waitHookDiv = $('#wait-options');
         var recordDiv = $('#record-options');
@@ -266,75 +283,7 @@
           else pipelineDiv.hide();
         }
 
-        var onVendorChanged = function() {
-          node.vendor = vendorElem.find(':selected').val();
-          console.log(`say vendor changed to ${node.vendor}`);
-          setLanguage(node.vendor);
-        }
-
-        var onLangChanged = function() {
-          node.lang = langElem.find(':selected').val();
-          console.log(`language changed to ${node.lang}`);
-          setVoice(node.vendor, node.lang)
-        }
-      
-        var onVoiceChanged = function() {
-          node.voice = voiceElem.find(':selected').val();
-          console.log(`voice changed to ${node.voice}`);
-        }
-
-        var setLanguage = function(v) {
-          langElem.find('option').remove();
-          voiceElem.find('option').remove();
-
-          switch (v) {
-            case 'default': 
-              langElem.append('<option value="default" selected>--application default--</option>');
-              voiceElem.append('<option value="default" selected>--application default--</option>');
-              node.lang = 'default';
-              node.voice = 'default';
-              break;
-
-            case 'google':
-              langElem.append(googleLanguageOptions);
-              break;
-
-            case 'aws':
-              langElem.append(awsLanguageOptions);
-              break;
-          }
-          langElem.val(node.lang);
-        }
-
-        var setVoice = function(vendor, lang) {
-          console.log(`say set voice for language ${lang} vendor ${vendor}`);
-          voiceElem.find('option').remove();
-
-          switch (vendor) {
-            case 'default':
-              voiceElem.append('<option value="default" selected>--application default--</option>');
-              break;
-
-            case 'google':
-            case 'aws':
-              var obj = 'google' === vendor ? mapGoogle[lang] : mapAws[lang];
-              if (obj) {
-                var options = '';
-                for (var i = 0; i < obj.voices.length; i++) {
-                  if (i) options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-                  else options += `<option value="${obj.voices[i].value}">${obj.voices[i].name}</option>`;
-                }
-                voiceElem.append(options);
-              }
-              break;
-          }
-          voiceElem.val(node.voice);
-        }
-
         actionElem.change(onActionChanged);
-        vendorElem.change(onVendorChanged);
-        langElem.change(onLangChanged);
-        voiceElem.change(onVoiceChanged);
 
         $('#node-input-siprecHeaders-container').css('min-height','120px').css('min-width','450px').editableList({
           addItem: function(container, i, opt) {
@@ -380,6 +329,9 @@
       },
       oneditsave: function () {
         var node = this;
+        var wsynth = this._whisperHandle ? this._whisperHandle.collect() : undefined;
+        $('#node-input-whisperSynth').val(wsynth ? JSON.stringify(wsynth) : '');
+        $('#node-input-speechMigrated').val('1');
         var headers = [];
         $("#node-input-siprecHeaders-container").editableList('items').each(function(i) {
           var header = $(this);
@@ -457,29 +409,17 @@
       <textarea id="node-input-text" rows="4" placeholder="Text or SSML to whisper" style="width:70%"></textarea>
     </div>
     <fieldset>
-      <legend>Speech synthesis options</legend>
+      <legend>Synthesizer</legend>
       <div class="form-row">
-        <label for="node-input-vendor">Vendor</label>
-        <select id="node-input-vendor">
-          <option value="default" selected>--application default--</option>
-          <option value="google">google</option>
-          <option value="aws">aws/polly</option>
-        </select>
+        <label for="node-input-speechServer">Speech data</label>
+        <input type="text" id="node-input-speechServer">
+        <small style="display:block;margin-left:160px;color:#888;">optional override &mdash; jambonz server for live language/voice lists (auto-detected; falls back to bundled data)</small>
       </div>
-      <div class="form-row">
-        <label for="node-input-lang">Language</label>
-        <select id="node-input-lang">
-          <option value="default" selected>--application default--</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label for="node-input-voice">Voice</label>
-        <select id="node-input-voice">
-          <option value="default" selected>--application default--</option>
-        </select>
-      </div>
+      <div id="node-input-whisper-mount"></div>
     </fieldset>
   </div>
+  <input type="hidden" id="node-input-whisperSynth">
+  <input type="hidden" id="node-input-speechMigrated">
   <div id="redirect-options">
     <div class="form-row">
       <label for="node-input-callHook">Call hook</label>

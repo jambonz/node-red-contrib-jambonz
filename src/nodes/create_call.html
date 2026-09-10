@@ -1,5 +1,6 @@
 <!-- Javascript -->
-<script src="resources/@jambonz/node-red-contrib-jambonz/editor.js"></script>
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-schema.js"></script>
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-component.js"></script>
 <script type="text/javascript">
   var mustacheType = {
     value: 'mustache',
@@ -14,6 +15,9 @@
       defaults: {
         name: {value: ''},
         server: {value: '', required: true, type: 'jambonz_auth'},
+        synthesizer: {value: ''},
+        recognizer: {value: ''},
+        speechMigrated: {value: ''},
         from: {value: '', required: true},
         fromType: {value: ''},
         to: {value: '', required: true},
@@ -73,6 +77,7 @@
         amd_actionHookType: {value: 'str'},
         amd_recognizer_vendor: {value: 'default'},
         amd_recognizer_lang: {value: 'default'},
+        amdRecognizer: {value: ''},
         amd_thresholdWordCount: {},
         amd_timers_decisionTimeoutMs: {},
         amd_timers_greetingCompletionTimeoutMs:{},
@@ -82,7 +87,7 @@
       },
       inputs:1,
       outputs:1,
-      icon: "font-awesome/fa-cubes",
+      icon: "font-awesome/fa-phone-square",
       label: function() { 
         return this.name || 'create call';
       },
@@ -93,8 +98,35 @@
         var applicationElem = $('#node-input-application');
         var trunkDiv = $('#trunk');
         var sipDiv = $('#sip');
-        prepareTtsControls(node);
-        prepareSttControls(node, '#node-input-amd_recognizer_vendor', '#node-input-amd_recognizer_lang');
+        // AMD recognizer editor component (with legacy migration)
+        var amdRecVal = {};
+        try { if (node.amdRecognizer) amdRecVal = JSON.parse(node.amdRecognizer) || {}; } catch (e) { amdRecVal = {}; }
+        if ((!amdRecVal || !amdRecVal.vendor) && node.speechMigrated !== '1' && node.amd_recognizer_vendor && node.amd_recognizer_vendor !== 'default') {
+          amdRecVal = { vendor: node.amd_recognizer_vendor };
+          if (node.amd_recognizer_lang && node.amd_recognizer_lang !== 'default') amdRecVal.language = node.amd_recognizer_lang;
+        }
+        node._amdRecHandle = JambonzSpeech.mountRecognizer(
+          document.getElementById('node-input-amd-rec-mount'), { value: amdRecVal, serverId: node.server });
+
+        // synthesizer + recognizer editor components (reuse the API server for live data)
+        var synthVal = {};
+        try { if (node.synthesizer) synthVal = JSON.parse(node.synthesizer) || {}; } catch (e) { synthVal = {}; }
+        if ((!synthVal || !synthVal.vendor) && node.speechMigrated !== '1' && node.vendor && node.vendor !== 'default') {
+          synthVal = { vendor: node.vendor };
+          if (node.lang && node.lang !== 'default') synthVal.language = node.lang;
+          if (node.voice && node.voice !== 'default') synthVal.voice = node.voice;
+        }
+        node._synthHandle = JambonzSpeech.mountSynthesizer(
+          document.getElementById('node-input-synth-mount'), { value: synthVal, serverId: node.server });
+
+        var recVal = {};
+        try { if (node.recognizer) recVal = JSON.parse(node.recognizer) || {}; } catch (e) { recVal = {}; }
+        if ((!recVal || !recVal.vendor) && node.speechMigrated !== '1' && node.transcriptionvendor && node.transcriptionvendor !== 'default') {
+          recVal = { vendor: node.transcriptionvendor };
+          if (node.recognizerlang && node.recognizerlang !== 'default') recVal.language = node.recognizerlang;
+        }
+        node._recHandle = JambonzSpeech.mountRecognizer(
+          document.getElementById('node-input-rec-mount'), { value: recVal, serverId: node.server });
 
         var onDestChanged = function () {
           var selectedDest = destElem.find(':selected').val();
@@ -270,6 +302,13 @@
         }
       },
       oneditsave: function () {
+        var s = this._synthHandle ? this._synthHandle.collect() : undefined;
+        var r = this._recHandle ? this._recHandle.collect() : undefined;
+        var ar = this._amdRecHandle ? this._amdRecHandle.collect() : undefined;
+        $('#node-input-synthesizer').val(s ? JSON.stringify(s) : '');
+        $('#node-input-recognizer').val(r ? JSON.stringify(r) : '');
+        $('#node-input-amdRecognizer').val(ar ? JSON.stringify(ar) : '');
+        $('#node-input-speechMigrated').val('1');
         var node = this;
         var headers = [];
         $("#node-input-headers-container").editableList('items').each(function(i) {
@@ -401,23 +440,9 @@
         <input type="text" id="node-input-amd_actionHook">
         <input type="hidden" id="node-input-amd_actionHookType">
       </div>
-      <div class="form-row">
-        <label for="node-input-amd_recognizer_vendor">Vendor</label>
-        <select id="node-input-amd_recognizer_vendor">
-          <option value="default" selected>--application default--</option>
-          <option value="google">Google</option>
-          <option value="aws">AWS</option>
-          <option value="deepgram">deepgram</option>
-          <option value="microsoft">microsoft</option>
-          <option value="ibm">ibm</option>
-          <option value="nuance">nuance</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label for="node-input-amd_recognizer_lang">Language</label>
-        <select id="node-input-amd_recognizer_lang">
-        </select>
-      </div>
+      <div class="form-row"><label style="width:100%">AMD recognizer</label></div>
+      <div id="node-input-amd-rec-mount"></div>
+      <input type="hidden" id="node-input-amdRecognizer">
       <div class="form-row">
         <label for="node-input-amd_thresholdWordCount">Threshold Word Count</label>
         <input type="text" id="node-input-amd_thresholdWordCount">
@@ -471,56 +496,13 @@
       </select>
     </div>
     <fieldset>
-      <legend>Speech synthesis options</legend>
-      <div class="form-row">
-        <label for="node-input-vendor">Vendor</label>
-        <select id="node-input-vendor">
-          <option value="default" selected disabled>--Select Vendor--</option>
-          <option value="google">google</option>
-          <option value="aws">aws/polly</option>
-          <option value="microsoft">microsoft</option>
-          <option value="ibm">ibm</option>
-          <option value="nuance">nuance</option>
-        </select>
-      </div>
-      <div class="form-row" style="display: none;">
-        <label for="node-input-lang"> Lang</label>
-        <input type="text" id="node-input-lang">
-      </div>
-      <div class="form-row">
-        <label for="node-input-xlang">Language</label>
-        <select id="node-input-xlang">
-        </select>
-      </div>
-      <div class="form-row" style="display: none;">
-        <label for="node-input-voice"> Voice</label>
-        <input type="text" id="node-input-voice">
-      </div>
-      <div class="form-row">
-        <label for="node-input-xvoice">Voice</label>
-        <select id="node-input-xvoice">
-        </select>
-      </div>
-      <legend>Transcription options</legend>
-      <div id="speech-input-container">
-        <div class="form-row">
-          <label for="node-input-transcriptionvendor">Vendor</label>
-          <select id="node-input-transcriptionvendor">
-            <option value="default" selected disabled>--Select Vendor--</option>
-            <option value="google">Google</option>
-            <option value="aws">AWS</option>
-            <option value="deepgram">deepgram</option>
-            <option value="microsoft">microsoft</option>
-            <option value="ibm">ibm</option>
-            <option value="nuance">nuance</option>
-  
-          </select>
-        </div>
-        <div class="form-row">
-          <label for="node-input-recognizerlang"><i class="icon-tag"></i> Language</label>
-          <select id="node-input-recognizerlang">
-          </select>
-        </div>
+      <legend>Synthesizer</legend>
+      <div id="node-input-synth-mount"></div>
+      <legend>Recognizer</legend>
+      <div id="node-input-rec-mount"></div>
+      <input type="hidden" id="node-input-synthesizer">
+      <input type="hidden" id="node-input-recognizer">
+      <input type="hidden" id="node-input-speechMigrated">
     </fieldset>
   </div>
 </script>

@@ -4,6 +4,68 @@ mustache.escape = function(text) {return text;};
 
 // helper functions
 
+/**
+ * Parse a canonical speech object (synthesizer/recognizer) stored by the reusable speech
+ * editor component. The value may be a JSON string (from the editor) or already an object.
+ * Returns the object when it has content, else undefined.
+ */
+exports.parseSpeechObject = (val) => {
+  if (!val) return undefined;
+  let obj = val;
+  if (typeof val === 'string') {
+    try { obj = JSON.parse(val); } catch (e) { return undefined; }
+  }
+  if (obj && typeof obj === 'object' && !Array.isArray(obj) && Object.keys(obj).length) return obj;
+  return undefined;
+};
+
+/**
+ * A "ref" leaf produced by the speech editor component for a field whose typedInput type is
+ * dynamic (msg/flow/global/env/jsonata): {'#': <value>, t: <type>}. Static fields are stored
+ * as their final JS value (string/number/boolean/array/object).
+ */
+const isSpeechRef = (v) =>
+  v && typeof v === 'object' && !Array.isArray(v) &&
+  Object.prototype.hasOwnProperty.call(v, '#') && Object.prototype.hasOwnProperty.call(v, 't');
+
+const resolveSpeechTree = async (RED, val, node, msg) => {
+  if (isSpeechRef(val)) {
+    if (val['#'] === '' || val['#'] == null) return undefined;
+    return await exports.new_resolve(RED, val['#'], val.t, node, msg);
+  }
+  if (Array.isArray(val)) return val;
+  if (val && typeof val === 'object') {
+    const out = {};
+    for (const k of Object.keys(val)) {
+      const r = await resolveSpeechTree(RED, val[k], node, msg);
+      if (r === undefined || r === null) continue;
+      if (typeof r === 'string' && r === '') continue;
+      if (Array.isArray(r) && r.length === 0) continue;
+      if (typeof r === 'object' && !Array.isArray(r) && Object.keys(r).length === 0) continue;
+      out[k] = r;
+    }
+    return out;
+  }
+  return val;
+};
+
+/**
+ * Resolve a canonical speech object (synthesizer/recognizer) stored by the reusable speech
+ * editor component into a plain object, resolving any msg/flow/global/env/jsonata references.
+ * Accepts a JSON string (from the editor) or an object (e.g. a legacy migration). Returns the
+ * object when it has content, else undefined.
+ */
+exports.resolveSpeechObject = async (RED, stored, node, msg) => {
+  let tree = stored;
+  if (typeof stored === 'string') {
+    if (!stored) return undefined;
+    try { tree = JSON.parse(stored); } catch (e) { return undefined; }
+  }
+  if (!tree || typeof tree !== 'object') return undefined;
+  const out = await resolveSpeechTree(RED, tree, node, msg);
+  return (out && Object.keys(out).length) ? out : undefined;
+};
+
 exports.appendVerb = (msg, obj) => {
     const data = {};
     Object.keys(obj).forEach((key) => {

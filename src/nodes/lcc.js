@@ -1,5 +1,5 @@
 var crypto = require('crypto');
-var {new_resolve, doLCC} = require('./libs')
+var {new_resolve, doLCC, resolveSpeechObject} = require('./libs')
 
 module.exports = function(RED) {
 /** LCC */
@@ -107,23 +107,18 @@ function lcc(config) {
         case 'unhold_conf':
           opts.conf_hold_status = 'unhold';
           break;
-        case 'whisper':
-          Object.assign(opts, {
-            whisper: {
-              verb: 'say',
-              text: await new_resolve(RED, config.text, 'mustache', node, msg),
-            }
-          });
-          if (['aws', 'google'].includes(config.vendor)) {
-            Object.assign(opts.whisper, {
-              synthesizer: {
-                vendor: config.vendor,
-                language: config.lang,
-                voice: config.voice
-              }
-            });
+        case 'whisper': {
+          opts.whisper = {
+            verb: 'say',
+            text: await new_resolve(RED, config.text, 'mustache', node, msg)
+          };
+          let whisperSynth = await resolveSpeechObject(RED, config.whisperSynth, node, msg);
+          if (!whisperSynth && ['aws', 'google'].includes(config.vendor)) {
+            whisperSynth = {vendor: config.vendor, language: config.lang, voice: config.voice};
           }
+          if (whisperSynth) opts.whisper.synthesizer = whisperSynth;
           break;
+        }
         case 'sip_request':
           opts.sip_request = { 
             method: config.sipRequestMethod,

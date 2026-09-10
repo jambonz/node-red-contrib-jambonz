@@ -1,4 +1,4 @@
-var {appendVerb, new_resolve} = require('./libs');
+var {appendVerb, new_resolve, resolveSpeechObject} = require('./libs');
 
 module.exports = function(RED) {
   /** agent - jambonz-native LLM voice agent (STT + LLM + TTS) */
@@ -11,8 +11,10 @@ module.exports = function(RED) {
         const obj = { verb: 'agent' };
 
         config.llm ? obj.llm = await new_resolve(RED, config.llm, config.llmType, node, msg) : null;
-        config.stt ? obj.stt = await new_resolve(RED, config.stt, config.sttType, node, msg) : null;
-        config.tts ? obj.tts = await new_resolve(RED, config.tts, config.ttsType, node, msg) : null;
+        const stt = await resolveSpeechObject(RED, config.stt, node, msg);
+        if (stt) obj.stt = stt;
+        const tts = await resolveSpeechObject(RED, config.tts, node, msg);
+        if (tts) obj.tts = tts;
         config.bargeIn ? obj.bargeIn = await new_resolve(RED, config.bargeIn, config.bargeInType, node, msg) : null;
         config.turnDetection ? obj.turnDetection =
           await new_resolve(RED, config.turnDetection, config.turnDetectionType, node, msg) : null;

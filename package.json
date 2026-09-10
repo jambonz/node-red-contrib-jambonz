@@ -63,6 +63,9 @@
   },
   "author": "Dave Horton",
   "license": "MIT",
+  "scripts": {
+    "gen:speech": "node scripts/generate-speech-schema.js"
+  },
   "dependencies": {
     "body-parser": "^1.20.4",
     "cookie-parser": "^1.4.7",
@@ -75,5 +78,8 @@
     "on-headers": "^1.1.0",
     "raw-body": "^2.5.3",
     "undici": "^6.24.0"
+  },
+  "devDependencies": {
+    "@jambonz/schema": "^0.4.13"
   }
 }

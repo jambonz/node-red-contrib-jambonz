@@ -1,4 +1,4 @@
-var {appendVerb, new_resolve} = require('./libs');
+var {appendVerb, new_resolve, resolveSpeechObject} = require('./libs');
 
 module.exports = function(RED) {
   /** transcribe - real-time transcription of the call, posted to a webhook */
@@ -14,14 +14,20 @@ module.exports = function(RED) {
         config.translationHook ? obj.translationHook =
           await new_resolve(RED, config.translationHook, config.translationHookType, node, msg) : null;
 
-        const recognizer = {};
-        if (config.vendor && config.vendor !== 'default') recognizer.vendor = config.vendor;
-        if (config.language && config.language !== 'default') recognizer.language = config.language;
-        if (config.recognizerOptions) {
-          const opts = await new_resolve(RED, config.recognizerOptions, config.recognizerOptionsType, node, msg);
-          if (opts && typeof opts === 'object') Object.assign(recognizer, opts);
+        // recognizer: canonical object from the reusable speech component (resolving any
+        // msg/flow references), with a legacy fallback for flows saved before the component existed.
+        let recognizer = await resolveSpeechObject(RED, config.recognizer, node, msg);
+        if (!recognizer) {
+          const r = {};
+          if (config.vendor && config.vendor !== 'default') r.vendor = config.vendor;
+          if (config.language && config.language !== 'default') r.language = config.language;
+          if (config.recognizerOptions) {
+            const opts = await new_resolve(RED, config.recognizerOptions, config.recognizerOptionsType, node, msg);
+            if (opts && typeof opts === 'object') Object.assign(r, opts);
+          }
+          if (Object.keys(r).length) recognizer = r;
         }
-        if (Object.keys(recognizer).length) obj.recognizer = recognizer;
+        if (recognizer && Object.keys(recognizer).length) obj.recognizer = recognizer;
 
         if (config.channel && config.channel !== 'default') obj.channel = parseInt(config.channel);
         if (config.earlyMedia) obj.earlyMedia = true;

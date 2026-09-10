@@ -1,4 +1,4 @@
-var {appendVerb, new_resolve} = require('./libs')
+var {appendVerb, new_resolve, resolveSpeechObject} = require('./libs')
 
 module.exports = function(RED) {
     function cfg(config) {
@@ -7,32 +7,29 @@ module.exports = function(RED) {
         node.on('input', async function(msg) {
           obj = { verb: 'config' }
           if (config.tts){
-            Object.assign(obj, {
-              synthesizer: {
-                vendor: config.vendor,
-                language: config.lang,
-                voice: config.voice
-              }
-            });
+            let synth = await resolveSpeechObject(RED, config.synthesizer, node, msg);
+            if (!synth) {
+              synth = {vendor: config.vendor, language: config.lang, voice: config.voice};
+            }
+            obj.synthesizer = synth;
           }
           if (config.speechinput){
-            Object.assign(obj, {
-              recognizer: {
-                vendor: config.transcriptionvendor,
-                language: config.recognizerlang
+            let recog = await resolveSpeechObject(RED, config.recognizer, node, msg);
+            if (!recog) {
+              recog = {vendor: config.transcriptionvendor, language: config.recognizerlang};
+              if (config.transcriptionvendor == 'google'){
+                recog.hints = await new_resolve(RED, config.transcriptionhints, config.transcriptionhintsType, node, msg)
+                recog.altLanguages = [await new_resolve(RED, config.altLanguages, config.altLanguagesType, node, msg)]
+                recog.naicsCode = await new_resolve(RED, config.naics, config.naicsType, node, msg)
               }
-            })
-            if (config.transcriptionvendor == 'google'){
-              obj.recognizer.hints = await new_resolve(RED, config.transcriptionhints, config.transcriptionhintsType, node, msg)
-              obj.recognizer.altLanguages = [await new_resolve(RED, config.altLanguages, config.altLanguagesType, node, msg)]
-              obj.recognizer.naicsCode = await new_resolve(RED, config.naics, config.naicsType, node, msg)
+              if (config.transcriptionvendor == 'aws'){
+                recog.vocabularyName = config.vocabularyname
+                recog.vocabularyFilterName = config.vocabularyfiltername
+                recog.filterMethod = config.filtermethod
+                recog.identifyChannels = config.identifyChannels
+              }
             }
-            if (config.transcriptionvendor == 'aws'){
-              obj.recognizer.vocabularyName = config.vocabularyname
-              obj.recognizer.vocabularyFilterName = config.vocabularyfiltername
-              obj.recognizer.filterMethod = config.filtermethod
-              obj.recognizer.identifyChannels = config.identifyChannels
-            }
+            obj.recognizer = recog;
           }
           if (config.bargeIn){
             obj.bargeIn = {}
@@ -56,6 +53,8 @@ module.exports = function(RED) {
             config.amd_timers_decisionTimeoutMs != '' ? obj.amd.timers.decisionTimeoutMs = await new_resolve(RED, config.amd_timers_decisionTimeoutMs, config.amd_timers_decisionTimeoutMsType, node, msg) : null
             config.amd_timers_toneTimeoutMs != '' ?	 obj.amd.timers.toneTimeoutMs = await new_resolve(RED, config.amd_timers_toneTimeoutMs, config.amd_timers_toneTimeoutMsType, node, msg) : null
             config.amd_timers_greetingCompletionTimeoutMs != '' ? obj.amd.timers.greetingCompletionTimeoutMs = await new_resolve(RED, config.amd_timers_greetingCompletionTimeoutMs, config.amd_timers_greetingCompletionTimeoutMsType, node, msg) : null
+            const amdRecog = await resolveSpeechObject(RED, config.amdRecognizer, node, msg);
+            if (amdRecog) obj.amd.recognizer = amdRecog;
           }
 
           if (config.record){

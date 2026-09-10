@@ -1,4 +1,6 @@
 <!-- Javascript -->
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-schema.js"></script>
+<script src="resources/@jambonz/node-red-contrib-jambonz/speech-component.js"></script>
 <script type="text/javascript">
   RED.nodes.registerType('agent', {
     category: 'jambonz',
@@ -8,9 +10,8 @@
       llm: {value: '', required: true},
       llmType: {value: 'json'},
       stt: {value: ''},
-      sttType: {value: 'json'},
       tts: {value: ''},
-      ttsType: {value: 'json'},
+      speechServer: {value: '', type: 'jambonz_auth', required: false},
       bargeIn: {value: ''},
       bargeInType: {value: 'json'},
       turnDetection: {value: ''},
@@ -45,8 +46,6 @@
       var hookTypes = ['str', 'msg', 'flow', 'global', 'jsonata', 'env'];
       var jsonTypes = ['json', 'msg', 'flow', 'global', 'jsonata', 'env'];
       $('#node-input-llm').typedInput({types: jsonTypes, typeField: $('#node-input-llmType')});
-      $('#node-input-stt').typedInput({types: jsonTypes, typeField: $('#node-input-sttType')});
-      $('#node-input-tts').typedInput({types: jsonTypes, typeField: $('#node-input-ttsType')});
       $('#node-input-bargeIn').typedInput({types: jsonTypes, typeField: $('#node-input-bargeInType')});
       $('#node-input-turnDetection').typedInput({types: jsonTypes, typeField: $('#node-input-turnDetectionType')});
       $('#node-input-noiseIsolation').typedInput({types: jsonTypes, typeField: $('#node-input-noiseIsolationType')});
@@ -57,6 +56,19 @@
       $('#node-input-eventHook').typedInput({types: hookTypes, typeField: $('#node-input-eventHookType')});
       $('#node-input-toolHook').typedInput({types: hookTypes, typeField: $('#node-input-toolHookType')});
       $('#node-input-noResponseTimeout').typedInput({types: ['num', 'msg', 'flow', 'global', 'env'], typeField: $('#node-input-noResponseTimeoutType')});
+
+      // Two instance-scoped speech controls coexisting in one dialog (stt + tts).
+      var node = this;
+      var sttVal = {}; try { if (node.stt) sttVal = JSON.parse(node.stt) || {}; } catch (e) { sttVal = {}; }
+      var ttsVal = {}; try { if (node.tts) ttsVal = JSON.parse(node.tts) || {}; } catch (e) { ttsVal = {}; }
+      node._sttHandle = JambonzSpeech.mountRecognizer(document.getElementById('node-input-stt-mount'), { value: sttVal, serverId: node.speechServer });
+      node._ttsHandle = JambonzSpeech.mountSynthesizer(document.getElementById('node-input-tts-mount'), { value: ttsVal, serverId: node.speechServer });
+    },
+    oneditsave: function() {
+      var stt = this._sttHandle ? this._sttHandle.collect() : undefined;
+      var tts = this._ttsHandle ? this._ttsHandle.collect() : undefined;
+      $('#node-input-stt').val(stt ? JSON.stringify(stt) : '');
+      $('#node-input-tts').val(tts ? JSON.stringify(tts) : '');
     }
   });
 </script>
@@ -72,19 +84,21 @@
     <input type="text" id="node-input-llm" placeholder='{"vendor":"openai","model":"gpt-4o","llmOptions":{...}}'>
     <input type="hidden" id="node-input-llmType">
   </div>
+  <div class="form-row">
+    <label for="node-input-speechServer">Speech data</label>
+    <input type="text" id="node-input-speechServer">
+    <small style="display:block;margin-left:160px;color:#888;">optional override &mdash; jambonz server for live language/voice lists (auto-detected from your config; falls back to bundled data)</small>
+  </div>
   <fieldset>
-    <legend>Speech</legend>
-    <div class="form-row">
-      <label for="node-input-stt">STT (recognizer)</label>
-      <input type="text" id="node-input-stt" placeholder='{"vendor":"deepgram","language":"en-US"}'>
-      <input type="hidden" id="node-input-sttType">
-    </div>
-    <div class="form-row">
-      <label for="node-input-tts">TTS (synthesizer)</label>
-      <input type="text" id="node-input-tts" placeholder='{"vendor":"elevenlabs","voice":"..."}'>
-      <input type="hidden" id="node-input-ttsType">
-    </div>
+    <legend>STT (recognizer)</legend>
+    <div id="node-input-stt-mount"></div>
   </fieldset>
+  <fieldset>
+    <legend>TTS (synthesizer)</legend>
+    <div id="node-input-tts-mount"></div>
+  </fieldset>
+  <input type="hidden" id="node-input-stt">
+  <input type="hidden" id="node-input-tts">
   <fieldset>
     <legend>Turn-taking &amp; noise</legend>
     <div class="form-row">
