@@ -1,0 +1,62 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  var mustacheType = {
+    value: 'mustache',
+    label: 'mustache',
+    hasvalue: true,
+    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+  };
+  RED.nodes.registerType('get_queues', {
+    category: 'jambonz',
+    color: '#aebfb9',
+    defaults: {
+      name: {value: ''},
+      server: {value: '', required: true, type: 'jambonz_auth'},
+      search: {value: ''},
+      searchType: {value: 'str'}
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-list-ol",
+    paletteLabel: "Get - Queues",
+    label: function() { return this.name || 'Get Queues'; },
+    oneditprepare: function() {
+      $('#node-input-search').typedInput({
+        types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+        typeField: $('#node-input-searchType')
+      });
+    }
+  });
+</script>
+
+<!-- HTML -->
+<script type="text/html" data-template-name="get_queues">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-server">Server</label>
+    <input type="text" id="node-input-server">
+  </div>
+  <div class="form-row">
+    <label for="node-input-search">Search</label>
+    <input type="text" id="node-input-search" placeholder="optional queue name filter">
+    <input type="hidden" id="node-input-searchType">
+  </div>
+</script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="get_queues">
+  <p>List the active queues under the account, with the number of calls waiting in each.</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>Search<span class="property-type">string</span></dt>
+    <dd>optional filter matched against queue names.</dd>
+  </dl>
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload<span class="property-type">array</span></dt>
+    <dd><code>msg.payload</code> will contain the list of queues (<code>{name, length}</code>).</dd>
+  </dl>
+</script>

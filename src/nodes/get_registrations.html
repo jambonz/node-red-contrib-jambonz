@@ -1,0 +1,80 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  var mustacheType = {
+    value: 'mustache',
+    label: 'mustache',
+    hasvalue: true,
+    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+  };
+  RED.nodes.registerType('get_registrations', {
+    category: 'jambonz',
+    color: '#aebfb9',
+    defaults: {
+      name: {value: ''},
+      server: {value: '', required: true, type: 'jambonz_auth'},
+      mode: {value: 'list'},
+      users: {value: ''},
+      usersType: {value: 'str'}
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-address-book",
+    paletteLabel: "Get - Registrations",
+    label: function() { return this.name || 'Get Registrations'; },
+    oneditprepare: function() {
+      $('#node-input-users').typedInput({
+        types: ['str', 'json', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+        typeField: $('#node-input-usersType')
+      });
+      var toggleUsers = function() {
+        $('#users-row').toggle($('#node-input-mode').val() === 'details');
+      };
+      $('#node-input-mode').change(toggleUsers);
+      toggleUsers();
+    }
+  });
+</script>
+
+<!-- HTML -->
+<script type="text/html" data-template-name="get_registrations">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-server">Server</label>
+    <input type="text" id="node-input-server">
+  </div>
+  <div class="form-row">
+    <label for="node-input-mode">Mode</label>
+    <select id="node-input-mode">
+      <option value="list">list (online users)</option>
+      <option value="details">details</option>
+    </select>
+  </div>
+  <div class="form-row" id="users-row">
+    <label for="node-input-users">Users</label>
+    <input type="text" id="node-input-users" placeholder="comma-separated usernames (blank = all)">
+    <input type="hidden" id="node-input-usersType">
+  </div>
+</script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="get_registrations">
+  <p>List the SIP users currently registered on the account's SIP realm.</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>Mode<span class="property-type">string</span></dt>
+    <dd><code>list</code> returns the online users as <code>user@realm</code> strings (GET).
+      <code>details</code> returns per-user registration details (contact, expiry, protocol,
+      registered_status) via POST.</dd>
+    <dt>Users<span class="property-type">string</span></dt>
+    <dd>details mode only: a comma-separated list of usernames (or a JSON array). Leave blank to
+      return details for all registered users.</dd>
+  </dl>
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload<span class="property-type">array</span></dt>
+    <dd><code>msg.payload</code> will contain the registration data.</dd>
+  </dl>
+</script>

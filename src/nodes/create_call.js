@@ -46,6 +46,16 @@ module.exports = function(RED) {
         opts.callerName = await new_resolve(RED, config.callername, config.callernameType, node, msg);
       }
 
+      if (config.answerOnBridge) opts.answerOnBridge = true;
+      if (config.fromHost) opts.fromHost = await new_resolve(RED, config.fromHost, config.fromHostType, node, msg);
+      if (config.timeLimit) {
+        const timeLimit = parseInt(await new_resolve(RED, config.timeLimit, config.timeLimitType, node, msg));
+        if (timeLimit > 0) opts.timeLimit = timeLimit;
+      }
+      if (config.sipRequestWithinDialogHook) {
+        opts.sipRequestWithinDialogHook = await new_resolve(RED, config.sipRequestWithinDialogHook, config.sipRequestWithinDialogHookType, node, msg);
+      }
+
       switch (config.mode) {
         case 'app':
           if (config.application == 'msg.application_sid'){

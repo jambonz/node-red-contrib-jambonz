@@ -80,6 +80,21 @@
         dubLoopType: {value: 'bool'},
         dubGain: {value: 0},
         dubGainType: {value: 'num'},
+        mediaPath: {value: 'full-media'},
+        boostLevel: {value: ''},
+        boostLevelType: {value: 'str'},
+        noiseIsolationVendor: {value: ''},
+        noiseIsolationLevel: {value: ''},
+        noiseIsolationLevelType: {value: 'num'},
+        noiseIsolationModel: {value: ''},
+        noiseIsolationModelType: {value: 'str'},
+        confParticipantAction: {value: 'mute'},
+        confParticipantTag: {value: ''},
+        confParticipantTagType: {value: 'str'},
+        transferData: {value: '{}'},
+        transferDataType: {value: 'json'},
+        pipelineUpdate: {value: '{}'},
+        pipelineUpdateType: {value: 'json'},
       },
       inputs:1,
       outputs:1,
@@ -102,6 +117,12 @@
         var dtmfDiv = $('#dtmf-options');
         var tagDiv = $('#tag-options');
         var dubDiv = $('#dub-options');
+        var mediaPathDiv = $('#media-path-options');
+        var boostDiv = $('#boost-options');
+        var noiseDiv = $('#noise-options');
+        var confPartDiv = $('#confpart-options');
+        var transferDiv = $('#transfer-options');
+        var pipelineDiv = $('#pipeline-options');
 
         $('#node-input-callSid').typedInput({
           default: $('#node-input-callSidType').val(),
@@ -188,6 +209,30 @@
           types: ['num', 'flow', 'global', 'json', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-dubGainType')
         });
+        $('#node-input-boostLevel').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-boostLevelType')
+        });
+        $('#node-input-noiseIsolationLevel').typedInput({
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-noiseIsolationLevelType')
+        });
+        $('#node-input-noiseIsolationModel').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-noiseIsolationModelType')
+        });
+        $('#node-input-confParticipantTag').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-confParticipantTagType')
+        });
+        $('#node-input-transferData').typedInput({
+          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-transferDataType')
+        });
+        $('#node-input-pipelineUpdate').typedInput({
+          types: ['json', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-pipelineUpdateType')
+        });
 
         var onActionChanged = function () {
           var selectedAction = actionElem.find(':selected').val();
@@ -207,6 +252,18 @@
           else tagDiv.hide();
           if ('dub' === selectedAction.substring(0,3)) dubDiv.show();
           else dubDiv.hide();
+          if ('media_path' === selectedAction) mediaPathDiv.show();
+          else mediaPathDiv.hide();
+          if ('boost_audio' === selectedAction) boostDiv.show();
+          else boostDiv.hide();
+          if ('noise_isolation_enable' === selectedAction) noiseDiv.show();
+          else noiseDiv.hide();
+          if ('conf_participant' === selectedAction) confPartDiv.show();
+          else confPartDiv.hide();
+          if ('transfer' === selectedAction) transferDiv.show();
+          else transferDiv.hide();
+          if ('pipeline_update' === selectedAction) pipelineDiv.show();
+          else pipelineDiv.hide();
         }
 
         var onVendorChanged = function() {
@@ -365,6 +422,10 @@
       <option value="unhold_conf">unhold conference participant</option>
       <option value="pause">pause listen audio feed</option>
       <option value="resume">resume listen audio feed</option>
+      <option value="silence">silence listen audio feed</option>
+      <option value="stream_pause">pause stream</option>
+      <option value="stream_resume">resume stream</option>
+      <option value="stream_silence">silence stream</option>
       <option value="redirect">redirect call</option>
       <option value="whisper">whisper</option>
       <option value="pause_transcribe">pause transcribe</option>
@@ -381,6 +442,13 @@
       <option value="dubPlay">Dub - playOnTrack</option>
       <option value="dubSay">Dub - sayOnTrack</option>
       <option value="dubSilence">Dub - SilenceTrack</option>
+      <option value="media_path">change media path</option>
+      <option value="boost_audio">boost audio signal</option>
+      <option value="noise_isolation_enable">enable noise isolation</option>
+      <option value="noise_isolation_disable">disable noise isolation</option>
+      <option value="conf_participant">conference participant action</option>
+      <option value="transfer">transfer</option>
+      <option value="pipeline_update">pipeline update (llm/agent)</option>
     </select>
   </div>
   <div id="say-options">
@@ -520,6 +588,77 @@
       <label for="node-input-dubGain">Gain</label>
       <input type="text" id="node-input-dubGain">
       <input type="hidden" id="node-input-dubGainType">
+    </div>
+  </div>
+  <div id="media-path-options">
+    <div class="form-row">
+      <label for="node-input-mediaPath">Media path</label>
+      <select id="node-input-mediaPath">
+        <option value="full-media">full-media</option>
+        <option value="partial-media">partial-media</option>
+        <option value="no-media">no-media</option>
+      </select>
+    </div>
+  </div>
+  <div id="boost-options">
+    <div class="form-row">
+      <label for="node-input-boostLevel">Boost level</label>
+      <input type="text" id="node-input-boostLevel" placeholder="e.g. 6 or 6dB">
+      <input type="hidden" id="node-input-boostLevelType">
+    </div>
+  </div>
+  <div id="noise-options">
+    <div class="form-row">
+      <label for="node-input-noiseIsolationVendor">Vendor</label>
+      <select id="node-input-noiseIsolationVendor">
+        <option value="">--default--</option>
+        <option value="krisp">krisp</option>
+        <option value="rnnoise">rnnoise</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-noiseIsolationLevel">Level</label>
+      <input type="text" id="node-input-noiseIsolationLevel" placeholder="0-100">
+      <input type="hidden" id="node-input-noiseIsolationLevelType">
+    </div>
+    <div class="form-row">
+      <label for="node-input-noiseIsolationModel">Model</label>
+      <input type="text" id="node-input-noiseIsolationModel">
+      <input type="hidden" id="node-input-noiseIsolationModelType">
+    </div>
+  </div>
+  <div id="confpart-options">
+    <div class="form-row">
+      <label for="node-input-confParticipantAction">Participant action</label>
+      <select id="node-input-confParticipantAction">
+        <option value="mute">mute</option>
+        <option value="unmute">unmute</option>
+        <option value="hold">hold</option>
+        <option value="unhold">unhold</option>
+        <option value="tag">tag</option>
+        <option value="untag">untag</option>
+        <option value="coach">coach</option>
+        <option value="uncoach">uncoach</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="node-input-confParticipantTag">Tag</label>
+      <input type="text" id="node-input-confParticipantTag" placeholder="required for tag / coach">
+      <input type="hidden" id="node-input-confParticipantTagType">
+    </div>
+  </div>
+  <div id="transfer-options">
+    <div class="form-row">
+      <label for="node-input-transferData">Transfer</label>
+      <input type="text" id="node-input-transferData" placeholder='{"mode":"blind","target":[...]}'>
+      <input type="hidden" id="node-input-transferDataType">
+    </div>
+  </div>
+  <div id="pipeline-options">
+    <div class="form-row">
+      <label for="node-input-pipelineUpdate">Pipeline update</label>
+      <input type="text" id="node-input-pipelineUpdate" placeholder='{"type":"update_instructions","instructions":"..."}'>
+      <input type="hidden" id="node-input-pipelineUpdateType">
     </div>
   </div>
 </script>

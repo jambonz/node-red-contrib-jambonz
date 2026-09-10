@@ -1,0 +1,96 @@
+<!-- Javascript -->
+<script type="text/javascript">
+  var mustacheType = {
+    value: 'mustache',
+    label: 'mustache',
+    hasvalue: true,
+    icon: 'resources/@jambonz/node-red-contrib-jambonz/icons/mustache.svg'
+  };
+  RED.nodes.registerType('conference_listen', {
+    category: 'jambonz',
+    color: '#aebfb9',
+    defaults: {
+      name: {value: ''},
+      server: {value: '', required: true, type: 'jambonz_auth'},
+      action: {value: 'start'},
+      confName: {value: ''},
+      confNameType: {value: 'str'},
+      wsUrl: {value: ''},
+      wsUrlType: {value: 'str'},
+      scope: {value: ''},
+      scopeType: {value: 'str'}
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-headphones",
+    paletteLabel: "Conference Listen",
+    label: function() { return this.name || 'Conference Listen'; },
+    oneditprepare: function() {
+      var hookTypes = ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType];
+      $('#node-input-confName').typedInput({types: hookTypes, typeField: $('#node-input-confNameType')});
+      $('#node-input-wsUrl').typedInput({types: hookTypes, typeField: $('#node-input-wsUrlType')});
+      $('#node-input-scope').typedInput({types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env'], typeField: $('#node-input-scopeType')});
+      var toggleUrl = function() {
+        $('#wsurl-row').toggle($('#node-input-action').val() === 'start');
+      };
+      $('#node-input-action').change(toggleUrl);
+      toggleUrl();
+    }
+  });
+</script>
+
+<!-- HTML -->
+<script type="text/html" data-template-name="conference_listen">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-server">Server</label>
+    <input type="text" id="node-input-server">
+  </div>
+  <div class="form-row">
+    <label for="node-input-action">Action</label>
+    <select id="node-input-action">
+      <option value="start">start</option>
+      <option value="stop">stop</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-confName">Conference</label>
+    <input type="text" id="node-input-confName" placeholder="conference name">
+    <input type="hidden" id="node-input-confNameType">
+  </div>
+  <div class="form-row" id="wsurl-row">
+    <label for="node-input-wsUrl">Websocket URL</label>
+    <input type="text" id="node-input-wsUrl" placeholder="wss://...">
+    <input type="hidden" id="node-input-wsUrlType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-scope">Scope</label>
+    <input type="text" id="node-input-scope" placeholder="mix (default) or members">
+    <input type="hidden" id="node-input-scopeType">
+  </div>
+</script>
+
+<!-- Help Text -->
+<script type="text/html" data-help-name="conference_listen">
+  <p>Start or stop a conference-level audio fork, streaming the conference audio to a websocket server.</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>Action<span class="property-type">string</span></dt>
+    <dd><code>start</code> begins the fork (POST); <code>stop</code> ends it (DELETE).</dd>
+    <dt>Conference<span class="property-type">string</span></dt>
+    <dd>the name of the conference to fork.</dd>
+    <dt>Websocket URL<span class="property-type">string</span></dt>
+    <dd>start only: the websocket server to stream conference audio to.</dd>
+    <dt>Scope<span class="property-type">string</span></dt>
+    <dd>optional. <code>mix</code> (default) forks the whole room; <code>members</code> forks one
+      identity-tagged stream per member.</dd>
+  </dl>
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload<span class="property-type">object</span></dt>
+    <dd><code>msg.payload</code> and <code>msg.statusCode</code> reflect the API response.</dd>
+  </dl>
+</script>

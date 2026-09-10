@@ -21,14 +21,14 @@ The [answer](https://docs.jambonz.org/verbs/verbs/answer) verb answers the call.
 ### conference
 The [conference](https://docs.jambonz.org/verbs/verbs/conference) verb connects a call into a conference.
 
+### conference listen
+Starts or stops a conference-level audio fork, streaming the conference audio to a websocket server.
+
 ### config
 The [config](https://docs.jambonz.org/verbs/verbs/config) verb updates default session settings (speech, barge-in, recording, etc.) for subsequent verbs.
 
 ### create call
 Creates an outbound call via the jambonz REST API.
-
-### create sms
-Creates an outbound SMS message via the jambonz REST API.
 
 ### dequeue
 The [dequeue](https://docs.jambonz.org/verbs/verbs/dequeue) verb removes a call from the front of a specified queue and bridges that call to the current caller.
@@ -60,11 +60,23 @@ Retrieves alert records for an account.
 ### get call
 Retrieves info for a single call.
 
+### get call count
+Retrieves the current number of active inbound and outbound calls on the account.
+
 ### get calls
 Retrieves info for a group of calls.
 
+### get conferences
+Lists the active conferences on the account, optionally expanded to include their participants.
+
+### get queues
+Lists the active queues on the account and the number of calls waiting in each.
+
 ### get recent calls
 Retrieves recent call detail records (CDRs) with paging.
+
+### get registrations
+Lists the SIP users currently registered on the account's SIP realm.
 
 ### hangup
 The [hangup](https://docs.jambonz.org/verbs/verbs/hangup) command terminates the call and ends the application.

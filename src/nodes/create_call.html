@@ -29,6 +29,13 @@
         dest: {value: 'phone', required: true},
         timeout: {value: '' },
         timeoutType: {value: 'num'},
+        timeLimit: {value: ''},
+        timeLimitType: {value: 'num'},
+        answerOnBridge: {value: false},
+        fromHost: {value: ''},
+        fromHostType: {value: 'str'},
+        sipRequestWithinDialogHook: {value: ''},
+        sipRequestWithinDialogHookType: {value: 'str'},
         tag: {value: '{}'},
         tagType: {value: 'json'},
         application: {value: ''},
@@ -122,6 +129,18 @@
         $('#node-input-callername').typedInput({
           types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
           typeField: $('#node-input-callernameType')
+        });
+        $('#node-input-fromHost').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-fromHostType')
+        });
+        $('#node-input-timeLimit').typedInput({
+          types: ['num', 'msg', 'flow', 'global', 'jsonata', 'env'],
+          typeField: $('#node-input-timeLimitType')
+        });
+        $('#node-input-sipRequestWithinDialogHook').typedInput({
+          types: ['str', 'msg', 'flow', 'global', 'jsonata', 'env', mustacheType],
+          typeField: $('#node-input-sipRequestWithinDialogHookType')
         });
         $('#node-input-tag').typedInput({
           default: $('#node-input-tagType').val(),
@@ -327,6 +346,25 @@
     <label for="node-input-timeout">Ring timeout</label>
     <input type="text" id="node-input-timeout" placeholder="ring no answer timeout in secs (default: 60)">
     <input type="hidden" id="node-input-timeoutType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-timeLimit">Time limit</label>
+    <input type="text" id="node-input-timeLimit" placeholder="max call length in secs">
+    <input type="hidden" id="node-input-timeLimitType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-fromHost">From host</label>
+    <input type="text" id="node-input-fromHost" placeholder="SIP From header host">
+    <input type="hidden" id="node-input-fromHostType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-sipRequestWithinDialogHook">In-dialog SIP hook</label>
+    <input type="text" id="node-input-sipRequestWithinDialogHook" placeholder="webhook for in-dialog SIP requests">
+    <input type="hidden" id="node-input-sipRequestWithinDialogHookType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-answerOnBridge">Answer on bridge</label>
+    <input type="checkbox" id="node-input-answerOnBridge">
   </div>
   <div class="form-row">
     <label for="node-input-tag">Tag data</label>

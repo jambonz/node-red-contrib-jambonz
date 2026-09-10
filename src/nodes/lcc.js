@@ -49,11 +49,50 @@ function lcc(config) {
         case 'resume':
           opts.listen_status = 'resume';
           break;
+        case 'silence':
+          opts.listen_status = 'silence';
+          break;
+        case 'stream_pause':
+          opts.stream_status = 'pause';
+          break;
+        case 'stream_resume':
+          opts.stream_status = 'resume';
+          break;
+        case 'stream_silence':
+          opts.stream_status = 'silence';
+          break;
         case 'pause_transcribe':
           opts.transcribe_status = 'pause';
           break;
         case 'resume_transcribe':
           opts.transcribe_status = 'resume';
+          break;
+        case 'media_path':
+          opts.media_path = config.mediaPath;
+          break;
+        case 'boost_audio':
+          opts.boostAudioSignal = await new_resolve(RED, config.boostLevel, config.boostLevelType, node, msg);
+          break;
+        case 'noise_isolation_enable':
+          opts.noise_isolation_status = 'enable';
+          config.noiseIsolationVendor ? opts.noise_isolation_vendor = config.noiseIsolationVendor : null;
+          config.noiseIsolationLevel !== '' ? opts.noise_isolation_level = parseInt(await new_resolve(RED, config.noiseIsolationLevel, config.noiseIsolationLevelType, node, msg)) : null;
+          config.noiseIsolationModel ? opts.noise_isolation_model = await new_resolve(RED, config.noiseIsolationModel, config.noiseIsolationModelType, node, msg) : null;
+          break;
+        case 'noise_isolation_disable':
+          opts.noise_isolation_status = 'disable';
+          break;
+        case 'conf_participant':
+          opts.conferenceParticipantAction = {action: config.confParticipantAction};
+          if (['tag', 'coach'].includes(config.confParticipantAction)) {
+            opts.conferenceParticipantAction.tag = await new_resolve(RED, config.confParticipantTag, config.confParticipantTagType, node, msg);
+          }
+          break;
+        case 'transfer':
+          opts.transfer = await new_resolve(RED, config.transferData, config.transferDataType, node, msg);
+          break;
+        case 'pipeline_update':
+          opts.pipeline_update = await new_resolve(RED, config.pipelineUpdate, config.pipelineUpdateType, node, msg);
           break;
         case 'redirect':
           opts.call_hook = {url: await new_resolve(RED, config.callHook, config.callHookType, node, msg)};
