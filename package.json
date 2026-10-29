@@ -80,6 +80,6 @@
     "undici": "^6.28.1"
   },
   "devDependencies": {
-    "@jambonz/schema": "^0.4.33"
+    "@jambonz/schema": "^0.4.36"
   }
 }
